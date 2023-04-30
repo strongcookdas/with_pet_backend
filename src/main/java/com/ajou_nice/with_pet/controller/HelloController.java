@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,17 @@ public class HelloController {
 
     @Value("${ajou.nice}")
     private String test;
+    Response response = new Response("OK", "React SpringBoot!!!!");
 
     @GetMapping
     @ApiOperation(value = "CICD 테스트 API")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok().body("Hello SpringBoot React!!!!");
+    public ResponseEntity<Response> hello() {
+        return ResponseEntity.ok().body(response);
+    }
+
+    @AllArgsConstructor
+    class Response {
+        public String resultCode;
+        public String result;
     }
 }
