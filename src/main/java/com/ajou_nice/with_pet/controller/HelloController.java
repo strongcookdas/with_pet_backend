@@ -16,7 +16,7 @@ public class HelloController {
 
     @Value("${ajou.nice}")
     private String test;
-    Response response = new Response("OK", "React SpringBoot!!!!");
+    Response response = new Response("OK", "React SpringBoot!!!!!");
 
     @GetMapping
     @ApiOperation(value = "CICD 테스트 API")
