@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.service;
 
-import com.ajou_nice.with_pet.domain.dto.UserLoginRequest;
+import com.ajou_nice.with_pet.domain.dto.user.UserLoginRequest;
 import com.ajou_nice.with_pet.domain.dto.user.UserLoginResponse;
 import com.ajou_nice.with_pet.domain.dto.user.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.user.UserSignUpResponse;

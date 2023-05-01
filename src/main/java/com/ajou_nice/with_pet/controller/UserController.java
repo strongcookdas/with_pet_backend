@@ -1,13 +1,14 @@
 package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.UserLoginRequest;
+import com.ajou_nice.with_pet.domain.dto.user.UserLoginRequest;
 import com.ajou_nice.with_pet.domain.dto.user.UserLoginResponse;
 import com.ajou_nice.with_pet.domain.dto.user.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.user.UserSignUpResponse;
 import com.ajou_nice.with_pet.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,8 @@ public class UserController {
 
     @PostMapping("/signup")
     @ApiOperation(value = "회원가입")
-    public Response<UserSignUpResponse> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
+    public Response<UserSignUpResponse> signUp(
+            @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
         //log.info(userSignUpRequest.toString());
         UserSignUpResponse userSignUpResponse = userService.signUp(userSignUpRequest);
         return Response.success(userSignUpResponse);
