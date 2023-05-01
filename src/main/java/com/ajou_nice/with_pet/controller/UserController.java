@@ -1,6 +1,8 @@
 package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
+import com.ajou_nice.with_pet.domain.dto.UserLoginRequest;
+import com.ajou_nice.with_pet.domain.dto.user.UserLoginResponse;
 import com.ajou_nice.with_pet.domain.dto.user.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.user.UserSignUpResponse;
 import com.ajou_nice.with_pet.service.UserService;
@@ -25,8 +27,15 @@ public class UserController {
     @PostMapping("/signup")
     @ApiOperation(value = "회원가입")
     public Response<UserSignUpResponse> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
-        log.info(userSignUpRequest.toString());
+        //log.info(userSignUpRequest.toString());
         UserSignUpResponse userSignUpResponse = userService.signUp(userSignUpRequest);
         return Response.success(userSignUpResponse);
+    }
+
+    @PostMapping("/login")
+    @ApiOperation(value = "로그인")
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
+        return Response.success(userLoginResponse);
     }
 }
