@@ -1,6 +1,5 @@
 package com.ajou_nice.with_pet.domain.entity;
 
-import com.ajou_nice.with_pet.domain.dto.user.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.UserRole;
 import javax.persistence.AttributeOverride;
@@ -50,17 +49,4 @@ public class User extends BaseEntity {
             @AttributeOverride(name = "zipcode", column = @Column(nullable = false))
     })
     private Address address;
-
-    public static User of(UserSignUpRequest userSignUpRequest) {
-        return User.builder()
-                .name(userSignUpRequest.getUserName())
-                .id(userSignUpRequest.getUserId())
-                .password(userSignUpRequest.getUserPassword())
-                .email(userSignUpRequest.getUserEmail())
-                .role(UserRole.USER)
-                .profileImg(userSignUpRequest.getProfileImg())
-                .phone(userSignUpRequest.getPhoneNum())
-                .address(Address.of(userSignUpRequest.getAddress()))
-                .build();
-    }
 }

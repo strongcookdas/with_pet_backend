@@ -1,6 +1,8 @@
 package com.ajou_nice.with_pet.domain.dto.user;
 
 import com.ajou_nice.with_pet.domain.embedded.AddressDto;
+import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.enums.UserRole;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -10,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,5 +43,18 @@ public class UserSignUpRequest {
     @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$", message = "올바른 형식의 전화번호를 입력하세요.")
     private String phoneNum;
     private AddressDto address;
+
+    public User toUserEntity(BCryptPasswordEncoder encoder) {
+        return User.builder()
+                .name(this.userName)
+                .id(this.userId)
+                .password(encoder.encode(this.getUserPassword()))
+                .email(this.userEmail)
+                .role(UserRole.USER)
+                .profileImg(this.profileImg)
+                .phone(this.phoneNum)
+                .address(this.address.toAddressEntity())
+                .build();
+    }
 
 }

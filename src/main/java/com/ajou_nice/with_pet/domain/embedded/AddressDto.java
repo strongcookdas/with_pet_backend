@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.embedded;
 
+import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,4 +19,12 @@ public class AddressDto {
     private String street_adr;
     @NotBlank
     private String detail_adr;
+
+    public Address toAddressEntity() {
+        return Address.builder()
+                .zipcode(this.getZipcode())
+                .street_adr(this.getStreet_adr())
+                .detail_adr(this.getDetail_adr())
+                .build();
+    }
 }
