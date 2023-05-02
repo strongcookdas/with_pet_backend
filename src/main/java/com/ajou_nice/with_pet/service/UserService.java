@@ -1,5 +1,7 @@
 package com.ajou_nice.with_pet.service;
 
+import com.ajou_nice.with_pet.domain.dto.user.UserLoginRequest;
+import com.ajou_nice.with_pet.domain.dto.user.UserLoginResponse;
 import com.ajou_nice.with_pet.domain.dto.user.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.user.UserSignUpResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -28,5 +30,19 @@ public class UserService {
         User user = User.of(userSignUpRequest);
         User saveUser = userRepository.save(user);
         return UserSignUpResponse.of(saveUser);
+    }
+
+    public UserLoginResponse login(UserLoginRequest userLoginRequest) {
+
+        User findUser = userRepository.findById(userLoginRequest.getId()).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        if (!findUser.getPassword().equals(userLoginRequest.getPassword())) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD,
+                    ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+
+        return UserLoginResponse.of("로그인에 성공했습니다.");
     }
 }
