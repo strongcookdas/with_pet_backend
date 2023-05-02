@@ -9,6 +9,7 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
         userRepository.findById(userSignUpRequest.getUserId()).ifPresent(user -> {
@@ -27,7 +29,7 @@ public class UserService {
             throw new AppException(ErrorCode.PASSWORD_COMPARE_FAIL,
                     ErrorCode.PASSWORD_COMPARE_FAIL.getMessage());
         }
-        User user = User.of(userSignUpRequest);
+        User user = userSignUpRequest.toUserEntity(encoder);
         User saveUser = userRepository.save(user);
         return UserSignUpResponse.of(saveUser);
     }
@@ -38,7 +40,7 @@ public class UserService {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
-        if (!findUser.getPassword().equals(userLoginRequest.getPassword())) {
+        if (!encoder.matches(userLoginRequest.getPassword(), findUser.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD,
                     ErrorCode.INVALID_PASSWORD.getMessage());
         }
