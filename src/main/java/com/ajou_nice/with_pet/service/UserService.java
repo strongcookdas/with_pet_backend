@@ -57,7 +57,7 @@ public class UserService {
         String accessToken = jwtTokenUtil.createToken(findUser.getId(),
                 findUser.getRole().name());
 
-        CookieUtil.saveCookie(response, "token", accessToken);
+        CookieUtil.savePathCookie(response, "token", accessToken, "/");
 
         //테스트로 반환
         return UserLoginResponse.of("token : " + accessToken);
