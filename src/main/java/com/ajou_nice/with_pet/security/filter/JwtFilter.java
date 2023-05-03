@@ -22,7 +22,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    @Value("${jwt.token.key}")
+    @Value("${jwt.token.secret}")
     private String key;
 
     @Override

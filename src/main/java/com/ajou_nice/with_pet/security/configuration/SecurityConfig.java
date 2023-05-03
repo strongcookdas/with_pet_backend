@@ -21,8 +21,8 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final String[] PERMIT_URL = {
             "/swagger-ui/**",
-            "api/v1/users/signup",
-            "api/v1/users/login"
+            "/api/v1/users/signup",
+            "/api/v1/users/login"
     };
 
     @Bean
