@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.embedded;
+package com.ajou_nice.with_pet.domain.dto.embedded;
 
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import javax.validation.constraints.NotBlank;
@@ -16,15 +16,15 @@ public class AddressDto {
     @NotBlank
     private String zipcode;
     @NotBlank
-    private String street_adr;
+    private String streetAdr;
     @NotBlank
-    private String detail_adr;
+    private String detailAdr;
 
-    public Address toAddressEntity() {
-        return Address.builder()
-                .zipcode(this.getZipcode())
-                .street_adr(this.getStreet_adr())
-                .detail_adr(this.getDetail_adr())
+    public static AddressDto of(Address address) {
+        return AddressDto.builder()
+                .zipcode(address.getZipcode())
+                .streetAdr(address.getStreetAdr())
+                .detailAdr(address.getDetailAdr())
                 .build();
     }
 }
