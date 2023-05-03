@@ -22,17 +22,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+    private final JwtTokenUtil jwtTokenUtil;
     private final long accessTokenExpireTimeMx = 1000 * 60 * 60L;
 
     @Value("${jwt.token.secret")
     private String key;
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
+
         userRepository.findById(userSignUpRequest.getUserId()).ifPresent(user -> {
             throw new AppException(ErrorCode.DUPLICATED_USER_ID,
                     ErrorCode.DUPLICATED_USER_ID.getMessage());
         });
-
         if (!userSignUpRequest.getUserPassword().equals(userSignUpRequest.getUserPasswordCheck())) {
             throw new AppException(ErrorCode.PASSWORD_COMPARE_FAIL,
                     ErrorCode.PASSWORD_COMPARE_FAIL.getMessage());
@@ -54,7 +55,7 @@ public class UserService {
                     ErrorCode.INVALID_PASSWORD.getMessage());
         }
 
-        String accessToken = JwtTokenUtil.createToken(findUser.getUserId(), key,
+        String accessToken = jwtTokenUtil.createToken(findUser.getUserId(), findUser.getRole().name(),
                 accessTokenExpireTimeMx);
 
         CookieUtil.saveCookie(response, "token", accessToken);
