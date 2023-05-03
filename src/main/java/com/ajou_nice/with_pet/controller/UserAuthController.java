@@ -1,11 +1,11 @@
 package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.user.UserLoginRequest;
-import com.ajou_nice.with_pet.domain.dto.user.UserLoginResponse;
-import com.ajou_nice.with_pet.domain.dto.user.UserSignUpRequest;
-import com.ajou_nice.with_pet.domain.dto.user.UserSignUpResponse;
-import com.ajou_nice.with_pet.service.UserService;
+import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
+import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
+import com.ajou_nice.with_pet.service.UserAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletResponse;
@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Api
 @Slf4j
-public class UserController {
+public class UserAuthController {
 
-    private final UserService userService;
+    private final UserAuthService userService;
 
     @PostMapping("/signup")
     @ApiOperation(value = "회원가입")

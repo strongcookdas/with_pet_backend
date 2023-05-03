@@ -1,9 +1,9 @@
 package com.ajou_nice.with_pet.service;
 
-import com.ajou_nice.with_pet.domain.dto.user.UserLoginRequest;
-import com.ajou_nice.with_pet.domain.dto.user.UserLoginResponse;
-import com.ajou_nice.with_pet.domain.dto.user.UserSignUpRequest;
-import com.ajou_nice.with_pet.domain.dto.user.UserSignUpResponse;
+import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
+import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserAuthService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
