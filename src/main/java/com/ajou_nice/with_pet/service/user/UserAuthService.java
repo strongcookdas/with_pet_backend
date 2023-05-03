@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.service;
+package com.ajou_nice.with_pet.service.user;
 
 import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
@@ -34,7 +34,7 @@ public class UserAuthService {
             throw new AppException(ErrorCode.PASSWORD_COMPARE_FAIL,
                     ErrorCode.PASSWORD_COMPARE_FAIL.getMessage());
         }
-        User user = userSignUpRequest.toUserEntity(encoder);
+        User user = User.toUserEntity(userSignUpRequest, encoder);
         User saveUser = userRepository.save(user);
         return UserSignUpResponse.of(saveUser);
     }

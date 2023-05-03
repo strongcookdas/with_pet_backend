@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.UserRole;
 import javax.persistence.AttributeOverride;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,9 +46,22 @@ public class User extends BaseEntity {
     private String phone;
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "street_adr", column = @Column(nullable = false)),
-            @AttributeOverride(name = "detail_adr", column = @Column(nullable = false)),
+            @AttributeOverride(name = "streetAdr", column = @Column(nullable = false)),
+            @AttributeOverride(name = "detailAdr", column = @Column(nullable = false)),
             @AttributeOverride(name = "zipcode", column = @Column(nullable = false))
     })
     private Address address;
+
+    public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
+        return User.builder()
+                .name(userSignUpRequest.getUserName())
+                .id(userSignUpRequest.getUserId())
+                .password(encoder.encode(userSignUpRequest.getUserPassword()))
+                .email(userSignUpRequest.getUserEmail())
+                .role(UserRole.ROLE_USER)
+                .profileImg(userSignUpRequest.getProfileImg())
+                .phone(userSignUpRequest.getPhoneNum())
+                .address(Address.toAddressEntity(userSignUpRequest.getAddress()))
+                .build();
+    }
 }
