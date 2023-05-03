@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/users")
 @RequiredArgsConstructor
-@Api
 @Slf4j
+@Api(tags = "UserAuth API")
 public class UserAuthController {
 
     private final UserAuthService userService;
@@ -30,7 +30,6 @@ public class UserAuthController {
     @ApiOperation(value = "회원가입")
     public Response<UserSignUpResponse> signUp(
             @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
-        //log.info(userSignUpRequest.toString());
         UserSignUpResponse userSignUpResponse = userService.signUp(userSignUpRequest);
         return Response.success(userSignUpResponse);
     }

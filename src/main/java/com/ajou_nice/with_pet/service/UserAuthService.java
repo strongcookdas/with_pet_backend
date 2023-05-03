@@ -12,7 +12,6 @@ import com.ajou_nice.with_pet.utils.CookieUtil;
 import com.ajou_nice.with_pet.utils.JwtTokenUtil;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +22,7 @@ public class UserAuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final JwtTokenUtil jwtTokenUtil;
-
-    @Value("${jwt.token.secret")
-    private String key;
+    private final CookieUtil cookieUtil;
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
 
@@ -57,7 +54,7 @@ public class UserAuthService {
         String accessToken = jwtTokenUtil.createToken(findUser.getId(),
                 findUser.getRole().name());
 
-        CookieUtil.savePathCookie(response, "token", accessToken, "/");
+        cookieUtil.savePathCookie(response, "token", accessToken, "/");
 
         //테스트로 반환
         return UserLoginResponse.of("token : " + accessToken);
