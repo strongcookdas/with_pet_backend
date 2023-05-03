@@ -1,38 +1,55 @@
 package com.ajou_nice.with_pet.utils;
 
-import com.ajou_nice.with_pet.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class JwtTokenUtil {
 
-    private static Claims extractClaims(String token, String key) {
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+    private final UserDetailsService userDetailsService;
+    @Value("${jwt.token.secret}")
+    private String key;
+    private final long expireTimeMs = 1000 * 60 * 60L;
+
+    private Jws<Claims> extractClaims(String token) {
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token);
     }
 
-    public static String isValid(String token, String key) {
+    public boolean isValid(String token) {
         try {
-            extractClaims(token, key);
-            return "OK";
-        } catch (ExpiredJwtException e) {
-            return ErrorCode.EXPIRE_TOKEN.name();
+            Jws<Claims> claims = extractClaims(token);
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
-            return ErrorCode.INVALID_TOKEN.name();
+            return false;
         }
     }
 
-    public static Long getUserId(String token, String key) {
-        return Long.valueOf(extractClaims(token, key).get("userId").toString());
+    public String getUserId(String token) {
+        return extractClaims(token).getBody().getSubject();
     }
 
-    public static String createToken(Long userId, String key, long expireTimeMs) {
-        Claims claims = Jwts.claims();
-        claims.put("userId", userId);
+    public String getUserRole(String token) {
+        return extractClaims(token).getBody().get("ROLE").toString();
+    }
+
+    public String createToken(String id, String userRole) {
+        //user pk 값 insert
+        Claims claims = Jwts.claims().setSubject(id);
+        claims.put("ROLE", userRole);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -40,5 +57,16 @@ public class JwtTokenUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
+    }
+
+    // JWT 토큰에서 인증 정보 조회
+    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        return new UsernamePasswordAuthenticationToken(getUserId(token), null,
+                List.of(new SimpleGrantedAuthority(getUserRole(token))));
+    }
+
+    //쿠키에서 토큰 파싱
+    public String getToken(HttpServletRequest request) {
+        return CookieUtil.getCookieValue(request, "token");
     }
 }

@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.configuration.security;
+package com.ajou_nice.with_pet.security.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

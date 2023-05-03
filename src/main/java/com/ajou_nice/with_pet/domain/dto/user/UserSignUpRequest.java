@@ -50,7 +50,7 @@ public class UserSignUpRequest {
                 .id(this.userId)
                 .password(encoder.encode(this.getUserPassword()))
                 .email(this.userEmail)
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .profileImg(this.profileImg)
                 .phone(this.phoneNum)
                 .address(this.address.toAddressEntity())

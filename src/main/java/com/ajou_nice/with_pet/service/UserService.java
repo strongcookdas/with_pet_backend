@@ -23,7 +23,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final JwtTokenUtil jwtTokenUtil;
-    private final long accessTokenExpireTimeMx = 1000 * 60 * 60L;
 
     @Value("${jwt.token.secret")
     private String key;
@@ -55,8 +54,8 @@ public class UserService {
                     ErrorCode.INVALID_PASSWORD.getMessage());
         }
 
-        String accessToken = jwtTokenUtil.createToken(findUser.getUserId(), findUser.getRole().name(),
-                accessTokenExpireTimeMx);
+        String accessToken = jwtTokenUtil.createToken(findUser.getId(),
+                findUser.getRole().name());
 
         CookieUtil.saveCookie(response, "token", accessToken);
 
