@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtTokenUtil {
 
-    private final UserDetailsService userDetailsService;
+    private final CookieUtil cookieUtil;
     @Value("${jwt.token.secret}")
     private String key;
     private final long expireTimeMs = 1000 * 60 * 60L;
@@ -67,6 +66,6 @@ public class JwtTokenUtil {
 
     //쿠키에서 토큰 파싱
     public String getToken(HttpServletRequest request) {
-        return CookieUtil.getCookieValue(request, "token");
+        return cookieUtil.getCookieValue(request, "token");
     }
 }

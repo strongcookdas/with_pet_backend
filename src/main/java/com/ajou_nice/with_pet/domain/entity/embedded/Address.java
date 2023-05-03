@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
+@ToString
 public class Address {
 
     private String zipcode;
