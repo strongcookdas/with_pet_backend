@@ -8,6 +8,7 @@ import com.ajou_nice.with_pet.domain.dto.user.UserSignUpResponse;
 import com.ajou_nice.with_pet.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +37,9 @@ public class UserController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인")
-    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
-        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest,
+            HttpServletResponse response) {
+        UserLoginResponse userLoginResponse = userService.login(userLoginRequest, response);
         return Response.success(userLoginResponse);
     }
 }

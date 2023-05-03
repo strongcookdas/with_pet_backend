@@ -8,7 +8,11 @@ import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import com.ajou_nice.with_pet.utils.CookieUtil;
+import com.ajou_nice.with_pet.utils.JwtTokenUtil;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +22,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+    private final long accessTokenExpireTimeMx = 1000 * 60 * 60L;
+
+    @Value("${jwt.token.secret")
+    private String key;
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
         userRepository.findById(userSignUpRequest.getUserId()).ifPresent(user -> {
@@ -34,7 +42,8 @@ public class UserService {
         return UserSignUpResponse.of(saveUser);
     }
 
-    public UserLoginResponse login(UserLoginRequest userLoginRequest) {
+    public UserLoginResponse login(UserLoginRequest userLoginRequest,
+            HttpServletResponse response) {
 
         User findUser = userRepository.findById(userLoginRequest.getId()).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -45,6 +54,12 @@ public class UserService {
                     ErrorCode.INVALID_PASSWORD.getMessage());
         }
 
-        return UserLoginResponse.of("로그인에 성공했습니다.");
+        String accessToken = JwtTokenUtil.createToken(findUser.getUserId(), key,
+                accessTokenExpireTimeMx);
+
+        CookieUtil.saveCookie(response, "token", accessToken);
+
+        //테스트로 반환
+        return UserLoginResponse.of("token : " + accessToken);
     }
 }
