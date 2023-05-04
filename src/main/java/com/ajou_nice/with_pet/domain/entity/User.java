@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
+import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyRequest;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.UserRole;
 import javax.persistence.AttributeOverride;
@@ -52,7 +53,17 @@ public class User extends BaseEntity {
     })
     private Address address;
 
-    public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
+    public void updateUser(MyInfoModifyRequest modifyRequest) {
+        this.name = modifyRequest.getUserName();
+        this.password = modifyRequest.getUserPassword();
+        this.email = modifyRequest.getUserEmail();
+        this.profileImg = modifyRequest.getProfileImg();
+        this.phone = modifyRequest.getPhoneNum();
+        this.address = Address.toAddressEntity(modifyRequest.getAddress());
+    }
+
+    public static User toUserEntity(UserSignUpRequest userSignUpRequest,
+            BCryptPasswordEncoder encoder) {
         return User.builder()
                 .name(userSignUpRequest.getUserName())
                 .id(userSignUpRequest.getUserId())

@@ -25,6 +25,10 @@ public class SecurityConfig {
             "/api/v1/users/login"
     };
 
+    private static final String[] DOC_URLS = {
+            "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html","/swagger-ui/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -42,6 +46,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests()
                 .antMatchers(PERMIT_URL).permitAll()
+                .antMatchers(DOC_URLS).permitAll()
                 .antMatchers(HttpMethod.GET).authenticated()
                 .antMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
