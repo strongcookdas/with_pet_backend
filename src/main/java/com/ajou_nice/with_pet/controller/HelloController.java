@@ -1,10 +1,10 @@
 package com.ajou_nice.with_pet.controller;
 
+import com.ajou_nice.with_pet.domain.dto.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,19 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "Test API")
 public class HelloController {
 
-    @Value("${ajou.nice}")
-    private String test;
-    Response response = new Response("OK", "React SpringBoot!!!!!");
-
     @GetMapping
     @ApiOperation(value = "CICD 테스트 API")
-    public ResponseEntity<Response> hello() {
-        return ResponseEntity.ok().body(response);
+    public Response hello(Authentication authentication) {
+        return Response.success(authentication.getName());
     }
 
-    @AllArgsConstructor
-    class Response {
-        public String resultCode;
-        public String result;
-    }
 }
