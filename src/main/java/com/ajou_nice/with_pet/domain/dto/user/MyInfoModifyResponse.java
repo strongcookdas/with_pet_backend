@@ -6,25 +6,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-
-@AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@AllArgsConstructor
 @Setter
+@Getter
 @Builder
-@ToString
-public class UserSignUpResponse {
+public class MyInfoModifyResponse {
 
     private Long userId;
     private String userName;
 
-    public static UserSignUpResponse of(User user) {
-        return UserSignUpResponse.builder()
+    public static MyInfoModifyResponse toMyInfoModifyResponse(User user) {
+        return MyInfoModifyResponse.builder()
                 .userId(user.getUserId())
                 .userName(user.getName())
                 .build();
     }
-
 }

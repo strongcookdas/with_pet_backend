@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.user;
+package com.ajou_nice.with_pet.domain.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
