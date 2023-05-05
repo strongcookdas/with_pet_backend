@@ -20,7 +20,7 @@ import lombok.ToString;
 public class MyInfoModifyRequest {
 
     @NotBlank
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9_-]{3,20}$", message = "올바른 이름을 입력하세요.")
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9_-]{3,20}$", message = "올바른 이름을 입력하세요.")
     private String userName;
 
     @NotBlank

@@ -19,14 +19,19 @@ public class SecurityConfig {
     private final AuthenticationManager authenticationManager;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final JwtFilter jwtFilter;
-    private final String[] PERMIT_URL = {
-            "/swagger-ui/**",
+
+    private final String[] GET_PERMIT_URL = {
+            "/api/v1/dogs/*",
+            "/api/v1/dogs"
+    };
+    private final String[] POST_PERMIT_URL = {
             "/api/v1/users/signup",
-            "/api/v1/users/login"
+            "/api/v1/users/login",
+            "/api/v1/dogs/register-dog"
     };
 
     private static final String[] DOC_URLS = {
-            "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html","/swagger-ui/**"
+            "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**"
     };
 
     @Bean
@@ -45,7 +50,8 @@ public class SecurityConfig {
         //URL 관리
         http
                 .authorizeRequests()
-                .antMatchers(PERMIT_URL).permitAll()
+                .antMatchers(GET_PERMIT_URL).permitAll()
+                .antMatchers(POST_PERMIT_URL).permitAll()
                 .antMatchers(DOC_URLS).permitAll()
                 .antMatchers(HttpMethod.GET).authenticated()
                 .antMatchers(HttpMethod.POST).authenticated()
