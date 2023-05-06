@@ -26,14 +26,18 @@ public class UserAuthService {
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
 
-        userRepository.findById(userSignUpRequest.getUserId()).ifPresent(user -> {
+        //아이디 중복확인
+        if (userRepository.existsById(userSignUpRequest.getUserId())) {
             throw new AppException(ErrorCode.DUPLICATED_USER_ID,
                     ErrorCode.DUPLICATED_USER_ID.getMessage());
-        });
+        }
+
+        //비밀번호와 비밀번호 확인 비교
         if (!userSignUpRequest.getUserPassword().equals(userSignUpRequest.getUserPasswordCheck())) {
             throw new AppException(ErrorCode.PASSWORD_COMPARE_FAIL,
                     ErrorCode.PASSWORD_COMPARE_FAIL.getMessage());
         }
+
         User user = User.toUserEntity(userSignUpRequest, encoder);
         User saveUser = userRepository.save(user);
         return UserSignUpResponse.of(saveUser);
