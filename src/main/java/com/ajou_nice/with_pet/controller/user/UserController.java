@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("api/v1/users")
 @RequiredArgsConstructor
 @Api(tags = "User API")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -29,6 +31,8 @@ public class UserController {
     @ApiOperation(value = "회원정보 조회")
     public Response<MyInfoResponse> getMyInfo(@ApiIgnore Authentication authentication) {
         MyInfoResponse myInfoResponse = userService.getMyInfo(authentication.getName());
+        log.info("-------------------------user MyInfo Response : {}-----------------------------",
+                myInfoResponse);
         return Response.success(myInfoResponse);
     }
 
@@ -36,8 +40,12 @@ public class UserController {
     @ApiOperation(value = "회원정보 수정")
     public Response modifyMyInfo(@ApiIgnore Authentication authentication,
             @Valid @RequestBody MyInfoModifyRequest myInfoModifyRequest) {
+        log.info("-------------------------user Info ModifyRequest : {}-----------------------------",
+                myInfoModifyRequest);
         MyInfoModifyResponse myInfoModifyResponse = userService.modifyMyInfo(
                 authentication.getName(), myInfoModifyRequest);
+        log.info("-------------------------user Info ModifyResponse : {}-----------------------------",
+                myInfoModifyRequest);
         return Response.success(myInfoModifyResponse);
     }
 }
