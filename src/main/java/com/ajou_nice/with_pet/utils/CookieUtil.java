@@ -9,17 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class CookieUtil {
 
-    public void saveCookie(HttpServletResponse response, String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        response.addCookie(cookie);
-    }
-
-    public void savePathCookie(HttpServletResponse response, String key, String value,
-            String path) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setPath(path);
-        cookie.setDomain(".ec2-3-39-193-176.ap-northeast-2.compute.amazonaws.com");
-        response.addCookie(cookie);
+    public void addCookie(HttpServletResponse response, String name, String value, String path) {
+        ResponseCookie cookie = ResponseCookie.from(name, value)
+                .path(path)
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
     }
 
     public String getCookieValue(HttpServletRequest request, String key) {
