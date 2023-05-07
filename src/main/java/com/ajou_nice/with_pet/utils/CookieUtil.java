@@ -3,6 +3,7 @@ package com.ajou_nice.with_pet.utils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,6 +18,7 @@ public class CookieUtil {
             String path) {
         Cookie cookie = new Cookie(key, value);
         cookie.setPath(path);
+        cookie.setDomain(".ec2-3-39-193-176.ap-northeast-2.compute.amazonaws.com");
         response.addCookie(cookie);
     }
 
