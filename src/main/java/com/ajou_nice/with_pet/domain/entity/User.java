@@ -56,9 +56,9 @@ public class User extends BaseEntity {
     })
     private Address address;
 
-    public void updateUser(MyInfoModifyRequest modifyRequest) {
+    public void updateUser(MyInfoModifyRequest modifyRequest, BCryptPasswordEncoder encoder) {
         this.name = modifyRequest.getUserName();
-        this.password = modifyRequest.getUserPassword();
+        this.password = encoder.encode(modifyRequest.getUserPassword());
         this.email = modifyRequest.getUserEmail();
         this.profileImg = modifyRequest.getProfileImg();
         this.phone = modifyRequest.getPhoneNum();

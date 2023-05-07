@@ -8,6 +8,7 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
 
     public MyInfoResponse getMyInfo(String userId) {
 
@@ -34,7 +36,7 @@ public class UserService {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
-        findUser.updateUser(myInfoModifyRequest);
+        findUser.updateUser(myInfoModifyRequest, encoder);
         return MyInfoModifyResponse.toMyInfoModifyResponse(findUser);
     }
 }
