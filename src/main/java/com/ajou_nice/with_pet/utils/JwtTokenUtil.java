@@ -66,6 +66,8 @@ public class JwtTokenUtil {
 
     //쿠키에서 토큰 파싱
     public String getToken(HttpServletRequest request) {
-        return cookieUtil.getCookieValue(request, "token");
+        String token = cookieUtil.getCookieValue(request, "token");
+        log.info(token);
+        return token;
     }
 }
