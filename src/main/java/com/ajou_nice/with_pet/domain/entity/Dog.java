@@ -6,7 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,10 @@ public class Dog extends BaseEntity {
     private Long dogId;
     @NotNull
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "groupId", nullable = false)
+    private Party group;
     @NotNull
     private String gender;
     @NotNull
@@ -39,6 +45,13 @@ public class Dog extends BaseEntity {
     private String breed;
 
     private String isbn;
+
+    @NotNull
+    private Double socializationTemperature = 0.0;
+    @NotNull
+    private Double affectionTemperature = 0.0;
+    @NotNull
+    private Integer socializationCnt = 0;
 
     public void update(DogInfoRequest dogInfoRequest) {
         this.name = dogInfoRequest.getDog_name();
