@@ -1,15 +1,38 @@
-spring:
-  config:
-    import: application-aws.yml
+#spring:
+#  config:
+#    import: application-aws.yml
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
-
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    show-sql: true
 server:
-  servlet:
-    session:
-      cookie:
-        same-site: none
-        secure: true
+  address: localhost
+  port: 8000
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/temp?createDatabaseIfNotExist=true&characterEncoding=UTF-8&characterSetResult=UTF-8
+    username: root
+    password: wkdtmdgus1!
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+jwt:
+  token:
+    secret: ajounicewithpet0302
+
+
+ajou:
+  nice: hello
+

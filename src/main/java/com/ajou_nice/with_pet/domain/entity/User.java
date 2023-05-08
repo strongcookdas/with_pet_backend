@@ -65,8 +65,7 @@ public class User extends BaseEntity {
         this.address = Address.toAddressEntity(modifyRequest.getAddress());
     }
 
-    public static User toUserEntity(UserSignUpRequest userSignUpRequest,
-            BCryptPasswordEncoder encoder) {
+    public static User toUserEntity(UserSignUpRequest userSignUpRequest) {
 
         //이미지 null 체크 null이면 기본이미지로 insert
         String img = userSignUpRequest.getProfileImg();
@@ -78,7 +77,7 @@ public class User extends BaseEntity {
         return User.builder()
                 .name(userSignUpRequest.getUserName())
                 .id(userSignUpRequest.getUserId())
-                .password(encoder.encode(userSignUpRequest.getUserPassword()))
+                .password(userSignUpRequest.getUserPassword())
                 .email(userSignUpRequest.getUserEmail())
                 .role(UserRole.ROLE_USER)
                 .profileImg(img)
