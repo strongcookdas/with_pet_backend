@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest.ApplicantModifyRequest;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -21,10 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.springframework.security.core.Authentication;
 
 
 @Entity
@@ -69,7 +64,19 @@ public class PetSitterApplicant {
 	@Enumerated(EnumType.STRING)
 	private ApplicantStatus applicantStatus;
 
-	public static PetSitterApplicant of(ApplicantInfoRequest applicantInfoRequest, User user){
+	// update는 경험과 동기, 경력만 수정 가능
+	public void updateApplicateInfo(ApplicantModifyRequest applicantModifyRequest){
+		this.care_experience = applicantModifyRequest.getApplicant_care_experience();
+		this.animal_career = applicantModifyRequest.getApplicant_animal_career();
+		this.petsitter_career = applicantModifyRequest.getApplicant_petsitter_career();
+		this.motivate = applicantModifyRequest.getApplicant_motivate();
+	}
+
+	public void updateApplicantState(ApplicantStatus applicantStatus){
+		this.applicantStatus = applicantStatus;
+	}
+
+	public static PetSitterApplicant toEntity(ApplicantInfoRequest applicantInfoRequest, User user){
 		ApplicantStatus defaultApplicantStatus = ApplicantStatus.WAIT;
 
 		return PetSitterApplicant.builder()
