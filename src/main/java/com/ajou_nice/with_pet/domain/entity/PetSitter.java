@@ -17,11 +17,17 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class PetSitter {
 
 	@Id
@@ -29,6 +35,7 @@ public class PetSitter {
 	@Column(name = "petsitter_id")
 	private Long id;
 
+	@NotNull
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="applicant_id",unique = true, nullable = false)
 	private PetSitterApplicant applicant;
@@ -47,4 +54,11 @@ public class PetSitter {
 
 	@Lob
 	private String introduction;
+
+	public static PetSitter toEntity(PetSitterApplicant petSitterApplicant){
+
+		return PetSitter.builder()
+				.applicant(petSitterApplicant)
+				.build();
+	}
 }
