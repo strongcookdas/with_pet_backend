@@ -29,8 +29,7 @@ public class PetSitterService {
 
 	private int price;
 
-	//==비즈니스 로직==//
-	//가격 변경
+	//==펫시터 서비스 가격 변경==//
 	public void changePrice(int changedPrice){
 		if(changedPrice > 0){
 			this.price = changedPrice;
