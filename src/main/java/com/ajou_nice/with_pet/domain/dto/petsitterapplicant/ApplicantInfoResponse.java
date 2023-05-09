@@ -1,34 +1,30 @@
 package com.ajou_nice.with_pet.domain.dto.petsitterapplicant;
 
 
+import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
-@Builder
-@ToString
-public class ApplicantInfoResponse {
-	private String applicant_user_name;
-	private Long applicant_user_userId;
+@Getter
+@SuperBuilder
+@ToString(callSuper = true)
+public class ApplicantInfoResponse extends ApplicantBasicInfoResponse {
 
-	private String applicant_user_profileImg;
-
-	private String applicant_user_phone;
 
 	// 유저 어드레스도 필요
 	// 유저 로그인 아이디도 필요 ??
-
-	private Long applicant_id;
 
 	private String applicant_identification;
 
@@ -46,22 +42,13 @@ public class ApplicantInfoResponse {
 
 	private String applicant_motivate;
 
-	private ApplicantStatus applicant_status;
 
 
-
-
-	public static List<ApplicantInfoResponse> toList(List<PetSitterApplicant> petSitterApplicants){
-		return petSitterApplicants.stream().map(applicant -> new ApplicantInfoResponse())
-				.collect(Collectors.toList());
-	}
-
-
-
-	public static ApplicantInfoResponse of(PetSitterApplicant petSitterApplicant){
+	// 위 메서드는 처음 지원하고 나서, response를 위한 메서드
+	public static ApplicantInfoResponse ofAll(PetSitterApplicant petSitterApplicant){
 		return ApplicantInfoResponse.builder()
 				.applicant_user_name(petSitterApplicant.getUser().getName())
-				.applicant_user_userId(petSitterApplicant.getUser().getUserId())
+				.applicant_user_id(petSitterApplicant.getUser().getUserId())
 				.applicant_user_profileImg(petSitterApplicant.getUser().getProfileImg())
 				.applicant_user_phone(petSitterApplicant.getUser().getPhone())
 				.applicant_id(petSitterApplicant.getId())
