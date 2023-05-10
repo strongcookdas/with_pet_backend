@@ -16,11 +16,11 @@ public class BaseEntity {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime last_modified_at;
+    private LocalDateTime lastModifiedAt;
 
-    private LocalDateTime deleted_at;
+    private LocalDateTime deletedAt;
 
 }

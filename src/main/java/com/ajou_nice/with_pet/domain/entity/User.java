@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Entity
 @Builder
 @Getter
+@Table(name = "users")
 public class User extends BaseEntity {
 
     @Id
@@ -63,7 +65,7 @@ public class User extends BaseEntity {
 
     public void updateUser(MyInfoModifyRequest modifyRequest) {
         this.name = modifyRequest.getUserName();
-        this.password = modifyRequest.getUserPassword();
+        this.password = encoder.encode(modifyRequest.getUserPassword());
         this.email = modifyRequest.getUserEmail();
         this.profileImg = modifyRequest.getProfileImg();
         this.phone = modifyRequest.getPhoneNum();
