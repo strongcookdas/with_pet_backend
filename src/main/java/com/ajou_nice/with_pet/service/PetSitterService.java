@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,10 +64,14 @@ public class PetSitterService {
 		return PetSitterInfoResponse.of(petSitter);
 	}
 
-	// == 메인페이지 펫시터들 정보 조회 == //
-	public List<PetSitterInfoResponse> getPetSitters(){
 
+	// == 메인페이지 펫시터들 정보 조회 == //
+	public Page<PetSitterInfoResponse> getPetSitters(Pageable pageable, String userId){
+		Page<PetSitter> petSitters = petSitterRepository.searchPage(pageable, userId);
+		return petSitters.map(PetSitterInfoResponse::of);
 	}
+
+
 
 
 }
