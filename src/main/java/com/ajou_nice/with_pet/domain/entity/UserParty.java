@@ -30,4 +30,11 @@ public class UserParty extends BaseEntity {
     @JoinColumn(name = "partyId")
     private Party party;
 
+    public static UserParty of(User user, Party party){
+        return UserParty.builder()
+                .user(user)
+                .party(party)
+                .build();
+    }
+
 }

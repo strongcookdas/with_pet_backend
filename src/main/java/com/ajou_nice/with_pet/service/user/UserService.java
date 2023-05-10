@@ -21,9 +21,7 @@ public class UserService {
 
     public MyInfoResponse getMyInfo(String userId) {
 
-        User findUser = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User findUser = findUser(userId);
 
         return MyInfoResponse.toMyInfoResponse(findUser);
     }
@@ -32,11 +30,15 @@ public class UserService {
     public MyInfoModifyResponse modifyMyInfo(String userId,
             MyInfoModifyRequest myInfoModifyRequest) {
 
-        User findUser = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User findUser = findUser(userId);
 
         findUser.updateUser(myInfoModifyRequest, encoder);
         return MyInfoModifyResponse.toMyInfoModifyResponse(findUser);
+    }
+
+    public User findUser(String userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
     }
 }
