@@ -6,7 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface PetSitterRepository extends JpaRepository<PetSitter, Long> {
+public interface PetSitterRepository extends JpaRepository<PetSitter, Long> ,
+PetSitterRespositoryCustom{
 
 	//쿼리 dsl 사용 필요
 	Optional<PetSitter> findByApplicant(PetSitterApplicant petSitterApplicant);
