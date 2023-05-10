@@ -60,4 +60,12 @@ public class UserDiary extends BaseEntity {
                 .dog(dog)
                 .build();
     }
+
+    public void update(DiaryRequest diaryRequest, Dog dog) {
+        this.category = diaryRequest.getCategory();
+        this.content = diaryRequest.getContentBody();
+        this.title = diaryRequest.getTitle();
+        this.dog = dog;
+        this.media = diaryRequest.getDogImgToday();
+    }
 }

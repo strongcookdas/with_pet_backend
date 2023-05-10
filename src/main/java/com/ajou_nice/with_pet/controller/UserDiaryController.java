@@ -10,7 +10,9 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +40,15 @@ public class UserDiaryController {
         log.info(
                 "-------------------------------------------DiaryResponse : {}------------------------------------------------",
                 userDiaryResponse);
+        return Response.success(userDiaryResponse);
+    }
+
+    @PutMapping("/{diaryId}")
+    @ApiOperation(value = "반려인 다이어리 수정")
+    public Response<UserDiaryResponse> updateUserDiary(@ApiIgnore Authentication authentication,
+            @Valid @RequestBody DiaryRequest diaryRequest, @PathVariable Long diaryId) {
+        UserDiaryResponse userDiaryResponse = userDiaryService.updateUserDiary(
+                authentication.getName(), diaryRequest, diaryId);
         return Response.success(userDiaryResponse);
     }
 

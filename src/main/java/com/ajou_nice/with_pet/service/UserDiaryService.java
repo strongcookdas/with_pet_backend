@@ -14,6 +14,7 @@ import com.ajou_nice.with_pet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,31 @@ public class UserDiaryService {
         }
 
         UserDiary userDiary = userDiaryRepository.save(UserDiary.of(diaryRequest, dog, user));
+        return UserDiaryResponse.of(userDiary);
+    }
+
+    @Transactional
+    public UserDiaryResponse updateUserDiary(String userId, DiaryRequest diaryRequest,
+            Long diaryId) {
+        //유저 체크
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+        //일지 체크
+        UserDiary userDiary = userDiaryRepository.findById(diaryId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.DIARY_NOT_FOUND,
+                    ErrorCode.DIARY_NOT_FOUND.getMessage());
+        });
+        //반려견 체크
+        Dog dog = dogRepository.findById(diaryRequest.getDogId()).orElseThrow(() -> {
+            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
+        });
+        //작성자 비교
+        if (!user.equals(userDiary.getUser())) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "일지를 수정할 권한이 없습니다.");
+        }
+        //수정
+        userDiary.update(diaryRequest, dog);
         return UserDiaryResponse.of(userDiary);
     }
 
