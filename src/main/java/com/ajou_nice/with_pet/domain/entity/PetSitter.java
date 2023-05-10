@@ -1,9 +1,11 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterInfoResponse;
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -21,7 +23,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -41,7 +42,7 @@ public class PetSitter {
 	private PetSitterApplicant applicant;
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterService> petSitterServiceList = new ArrayList<>();
+	private List<PetSitterWithPetService> petSitterWithPetServiceList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "petSitter")
 	private List<House> petSitterHouseList = new ArrayList<>();
@@ -61,4 +62,5 @@ public class PetSitter {
 				.applicant(petSitterApplicant)
 				.build();
 	}
+
 }

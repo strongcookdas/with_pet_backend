@@ -30,7 +30,9 @@ public class SecurityConfig {
     private final String[] POST_PERMIT_URL = {
             "/api/v1/users/signup",
             "/api/v1/users/login",
-            "/api/v1/dogs/register-dog"
+            "/api/v1/dogs/register-dog",
+            "/api/v1/applicate-petsitter",
+            "/api/v1/users/show-applicatestate"
     };
 
     private static final String[] DOC_URLS = {

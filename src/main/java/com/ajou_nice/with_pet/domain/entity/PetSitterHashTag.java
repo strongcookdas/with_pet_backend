@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

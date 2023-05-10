@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminService {
 
-
 	private final PetSitterApplicantRepository petSitterApplicantRepository;
 	private final UserRepository userRepository;
 	private final PetSitterRepository petSitterRepository;
@@ -138,5 +137,4 @@ public class AdminService {
 
 		return WithPetServiceResponse.toList(withPetServiceList);
 	}
-
 }
