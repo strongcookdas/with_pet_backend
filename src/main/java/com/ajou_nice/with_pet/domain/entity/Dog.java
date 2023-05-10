@@ -6,7 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,10 @@ public class Dog extends BaseEntity {
     private Long dogId;
     @NotNull
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "groupId", nullable = false)
+    private Party party;
     @NotNull
     private String gender;
     @NotNull
@@ -40,6 +46,13 @@ public class Dog extends BaseEntity {
 
     private String isbn;
 
+    @NotNull
+    private Double socializationTemperature;
+    @NotNull
+    private Double affectionTemperature;
+    @NotNull
+    private Integer socializationCnt;
+
     public void update(DogInfoRequest dogInfoRequest) {
         this.name = dogInfoRequest.getDog_name();
         this.gender = dogInfoRequest.getDog_gender();
@@ -51,7 +64,7 @@ public class Dog extends BaseEntity {
         this.isbn = dogInfoRequest.getDog_isbn();
     }
 
-    public static Dog of(DogInfoRequest dogInfoRequest) {
+    public static Dog of(DogInfoRequest dogInfoRequest, Party party) {
         //이미지 null 체크 null이면 기본이미지로 insert
         String img = dogInfoRequest.getDog_img();
         if (dogInfoRequest.getDog_img() == null || dogInfoRequest.getDog_img().isEmpty()) {
@@ -61,12 +74,16 @@ public class Dog extends BaseEntity {
         return Dog.builder()
                 .name(dogInfoRequest.getDog_name())
                 .gender(dogInfoRequest.getDog_gender())
+                .party(party)
                 .neutralization(dogInfoRequest.getNeutralization())
                 .birth(dogInfoRequest.getDog_birth())
                 .weight(dogInfoRequest.getDog_weight())
                 .profile_img(img)
                 .breed(dogInfoRequest.getDog_breed())
                 .isbn(dogInfoRequest.getDog_isbn())
+                .socializationTemperature(0.0)
+                .affectionTemperature(0.0)
+                .socializationCnt(0)
                 .build();
     }
 }
