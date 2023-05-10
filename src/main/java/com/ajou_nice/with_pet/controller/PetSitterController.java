@@ -13,6 +13,10 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +62,15 @@ public class PetSitterController {
 	// 3. 메인페이지 //
 	@GetMapping("/api/v1/show-petsitter")
 	@ApiOperation(value = "메인페이지 펫시터들 조회")
-	public
+	public Response<Page<PetSitterInfoResponse>> showPetSitters(
+			@ApiIgnore @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC)
+			Pageable pageable, @ApiIgnore Authentication authentication) {
+		Page<PetSitterInfoResponse> petSitterInfoResponses = petSitterService.getPetSitters(
+				pageable,
+				authentication.getName());
+
+		return Response.success(petSitterInfoResponses);
+	}
 
 
 	// 3. 서비스 가격 수정 //
