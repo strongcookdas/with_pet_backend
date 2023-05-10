@@ -63,7 +63,7 @@ public class User extends BaseEntity {
         this.role = userRole;
     }
 
-    public void updateUser(MyInfoModifyRequest modifyRequest) {
+    public void updateUser(MyInfoModifyRequest modifyRequest, BCryptPasswordEncoder encoder) {
         this.name = modifyRequest.getUserName();
         this.password = encoder.encode(modifyRequest.getUserPassword());
         this.email = modifyRequest.getUserEmail();
