@@ -4,10 +4,8 @@ import static com.ajou_nice.with_pet.domain.entity.QDog.dog;
 import static com.ajou_nice.with_pet.domain.entity.QUserParty.userParty;
 
 import com.ajou_nice.with_pet.domain.entity.Dog;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

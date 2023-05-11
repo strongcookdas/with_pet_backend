@@ -2,6 +2,8 @@ package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
 import com.ajou_nice.with_pet.enums.Category;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +29,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @Table(name = "user_diary")
-public class UserDiary extends BaseEntity {
+public class UserDiary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,7 +51,15 @@ public class UserDiary extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "dogId", nullable = false)
-    Dog dog;
+    private Dog dog;
+
+    @NotNull
+    private LocalDate createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedAt;
+
+    private LocalDateTime deletedAt;
 
     public static UserDiary of(DiaryRequest diaryRequest, Dog dog, User user) {
         return UserDiary.builder()
@@ -58,6 +69,7 @@ public class UserDiary extends BaseEntity {
                 .media(diaryRequest.getDogImgToday())
                 .user(user)
                 .dog(dog)
+                .createdAt(diaryRequest.getCreatedAt())
                 .build();
     }
 
