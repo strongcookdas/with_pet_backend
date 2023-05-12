@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
-import com.ajou_nice.with_pet.enums.Category;
+import com.ajou_nice.with_pet.enums.Category_1;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -37,7 +37,7 @@ public class UserDiary {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private Category category;
+    private Category_1 category1;
     @NotNull
     private String title;
     @NotNull
@@ -63,7 +63,7 @@ public class UserDiary {
 
     public static UserDiary of(DiaryRequest diaryRequest, Dog dog, User user) {
         return UserDiary.builder()
-                .category(diaryRequest.getCategory())
+                .category1(diaryRequest.getCategory1())
                 .title(diaryRequest.getTitle())
                 .content(diaryRequest.getContentBody())
                 .media(diaryRequest.getDogImgToday())
@@ -74,7 +74,7 @@ public class UserDiary {
     }
 
     public void update(DiaryRequest diaryRequest, Dog dog) {
-        this.category = diaryRequest.getCategory();
+        this.category1 = diaryRequest.getCategory1();
         this.content = diaryRequest.getContentBody();
         this.title = diaryRequest.getTitle();
         this.dog = dog;

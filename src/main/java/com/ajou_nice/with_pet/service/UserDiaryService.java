@@ -5,7 +5,7 @@ import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserDiary;
-import com.ajou_nice.with_pet.enums.Category;
+import com.ajou_nice.with_pet.enums.Category_1;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
@@ -74,7 +74,7 @@ public class UserDiaryService {
         return UserDiaryResponse.of(userDiary);
     }
 
-    public List<UserDiaryResponse> getUserMonthDiary(String userId, Long dogId, Category category,
+    public List<UserDiaryResponse> getUserMonthDiary(String userId, Long dogId, Category_1 category1,
             String month) {
 
         //유저 체크
@@ -83,17 +83,18 @@ public class UserDiaryService {
         });
 
         List<UserDiary> userDiaries = userDiaryRepository.findByMonthDate(user.getUserId(),
-                dogId, category, LocalDate.parse(month + "-01"));
+                dogId, category1, LocalDate.parse(month + "-01"));
         return userDiaries.stream().map(UserDiaryResponse::of).collect(Collectors.toList());
     }
 
-    public List<UserDiaryResponse> getUserDayDiary(String userId, Long dogId, Category category, String day) {
+    public List<UserDiaryResponse> getUserDayDiary(String userId, Long dogId, Category_1 category1, String day) {
         //유저체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
-        List<UserDiary> userDiaries = userDiaryRepository.findByDayDate(user.getUserId(), dogId, category, LocalDate.parse(day));
+        List<UserDiary> userDiaries = userDiaryRepository.findByDayDate(user.getUserId(), dogId,
+                category1, LocalDate.parse(day));
         return userDiaries.stream().map(UserDiaryResponse::of).collect(Collectors.toList());
     }
 }
