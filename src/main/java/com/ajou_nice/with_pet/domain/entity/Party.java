@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,8 +31,8 @@ public class Party extends BaseEntity {
         this.user = user;
     }
 
-    public void updateParty(String name, String partyIsbn, BCryptPasswordEncoder encoder) {
+    public void updateParty(String name, String isbn) {
         this.name = name;
-        this.partyIsbn = encoder.encode(partyIsbn);
+        this.partyIsbn = isbn;
     }
 }
