@@ -34,4 +34,14 @@ public class DogRepositoryImpl extends QuerydslRepositorySupport implements DogR
         int end = Math.min((start + pageable.getPageSize()), dogs.size());
         return new PageImpl<Dog>(dogs.subList(start, end), pageable, dogs.size());
     }
+
+    @Override
+    public List<Dog> findAllByUserParty(String userId) {
+        List<Dog> dogs = queryFactory.select(dog)
+                .from(dog, userParty)
+                .where(dog.party.eq(userParty.party).and(userParty.user.id.eq(userId))).fetch();
+        log.info(
+                "--------------------------------Query DSL 디버깅----------------------------------------");
+        return dogs;
+    }
 }

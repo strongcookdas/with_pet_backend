@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -12,6 +13,8 @@ import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -89,5 +92,13 @@ public class DogService {
         });
         Page<Dog> dogs = dogRepository.findAllByUserParty(pageable, userId);
         return dogs.map(DogInfoResponse::of);
+    }
+
+    public List<DogSimpleInfoResponse> getDogSimpleInfos(String userId) {
+        userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+        List<Dog> dogs = dogRepository.findAllByUserParty(userId);
+        return dogs.stream().map(DogSimpleInfoResponse::of).collect(Collectors.toList());
     }
 }
