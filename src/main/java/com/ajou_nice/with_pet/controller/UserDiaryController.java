@@ -66,7 +66,7 @@ public class UserDiaryController {
      * @param month          월 기준 피터링 null 값이 들어오면 안되지만 들어올 수 있기에 리팩토링 필요
      * @return 조회 조건에 부합하는 일지를 리스트화해서 리턴
      */
-    @GetMapping
+    @GetMapping("/month")
     @ApiOperation(value = "월별 캘린더 일지 조회")
     @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true)
     public Response<List<UserDiaryResponse>> getUserMonthDiary(
@@ -76,6 +76,28 @@ public class UserDiaryController {
 
         List<UserDiaryResponse> userDiaryResponses = userDiaryService.getUserMonthDiary(
                 authentication.getName(), dogId, category, month);
+        return Response.success(userDiaryResponses);
+    }
+
+    /**
+     * 사용자의 반려견 일지 조회 (월 기준)
+     *
+     * @param authentication 사용자 인증
+     * @param dogId          반려견 필터링 null 값이 들어올 수 있다.
+     * @param category       카테고리 피터링 null 값이 들어올 수 있다.
+     * @param day          월 기준 피터링 null 값이 들어오면 안되지만 들어올 수 있기에 리팩토링 필요
+     * @return 조회 조건에 부합하는 일지를 리스트화해서 리턴
+     */
+    @GetMapping("/day")
+    @ApiOperation(value = "일별 캘린더 일지 조회")
+    @ApiImplicitParam(name = "day", value = "해당 년 월 일", example = "2023-05-12", required = true)
+    public Response<List<UserDiaryResponse>> getUserDayDiary(
+            @ApiIgnore Authentication authentication,
+            @RequestParam(required = false) Long dogId, @RequestParam(required = false) Category category,
+            @RequestParam String day) {
+
+        List<UserDiaryResponse> userDiaryResponses = userDiaryService.getUserDayDiary(
+                authentication.getName(), dogId, category, day);
         return Response.success(userDiaryResponses);
     }
 }

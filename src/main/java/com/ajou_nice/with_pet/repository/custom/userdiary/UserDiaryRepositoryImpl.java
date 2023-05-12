@@ -24,13 +24,27 @@ public class UserDiaryRepositoryImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public List<UserDiary> findBySearchOption(Long userId, Long dogId, Category category,
+    public List<UserDiary> findByMonthDate(Long userId, Long dogId, Category category,
             LocalDate month) {
 
         List<UserDiary> userDiaries = queryFactory.select(userDiary).from(userDiary, userParty)
                 .where(userDiary.dog.party.eq(userParty.party).and(userParty.user.userId.eq(userId)
-                                .and(userDiary.createdAt.between(month.withDayOfMonth(1),month.withDayOfMonth(month.lengthOfMonth())))),
+                                .and(userDiary.createdAt.between(month.withDayOfMonth(1),
+                                        month.withDayOfMonth(month.lengthOfMonth())))),
                         containsDog(dogId), containsCategory(category))
+                .orderBy(userDiary.createdAt.desc())
+                .fetch();
+        return userDiaries;
+    }
+
+    @Override
+    public List<UserDiary> findByDayDate(Long userId, Long dogId, Category category,
+            LocalDate day) {
+        List<UserDiary> userDiaries = queryFactory.select(userDiary).from(userDiary, userParty)
+                .where(userDiary.dog.party.eq(userParty.party).and(userParty.user.userId.eq(userId)
+                                .and(userDiary.createdAt.eq(day))),
+                        containsDog(dogId), containsCategory(category))
+                .orderBy(userDiary.createdAt.desc())
                 .fetch();
         return userDiaries;
     }
@@ -48,4 +62,5 @@ public class UserDiaryRepositoryImpl extends QuerydslRepositorySupport implement
         }
         return userDiary.category.eq(category);
     }
+
 }

@@ -82,9 +82,18 @@ public class UserDiaryService {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
-        List<UserDiary> userDiaries = userDiaryRepository.findBySearchOption(user.getUserId(),
+        List<UserDiary> userDiaries = userDiaryRepository.findByMonthDate(user.getUserId(),
                 dogId, category, LocalDate.parse(month + "-01"));
         return userDiaries.stream().map(UserDiaryResponse::of).collect(Collectors.toList());
     }
 
+    public List<UserDiaryResponse> getUserDayDiary(String userId, Long dogId, Category category, String day) {
+        //유저체크
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        List<UserDiary> userDiaries = userDiaryRepository.findByDayDate(user.getUserId(), dogId, category, LocalDate.parse(day));
+        return userDiaries.stream().map(UserDiaryResponse::of).collect(Collectors.toList());
+    }
 }
