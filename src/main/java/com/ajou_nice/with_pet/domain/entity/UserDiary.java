@@ -1,12 +1,9 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
-import com.ajou_nice.with_pet.enums.Category_1;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,9 +32,9 @@ public class UserDiary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userDiaryId;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private Category_1 category1;
+    @ManyToOne
+    @JoinColumn(name = "categoryId", nullable = false)
+    private Category category;
     @NotNull
     private String title;
     @NotNull
@@ -61,9 +58,9 @@ public class UserDiary {
 
     private LocalDateTime deletedAt;
 
-    public static UserDiary of(DiaryRequest diaryRequest, Dog dog, User user) {
+    public static UserDiary of(DiaryRequest diaryRequest, Dog dog, User user, Category category) {
         return UserDiary.builder()
-                .category1(diaryRequest.getCategory1())
+                .category(category)
                 .title(diaryRequest.getTitle())
                 .content(diaryRequest.getContentBody())
                 .media(diaryRequest.getDogImgToday())
@@ -73,8 +70,8 @@ public class UserDiary {
                 .build();
     }
 
-    public void update(DiaryRequest diaryRequest, Dog dog) {
-        this.category1 = diaryRequest.getCategory1();
+    public void update(DiaryRequest diaryRequest, Dog dog, Category category) {
+        this.category = category;
         this.content = diaryRequest.getContentBody();
         this.title = diaryRequest.getTitle();
         this.dog = dog;
