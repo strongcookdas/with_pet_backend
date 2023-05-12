@@ -12,11 +12,9 @@ import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DogService {
 
-    private final BCryptPasswordEncoder encoder;
     private final DogRepository dogRepository;
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
@@ -39,7 +36,7 @@ public class DogService {
         });
         // 파티 생성
         Party party = partyRepository.save(new Party(user));
-        party.updateParty(party.getPartyId().toString(), party.getPartyId().toString(), encoder);
+        party.updateParty(party.getPartyId().toString(), party.getPartyId().toString());
         // 반려견 추가
         Dog dog = dogRepository.save(Dog.of(dogInfoRequest, party));
         userPartyRepository.save(UserParty.of(user, party));
