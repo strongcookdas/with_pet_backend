@@ -1,15 +1,15 @@
 package com.ajou_nice.with_pet.controller;
 
 
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterMainResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.petsitter.CreateServiceRequest;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterModifyInfoRequest;
 import com.ajou_nice.with_pet.service.AdminService;
 import com.ajou_nice.with_pet.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -35,44 +36,52 @@ public class PetSitterController {
 
 	// 펫시터에서 필요한 api //
 
-	// 1. 등록할 수 있는 위드펫 서비스 조회 //
-	@GetMapping("/api/v1/petsitter/show-services")
-	@ApiOperation(value = "위드펫 서비스 리스트 조회")
-	public Response<List<WithPetServiceResponse>> showWithPetServices(){
-		List<WithPetServiceResponse> withPetServiceList = adminService.showWithPetServices();
+	// 펫시터 상세정보 조회 api //
+	@GetMapping("api/v1/petsitter/{petsitterId}")
+	@ApiOperation(value = "사용자의 펫시터 상세 정보 조회")
+	public Response<PetSitterDetailInfoResponse> showPetSitterInfo(@PathVariable("petsitterId") Long petSitterId){
 
-		log.info("=============== withPet service list : {} ================", withPetServiceList);
+		PetSitterDetailInfoResponse petSitterDetailInfoResponse = petSitterService.showPetSitterDetailInfo(petSitterId);
 
-		return Response.success(withPetServiceList);
+		return Response.success(petSitterDetailInfoResponse);
 	}
 
-	// 2. 서비스 선택 및 등록 //
-	// 서비스 선택시 서비스 리스트로 들어온다 Request에 //
-	@PostMapping("/api/v1/petsitter/services")
-	@ApiOperation(value = "펫시터의 자신이 제공할 서비스 등록")
-	public Response<PetSitterInfoResponse> updateWithPetServices(@ApiIgnore Authentication authentication,
-			@RequestBody @Valid CreateServiceRequest createServiceRequest){
-		log.info("=============== petSitter service list request : {} ================", createServiceRequest);
+	// 펫시터 현재 자신 정보 조회 //
+	@GetMapping("/api/v1/petsitter/show-myinfo")
+	@ApiOperation(value = "펫시터의 자신 정보 조회")
+	public Response<PetSitterModifyInfoResponse> showPetSitterSelfInfo(@ApiIgnore Authentication authentication){
 
-		PetSitterInfoResponse petSitterInfoResponse = petSitterService.updatePetSitterService(
-				authentication.getName(), createServiceRequest);
-		return Response.success(petSitterInfoResponse);
-	}
-
-	// 3. 메인페이지 //
-	@GetMapping("/api/v1/show-petsitter")
-	@ApiOperation(value = "메인페이지 펫시터들 조회")
-	public Response<Page<PetSitterInfoResponse>> showPetSitters(
-			@ApiIgnore @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC)
-			Pageable pageable, @ApiIgnore Authentication authentication) {
-		Page<PetSitterInfoResponse> petSitterInfoResponses = petSitterService.getPetSitters(
-				pageable,
+		PetSitterModifyInfoResponse modifyInfoResponse = petSitterService.showMyInfo(
 				authentication.getName());
 
-		return Response.success(petSitterInfoResponses);
+		log.info("=============== petsitter's info : {} ================", modifyInfoResponse);
+
+		return Response.success(modifyInfoResponse);
 	}
 
+	// 펫시터 my Info 수정  //
+	@PutMapping("/api/v1/petsitter/update-myinfo")
+	@ApiOperation(value = "펫시터의 펫시터정보 수정")
+	public Response<PetSitterModifyInfoResponse> modifyPetSitterInfo(@ApiIgnore Authentication authentication,
+			@RequestBody @Valid PetSitterModifyInfoRequest petSitterModifyInfoRequest){
+		log.info("=============== petSitter modify info request : {} ================", petSitterModifyInfoRequest);
 
-	// 3. 서비스 가격 수정 //
+		PetSitterModifyInfoResponse modifyInfoResponse = petSitterService.updateMyInfo(petSitterModifyInfoRequest,
+				authentication.getName());
 
+		log.info("=============== petSitter modify info response : {} ================", modifyInfoResponse);
+		return Response.success(modifyInfoResponse);
+	}
+
+	// 메인페이지 펫시터 조회 //
+	@GetMapping("/api/v1/show-petsitter")
+	@ApiOperation(value = "메인페이지 펫시터들 조회")
+	public Response<Page<PetSitterMainResponse>> showPetSitters(
+			@ApiIgnore @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC)
+			Pageable pageable) {
+		Page<PetSitterMainResponse> petSitterMainResponses = petSitterService.getPetSitters(
+				pageable);
+
+		return Response.success(petSitterMainResponses);
+	}
 }
