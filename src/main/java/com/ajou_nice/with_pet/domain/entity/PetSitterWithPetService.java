@@ -1,11 +1,7 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 
-import com.ajou_nice.with_pet.domain.dto.PetSitterServiceInfoResponse;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -40,6 +35,10 @@ public class PetSitterWithPetService {
 	private WithPetService withPetService;
 
 	private int price;
+
+	public void changeServicePrice(int price){
+		this.price = price;
+	}
 
 
 	public static PetSitterWithPetService toEntity(WithPetService withPetService, PetSitter petSitter, int price){
