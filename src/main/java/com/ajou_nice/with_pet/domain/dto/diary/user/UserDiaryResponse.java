@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.domain.dto.diary.user;
 
 import com.ajou_nice.with_pet.domain.entity.UserDiary;
-import com.ajou_nice.with_pet.enums.Category;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,16 +18,20 @@ import lombok.ToString;
 public class UserDiaryResponse {
 
     private Long userDiaryId;
-    private Category category;
+    private Long categoryId;
+    private String categoryName;
     private String content;
     private String media;
+    private LocalDate createdAt;
 
     public static UserDiaryResponse of(UserDiary userDiary) {
         return UserDiaryResponse.builder()
                 .userDiaryId(userDiary.getUserDiaryId())
-                .category(userDiary.getCategory())
+                .categoryId(userDiary.getCategory().getCategoryId())
+                .categoryName(userDiary.getCategory().getName())
                 .content(userDiary.getContent())
                 .media(userDiary.getMedia())
+                .createdAt(userDiary.getCreatedAt())
                 .build();
     }
 }

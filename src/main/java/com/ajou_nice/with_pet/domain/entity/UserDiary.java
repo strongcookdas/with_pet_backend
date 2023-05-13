@@ -1,10 +1,9 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
-import com.ajou_nice.with_pet.enums.Category;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,14 +26,14 @@ import lombok.ToString;
 @Builder
 @ToString
 @Table(name = "user_diary")
-public class UserDiary extends BaseEntity {
+public class UserDiary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userDiaryId;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "categoryId", nullable = false)
     private Category category;
     @NotNull
     private String title;
@@ -48,21 +48,30 @@ public class UserDiary extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "dogId", nullable = false)
-    Dog dog;
+    private Dog dog;
 
-    public static UserDiary of(DiaryRequest diaryRequest, Dog dog, User user) {
+    @NotNull
+    private LocalDate createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedAt;
+
+    private LocalDateTime deletedAt;
+
+    public static UserDiary of(DiaryRequest diaryRequest, Dog dog, User user, Category category) {
         return UserDiary.builder()
-                .category(diaryRequest.getCategory())
+                .category(category)
                 .title(diaryRequest.getTitle())
                 .content(diaryRequest.getContentBody())
                 .media(diaryRequest.getDogImgToday())
                 .user(user)
                 .dog(dog)
+                .createdAt(diaryRequest.getCreatedAt())
                 .build();
     }
 
-    public void update(DiaryRequest diaryRequest, Dog dog) {
-        this.category = diaryRequest.getCategory();
+    public void update(DiaryRequest diaryRequest, Dog dog, Category category) {
+        this.category = category;
         this.content = diaryRequest.getContentBody();
         this.title = diaryRequest.getTitle();
         this.dog = dog;

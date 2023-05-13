@@ -15,7 +15,9 @@ public enum ErrorCode {
     INVALID_PERMISSION(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
     DOG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 반려견이 존재하지 않습니다."),
     GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 그룹이 존재하지 않습니다."),
-    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 일지는 존재하지 않습니다.");
+    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 일지는 존재하지 않습니다."),
+    DUPLICATED_GROUP_MEMBER(HttpStatus.CONFLICT, "해당 그룹에 존재하는 유저입니다."),
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카테고리가 존재하지 않습니다.");
     private HttpStatus status;
     private String message;
 }

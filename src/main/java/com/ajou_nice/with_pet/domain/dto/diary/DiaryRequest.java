@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.diary;
 
-import com.ajou_nice.with_pet.enums.Category;
+import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,9 +23,11 @@ public class DiaryRequest {
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
     @NotNull(message = "카테고리를 선택해주세요.")
-    private Category category;
+    private Long categoryId;
     @NotBlank(message = "내용을 입력해주세요.")
     private String contentBody;
     private String dogImgToday;
+    @NotNull(message = "날짜를 입력해주세요.")
+    private LocalDate createdAt;
 
 }
