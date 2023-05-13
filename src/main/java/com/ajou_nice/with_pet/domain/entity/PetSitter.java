@@ -1,11 +1,9 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterInfoResponse;
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -42,13 +40,13 @@ public class PetSitter extends BaseEntity {
 	private PetSitterApplicant applicant;
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterWithPetService> petSitterWithPetServiceList = new ArrayList<>();
+	private List<PetSitterWithPetService> petSitterWithPetServiceList = new ArrayList<PetSitterWithPetService>();
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<House> petSitterHouseList = new ArrayList<>();
+	private List<House> petSitterHouseList = new ArrayList<House>();
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterHashTag> petSitterHashTagList = new ArrayList<>();
+	private List<PetSitterHashTag> petSitterHashTagList = new ArrayList<PetSitterHashTag>();
 
 	@Enumerated(EnumType.STRING)
 	private DogSize availableDogSize;
@@ -56,10 +54,21 @@ public class PetSitter extends BaseEntity {
 	@Lob
 	private String introduction;
 
+	private Boolean valid;
+
+	public void changeValidation(Boolean valid){
+		this.valid = valid;
+	}
+
+	public void updateIntroduction(String introduction){
+		this.introduction = introduction;
+	}
+
 	public static PetSitter toEntity(PetSitterApplicant petSitterApplicant){
 
 		return PetSitter.builder()
 				.applicant(petSitterApplicant)
+				.valid(false)
 				.build();
 	}
 
