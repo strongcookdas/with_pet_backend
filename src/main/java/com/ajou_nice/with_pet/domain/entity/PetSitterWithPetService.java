@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +21,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@Table(name = "petsitter_withpetservice")
 public class PetSitterWithPetService {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
