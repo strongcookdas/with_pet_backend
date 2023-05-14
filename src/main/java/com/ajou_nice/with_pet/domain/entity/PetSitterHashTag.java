@@ -23,6 +23,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@Table(name = "petsitter_hashtag")
 public class PetSitterHashTag {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +38,7 @@ public class PetSitterHashTag {
 	public static PetSitterHashTag toEntity(PetSitter petSitter, PetSitterHashTagRequest petSitterHashTagRequest){
 		return PetSitterHashTag.builder()
 				.petSitter(petSitter)
-				.hashTagName(petSitterHashTagRequest.getHasTagName())
+				.hashTagName(petSitterHashTagRequest.getHashTagName())
 				.build();
 	}
 
