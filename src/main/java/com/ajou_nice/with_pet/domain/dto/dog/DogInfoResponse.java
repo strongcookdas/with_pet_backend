@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.dog;
 
+import com.ajou_nice.with_pet.domain.dto.party.PartyMemberResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +31,7 @@ public class DogInfoResponse {
     private LocalDate dog_birth;
     private Float dog_weight;
     private String dog_isbn;
+    private List<PartyMemberResponse> partyMemberResponses;
 
     public static List<DogInfoResponse> toList(List<Dog> dogs) {
         return dogs.stream().map(dog -> DogInfoResponse.builder()
@@ -46,6 +48,7 @@ public class DogInfoResponse {
     }
 
     public static DogInfoResponse of(Dog dog) {
+
         return DogInfoResponse.builder()
                 .dog_id(dog.getDogId())
                 .dog_img(dog.getProfile_img())
@@ -56,6 +59,10 @@ public class DogInfoResponse {
                 .dog_birth(dog.getBirth())
                 .dog_weight(dog.getWeight())
                 .dog_isbn(dog.getIsbn())
+                .partyMemberResponses(
+                        dog.getParty().getUserPartyList().stream().map(PartyMemberResponse::of)
+                                .collect(
+                                        Collectors.toList()))
                 .build();
     }
 }

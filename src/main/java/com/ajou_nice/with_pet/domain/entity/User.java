@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Entity
 @Builder
 @Getter
+@Table(name = "users")
 public class User extends BaseEntity {
 
     @Id
@@ -56,17 +58,21 @@ public class User extends BaseEntity {
     })
     private Address address;
 
-    public void updateUser(MyInfoModifyRequest modifyRequest) {
+
+    public void updateUserRole(UserRole userRole){
+        this.role = userRole;
+    }
+
+    public void updateUser(MyInfoModifyRequest modifyRequest, BCryptPasswordEncoder encoder) {
         this.name = modifyRequest.getUserName();
-        this.password = modifyRequest.getUserPassword();
+        this.password = encoder.encode(modifyRequest.getUserPassword());
         this.email = modifyRequest.getUserEmail();
         this.profileImg = modifyRequest.getProfileImg();
         this.phone = modifyRequest.getPhoneNum();
         this.address = Address.toAddressEntity(modifyRequest.getAddress());
     }
 
-    public static User toUserEntity(UserSignUpRequest userSignUpRequest,
-            BCryptPasswordEncoder encoder) {
+    public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
 
         //이미지 null 체크 null이면 기본이미지로 insert
         String img = userSignUpRequest.getProfileImg();
