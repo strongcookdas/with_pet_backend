@@ -7,9 +7,3 @@ spring:
       ddl-auto: update
     show-sql: true
 
-server:
-  servlet:
-    session:
-      cookie:
-        same-site: none
-        secure: true

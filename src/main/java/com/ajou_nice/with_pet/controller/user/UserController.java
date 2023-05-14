@@ -40,6 +40,7 @@ public class UserController {
     @ApiOperation(value = "회원정보 수정")
     public Response modifyMyInfo(@ApiIgnore Authentication authentication,
             @Valid @RequestBody MyInfoModifyRequest myInfoModifyRequest) {
+        System.out.println("myInfoModifyRequest : " + myInfoModifyRequest.toString());
         log.info("-------------------------user Info ModifyRequest : {}-----------------------------",
                 myInfoModifyRequest);
         MyInfoModifyResponse myInfoModifyResponse = userService.modifyMyInfo(
