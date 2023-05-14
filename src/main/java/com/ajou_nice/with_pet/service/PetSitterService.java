@@ -3,21 +3,26 @@ package com.ajou_nice.with_pet.service;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterMainResponse;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterCriticalServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHashTagRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHouseRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterModifyInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterServiceRequest;
+import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.House;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
+import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.HouseRepository;
 import com.ajou_nice.with_pet.repository.PetSitterApplicantRepository;
+import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
@@ -45,6 +50,10 @@ public class PetSitterService {
 	private final HouseRepository houseRepository;
 	private final PetSitterHashTagRepository petSitterHashTagRepository;
 
+	private final CriticalServiceRepository criticalServiceRepository;
+
+	private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
+
 
 	// == 펫시터 상세정보 조회 == //
 	public PetSitterDetailInfoResponse showPetSitterDetailInfo(Long petSitterId){
@@ -70,8 +79,9 @@ public class PetSitterService {
 		});
 
 		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
+		List<CriticalService> criticalServiceList = criticalServiceRepository.findAll();
 
-		return PetSitterModifyInfoResponse.of(petSitter, withPetServiceList);
+		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList);
 	}
 
 	// == 펫시터 my Info 수정 == //
@@ -90,22 +100,21 @@ public class PetSitterService {
 		});
 
 		//원래 있던 정보 전체 삭제
-		Optional<List<House>> petSitterHouseList = houseRepository.findAllByPetSitterInQuery(petSitter.getId());
+		List<House> petSitterHouseList = houseRepository.findAllByPetSitterInQuery(petSitter.getId());
 
-		if(petSitterHouseList.isPresent()){
+		if(!petSitterHouseList.isEmpty()){
 			houseRepository.deleteAllByPetSitterInQuery(petSitter.getId());
 		}
 
-		Optional<List<PetSitterService>> petSitterServiceList = petSitterServiceRepository.findAllByPetSitterInQuery(petSitter.getId());
-		if(petSitterServiceList.isPresent()){
+		List<PetSitterWithPetService> petSitterServiceList = petSitterServiceRepository.findAllByPetSitterInQuery(petSitter.getId());
+		if(!petSitterServiceList.isEmpty()){
 			petSitterServiceRepository.deleteAllByPetSitterInQuery(petSitter.getId());
 		}
 
-		Optional<List<PetSitterHashTag>> petSitterHashTagList = petSitterHashTagRepository.findAllByPetSitterInQuery(petSitter.getId());
-		if(petSitterHashTagList.isPresent()){
+		List<PetSitterHashTag> petSitterHashTagList = petSitterHashTagRepository.findAllByPetSitterInQuery(petSitter.getId());
+		if(!petSitterHashTagList.isEmpty()){
 			petSitterHashTagRepository.deleteAllByPetSitterInQuery(petSitter.getId());
 		}
-
 
 		//새로운 정보로 갈아 끼움 (houses, hashtags, petsitterservices, introduction)
 		Iterator<PetSitterHouseRequest> petSitterHouses = petSitterModifyInfoRequest.getPetSitterHouseRequests().iterator();
@@ -120,6 +129,9 @@ public class PetSitterService {
 			PetSitterHashTag petSitterHashTag = PetSitterHashTag.toEntity(petSitter, hashTagRequest);
 			petSitterHashTagRepository.save(petSitterHashTag);
 		}
+
+
+		// 리팩토링 필요하다. (어떻게 ?)
 		Iterator<PetSitterServiceRequest> petSitterServices = petSitterModifyInfoRequest.getPetSitterServiceRequests().iterator();
 		while(petSitterServices.hasNext()){
 			PetSitterServiceRequest serviceRequest = petSitterServices.next();
@@ -135,10 +147,22 @@ public class PetSitterService {
 		// 펫시터 정보를 입력한 다음 validation이 true로 바뀌어서 Main page에 조회가 된다.
 		petSitter.changeValidation(true);
 
+		Iterator<PetSitterCriticalServiceRequest> petSitterCriticalServices = petSitterModifyInfoRequest.getPetSitterCriticalServiceRequests().iterator();
+
+		while(petSitterCriticalServices.hasNext()){
+			PetSitterCriticalServiceRequest criticalServiceRequest = petSitterCriticalServices.next();
+			CriticalService criticalService = criticalServiceRepository.findById(
+					criticalServiceRequest.getServiceId()).orElseThrow(()->{
+						throw new AppException(ErrorCode.CRITICAL_SERVICE_NOT_FOUND, ErrorCode.CRITICAL_SERVICE_NOT_FOUND.getMessage());
+					});
+			PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter,criticalServiceRequest.getPrice());
+			petSitterCriticalServiceRepository.save(petSitterCriticalService);
+		}
+
 		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
+		List<CriticalService> criticalServiceList = criticalServiceRepository.findAll();
 
-		return PetSitterModifyInfoResponse.of(petSitter, withPetServiceList);
-
+		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList);
 	}
 
 	// == 메인페이지 펫시터들 정보 조회 == //

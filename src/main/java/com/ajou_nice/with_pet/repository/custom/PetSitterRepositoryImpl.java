@@ -28,7 +28,6 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
 		List<PetSitter> petSitters = queryFactory.select(petSitter)
 				.from(petSitter)
 				.where(petSitter.valid.eq(true)).fetch();
-
 		int start = (int) pageable.getOffset();
 		int end = Math.min((start+ pageable.getPageSize()), petSitters.size());
 		return new PageImpl<PetSitter>(petSitters.subList(start,end), pageable, petSitters.size());
