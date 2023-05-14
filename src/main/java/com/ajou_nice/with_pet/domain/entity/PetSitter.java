@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "petsitter")
 public class PetSitter extends BaseEntity {
 
 	@Id
@@ -48,6 +50,9 @@ public class PetSitter extends BaseEntity {
 	@OneToMany(mappedBy = "petSitter")
 	private List<PetSitterHashTag> petSitterHashTagList = new ArrayList<PetSitterHashTag>();
 
+	@OneToMany(mappedBy = "petSitter")
+	private List<PetSitterCriticalService> petSitterCriticalServiceList = new ArrayList<>();
+
 	@Enumerated(EnumType.STRING)
 	private DogSize availableDogSize;
 
@@ -55,6 +60,9 @@ public class PetSitter extends BaseEntity {
 	private String introduction;
 
 	private Boolean valid;
+
+	private int review_count;
+	private Double star_rate;
 
 	public void changeValidation(Boolean valid){
 		this.valid = valid;
@@ -69,6 +77,8 @@ public class PetSitter extends BaseEntity {
 		return PetSitter.builder()
 				.applicant(petSitterApplicant)
 				.valid(false)
+				.review_count(0)
+				.star_rate(0.0)
 				.build();
 	}
 
