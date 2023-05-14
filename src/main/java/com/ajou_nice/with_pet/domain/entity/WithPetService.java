@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
+@Table(name = "withpetservice")
 public class WithPetService {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
