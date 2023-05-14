@@ -5,11 +5,14 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantRequest;
 import com.ajou_nice.with_pet.domain.dto.admin.AdminAcceptApplicantResponse;
 import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantResponse;
+import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest;
+import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
+import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,11 +58,11 @@ public class AdminController {
 		return Response.success(applicantList);
 	}
 
-	@GetMapping("/api/v1/show-applicant/{petSitterId}")
+	@GetMapping("/api/v1/show-applicant/{applicantId}")
 	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-	public Response<ApplicantInfoResponse> getApplicant(@PathVariable("petSitterId")Long petSitterId){
+	public Response<ApplicantInfoResponse> getApplicant(@PathVariable("applicantId")Long applicantId){
 
-		ApplicantInfoResponse applicantInfoResponse = adminService.getApplicantInfo(petSitterId);
+		ApplicantInfoResponse applicantInfoResponse = adminService.getApplicantInfo(applicantId);
 
 		return Response.success(applicantInfoResponse);
 	}
@@ -84,6 +87,32 @@ public class AdminController {
 		log.info("=============== withPet service list : {} ================", withPetServiceList);
 
 		return Response.success(withPetServiceList);
+	}
+
+	@GetMapping("/api/v1/show-critical-services")
+	@ApiOperation(value = "관리자의 필수 위드펫 서비스 리스트 조회")
+	public Response<List<CriticalServiceResponse>> showCriticalServices(){
+		List<CriticalServiceResponse> criticalServiceResponseList = adminService.showCriticalServices();
+
+		return Response.success(criticalServiceResponseList);
+	}
+
+	@PostMapping("/api/v1/admin/add-criticalservice")
+	@ApiOperation(value = "관리자의 필수 서비스 추가")
+	public Response<CriticalServiceResponse> addCriticalService(@RequestBody @Valid
+			CriticalServiceRequest criticalServiceRequest){
+		CriticalServiceResponse criticalServiceResponse = adminService.addCriticalService(criticalServiceRequest);
+
+		return Response.success(criticalServiceResponse);
+	}
+
+	@PutMapping("/api/v1/admin/update-criticalservice")
+	@ApiOperation(value = "관리자의 필수 서비스 수정")
+	public Response<CriticalServiceResponse> updateCriticalService(@RequestBody @Valid
+	CriticalServiceRequest.CriticalServiceModifyRequest criticalServiceModifyRequest){
+		CriticalServiceResponse criticalServiceResponse = adminService.updateCriticalService(criticalServiceModifyRequest);
+
+		return Response.success(criticalServiceResponse);
 	}
 
 	@PostMapping("/api/v1/admin/add-service")
