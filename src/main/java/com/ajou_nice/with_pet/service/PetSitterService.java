@@ -28,9 +28,9 @@ import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
+import com.ajou_nice.with_pet.service.user.UserService;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,6 +53,7 @@ public class PetSitterService {
 	private final CriticalServiceRepository criticalServiceRepository;
 
 	private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
+	private final UserService userService;
 
 
 	// == 펫시터 상세정보 조회 == //
@@ -66,9 +67,7 @@ public class PetSitterService {
 
 	// == 펫시터의 자신 정보 조회 == //
 	public PetSitterModifyInfoResponse showMyInfo(String userId){
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
+		User findUser = userService.findUser(userId);
 
 		PetSitterApplicant findApplicant = petSitterApplicantRepository.findByUser(findUser).orElseThrow(()->{
 			throw new AppException(ErrorCode.APPLICANT_NOT_FOUND, ErrorCode.APPLICANT_NOT_FOUND.getMessage());

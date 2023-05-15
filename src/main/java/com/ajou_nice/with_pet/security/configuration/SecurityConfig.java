@@ -25,11 +25,29 @@ public class SecurityConfig {
 
     private final String[] GET_PERMIT_URL = {
             "/api/v1/dogs/*",
-            "/api/v1/dogs"
+            "/api/v1/dogs",
+            "/api/v1/petsitter/*",
+            "/api/v1/show-petsitter",
+            "/api/v1/admin/*",
+            "/api/v1/show-applicants",
+            "/api/v1/show-applicant/{applicantId}",
+            "/api/v1/show-services",
+            "/api/v1/show-critical-services",
+            "/api/v1/users/show-applicateInfo"
     };
     private final String[] POST_PERMIT_URL = {
             "/api/v1/users/signup",
-            "/api/v1/users/login"
+            "/api/v1/users/login",
+            "/api/v1/admin/*",
+            "/api/v1/users/applicate-petsitter"
+    };
+    private final String[] PUT_PERMIT_URL = {
+            "/api/v1/petsitter/*",
+            "/api/v1/admin/*",
+            "/api/v1/users/update-applicateInfo"
+    };
+    private final String[] DELETE_PERMIT_URL = {
+            "/api/v1/admin/service"
     };
 
     private static final String[] DOC_URLS = {
@@ -54,6 +72,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(GET_PERMIT_URL).permitAll()
                 .antMatchers(POST_PERMIT_URL).permitAll()
+                .antMatchers(PUT_PERMIT_URL).permitAll()
+                .antMatchers(DELETE_PERMIT_URL).permitAll()
                 .antMatchers(DOC_URLS).permitAll()
                 .antMatchers(HttpMethod.GET).authenticated()
                 .antMatchers(HttpMethod.POST).authenticated()
