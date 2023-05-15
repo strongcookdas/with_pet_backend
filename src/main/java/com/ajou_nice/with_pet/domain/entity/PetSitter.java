@@ -64,6 +64,8 @@ public class PetSitter extends BaseEntity {
 	private int review_count;
 	private Double star_rate;
 
+	private int report_count;
+
 	public void changeValidation(Boolean valid){
 		this.valid = valid;
 	}
@@ -79,6 +81,7 @@ public class PetSitter extends BaseEntity {
 				.valid(false)
 				.review_count(0)
 				.star_rate(0.0)
+				.report_count(0)
 				.build();
 	}
 
