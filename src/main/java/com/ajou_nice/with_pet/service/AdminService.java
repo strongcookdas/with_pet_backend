@@ -49,7 +49,7 @@ public class AdminService {
 	public List<ApplicantBasicInfoResponse> showApplicants(String userId){
 
 		User findUser = userService.findUser(userId);
-		List<PetSitterApplicant> petSitterApplicantList = petSitterApplicantRepository.findAllInQuery(ApplicantStatus.APPROVE);
+		List<PetSitterApplicant> petSitterApplicantList = petSitterApplicantRepository.findAllInQuery(ApplicantStatus.WAIT);
 
 		return ApplicantBasicInfoResponse.toList(petSitterApplicantList);
 	}
