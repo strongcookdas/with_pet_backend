@@ -35,5 +35,14 @@ public class CookieUtil {
         return null;
     }
 
-
+    public void initCookie(HttpServletResponse response, String name, String value, String path) {
+        ResponseCookie cookie = ResponseCookie.from(name, value)
+                .path(path)
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(false)
+                .maxAge(Math.toIntExact(0))
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
+    }
 }
