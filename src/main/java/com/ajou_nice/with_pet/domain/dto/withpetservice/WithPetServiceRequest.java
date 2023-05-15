@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.domain.dto.withpetservice;
 
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class WithPetServiceRequest {
 
 	@Data
 	public static class WithPetServiceModifyRequest{
-		@NotEmpty
+		@NotNull
 		private Long serviceId;
 
 		private String serviceName;
