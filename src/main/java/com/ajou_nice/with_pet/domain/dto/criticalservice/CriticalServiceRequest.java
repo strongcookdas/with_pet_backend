@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.domain.dto.criticalservice;
 
 
+import javax.persistence.Lob;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class CriticalServiceRequest {
 	private String serviceName;
 
 	@NotNull
+	@Lob
 	private String serviceImg;
 
 	@NotNull
