@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.domain.dto.petsitter;
 
 
 import java.util.List;
+import javax.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,8 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@Getter
 	@ToString
 	public static class PetSitterHouseRequest{
+
+		@Lob
 		private String houseImg;
 		private Boolean representative;
 	}
