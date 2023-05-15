@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 public class CategoryResponse {
 
     private Long categoryId;
-    private String categoryName;
+    private String name;
 
     public static CategoryResponse of(Category category) {
         return CategoryResponse.builder()
                 .categoryId(category.getCategoryId())
-                .categoryName(category.getName())
+                .name(category.getName())
                 .build();
     }
 }
