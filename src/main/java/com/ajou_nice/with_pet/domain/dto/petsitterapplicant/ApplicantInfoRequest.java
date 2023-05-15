@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.domain.dto.petsitterapplicant;
 
 
+import javax.persistence.Lob;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class ApplicantInfoRequest {
 	private String applicant_identification;
 
 	@NotEmpty(message = "자격증 업로드는 기본사항입니다.")
+	@Lob
 	private String applicant_license_img;
 
 	private Boolean applicant_is_smoking;
