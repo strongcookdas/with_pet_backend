@@ -77,7 +77,7 @@ public class AdminService {
 		//펫시터 지원자 상태 변경 + userRole 변경
 		petSitterApplicant.updateApplicantState(adminApplicantRequest.getApplicantStatus());
 		//유저 불러오기
-		User findUser = userRepository.findById(adminApplicantRequest.getApplicant_userId()).orElseThrow(()->{
+		User findUser = userRepository.findByUserId(adminApplicantRequest.getApplicant_userId()).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 		findUser.updateUserRole(UserRole.ROLE_PETSITTER);

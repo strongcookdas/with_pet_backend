@@ -42,6 +42,7 @@ public class PetSitterApplicant {
 	private String identification;
 
 	@NotNull
+	@Lob
 	private String license_img;
 
 	@NotNull
@@ -56,6 +57,7 @@ public class PetSitterApplicant {
 	@Lob
 	private String animal_career;
 
+	@Lob
 	private String petsitter_career;
 
 	@Lob

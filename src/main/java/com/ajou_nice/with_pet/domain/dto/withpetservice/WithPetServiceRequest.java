@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.domain.dto.withpetservice;
 
 
+import javax.persistence.Lob;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class WithPetServiceRequest {
 	@NotNull
 	private String serviceName;
 	@NotNull
+	@Lob
 	private String serviceImg;
 	@NotNull
 	private String serviceIntroduction;
