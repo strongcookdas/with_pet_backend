@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.LazyToOne;
 
 @Entity
 @AllArgsConstructor
@@ -30,6 +32,7 @@ public class House {
 	@JoinColumn(name = "petsitter_id", nullable = true)
 	private PetSitter petSitter;
 
+	@Lob
 	private String house_img;
 
 	private Boolean representative;

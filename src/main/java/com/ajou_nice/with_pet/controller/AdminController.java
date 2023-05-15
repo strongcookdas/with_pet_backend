@@ -142,7 +142,7 @@ public class AdminController {
 		return Response.success(withPetServiceResponse);
 	}
 
-	@DeleteMapping("/api/v1/admin/service")
+	@PostMapping  ("/api/v1/admin/service")
 	@ApiOperation(value = "관리자의 위드펫 서비스 삭제")
 	public Response<List<WithPetServiceResponse>> deleteWithPetService(@RequestBody @Valid
 			WithPetServiceModifyRequest withPetServiceModifyRequest){
