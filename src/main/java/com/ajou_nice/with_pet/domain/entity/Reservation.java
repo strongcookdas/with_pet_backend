@@ -57,6 +57,7 @@ public class Reservation extends BaseEntity {
                 .petSitter(petSitter)
                 .checkIn(reservationRequest.getCheckIn())
                 .checkOut(reservationRequest.getCheckOut())
+                .reservationStatus(ReservationStatus.WAIT)
                 .build();
     }
 }

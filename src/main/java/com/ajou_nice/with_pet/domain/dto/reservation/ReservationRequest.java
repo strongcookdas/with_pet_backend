@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,12 +19,12 @@ import lombok.Setter;
 @Setter
 public class ReservationRequest {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     @NotNull(message = "체크인 날짜를 선택해주세요.")
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime checkIn;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     @NotNull(message = "체크아웃 날짜를 선택해주세요.")
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime checkOut;
 
     @NotNull
