@@ -12,6 +12,7 @@ import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,4 +88,33 @@ public class ReservationService {
         }
     }
 
+    public List<String> getUnavailableDates(String userId, Long petsitterId, String month) {
+
+        List<String> unavailableDates = new ArrayList<>();
+
+        PetSitter petSitter = petSitterRepository.findById(petsitterId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
+                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
+        });
+
+        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonth(petSitter,
+                LocalDate.parse(month + "-01"), reservationStatuses);
+
+        for (Reservation reservation : reservations) {
+            unavailableDates.addAll(getDateRange(reservation.getCheckIn().toLocalDate(),
+                    reservation.getCheckOut().toLocalDate()));
+        }
+        return unavailableDates;
+    }
+
+    private List<String> getDateRange(LocalDate startDate, LocalDate endDate) {
+        List<String> dateRange = new ArrayList<>();
+
+        while (!startDate.isAfter(endDate)) {
+            dateRange.add(startDate.toString());
+            startDate = startDate.plusDays(1);
+        }
+
+        return dateRange;
+    }
 }

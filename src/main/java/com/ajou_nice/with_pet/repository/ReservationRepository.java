@@ -4,11 +4,13 @@ import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
+import com.ajou_nice.with_pet.repository.custom.reservation.ReservationRepositoryCustom;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long>,
+        ReservationRepositoryCustom {
 
     //펫시터 입장에서 유효 체크
     Boolean existsByCheckInBetweenAndPetSitterAndReservationStatusIn(LocalDateTime checkIn,
@@ -23,5 +25,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Boolean existsByCheckOutBetweenAndDogAndReservationStatusIn(LocalDateTime checkIn,
             LocalDateTime checkOut, Dog dog, List<ReservationStatus> reservationStatuses);
-
 }
