@@ -45,6 +45,8 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 	public static PetSitterDetailInfoResponse of(PetSitter petSitter){
 		return PetSitterDetailInfoResponse.builder()
 				.petSitterId(petSitter.getId())
+				.petSitterName(petSitter.getApplicant().getUser().getName())
+				.petSitterProfileImg(petSitter.getApplicant().getUser().getProfileImg())
 				.petSitterAddress(petSitter.getApplicant().getUser().getAddress().getStreetAdr())
 				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 				.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))

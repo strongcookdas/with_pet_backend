@@ -34,6 +34,7 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@ToString
 	public static class PetSitterHouseRequest{
 
+		private Long houseId;
 		@Lob
 		private String houseImg;
 		private Boolean representative;
@@ -44,6 +45,8 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@Getter
 	@ToString
 	public static class PetSitterHashTagRequest{
+
+		private Long hashTagId;
 		private String hashTagName;
 	}
 

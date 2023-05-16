@@ -64,7 +64,7 @@ public class AdminService {
 
 	// == 관리자의 펫시터 지원자 수락 == //
 	@Transactional
-	public AdminAcceptApplicantResponse createPetsitter(String userId, AdminApplicantRequest adminApplicantRequest){
+	public PetSitterBasicResponse createPetsitter(String userId, AdminApplicantRequest adminApplicantRequest){
 		User findAdminUser = userService.findUser(userId);
 
 		adminApplicantRequest.setApplicantStatus(ApplicantStatus.APPROVE);
@@ -85,7 +85,7 @@ public class AdminService {
 		PetSitter petSitter = PetSitter.toEntity(petSitterApplicant);
 		PetSitter newPetSitter = petSitterRepository.save(petSitter);
 
-		return AdminAcceptApplicantResponse.ofAccept(newPetSitter);
+		return PetSitterBasicResponse.of(newPetSitter);
 
 	}
 	// == 관리자의 펫시터 지원자 거절 == //

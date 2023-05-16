@@ -31,6 +31,7 @@ public class CriticalServiceRequest {
 		@NotNull
 		private Long serviceId;
 		private String serviceName;
+		@Lob
 		private String serviceImg;
 		private String serviceIntroduction;
 	}
