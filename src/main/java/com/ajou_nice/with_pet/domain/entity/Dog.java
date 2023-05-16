@@ -47,11 +47,12 @@ public class Dog extends BaseEntity {
     private String isbn;
 
     @NotNull
-    private Double socializationTemperature;    //반려견 사회화 온도
+    private Double socializationTemperature;    //반려인이 작성한 반려견 온도
+
+    @NotNull
+    private Double socializationPetSitterTemperature; //펫시터가 작성한 반려견 온도
     @NotNull
     private Double affectionTemperature;
-    @NotNull
-    private Integer socializationCnt;
 
     public void update(DogInfoRequest dogInfoRequest) {
         this.name = dogInfoRequest.getDog_name();
@@ -62,6 +63,10 @@ public class Dog extends BaseEntity {
         this.profile_img = dogInfoRequest.getDog_img();
         this.breed = dogInfoRequest.getDog_breed();
         this.isbn = dogInfoRequest.getDog_isbn();
+    }
+
+    public void updateSocalizationTemp(){
+
     }
 
     public static Dog of(DogInfoRequest dogInfoRequest, Party party) {
@@ -81,9 +86,9 @@ public class Dog extends BaseEntity {
                 .profile_img(img)
                 .breed(dogInfoRequest.getDog_breed())
                 .isbn(dogInfoRequest.getDog_isbn())
-                .socializationTemperature(0.0)
+                .socializationTemperature(37.5)
+                .socializationPetSitterTemperature(37.5)
                 .affectionTemperature(0.0)
-                .socializationCnt(0)
                 .build();
     }
 }

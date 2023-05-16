@@ -101,4 +101,7 @@ public class DogService {
         List<Dog> dogs = dogRepository.findAllByUserParty(userId);
         return dogs.stream().map(DogSimpleInfoResponse::of).collect(Collectors.toList());
     }
+
+    @Transactional
+    public 
 }
