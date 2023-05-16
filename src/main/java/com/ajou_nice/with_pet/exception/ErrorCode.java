@@ -29,7 +29,8 @@ public enum ErrorCode {
     PETSITTER_HASHTAG_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 해시태그가 없습니다."),
     PETSITTER_MAIN_HOUSE_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 대표 집 사진이 없습니다."),
     DUPLICATED_RESERVATION(HttpStatus.CONFLICT, "해당 반려견은 예약할 수 없습니다."),
-    RESERVATION_CONFLICT(HttpStatus.CONFLICT, "해당 기간에는 예약할 수 없습니다.");
+    RESERVATION_CONFLICT(HttpStatus.CONFLICT, "해당 기간에는 예약할 수 없습니다."),
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 예약이 존재하지 않습니다.");
     private HttpStatus status;
     private String message;
 }
