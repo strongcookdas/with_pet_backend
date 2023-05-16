@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.dog;
 
+import com.ajou_nice.with_pet.enums.DogSize;
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
