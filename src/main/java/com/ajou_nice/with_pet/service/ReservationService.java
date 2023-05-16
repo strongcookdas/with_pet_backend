@@ -1,5 +1,7 @@
 package com.ajou_nice.with_pet.service;
 
+import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -85,6 +88,43 @@ public class ReservationService {
             throw new AppException(ErrorCode.RESERVATION_CONFLICT,
                     ErrorCode.RESERVATION_CONFLICT.getMessage());
         }
+    }
+
+
+    @Transactional
+    // 펫시터가 완료된 예약의 반려견의 사회화 온도 평가
+    public void modifyDogTemp(String userId, Long reservationId, DogSocializationRequest dogSocializationRequest){
+
+        //reservation
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
+
+        //user가 펫시터인지 검증
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        //예약의 펫시터가 아니라면
+        if(!reservation.getPetSitter().equals(user)){
+            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
+        }
+
+        // 예약의 펫시터가 맞다면
+        Dog dog = dogRepository.findById(reservation.getDog().getDogId()).orElseThrow(()->{
+            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
+        });
+
+        float score = (dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()+ dogSocializationRequest.getQ3()+
+                dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5())/5;
+
+        if(score < 2.5){
+            score = -score;
+            dog.updateSocializationTemperature(score);
+        }else{
+            dog.updateSocializationTemperature(score);
+        }
+
     }
 
 }
