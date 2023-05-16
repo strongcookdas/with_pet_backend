@@ -1,8 +1,11 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
+import com.ajou_nice.with_pet.enums.DogSize;
 import java.time.LocalDate;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,14 +50,19 @@ public class Dog extends BaseEntity {
     private String isbn;
 
     @NotNull
-    private Double socializationTemperature;    //반려인이 작성한 반려견 온도
+    private Double socializationTemperature;    //펫시터가 작성한 반려견 온도
 
     @NotNull
-    private Double socializationPetSitterTemperature; //펫시터가 작성한 반려견 온도
+    private Integer socializationDegree; //반려인이 작성한 반려견 사회화 정도 %로 표현
     @NotNull
     private Double affectionTemperature;
 
-    public void update(DogInfoRequest dogInfoRequest) {
+    @Enumerated(EnumType.STRING)
+    private DogSize dogSize;
+
+
+
+    public void update(DogInfoRequest dogInfoRequest, DogSize dogSize) {
         this.name = dogInfoRequest.getDog_name();
         this.gender = dogInfoRequest.getDog_gender();
         this.neutralization = dogInfoRequest.getNeutralization();
@@ -65,11 +73,15 @@ public class Dog extends BaseEntity {
         this.isbn = dogInfoRequest.getDog_isbn();
     }
 
-    public void updateSocalizationTemp(){
+    public void updateSocialization(int dogSocialization){
+        this.socializationDegree = dogSocialization;
+    }
+
+    public void updateSocializationTemperature(){
 
     }
 
-    public static Dog of(DogInfoRequest dogInfoRequest, Party party) {
+    public static Dog of(DogInfoRequest dogInfoRequest, Party party, DogSize dogSize) {
         //이미지 null 체크 null이면 기본이미지로 insert
         String img = dogInfoRequest.getDog_img();
         if (dogInfoRequest.getDog_img() == null || dogInfoRequest.getDog_img().isEmpty()) {
@@ -87,8 +99,9 @@ public class Dog extends BaseEntity {
                 .breed(dogInfoRequest.getDog_breed())
                 .isbn(dogInfoRequest.getDog_isbn())
                 .socializationTemperature(37.5)
-                .socializationPetSitterTemperature(37.5)
-                .affectionTemperature(0.0)
+                .socializationDegree(0)
+                .affectionTemperature(37.5)
+                .dogSize(dogSize)
                 .build();
     }
 }
