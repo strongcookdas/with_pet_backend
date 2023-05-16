@@ -33,5 +33,5 @@ spring:
 #    secret: ajounicewithpet0302
 
 
-ajou:
-  nice: hello
+#ajou:
+#  nice: hello

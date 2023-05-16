@@ -47,7 +47,7 @@ public class Dog extends BaseEntity {
     private String isbn;
 
     @NotNull
-    private Double socializationTemperature;
+    private Double socializationTemperature;    //반려견 사회화 온도
     @NotNull
     private Double affectionTemperature;
     @NotNull

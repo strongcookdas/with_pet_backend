@@ -22,7 +22,7 @@ public class WithPetServiceRequest {
 	@Lob
 	private String serviceImg;
 	@NotNull
-	private String serviceIntroduction;
+	private String serviceIntro;
 
 	@Data
 	public static class WithPetServiceModifyRequest{
@@ -34,6 +34,6 @@ public class WithPetServiceRequest {
 		@Lob
 		private String serviceImg;
 
-		private String serviceIntroduction;
+		private String serviceIntro;
 	}
 }
