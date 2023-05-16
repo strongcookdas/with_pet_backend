@@ -3,10 +3,12 @@ package com.ajou_nice.with_pet.service;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
+import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
@@ -40,8 +42,19 @@ public class DogService {
         // 파티 생성
         Party party = partyRepository.save(new Party(user));
         party.updateParty(party.getPartyId().toString(), party.getPartyId().toString());
+
+        //반려견 사이즈 체크
+        DogSize myDogSize;
+        if(dogInfoRequest.getDog_weight() > 18){
+            myDogSize = DogSize.BIG;
+        }else if(dogInfoRequest.getDog_weight() > 10){
+            myDogSize = DogSize.MEDIUM;
+        }else{
+            myDogSize = DogSize.SMALL;
+        }
+
         // 반려견 추가
-        Dog dog = dogRepository.save(Dog.of(dogInfoRequest, party));
+        Dog dog = dogRepository.save(Dog.of(dogInfoRequest, party, myDogSize));
         userPartyRepository.save(UserParty.of(user, party));
 
         return DogInfoResponse.of(dog);
@@ -80,7 +93,16 @@ public class DogService {
             throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
         }
 
-        dog.update(dogInfoRequest);
+        DogSize myDogSize;
+        if(dogInfoRequest.getDog_weight() > 18){
+            myDogSize = DogSize.BIG;
+        }else if(dogInfoRequest.getDog_weight() > 10){
+            myDogSize = DogSize.MEDIUM;
+        }else{
+            myDogSize = DogSize.SMALL;
+        }
+
+        dog.update(dogInfoRequest, myDogSize);
 
         return DogInfoResponse.of(dog);
     }
@@ -103,5 +125,25 @@ public class DogService {
     }
 
     @Transactional
-    public 
+    public DogInfoResponse modifyDogSocialization(String userId, Long dogId, DogSocializationRequest dogSocializationRequest){
+        //유저 체크
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+        //반려견 체크
+        Dog dog = dogRepository.findById(dogId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
+        });
+        //그룹 체크
+        if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
+        }
+
+        //사회성 정도
+        int dogSocialization = dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()+ dogSocializationRequest.getQ3()+
+                dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5()*20;
+
+        dog.updateSocialization(dogSocialization);
+        return DogInfoResponse.of(dog);
+    }
 }
