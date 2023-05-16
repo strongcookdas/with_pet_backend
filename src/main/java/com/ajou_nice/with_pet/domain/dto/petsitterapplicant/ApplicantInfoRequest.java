@@ -31,19 +31,26 @@ public class ApplicantInfoRequest {
 
 	private Boolean applicant_having_with_pet;
 
+	@Lob
 	private String applicant_care_experience;
 
+	@Lob
 	private String applicant_animal_career;
 
+	@Lob
 	private String applicant_petsitter_career;
 
+	@Lob
 	private String applicant_motivate;
 
 	@Data
 	public static class ApplicantModifyRequest{
 		private String applicant_petsitter_career;
+		@Lob
 		private String applicant_care_experience;
+		@Lob
 		private String applicant_animal_career;
+		@Lob
 		private String applicant_motivate;
 
 	}

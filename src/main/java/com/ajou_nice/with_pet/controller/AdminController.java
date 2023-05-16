@@ -14,6 +14,7 @@ import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
+import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,11 +42,11 @@ public class AdminController {
 
 	@PostMapping("/api/v1/admin/accept-petsitter")
 	@ApiOperation(value = "관리자의 펫시터 지원자 수락")
-	public Response<AdminAcceptApplicantResponse> acceptApplicant(@ApiIgnore Authentication authentication, @RequestBody @Valid AdminApplicantRequest adminApplicantRequest){
+	public Response<PetSitterBasicResponse> acceptApplicant(@ApiIgnore Authentication authentication, @RequestBody @Valid AdminApplicantRequest adminApplicantRequest){
 
 		log.info("=============== accept petsitter info : {} ==================",
 				adminApplicantRequest);
-		AdminAcceptApplicantResponse adminAcceptApplicantResponse = adminService.createPetsitter(
+		PetSitterBasicResponse adminAcceptApplicantResponse = adminService.createPetsitter(
 				authentication.getName(), adminApplicantRequest);
 
 		log.info("=============== accepted petsitter info : {} =================", adminAcceptApplicantResponse);
