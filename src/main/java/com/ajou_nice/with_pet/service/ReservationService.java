@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -116,5 +117,27 @@ public class ReservationService {
         }
 
         return dateRange;
+    }
+
+    /*예약에 대한 상태가 많아서 승인/거절에 대한 메소드를 분리한 것이 아닌 그냥 상태를 수정하는 메소드를 선언
+      이게 맞는건지는 고민이 필요....
+     */
+    @Transactional
+    public void approveReservation(String userId, Long reservationId, String status) {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND,
+                    ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
+
+        if (!reservation.getPetSitter().getApplicant().getUser().getId().equals(userId)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED_RESERVATION,
+                    ErrorCode.UNAUTHORIZED_RESERVATION.getMessage());
+        }
+
+        reservation.updateStatus(status);
     }
 }
