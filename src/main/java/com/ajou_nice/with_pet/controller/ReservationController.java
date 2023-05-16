@@ -43,6 +43,6 @@ public class ReservationController {
 
         reservationService.modifyDogTemp(authentication.getName(), reservationId, dogSocializationRequest);
 
-        Response.success("평가가 완료되었습니다. 감사합니다.");
+        return Response.success("평가가 완료되었습니다. 감사합니다.");
     }
 }
