@@ -105,7 +105,7 @@ public class AdminController {
 		return Response.success(withPetServiceList);
 	}
 
-	@GetMapping("/api/v1/show-critical-services")
+	@GetMapping("/api/v1/show-criticalservices")
 	@ApiOperation(value = "관리자의 필수 위드펫 서비스 리스트 조회")
 	public Response<List<CriticalServiceResponse>> showCriticalServices(@ApiIgnore Authentication authentication){
 		List<CriticalServiceResponse> criticalServiceResponseList = adminService.showCriticalServices(
