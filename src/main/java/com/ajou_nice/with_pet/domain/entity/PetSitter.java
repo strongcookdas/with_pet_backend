@@ -42,16 +42,16 @@ public class PetSitter extends BaseEntity {
 	private PetSitterApplicant applicant;
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterWithPetService> petSitterWithPetServiceList = new ArrayList<PetSitterWithPetService>();
+	private List<PetSitterWithPetService> petSitterWithPetServiceList;
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<House> petSitterHouseList = new ArrayList<House>();
+	private List<House> petSitterHouseList;
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterHashTag> petSitterHashTagList = new ArrayList<PetSitterHashTag>();
+	private List<PetSitterHashTag> petSitterHashTagList;
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterCriticalService> petSitterCriticalServiceList = new ArrayList<>();
+	private List<PetSitterCriticalService> petSitterCriticalServiceList;
 
 	@Enumerated(EnumType.STRING)
 	private DogSize availableDogSize;

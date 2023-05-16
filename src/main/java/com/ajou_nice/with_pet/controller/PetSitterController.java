@@ -6,7 +6,6 @@ import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse.P
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterMainResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterModifyInfoRequest;
-import com.ajou_nice.with_pet.service.AdminService;
 import com.ajou_nice.with_pet.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +31,6 @@ import springfox.documentation.annotations.ApiIgnore;
 public class PetSitterController {
 
 	private final PetSitterService petSitterService;
-	private final AdminService adminService;
 
 	// 펫시터에서 필요한 api //
 
