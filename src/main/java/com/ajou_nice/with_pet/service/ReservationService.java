@@ -1,14 +1,17 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
+import com.ajou_nice.with_pet.repository.PetSitterApplicantRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
@@ -16,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +32,7 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final DogRepository dogRepository;
     private final PetSitterRepository petSitterRepository;
+    private final PetSitterApplicantRepository applicantRepository;
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.USE, ReservationStatus.APPROVAL,
@@ -98,7 +103,7 @@ public class ReservationService {
                     ErrorCode.PETSITTER_NOT_FOUND.getMessage());
         });
 
-        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonth(petSitter,
+        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(petSitter,
                 LocalDate.parse(month + "-01"), reservationStatuses);
 
         for (Reservation reservation : reservations) {
@@ -139,5 +144,23 @@ public class ReservationService {
         }
 
         reservation.updateStatus(status);
+    }
+
+    public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        PetSitterApplicant applicant = applicantRepository.findByUser(user).orElseThrow(() -> {
+            throw new AppException(ErrorCode.APPLICANT_NOT_FOUND, ErrorCode.APPLICANT_NOT_FOUND.getMessage());
+        });
+
+        PetSitter petSitter = petSitterRepository.findByApplicant(applicant).orElseThrow(() -> {
+            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
+        });
+
+        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonth(petSitter,LocalDate.parse(month+"-01"));
+
+        return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
     }
 }

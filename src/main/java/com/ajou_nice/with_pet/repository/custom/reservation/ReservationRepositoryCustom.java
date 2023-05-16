@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface ReservationRepositoryCustom {
 
-    List<Reservation> findAllByPetsitterAndMonth(PetSitter petSitter, LocalDate month, List<ReservationStatus> list);
+    List<Reservation> findAllByPetsitterAndMonthAndStatus(PetSitter petSitter, LocalDate month, List<ReservationStatus> list);
+
+    List<Reservation> findAllByPetsitterAndMonth(PetSitter petSitter, LocalDate month);
 
 }
