@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.domain.dto.dog;
 
 import com.ajou_nice.with_pet.domain.dto.party.PartyMemberResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.enums.DogSize;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +32,17 @@ public class DogInfoResponse {
     private LocalDate dog_birth;
     private Float dog_weight;
     private String dog_isbn;
+
+    private Double socializationTemperature;
+
+    private Integer socializationDegree;
+
+    private Double affectionTemperature;
+
     private List<PartyMemberResponse> partyMemberResponses;
+    private DogSize dogSize;
+
+
 
     public static List<DogInfoResponse> toList(List<Dog> dogs) {
         return dogs.stream().map(dog -> DogInfoResponse.builder()
@@ -44,6 +55,10 @@ public class DogInfoResponse {
                 .dog_birth(dog.getBirth())
                 .dog_weight(dog.getWeight())
                 .dog_isbn(dog.getIsbn())
+                .socializationTemperature(dog.getSocializationTemperature())
+                .socializationTemperature(dog.getSocializationTemperature())
+                .affectionTemperature(dog.getAffectionTemperature())
+                .dogSize(dog.getDogSize())
                 .build()).collect(Collectors.toList());
     }
 
@@ -63,6 +78,10 @@ public class DogInfoResponse {
                         dog.getParty().getUserPartyList().stream().map(PartyMemberResponse::of)
                                 .collect(
                                         Collectors.toList()))
+                .socializationTemperature(dog.getSocializationTemperature())
+                .socializationDegree(dog.getSocializationDegree())
+                .affectionTemperature(dog.getAffectionTemperature())
+                .dogSize(dog.getDogSize())
                 .build();
     }
 }
