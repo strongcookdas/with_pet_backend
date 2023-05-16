@@ -77,8 +77,8 @@ public class Dog extends BaseEntity {
         this.socializationDegree = dogSocialization;
     }
 
-    public void updateSocializationTemperature(){
-
+    public void updateSocializationTemperature(float score){
+        this.socializationTemperature = this.socializationTemperature + score;
     }
 
     public static Dog of(DogInfoRequest dogInfoRequest, Party party, DogSize dogSize) {
