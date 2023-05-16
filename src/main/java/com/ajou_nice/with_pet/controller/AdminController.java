@@ -124,7 +124,7 @@ public class AdminController {
 		return Response.success(criticalServiceResponse);
 	}
 
-	@PutMapping("/api/v1/admin/update-criticalservice")
+	@PutMapping("/api/v1/admin/criticalservice")
 	@ApiOperation(value = "관리자의 필수 서비스 수정")
 	public Response<CriticalServiceResponse> updateCriticalService(@ApiIgnore Authentication authentication, @RequestBody @Valid
 	CriticalServiceRequest.CriticalServiceModifyRequest criticalServiceModifyRequest){
