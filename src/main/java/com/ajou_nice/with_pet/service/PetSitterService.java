@@ -162,11 +162,11 @@ public class PetSitterService {
 						throw new AppException(ErrorCode.CRITICAL_SERVICE_NOT_FOUND, ErrorCode.CRITICAL_SERVICE_NOT_FOUND.getMessage());
 					});
 			if(criticalServiceRequest.getServiceId() == 1){
-				petSitter.changeAvailableDogSize(DogSize.SMALL);
+				petSitter.changeAvailableDogSize(DogSize.소형견);
 			}else if(criticalServiceRequest.getServiceId() == 2){
-				petSitter.changeAvailableDogSize(DogSize.MEDIUM);
+				petSitter.changeAvailableDogSize(DogSize.중형견);
 			}else{
-				petSitter.changeAvailableDogSize(DogSize.BIG);
+				petSitter.changeAvailableDogSize(DogSize.대형견);
 			}
 			PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter,criticalServiceRequest.getPrice());
 			petSitterCriticalServiceRepository.save(petSitterCriticalService);

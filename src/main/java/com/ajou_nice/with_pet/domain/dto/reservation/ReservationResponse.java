@@ -14,22 +14,18 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ReservationResponse {
 
-    private Long reservationId;
-    private Long userId;
     private Long dogId;
-    private Long petsitterId;
-    private LocalDateTime checkIn;
-    private LocalDateTime checkOut;
+    private String dogName;
+    private String checkIn;
+    private String checkOut;
     private ReservationStatus reservationStatus;
 
     public static ReservationResponse of(Reservation reservation) {
         return ReservationResponse.builder()
-                .reservationId(reservation.getReservationId())
-                .userId(reservation.getUser().getUserId())
                 .dogId(reservation.getDog().getDogId())
-                .petsitterId(reservation.getPetSitter().getId())
-                .checkIn(reservation.getCheckIn())
-                .checkOut(reservation.getCheckOut())
+                .dogName(reservation.getDog().getName())
+                .checkIn(reservation.getCheckIn().toLocalDate().toString())
+                .checkOut(reservation.getCheckOut().toLocalDate().toString())
                 .reservationStatus(reservation.getReservationStatus())
                 .build();
     }
