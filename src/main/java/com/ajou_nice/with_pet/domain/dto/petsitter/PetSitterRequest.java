@@ -56,7 +56,7 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@Getter
 	@ToString
 	public static class PetSitterServiceRequest{
-		private Long serviceIds;
+		private Long serviceId;
 		private int price;
 	}
 

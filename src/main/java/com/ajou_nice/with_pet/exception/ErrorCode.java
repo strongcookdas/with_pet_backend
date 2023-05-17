@@ -30,7 +30,8 @@ public enum ErrorCode {
     PETSITTER_MAIN_HOUSE_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 대표 집 사진이 없습니다."),
     DUPLICATED_RESERVATION(HttpStatus.CONFLICT, "해당 반려견은 예약할 수 없습니다."),
     RESERVATION_CONFLICT(HttpStatus.CONFLICT, "해당 기간에는 예약할 수 없습니다."),
-    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 예약이 존재하지 않습니다.");
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 예약을 찾을 수 없습니다."),
+    UNAUTHORIZED_RESERVATION(HttpStatus.UNAUTHORIZED, "해당 예약에 대한 권한이 없습니다.");
     private HttpStatus status;
     private String message;
 }

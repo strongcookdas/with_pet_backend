@@ -60,4 +60,8 @@ public class Reservation extends BaseEntity {
                 .reservationStatus(ReservationStatus.WAIT)
                 .build();
     }
+
+    public void updateStatus(String status) {
+        this.reservationStatus = ReservationStatus.valueOf(status);
+    }
 }

@@ -84,6 +84,7 @@ public class PetSitterService {
 	}
 
 	// == 펫시터 my Info 수정 == //
+	// 로직 필요한 것 : petsitter의 수정요청이 들어오면 선택한 criticalservice로 가능한 dogsize를 업데이트 해줘야하는데 어떻게 하지 ?
 	@Transactional
 	public PetSitterModifyInfoResponse updateMyInfo(PetSitterModifyInfoRequest petSitterModifyInfoRequest, String userId){
 		User findUser = userRepository.findById(userId).orElseThrow(()->{
@@ -135,7 +136,7 @@ public class PetSitterService {
 		while(petSitterServices.hasNext()){
 			PetSitterServiceRequest serviceRequest = petSitterServices.next();
 			WithPetService withPetService = withPetServiceRepository.findById(
-					serviceRequest.getServiceIds()).orElseThrow(()->{
+					serviceRequest.getServiceId()).orElseThrow(()->{
 						throw new AppException(ErrorCode.WITH_PET_SERVICE_NOT_FOUND,
 								ErrorCode.WITH_PET_SERVICE_NOT_FOUND.getMessage());
 			});
