@@ -139,6 +139,11 @@ public class AdminService {
 	// == 관리자의 필수 서비스 등록 == //
 	public CriticalServiceResponse addCriticalService(String userId, CriticalServiceRequest criticalServiceRequest){
 		User findUser = userService.findUser(userId);
+
+		CriticalService findCriticalService = criticalServiceRepository.findCritiCalServiceByServiceName(
+				criticalServiceRequest.getServiceName()).orElseThrow(()->{
+					throw new AppException(ErrorCode.DUPlICATED_SERVICE, ErrorCode.DUPlICATED_SERVICE.getMessage());
+		});
 		CriticalService criticalService = CriticalService.toEntity(criticalServiceRequest);
 		CriticalService newCriticalService = criticalServiceRepository.save(criticalService);
 

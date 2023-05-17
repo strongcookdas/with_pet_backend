@@ -141,7 +141,7 @@ public class DogService {
 
         //사회성 정도
         int dogSocialization = (int)((dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()+ dogSocializationRequest.getQ3()+
-                dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5())/5)*100;
+                dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5())/5)*20;
 
         dog.updateSocialization(dogSocialization);
         return DogInfoResponse.of(dog);

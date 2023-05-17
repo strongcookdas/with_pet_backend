@@ -112,7 +112,7 @@ public class ReservationService {
         });
 
         //예약의 펫시터가 아니라면
-        if(!reservation.getPetSitter().equals(user)){
+        if(!reservation.getPetSitter().getApplicant().getUser().equals(user)){
             throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
         }
 
