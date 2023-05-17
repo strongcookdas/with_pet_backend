@@ -31,7 +31,8 @@ public enum ErrorCode {
     DUPLICATED_RESERVATION(HttpStatus.CONFLICT, "해당 반려견은 예약할 수 없습니다."),
     RESERVATION_CONFLICT(HttpStatus.CONFLICT, "해당 기간에는 예약할 수 없습니다."),
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 예약을 찾을 수 없습니다."),
-    UNAUTHORIZED_RESERVATION(HttpStatus.UNAUTHORIZED, "해당 예약에 대한 권한이 없습니다.");
+    UNAUTHORIZED_RESERVATION(HttpStatus.UNAUTHORIZED, "해당 예약에 대한 권한이 없습니다."),
+    DUPlICATED_SERVICE(HttpStatus.CONFLICT, "해당 이름의 서비스가 이미 존재합니다.");
     private HttpStatus status;
     private String message;
 }

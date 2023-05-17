@@ -17,6 +17,7 @@ import com.ajou_nice.with_pet.domain.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
+import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
@@ -116,6 +117,11 @@ public class PetSitterService {
 			petSitterHashTagRepository.deleteAllByPetSitterInQuery(petSitter.getId());
 		}
 
+		List<PetSitterCriticalService> petSitterCriticalServiceList = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(petSitter.getId());
+		if(!petSitterCriticalServiceList.isEmpty()){
+			petSitterCriticalServiceRepository.deleteAllByPetSitterInQuery(petSitter.getId());
+		}
+
 		//새로운 정보로 갈아 끼움 (houses, hashtags, petsitterservices, introduction)
 		Iterator<PetSitterHouseRequest> petSitterHouses = petSitterModifyInfoRequest.getPetSitterHouseRequests().iterator();
 		while(petSitterHouses.hasNext()){
@@ -155,6 +161,13 @@ public class PetSitterService {
 					criticalServiceRequest.getServiceId()).orElseThrow(()->{
 						throw new AppException(ErrorCode.CRITICAL_SERVICE_NOT_FOUND, ErrorCode.CRITICAL_SERVICE_NOT_FOUND.getMessage());
 					});
+			if(criticalServiceRequest.getServiceId() == 1){
+				petSitter.changeAvailableDogSize(DogSize.SMALL);
+			}else if(criticalServiceRequest.getServiceId() == 2){
+				petSitter.changeAvailableDogSize(DogSize.MEDIUM);
+			}else{
+				petSitter.changeAvailableDogSize(DogSize.BIG);
+			}
 			PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter,criticalServiceRequest.getPrice());
 			petSitterCriticalServiceRepository.save(petSitterCriticalService);
 		}

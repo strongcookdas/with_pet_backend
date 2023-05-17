@@ -66,6 +66,10 @@ public class PetSitter extends BaseEntity {
 
 	private int report_count;
 
+	public void changeAvailableDogSize(DogSize availableDogSize){
+		this.availableDogSize = availableDogSize;
+	}
+
 	public void changeValidation(Boolean valid){
 		this.valid = valid;
 	}
