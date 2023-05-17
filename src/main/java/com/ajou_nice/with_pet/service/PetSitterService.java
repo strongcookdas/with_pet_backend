@@ -136,7 +136,6 @@ public class PetSitterService {
 			petSitterHashTagRepository.save(petSitterHashTag);
 		}
 
-
 		// 리팩토링 필요하다. (어떻게 ?)
 		Iterator<PetSitterServiceRequest> petSitterServices = petSitterModifyInfoRequest.getPetSitterServiceRequests().iterator();
 		while(petSitterServices.hasNext()){
