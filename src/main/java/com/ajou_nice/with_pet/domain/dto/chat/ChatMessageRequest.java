@@ -2,11 +2,13 @@ package com.ajou_nice.with_pet.domain.dto.chat;
 
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class ChatMessage {
+@Setter
+public class ChatMessageRequest {
 
-	private String roomId;
+	private Long roomId;
 
 	private String writer;
 
