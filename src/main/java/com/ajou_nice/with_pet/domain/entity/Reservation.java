@@ -49,8 +49,12 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
+    @ManyToOne
+    @JoinColumn(name = "critical_service_id", nullable = false)
+    private PetSitterCriticalService petSitterCriticalService;
+
     public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
-            PetSitter petSitter) {
+            PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
         return Reservation.builder()
                 .user(user)
                 .dog(dog)
@@ -58,6 +62,7 @@ public class Reservation extends BaseEntity {
                 .checkIn(reservationRequest.getCheckIn())
                 .checkOut(reservationRequest.getCheckOut())
                 .reservationStatus(ReservationStatus.WAIT)
+                .petSitterCriticalService(petSitterCriticalService)
                 .build();
     }
 

@@ -46,11 +46,11 @@ public class DogService {
         //반려견 사이즈 체크
         DogSize myDogSize;
         if(dogInfoRequest.getDog_weight() > 18){
-            myDogSize = DogSize.BIG;
+            myDogSize = DogSize.대형견;
         }else if(dogInfoRequest.getDog_weight() > 10){
-            myDogSize = DogSize.MEDIUM;
+            myDogSize = DogSize.중형견;
         }else{
-            myDogSize = DogSize.SMALL;
+            myDogSize = DogSize.소형견;
         }
 
         // 반려견 추가
@@ -95,11 +95,11 @@ public class DogService {
 
         DogSize myDogSize;
         if(dogInfoRequest.getDog_weight() > 18){
-            myDogSize = DogSize.BIG;
+            myDogSize = DogSize.대형견;
         }else if(dogInfoRequest.getDog_weight() > 10){
-            myDogSize = DogSize.MEDIUM;
+            myDogSize = DogSize.중형견;
         }else{
-            myDogSize = DogSize.SMALL;
+            myDogSize = DogSize.소형견;
         }
 
         dog.update(dogInfoRequest, myDogSize);
