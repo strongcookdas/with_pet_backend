@@ -1,22 +1,28 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
+import com.ajou_nice.with_pet.repository.PetSitterApplicantRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +32,7 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final DogRepository dogRepository;
     private final PetSitterRepository petSitterRepository;
+    private final PetSitterApplicantRepository applicantRepository;
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.USE, ReservationStatus.APPROVAL,
@@ -87,4 +94,73 @@ public class ReservationService {
         }
     }
 
+    public List<String> getUnavailableDates(String userId, Long petsitterId, String month) {
+
+        List<String> unavailableDates = new ArrayList<>();
+
+        PetSitter petSitter = petSitterRepository.findById(petsitterId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
+                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
+        });
+
+        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(petSitter,
+                LocalDate.parse(month + "-01"), reservationStatuses);
+
+        for (Reservation reservation : reservations) {
+            unavailableDates.addAll(getDateRange(reservation.getCheckIn().toLocalDate(),
+                    reservation.getCheckOut().toLocalDate()));
+        }
+        return unavailableDates;
+    }
+
+    private List<String> getDateRange(LocalDate startDate, LocalDate endDate) {
+        List<String> dateRange = new ArrayList<>();
+
+        while (!startDate.isAfter(endDate)) {
+            dateRange.add(startDate.toString());
+            startDate = startDate.plusDays(1);
+        }
+
+        return dateRange;
+    }
+
+    /*예약에 대한 상태가 많아서 승인/거절에 대한 메소드를 분리한 것이 아닌 그냥 상태를 수정하는 메소드를 선언
+      이게 맞는건지는 고민이 필요....
+     */
+    @Transactional
+    public void approveReservation(String userId, Long reservationId, String status) {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND,
+                    ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
+
+        if (!reservation.getPetSitter().getApplicant().getUser().getId().equals(userId)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED_RESERVATION,
+                    ErrorCode.UNAUTHORIZED_RESERVATION.getMessage());
+        }
+
+        reservation.updateStatus(status);
+    }
+
+    public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        PetSitterApplicant applicant = applicantRepository.findByUser(user).orElseThrow(() -> {
+            throw new AppException(ErrorCode.APPLICANT_NOT_FOUND, ErrorCode.APPLICANT_NOT_FOUND.getMessage());
+        });
+
+        PetSitter petSitter = petSitterRepository.findByApplicant(applicant).orElseThrow(() -> {
+            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
+        });
+
+        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonth(petSitter,LocalDate.parse(month+"-01"));
+
+        return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
+    }
 }

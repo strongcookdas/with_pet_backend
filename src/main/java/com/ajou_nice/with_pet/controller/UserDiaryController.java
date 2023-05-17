@@ -67,7 +67,7 @@ public class UserDiaryController {
      */
     @GetMapping("/month")
     @ApiOperation(value = "월별 캘린더 일지 조회")
-    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true)
+    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
     public Response<List<UserDiaryResponse>> getUserMonthDiary(
             @ApiIgnore Authentication authentication,
             @RequestParam(required = false) Long dogId,
@@ -90,7 +90,7 @@ public class UserDiaryController {
      */
     @GetMapping("/day")
     @ApiOperation(value = "일별 캘린더 일지 조회")
-    @ApiImplicitParam(name = "day", value = "해당 년 월 일", example = "2023-05-12", required = true)
+    @ApiImplicitParam(name = "day", value = "해당 년 월 일", example = "2023-05-12", required = true, dataTypeClass = String.class)
     public Response<List<UserDiaryResponse>> getUserDayDiary(
             @ApiIgnore Authentication authentication,
             @RequestParam(required = false) Long dogId,
