@@ -140,10 +140,11 @@ public class AdminService {
 	public CriticalServiceResponse addCriticalService(String userId, CriticalServiceRequest criticalServiceRequest){
 		User findUser = userService.findUser(userId);
 
-		CriticalService findCriticalService = criticalServiceRepository.findCritiCalServiceByServiceName(
-				criticalServiceRequest.getServiceName()).orElseThrow(()->{
-					throw new AppException(ErrorCode.DUPlICATED_SERVICE, ErrorCode.DUPlICATED_SERVICE.getMessage());
-		});
+		List<CriticalService> criticalServiceList = criticalServiceRepository.findCritiCalServiceByServiceName(
+				criticalServiceRequest.getServiceName());
+		if(!criticalServiceList.isEmpty()){
+			throw new AppException(ErrorCode.DUPlICATED_SERVICE, ErrorCode.DUPlICATED_SERVICE.getMessage());
+		}
 		CriticalService criticalService = CriticalService.toEntity(criticalServiceRequest);
 		CriticalService newCriticalService = criticalServiceRepository.save(criticalService);
 
