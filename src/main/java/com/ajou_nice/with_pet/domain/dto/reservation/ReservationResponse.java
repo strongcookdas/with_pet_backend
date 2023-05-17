@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class ReservationResponse {
-
+    //월별 펫시터 예약 조회용 Response
     private Long dogId;
     private String dogName;
     private String checkIn;
