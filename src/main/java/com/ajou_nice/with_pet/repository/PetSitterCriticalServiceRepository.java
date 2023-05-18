@@ -25,4 +25,6 @@ public interface PetSitterCriticalServiceRepository extends
     Optional<PetSitterCriticalService> findByPetSitterAndCriticalService_ServiceName(
             PetSitter petSitter, String serviceName);
 
+    List<PetSitterCriticalService> findAllByPetSitterId(Long petSitterId);
+
 }

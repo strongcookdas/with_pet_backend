@@ -5,7 +5,10 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.exception.AppException;
+import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.service.DogService;
@@ -36,7 +39,6 @@ import springfox.documentation.annotations.ApiIgnore;
 public class DogController {
 
     private final DogService dogService;
-    private final PetSitterCriticalServiceRepository criticalServiceRepository;
 
     @PostMapping("/register-dog")
     @ApiOperation(value = "반려견 등록")
@@ -109,8 +111,9 @@ public class DogController {
 
     @GetMapping("/reservation-dogs")
     @ApiOperation(value = "예약 페이지 반려견 리스트 조회")
-    public Response<List<DogListInfoResponse>> getDogListInfoResponses(String userId, Long petSitterId) {
-//        List<PetSitterCriticalService> criticalServices = criticalServiceRepository.findAllByPet
+    public Response<List<DogListInfoResponse>> getDogListInfoResponses(@ApiIgnore Authentication authentication,
+            Long petSitterId) {
+        List<DogListInfoResponse> list = dogService.getDogListInfoResponse(authentication.getName(), petSitterId);
         return null;
     }
 }

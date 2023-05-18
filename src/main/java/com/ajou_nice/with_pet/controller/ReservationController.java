@@ -4,6 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationStatusRequest;
 import com.ajou_nice.with_pet.service.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -60,11 +61,12 @@ public class ReservationController {
                         month));
     }
 
-    @PostMapping("/reservation-status")
+    @PutMapping("/reservation-status")
     @ApiOperation(value = "예약 상태 변경")
     public Response updateReservationStatus(@ApiIgnore Authentication authentication,
-            @RequestParam Long reservationId, @RequestParam String status) {
-        reservationService.approveReservation(authentication.getName(), reservationId, status);
+            @RequestBody ReservationStatusRequest reservationStatusRequest) {
+        reservationService.approveReservation(authentication.getName(),
+                reservationStatusRequest.getReservationId(), reservationStatusRequest.getStatus());
         return Response.success("예약 상태를 변경했습니다.");
     }
 
