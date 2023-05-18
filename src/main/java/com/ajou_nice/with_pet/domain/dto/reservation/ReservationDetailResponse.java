@@ -14,6 +14,7 @@ public class ReservationDetailResponse {
 
     private Long dogId;
     private String dogName;
+    private String dogImg;
     private Integer cost;
     private String checkIn;
     private String checkOut;
@@ -25,6 +26,7 @@ public class ReservationDetailResponse {
         return ReservationDetailResponse.builder()
                 .dogId(reservation.getDog().getDogId())
                 .dogName(reservation.getDog().getName())
+                .dogImg(reservation.getDog().getProfile_img())
                 .cost(reservation.getPay().getCost())
                 .checkIn(reservation.getCheckIn().toLocalDate().toString())
                 .checkOut(reservation.getCheckOut().toLocalDate().toString())
