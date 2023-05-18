@@ -4,6 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
@@ -15,6 +16,7 @@ import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
+import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.PetSitterApplicantRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
@@ -24,6 +26,7 @@ import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,13 +46,16 @@ public class ReservationService {
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final PetSitterServiceRepository serviceRepository;
     private final ReservationPetsitterServiceRepository reservationServiceRepository;
+    private final PayRepository payRepository;
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.USE, ReservationStatus.APPROVAL,
                     ReservationStatus.WAIT));
 
     //리팩토링이 절대적으로 필요해 보인다......
+    @Transactional
     public void createReservation(String userId, ReservationRequest reservationRequest) {
+        int cost = 0;
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
@@ -77,11 +83,17 @@ public class ReservationService {
             throw new AppException(ErrorCode.PETSITTER_SERVICE_NOT_FOUND, "해당 옵션이 존재하지 않습니다.");
         });
 
+        cost += criticalService.getPrice();
+
         List<PetSitterWithPetService> withPetServices = serviceRepository.findAllById(
                 reservationRequest.getOptionId());
 
         Reservation reservation = reservationRepository.save(
                 Reservation.of(reservationRequest, user, dog, petSitter, criticalService));
+
+        Period diff = Period.between(reservation.getCheckIn().toLocalDate(),
+                reservation.getCheckOut().toLocalDate());
+        cost *= diff.getDays();
 
         for (PetSitterWithPetService withPetService : withPetServices) {
             if (!withPetService.getPetSitter().getId().equals(petSitter.getId())) {
@@ -90,8 +102,9 @@ public class ReservationService {
             }
             reservationServiceRepository.save(
                     ReservationPetsitterService.of(reservation, withPetService));
+            cost += withPetService.getPrice();
         }
-
+        payRepository.save(Pay.of(reservation, cost));
     }
 
     private void isDuplicatedReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog,

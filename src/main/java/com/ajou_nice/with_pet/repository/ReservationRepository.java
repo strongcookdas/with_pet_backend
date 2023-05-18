@@ -25,4 +25,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     Boolean existsByCheckOutBetweenAndDogAndReservationStatusIn(LocalDateTime checkIn,
             LocalDateTime checkOut, Dog dog, List<ReservationStatus> reservationStatuses);
+
 }

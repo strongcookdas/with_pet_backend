@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +53,9 @@ public class Reservation extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "critical_service_id", nullable = false)
     private PetSitterCriticalService petSitterCriticalService;
+
+    @OneToOne(mappedBy = "reservation")
+    private Pay pay;
 
     public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
             PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {

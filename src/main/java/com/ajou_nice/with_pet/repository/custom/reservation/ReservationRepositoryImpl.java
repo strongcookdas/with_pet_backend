@@ -43,6 +43,17 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
         return reservations;
     }
 
+    @Override
+    public List<Reservation> getPetsitterSideBarInfo(PetSitter petSitter, LocalDate month,
+            ReservationStatus reservationStatus) {
+        List<Reservation> reservations = queryFactory.selectFrom(reservation)
+                .where(containPetsitter(petSitter), getMonthReservationCheckIn(month),
+                        compareReservationStatus(reservationStatus))
+                .orderBy(reservation.checkIn.asc())
+                .fetch();
+        return reservations;
+    }
+
     private BooleanExpression containPetsitter(PetSitter petSitter) {
         return reservation.petSitter.id.eq(petSitter.getId());
     }
@@ -59,5 +70,9 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
 
     private BooleanExpression compareReservationStatus(List<ReservationStatus> list) {
         return reservation.reservationStatus.in(list);
+    }
+
+    private BooleanExpression compareReservationStatus(ReservationStatus reservationStatus) {
+        return reservation.reservationStatus.eq(reservationStatus);
     }
 }

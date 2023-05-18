@@ -12,4 +12,7 @@ public interface ReservationRepositoryCustom {
 
     List<Reservation> findAllByPetsitterAndMonth(PetSitter petSitter, LocalDate month);
 
+    List<Reservation> getPetsitterSideBarInfo(PetSitter petSitter, LocalDate month, ReservationStatus reservationStatus);
+
+
 }
