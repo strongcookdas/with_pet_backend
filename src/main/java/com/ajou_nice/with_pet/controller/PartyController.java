@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -25,7 +27,7 @@ public class PartyController {
     @PostMapping("/member")
     @ApiOperation(value = "그룹 멤버 추가")
     public Response addMember(@ApiIgnore Authentication authentication,
-            PartyMemberRequest partyMemberRequest) {
+            @RequestBody PartyMemberRequest partyMemberRequest) {
         partyService.addMember(authentication.getName(), partyMemberRequest);
         return Response.success("그룹에 추가되었습니다.");
     }

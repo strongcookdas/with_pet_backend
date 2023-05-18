@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
+import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryMonthResponse;
 import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Dog;
@@ -90,7 +91,7 @@ public class UserDiaryService {
         return UserDiaryResponse.of(userDiary);
     }
 
-    public List<UserDiaryResponse> getUserMonthDiary(String userId, Long dogId,
+    public List<UserDiaryMonthResponse> getUserMonthDiary(String userId, Long dogId,
             Long categoryId,
             String month) {
 
@@ -101,7 +102,7 @@ public class UserDiaryService {
 
         List<UserDiary> userDiaries = userDiaryRepository.findByMonthDate(user.getUserId(),
                 dogId, categoryId, LocalDate.parse(month + "-01"));
-        return userDiaries.stream().map(UserDiaryResponse::of).collect(Collectors.toList());
+        return userDiaries.stream().map(UserDiaryMonthResponse::of).collect(Collectors.toList());
     }
 
     public List<UserDiaryResponse> getUserDayDiary(String userId, Long dogId, Long categoryId,

@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
@@ -13,6 +14,7 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
+import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.util.List;
@@ -32,6 +34,8 @@ public class DogService {
     private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
 
+    private final PetSitterCriticalServiceRepository criticalServiceRepository;
+
 
     @Transactional
     public DogInfoResponse registerDog(DogInfoRequest dogInfoRequest, String userId) {
@@ -46,11 +50,11 @@ public class DogService {
         //반려견 사이즈 체크
         DogSize myDogSize;
         if(dogInfoRequest.getDog_weight() > 18){
-            myDogSize = DogSize.BIG;
+            myDogSize = DogSize.대형견;
         }else if(dogInfoRequest.getDog_weight() > 10){
-            myDogSize = DogSize.MEDIUM;
+            myDogSize = DogSize.중형견;
         }else{
-            myDogSize = DogSize.SMALL;
+            myDogSize = DogSize.소형견;
         }
 
         // 반려견 추가
@@ -95,11 +99,11 @@ public class DogService {
 
         DogSize myDogSize;
         if(dogInfoRequest.getDog_weight() > 18){
-            myDogSize = DogSize.BIG;
+            myDogSize = DogSize.대형견;
         }else if(dogInfoRequest.getDog_weight() > 10){
-            myDogSize = DogSize.MEDIUM;
+            myDogSize = DogSize.중형견;
         }else{
-            myDogSize = DogSize.SMALL;
+            myDogSize = DogSize.소형견;
         }
 
         dog.update(dogInfoRequest, myDogSize);
@@ -145,5 +149,13 @@ public class DogService {
 
         dog.updateSocialization(dogSocialization);
         return DogInfoResponse.of(dog);
+    }
+
+    public List<DogListInfoResponse> getDogListInfoResponse(String userId, Long petSitterId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+        return null;
     }
 }

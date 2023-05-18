@@ -1,39 +1,30 @@
 package com.ajou_nice.with_pet.domain.dto.diary.user;
 
 import com.ajou_nice.with_pet.domain.entity.UserDiary;
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Setter
 @Getter
-@ToString
-public class UserDiaryResponse {
+public class UserDiaryMonthResponse {
 
     private Long userDiaryId;
     private Long categoryId;
     private String categoryName;
-    private String title;
-    private String content;
-    private String media;
-    private LocalDate createdAt;
+    private Long dogId;
+    private String dogName;
 
-    public static UserDiaryResponse of(UserDiary userDiary) {
-        return UserDiaryResponse.builder()
+    public static UserDiaryMonthResponse of(UserDiary userDiary) {
+        return UserDiaryMonthResponse.builder()
                 .userDiaryId(userDiary.getUserDiaryId())
                 .categoryId(userDiary.getCategory().getCategoryId())
                 .categoryName(userDiary.getCategory().getName())
-                .title(userDiary.getTitle())
-                .content(userDiary.getContent())
-                .media(userDiary.getMedia())
-                .createdAt(userDiary.getCreatedAt())
+                .dogId(userDiary.getDog().getDogId())
+                .dogName(userDiary.getDog().getName())
                 .build();
     }
 }

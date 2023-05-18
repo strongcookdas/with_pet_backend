@@ -3,10 +3,18 @@ package com.ajou_nice.with_pet.controller;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.exception.AppException;
+import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
+import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.service.DogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -82,16 +90,30 @@ public class DogController {
 
     @PutMapping("/temperature/{dogId}")
     @ApiOperation(value = "반려견 사회화 정도 등록")
-    public Response<DogInfoResponse> modifyDogSocialization(@ApiIgnore Authentication authentication,
-            @PathVariable Long dogId, @RequestBody DogSocializationRequest dogSocializationRequest){
+    public Response<DogInfoResponse> modifyDogSocialization(
+            @ApiIgnore Authentication authentication,
+            @PathVariable Long dogId,
+            @RequestBody DogSocializationRequest dogSocializationRequest) {
 
-        log.info("---------------------dog Modify socialization Request : {}--------------------------", dogSocializationRequest);
+        log.info(
+                "---------------------dog Modify socialization Request : {}--------------------------",
+                dogSocializationRequest);
 
-        DogInfoResponse dogInfoResponse = dogService.modifyDogSocialization(authentication.getName(),dogId, dogSocializationRequest);
+        DogInfoResponse dogInfoResponse = dogService.modifyDogSocialization(
+                authentication.getName(), dogId, dogSocializationRequest);
 
-        log.info("---------------------dog Modify socialization Response : {}--------------------------",
+        log.info(
+                "---------------------dog Modify socialization Response : {}--------------------------",
                 dogInfoResponse);
 
         return Response.success(dogInfoResponse);
+    }
+
+    @GetMapping("/reservation-dogs")
+    @ApiOperation(value = "예약 페이지 반려견 리스트 조회")
+    public Response<List<DogListInfoResponse>> getDogListInfoResponses(@ApiIgnore Authentication authentication,
+            Long petSitterId) {
+        List<DogListInfoResponse> list = dogService.getDogListInfoResponse(authentication.getName(), petSitterId);
+        return null;
     }
 }
