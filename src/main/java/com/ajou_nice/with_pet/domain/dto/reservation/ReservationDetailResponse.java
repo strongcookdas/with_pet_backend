@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ReservationDetailResponse {
 
+    private Long reservationId;
     private Long dogId;
     private String dogName;
     private String dogImg;
@@ -24,6 +25,7 @@ public class ReservationDetailResponse {
 
     public static ReservationDetailResponse of(Reservation reservation) {
         return ReservationDetailResponse.builder()
+                .reservationId(reservation.getReservationId())
                 .dogId(reservation.getDog().getDogId())
                 .dogName(reservation.getDog().getName())
                 .dogImg(reservation.getDog().getProfile_img())
