@@ -2,7 +2,6 @@ package com.ajou_nice.with_pet.controller;
 
 
 import com.ajou_nice.with_pet.domain.dto.chat.ChatMessageRequest;
-import com.ajou_nice.with_pet.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
