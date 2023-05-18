@@ -23,6 +23,7 @@ public class UserDiaryResponse {
     private String title;
     private String content;
     private String media;
+    private String dogName;
     private LocalDate createdAt;
 
     public static UserDiaryResponse of(UserDiary userDiary) {
@@ -33,6 +34,7 @@ public class UserDiaryResponse {
                 .title(userDiary.getTitle())
                 .content(userDiary.getContent())
                 .media(userDiary.getMedia())
+                .dogName(userDiary.getDog().getName())
                 .createdAt(userDiary.getCreatedAt())
                 .build();
     }
