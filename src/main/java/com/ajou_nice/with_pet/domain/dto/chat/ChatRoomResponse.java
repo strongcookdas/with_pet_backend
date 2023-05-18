@@ -18,17 +18,18 @@ import lombok.ToString;
 public class ChatRoomResponse {
 
 	private Long chatRoomId;
-	private String petSitterProfileImg;
+	private String userId;
+	private String senderProfileImg;
 
-	private Long petSitterId;
+	private Long senderId;
 
-	private String petSitterName;
+	private String senderName;
 
 	public static ChatRoomResponse of(ChatRoom chatRoom){
 
 		return ChatRoomResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())
-				.petSitterProfileImg(chatRoom.getPetSitter().getApplicant().getUser().getProfileImg())
+				.senderProfileImg(chatRoom.getSender().getApplicant().getUser().getProfileImg())
 				.petSitterId(chatRoom.getPetSitter().getId())
 				.petSitterName(chatRoom.getPetSitter().getApplicant().getUser().getName())
 				.build();

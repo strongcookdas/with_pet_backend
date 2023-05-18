@@ -26,12 +26,12 @@ public class ChatRoom {
 	private String roomName;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "petsitter_id")
-	private PetSitter petSitter;
+	@JoinColumn(name = "userId")
+	private User sender;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId")
-	private User user;
+	private User receiver;
 
 
 	public static ChatRoom toEntity(String roomName){
