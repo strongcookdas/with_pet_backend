@@ -23,7 +23,6 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 		private List<PetSitterHashTagRequest> petSitterHashTagRequests;
 		private String introduction;
 		private List<PetSitterServiceRequest> petSitterServiceRequests;
-
 		private List<PetSitterCriticalServiceRequest> petSitterCriticalServiceRequests;
 
 	}
@@ -46,7 +45,7 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@ToString
 	public static class PetSitterHashTagRequest{
 
-		private Long hashTagId;
+		private Long petSitterhashTagId;
 		private String hashTagName;
 	}
 
