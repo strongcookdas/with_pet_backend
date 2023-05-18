@@ -60,7 +60,7 @@ public class ReservationController {
                         month));
     }
 
-    @PutMapping("/reservation-status")
+    @PostMapping("/reservation-status")
     @ApiOperation(value = "예약 상태 변경")
     public Response updateReservationStatus(@ApiIgnore Authentication authentication,
             @RequestParam Long reservationId, @RequestParam String status) {
