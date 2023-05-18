@@ -159,14 +159,16 @@ public class DogService {
         List<Dog> dogs = dogRepository.findAllByUserParty(userId);
         List<PetSitterCriticalService> criticalServices = criticalServiceRepository.findAllByPetSitterId(petSitterId);
         List<DogListInfoResponse> dogInfoResponses = new ArrayList<>();
-        for(Dog dog : dogs){
+        boolean check;
+        for(Dog dog: dogs){
+            check = false;
             for(PetSitterCriticalService criticalService : criticalServices){
                 if(dog.getDogSize().toString().equals(criticalService.getCriticalService().getServiceName())){
-                    dogInfoResponses.add(DogListInfoResponse.of(dog,true));
-
+                   check=true;
                 }
             }
+            dogInfoResponses.add(DogListInfoResponse.of(dog,check));
         }
-        return null;
+        return dogInfoResponses;
     }
 }

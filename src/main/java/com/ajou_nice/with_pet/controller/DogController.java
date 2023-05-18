@@ -107,8 +107,7 @@ public class DogController {
     @ApiOperation(value = "예약 페이지 반려견 리스트 조회")
     public Response<List<DogListInfoResponse>> getDogListInfoResponses(@ApiIgnore Authentication authentication,
             Long petSitterId) {
-        //
         List<DogListInfoResponse> list = dogService.getDogListInfoResponse(authentication.getName(), petSitterId);
-        return null;
+        return Response.success(list);
     }
 }
