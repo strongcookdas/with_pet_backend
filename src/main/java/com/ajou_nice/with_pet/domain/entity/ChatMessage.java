@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.domain.entity;
 
 
 import com.ajou_nice.with_pet.domain.dto.chat.ChatMessageRequest;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -37,13 +38,17 @@ public class ChatMessage {
 	@JoinColumn(name = "roomId")
 	private ChatRoom chatRoom;
 
-	private String writerId;
+	//메시지를 작성한 사람의 Id(user의) -> withPet3 처럼
+	private String senderId;
+	private LocalDateTime sendTime;
 
-	public static ChatMessage toEntity(ChatMessageRequest chatMessageRequest, ChatRoom chatRoom){
+	public static ChatMessage toEntity(ChatMessageRequest chatMessageRequest,ChatRoom chatRoom, String userId){
 
 		return ChatMessage.builder()
 				.message(chatMessageRequest.getMessage())
 				.chatRoom(chatRoom)
+				.sendTime(chatMessageRequest.getSendTime())
+				.senderId(userId)
 				.build();
 	}
 }
