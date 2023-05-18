@@ -5,8 +5,10 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
+import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.DogSize;
@@ -17,6 +19,7 @@ import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -153,9 +156,17 @@ public class DogService {
 
     public List<DogListInfoResponse> getDogListInfoResponse(String userId, Long petSitterId) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        List<Dog> dogs = dogRepository.findAllByUserParty(userId);
+        List<PetSitterCriticalService> criticalServices = criticalServiceRepository.findAllByPetSitterId(petSitterId);
+        List<DogListInfoResponse> dogInfoResponses = new ArrayList<>();
+        for(Dog dog : dogs){
+            for(PetSitterCriticalService criticalService : criticalServices){
+                if(dog.getDogSize().toString().equals(criticalService.getCriticalService().getServiceName())){
+                    dogInfoResponses.add(DogListInfoResponse.of(dog,true));
+
+                }
+            }
+        }
         return null;
     }
 }

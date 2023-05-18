@@ -14,7 +14,7 @@ public class DogListInfoResponse {
 
     private Long dogId;
     private String name;
-    private Boolean petReservationAvailable;
+    private Boolean petReservationAvailable = false;
 
     public static DogListInfoResponse of(Dog dog, boolean check) {
         return DogListInfoResponse.builder()

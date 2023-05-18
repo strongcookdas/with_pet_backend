@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
@@ -213,7 +214,7 @@ public class ReservationService {
       이게 맞는건지는 고민이 필요....
      */
     @Transactional
-    public void approveReservation(String userId, Long reservationId, String status) {
+    public ReservationDetailResponse approveReservation(String userId, Long reservationId, String status) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -230,6 +231,7 @@ public class ReservationService {
         }
 
         reservation.updateStatus(status);
+        return ReservationDetailResponse.of(reservation);
     }
 
     public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
