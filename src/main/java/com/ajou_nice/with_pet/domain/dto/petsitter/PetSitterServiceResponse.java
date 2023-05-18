@@ -22,7 +22,7 @@ public class PetSitterServiceResponse {
 
 	private Long serviceId;
 	private String serviceName;
-	private String serviceIntro;
+	private String serviceIntroduction;
 	private String serviceImg;
 
 	private int price;
@@ -32,7 +32,7 @@ public class PetSitterServiceResponse {
 				.petSitterServiceId(petSitterService.getId())
 				.serviceId(petSitterService.getWithPetService().getId())
 				.serviceName(petSitterService.getWithPetService().getName())
-				.serviceIntro(petSitterService.getWithPetService().getIntroduction())
+				.serviceIntroduction(petSitterService.getWithPetService().getIntroduction())
 				.serviceImg(petSitterService.getWithPetService().getService_Img())
 				.price(petSitterService.getPrice())
 				.build()).collect(Collectors.toList());
@@ -47,7 +47,7 @@ public class PetSitterServiceResponse {
 		private Long petSitterServiceId;
 		private Long serviceId;
 		private String serviceName;
-		private String serviceIntro;
+		private String serviceIntroduction;
 
 		private String serviceImg;
 
@@ -58,7 +58,7 @@ public class PetSitterServiceResponse {
 					.petSitterServiceId(petSitterCriticalService.getId())
 					.serviceId(petSitterCriticalService.getCriticalService().getId())
 					.serviceName(petSitterCriticalService.getCriticalService().getServiceName())
-					.serviceIntro(petSitterCriticalService.getCriticalService().getIntroduction())
+					.serviceIntroduction(petSitterCriticalService.getCriticalService().getIntroduction())
 					.serviceImg(petSitterCriticalService.getCriticalService().getServiceImg())
 					.price(petSitterCriticalService.getPrice())
 					.build()).collect(Collectors.toList());
