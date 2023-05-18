@@ -26,7 +26,7 @@ public class DiaryRequest {
     private Long categoryId;
     @NotBlank(message = "내용을 입력해주세요.")
     private String contentBody;
-    private String media;
+    private String dogImgToday;
     @NotNull(message = "날짜를 입력해주세요.")
     private LocalDate createdAt;
 
