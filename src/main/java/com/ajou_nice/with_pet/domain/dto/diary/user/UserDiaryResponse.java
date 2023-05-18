@@ -20,6 +20,7 @@ public class UserDiaryResponse {
     private Long userDiaryId;
     private Long categoryId;
     private String categoryName;
+    private String title;
     private String content;
     private String media;
     private LocalDate createdAt;
@@ -29,6 +30,7 @@ public class UserDiaryResponse {
                 .userDiaryId(userDiary.getUserDiaryId())
                 .categoryId(userDiary.getCategory().getCategoryId())
                 .categoryName(userDiary.getCategory().getName())
+                .title(userDiary.getTitle())
                 .content(userDiary.getContent())
                 .media(userDiary.getMedia())
                 .createdAt(userDiary.getCreatedAt())
