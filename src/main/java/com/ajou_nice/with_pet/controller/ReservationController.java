@@ -65,6 +65,7 @@ public class ReservationController {
     @ApiOperation(value = "예약 상태 변경")
     public Response updateReservationStatus(@ApiIgnore Authentication authentication,
             @RequestBody ReservationStatusRequest reservationStatusRequest) {
+        log.info("============================ReservationStatusRequest : {}==============================",reservationStatusRequest);
         reservationService.approveReservation(authentication.getName(),
                 reservationStatusRequest.getReservationId(), reservationStatusRequest.getStatus());
         return Response.success("예약 상태를 변경했습니다.");
