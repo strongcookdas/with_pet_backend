@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.diary.user;
 
-import com.ajou_nice.with_pet.domain.entity.UserDiary;
+import com.ajou_nice.with_pet.domain.entity.Diary;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +19,7 @@ public class UserDiaryResponse {
 
     private Long userDiaryId;
     private Long categoryId;
+    private Long dogId;
     private String categoryName;
     private String title;
     private String content;
@@ -26,16 +27,17 @@ public class UserDiaryResponse {
     private String dogName;
     private LocalDate createdAt;
 
-    public static UserDiaryResponse of(UserDiary userDiary) {
+    public static UserDiaryResponse of(Diary diary) {
         return UserDiaryResponse.builder()
-                .userDiaryId(userDiary.getUserDiaryId())
-                .categoryId(userDiary.getCategory().getCategoryId())
-                .categoryName(userDiary.getCategory().getName())
-                .title(userDiary.getTitle())
-                .content(userDiary.getContent())
-                .media(userDiary.getMedia())
-                .dogName(userDiary.getDog().getName())
-                .createdAt(userDiary.getCreatedAt())
+                .userDiaryId(diary.getDiaryId())
+                .categoryId(diary.getCategory().getCategoryId())
+                .dogId(diary.getDog().getDogId())
+                .categoryName(diary.getCategory().getName())
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .media(diary.getMedia())
+                .dogName(diary.getDog().getName())
+                .createdAt(diary.getCreatedAt())
                 .build();
     }
 }
