@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DogService {
 
     private final DogRepository dogRepository;
@@ -163,6 +165,7 @@ public class DogService {
         for(Dog dog: dogs){
             check = false;
             for(PetSitterCriticalService criticalService : criticalServices){
+                log.info("================Dog Size : {}, Critical Size : {} ================================",dog.getDogSize().toString(),criticalService.getCriticalService().getServiceName());
                 if(dog.getDogSize().toString().equals(criticalService.getCriticalService().getServiceName())){
                    check=true;
                 }
