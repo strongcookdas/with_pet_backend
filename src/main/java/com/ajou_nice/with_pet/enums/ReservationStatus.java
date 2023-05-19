@@ -6,5 +6,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ReservationStatus {
-    WAIT, CANCEL, APPROVAL, USE, DONE;
+    WAIT, CANCEL, APPROVAL,PAYED, USE, DONE;
 }

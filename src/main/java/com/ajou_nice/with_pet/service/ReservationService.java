@@ -234,6 +234,22 @@ public class ReservationService {
         return ReservationDetailResponse.of(reservation);
     }
 
+    /*
+    예약 내역 페이지(유저) -> 결제를 위해 reservation_status가 approval인 예약 리스트 불러오기
+     */
+    public List<ReservationResponse> showApprovalReservation(String userId){
+
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        List<Reservation> reservations = reservationRepository.findReservationByStatus(userId,
+                String.valueOf(ReservationStatus.APPROVAL));
+
+        return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
+    }
+
+    //펫시터 입장에서 ReservationList를 불러올때 reservationStatus가 payed인 List만 불러오는게 좋을 것 같다.
     public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());

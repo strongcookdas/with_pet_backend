@@ -21,5 +21,5 @@ public class PayApproveResponse {
 	private String created_at;
 	private String approved_at;
 	private String payload;
-	private PaymentDetail paymentDetail;
+	private Amount amount;
 }
