@@ -5,8 +5,10 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
+import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.DogSize;
@@ -17,9 +19,11 @@ import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DogService {
 
     private final DogRepository dogRepository;
@@ -153,9 +158,20 @@ public class DogService {
 
     public List<DogListInfoResponse> getDogListInfoResponse(String userId, Long petSitterId) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
-        return null;
+        List<Dog> dogs = dogRepository.findAllByUserParty(userId);
+        List<PetSitterCriticalService> criticalServices = criticalServiceRepository.findAllByPetSitterId(petSitterId);
+        List<DogListInfoResponse> dogInfoResponses = new ArrayList<>();
+        boolean check;
+        for(Dog dog: dogs){
+            check = false;
+            for(PetSitterCriticalService criticalService : criticalServices){
+                log.info("================Dog Size : {}, Critical Size : {} ================================",dog.getDogSize().toString(),criticalService.getCriticalService().getServiceName());
+                if(dog.getDogSize().toString().equals(criticalService.getCriticalService().getServiceName())){
+                   check=true;
+                }
+            }
+            dogInfoResponses.add(DogListInfoResponse.of(dog,check));
+        }
+        return dogInfoResponses;
     }
 }

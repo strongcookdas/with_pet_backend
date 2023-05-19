@@ -25,12 +25,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @Builder
 @ToString
-@Table(name = "user_diary")
-public class UserDiary {
+@Table(name = "diary")
+public class Diary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userDiaryId;
+    private Long diaryId;
 
     @ManyToOne
     @JoinColumn(name = "categoryId", nullable = false)
@@ -40,11 +40,16 @@ public class UserDiary {
     @NotNull
     @Lob
     private String content;
+    @Lob
     private String media;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "petsitter_id")
+    private PetSitter petSitter;
 
     @ManyToOne
     @JoinColumn(name = "dogId", nullable = false)
@@ -58,8 +63,8 @@ public class UserDiary {
 
     private LocalDateTime deletedAt;
 
-    public static UserDiary of(DiaryRequest diaryRequest, Dog dog, User user, Category category) {
-        return UserDiary.builder()
+    public static Diary of(DiaryRequest diaryRequest, Dog dog, User user, Category category) {
+        return Diary.builder()
                 .category(category)
                 .title(diaryRequest.getTitle())
                 .content(diaryRequest.getContentBody())
