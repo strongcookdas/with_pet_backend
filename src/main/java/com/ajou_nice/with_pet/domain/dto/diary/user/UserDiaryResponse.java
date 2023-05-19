@@ -19,6 +19,7 @@ public class UserDiaryResponse {
 
     private Long userDiaryId;
     private Long categoryId;
+    private Long dogId;
     private String categoryName;
     private String title;
     private String content;
@@ -30,6 +31,7 @@ public class UserDiaryResponse {
         return UserDiaryResponse.builder()
                 .userDiaryId(diary.getDiaryId())
                 .categoryId(diary.getCategory().getCategoryId())
+                .dogId(diary.getDog().getDogId())
                 .categoryName(diary.getCategory().getName())
                 .title(diary.getTitle())
                 .content(diary.getContent())
