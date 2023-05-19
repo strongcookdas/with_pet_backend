@@ -22,8 +22,8 @@ public class UserDiaryResponse {
     private Long dogId;
     private String categoryName;
     private String title;
-    private String content;
-    private String media;
+    private String contentBody;
+    private String dogImgToday;
     private String dogName;
     private LocalDate createdAt;
 
@@ -34,8 +34,8 @@ public class UserDiaryResponse {
                 .dogId(diary.getDog().getDogId())
                 .categoryName(diary.getCategory().getName())
                 .title(diary.getTitle())
-                .content(diary.getContent())
-                .media(diary.getMedia())
+                .contentBody(diary.getContent())
+                .dogImgToday(diary.getMedia())
                 .dogName(diary.getDog().getName())
                 .createdAt(diary.getCreatedAt())
                 .build();
