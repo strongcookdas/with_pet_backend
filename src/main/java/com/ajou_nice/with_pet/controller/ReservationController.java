@@ -37,6 +37,7 @@ public class ReservationController {
     @ApiOperation(value = "예약 하기")
     public Response createReservation(@ApiIgnore Authentication authentication,
             @RequestBody ReservationRequest reservationRequest) {
+        log.info("=======================ReservationRequest : {}=============================",reservationRequest);
         reservationService.createReservation(authentication.getName(), reservationRequest);
         return Response.success("예약이 완료되었습니다.");
     }
