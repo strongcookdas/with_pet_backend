@@ -73,10 +73,11 @@ public class UserDiaryController {
             @ApiIgnore Authentication authentication,
             @RequestParam(required = false) Long dogId,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam String month) {
+            @RequestParam String month,
+            @RequestParam(required = false) String petsitterCheck) {
 
         List<UserDiaryMonthResponse> userDiaryResponses = userDiaryService.getUserMonthDiary(
-                authentication.getName(), dogId, categoryId, month);
+                authentication.getName(), dogId, categoryId, month, petsitterCheck);
         return Response.success(userDiaryResponses);
     }
 
@@ -96,10 +97,11 @@ public class UserDiaryController {
             @ApiIgnore Authentication authentication,
             @RequestParam(required = false) Long dogId,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam String day) {
+            @RequestParam String day,
+            @RequestParam(required = false) String petsitterCheck) {
 
         List<UserDiaryResponse> userDiaryResponses = userDiaryService.getUserDayDiary(
-                authentication.getName(), dogId, categoryId, day);
+                authentication.getName(), dogId, categoryId, day, petsitterCheck);
         return Response.success(userDiaryResponses);
     }
 }

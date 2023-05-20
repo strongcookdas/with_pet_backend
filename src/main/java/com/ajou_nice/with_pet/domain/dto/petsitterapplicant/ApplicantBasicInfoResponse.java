@@ -24,6 +24,7 @@ public class ApplicantBasicInfoResponse {
 	protected Long applicant_id;
 	protected Long applicant_user_id;
 	protected String applicant_user_name;
+	protected String applicant_user_auth_id;
 	protected String applicant_user_profileImg;
 
 	protected String applicant_user_phone;
@@ -34,6 +35,7 @@ public class ApplicantBasicInfoResponse {
 				.applicant_id(petSitterApplicant.getId())
 				.applicant_user_id(petSitterApplicant.getUser().getUserId())
 				.applicant_user_name(petSitterApplicant.getUser().getName())
+				.applicant_user_auth_id(petSitterApplicant.getUser().getId())
 				.applicant_user_profileImg(petSitterApplicant.getUser().getProfileImg())
 				.applicant_user_phone(petSitterApplicant.getUser().getPhone())
 				.applicant_status(petSitterApplicant.getApplicantStatus())
