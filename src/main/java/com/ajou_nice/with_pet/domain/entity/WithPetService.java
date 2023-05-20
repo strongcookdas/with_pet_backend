@@ -41,7 +41,7 @@ public class WithPetService {
 	public void updateServiceInfo(WithPetServiceModifyRequest withPetServiceModifyRequest){
 		this.name = withPetServiceModifyRequest.getServiceName();
 		this.service_Img = withPetServiceModifyRequest.getServiceImg();
-		this.introduction = withPetServiceModifyRequest.getServiceIntro();
+		this.introduction = withPetServiceModifyRequest.getServiceIntroduction();
 	}
 
 	public static WithPetService toEntity(WithPetServiceRequest withPetServiceRequest){
