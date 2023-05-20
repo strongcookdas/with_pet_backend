@@ -17,6 +17,7 @@ public class UserDiaryMonthResponse {
     private String categoryName;
     private Long dogId;
     private String dogName;
+    private String createdAt;
 
     public static UserDiaryMonthResponse of(Diary diary) {
         return UserDiaryMonthResponse.builder()
@@ -25,6 +26,7 @@ public class UserDiaryMonthResponse {
                 .categoryName(diary.getCategory().getName())
                 .dogId(diary.getDog().getDogId())
                 .dogName(diary.getDog().getName())
+                .createdAt(diary.getCreatedAt().toString())
                 .build();
     }
 }
