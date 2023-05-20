@@ -4,6 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
 import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
 import com.ajou_nice.with_pet.service.PetSitterDiaryService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("api/v1/petsitter-diaries")
 @RequiredArgsConstructor
+@Api(tags = "PetSitterDiary API")
 public class PetSitterDiaryController {
 
     private final PetSitterDiaryService petSitterDiaryService;
