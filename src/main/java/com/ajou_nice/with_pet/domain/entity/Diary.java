@@ -74,6 +74,18 @@ public class Diary {
                 .createdAt(diaryRequest.getCreatedAt())
                 .build();
     }
+    public static Diary of(DiaryRequest diaryRequest, Dog dog, User user, Category category, PetSitter petSitter) {
+        return Diary.builder()
+                .category(category)
+                .title(diaryRequest.getTitle())
+                .content(diaryRequest.getContentBody())
+                .media(diaryRequest.getDogImgToday())
+                .user(user)
+                .dog(dog)
+                .createdAt(diaryRequest.getCreatedAt())
+                .petSitter(petSitter)
+                .build();
+    }
 
     public void update(DiaryRequest diaryRequest, Dog dog, Category category) {
         this.category = category;
