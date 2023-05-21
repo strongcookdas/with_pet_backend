@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.auth;
 
+import com.ajou_nice.with_pet.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,11 +16,13 @@ import lombok.ToString;
 @ToString
 public class UserLoginResponse {
 
-    private String result;
+    private String userName;
+    private String role;
 
-    public static UserLoginResponse of(String result) {
+    public static UserLoginResponse of(User user) {
         return UserLoginResponse.builder()
-                .result(result)
+                .userName(user.getName())
+                .role(user.getRole().name())
                 .build();
     }
 }
