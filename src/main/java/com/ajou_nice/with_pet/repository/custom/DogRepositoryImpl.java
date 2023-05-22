@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.repository.custom;
 
+
 import static com.ajou_nice.with_pet.domain.entity.QDog.dog;
 import static com.ajou_nice.with_pet.domain.entity.QUserParty.userParty;
 
