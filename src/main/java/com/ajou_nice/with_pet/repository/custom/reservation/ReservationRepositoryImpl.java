@@ -28,8 +28,7 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
             List<ReservationStatus> list) {
 
         List<Reservation> reservations = queryFactory.selectFrom(reservation)
-                .where(containPetsitter(petSitter), getMonthReservationCheckIn(month),
-                        getMonthReservationCheckOut(month), compareReservationStatus(list))
+                .where(containPetsitter(petSitter), getMonthReservationCheckIn(month), compareReservationStatus(list))
                 .orderBy(reservation.checkIn.asc())
                 .fetch();
         return reservations;
