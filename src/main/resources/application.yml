@@ -32,6 +32,24 @@ jwt:
   token:
     secret: ajounicewithpet0302
 
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA3RLWRH5UZTYF6YD7
+      secret-key: KWLzlv3HjNKbriYSoFwWkmHkEfyG33VuxI+qOdf
+    S3:
+      bucket: withpetoriginimage
+    region:
+      static: ap-northeast-1
+    stack:
+      auto: false
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
 
 ajou:
   nice: hello

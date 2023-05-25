@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class WithPetApplication {
 
     public static void main(String[] args) {
+        System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
         SpringApplication.run(WithPetApplication.class, args);
     }
 

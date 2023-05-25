@@ -28,9 +28,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Boolean existsByCheckOutBetweenAndDogAndReservationStatusIn(LocalDateTime checkIn,
             LocalDateTime checkOut, Dog dog, List<ReservationStatus> reservationStatuses);
 
-    @Query("delete from Reservation r where r.reservationStatus='APPROVAL' and r.checkIn <= :needDeleteTime")
-    void deleteReservationByCheckInTime(@Param("needDeleteTime")LocalDateTime needDeleteTime);
-
     @Query("select r from Reservation r where r.user.id=:userId and r.reservationStatus=:status")
     List<Reservation> findReservationByStatus(@Param("userId") String userId, @Param("status") String status);
 }

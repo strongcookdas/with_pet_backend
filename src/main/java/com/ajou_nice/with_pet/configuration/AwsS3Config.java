@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@PropertySource("classpath:/resources/application-aws.yml")
+@PropertySource("classpath:application.yml") //나중에 application-aws.yml파일에 옮기고 classpath:application-aws.yml로 바꾸기
 public class AwsS3Config {
 
 	@Value("${cloud.aws.credentials.secret-key}")
@@ -24,7 +24,6 @@ public class AwsS3Config {
 	@Value("${cloud.aws.region.static}")
 	private String region;
 
-	@Bean
 	public AmazonS3 awsS3Config(){
 		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 		return AmazonS3ClientBuilder.standard()
