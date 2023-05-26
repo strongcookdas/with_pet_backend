@@ -73,12 +73,9 @@ public class DogController {
 
     @GetMapping
     @ApiOperation(value = "반려견 상세정보 목록")
-    public Response<Page<DogInfoResponse>> getDogInfos(
-            @ApiIgnore @PageableDefault(size = 10, sort = "createdAt", direction = Direction.ASC)
-            Pageable pageable, @ApiIgnore Authentication authentication) {
+    public Response<List<DogInfoResponse>> getDogInfos(@ApiIgnore Authentication authentication) {
 
-        Page<DogInfoResponse> dogInfoResponses = dogService.getDogInfos(pageable,
-                authentication.getName());
+        List<DogInfoResponse> dogInfoResponses = dogService.getDogInfos(authentication.getName());
         return Response.success(dogInfoResponses);
     }
 
@@ -105,9 +102,11 @@ public class DogController {
 
     @GetMapping("/reservation-dogs")
     @ApiOperation(value = "예약 페이지 반려견 리스트 조회")
-    public Response<List<DogListInfoResponse>> getDogListInfoResponses(@ApiIgnore Authentication authentication,
+    public Response<List<DogListInfoResponse>> getDogListInfoResponses(
+            @ApiIgnore Authentication authentication,
             Long petSitterId) {
-        List<DogListInfoResponse> list = dogService.getDogListInfoResponse(authentication.getName(), petSitterId);
+        List<DogListInfoResponse> list = dogService.getDogListInfoResponse(authentication.getName(),
+                petSitterId);
         return Response.success(list);
     }
 }

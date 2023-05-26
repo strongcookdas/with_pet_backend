@@ -117,12 +117,12 @@ public class DogService {
     }
 
     //여기가 제일 문제다....
-    public Page<DogInfoResponse> getDogInfos(Pageable pageable, String userId) {
+    public List<DogInfoResponse> getDogInfos(String userId) {
         userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
-        Page<Dog> dogs = dogRepository.findAllByUserParty(pageable, userId);
-        return dogs.map(DogInfoResponse::of);
+        List<Dog> dogs = dogRepository.findAllByUserParty(userId);
+        return dogs.stream().map(DogInfoResponse::of).collect(Collectors.toList());
     }
 
     public List<DogSimpleInfoResponse> getDogSimpleInfos(String userId) {
