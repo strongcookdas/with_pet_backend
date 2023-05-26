@@ -50,12 +50,10 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "critical_service_id", nullable = false)
-    private PetSitterCriticalService petSitterCriticalService;
-
-    @OneToOne(mappedBy = "reservation")
-    private Pay pay;
+    private Long petSitterCriticalServiceId;
+    private String criticalServiceName;
+    private Integer criticalServicePrice;
+    private Integer totalPrice;
 
     public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
             PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
@@ -66,8 +64,15 @@ public class Reservation extends BaseEntity {
                 .checkIn(reservationRequest.getCheckIn())
                 .checkOut(reservationRequest.getCheckOut())
                 .reservationStatus(ReservationStatus.WAIT)
-                .petSitterCriticalService(petSitterCriticalService)
+                .petSitterCriticalServiceId(petSitterCriticalService.getId())
+                .criticalServiceName(petSitterCriticalService.getCriticalService().getServiceName())
+                .criticalServicePrice(petSitterCriticalService.getPrice())
+                .totalPrice(0)
                 .build();
+    }
+
+    public void updateTotalPrice(int price){
+        this.totalPrice = price;
     }
 
     public void updateStatus(String status) {

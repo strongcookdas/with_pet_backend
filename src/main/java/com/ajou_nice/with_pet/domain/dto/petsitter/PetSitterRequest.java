@@ -56,6 +56,7 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@ToString
 	public static class PetSitterServiceRequest{
 		private Long serviceId;
+		private String serviceName;
 		private int price;
 	}
 
@@ -66,5 +67,6 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	public static class PetSitterCriticalServiceRequest{
 		private Long serviceId;
 		private int price;
+		private String serviceName;
 	}
 }

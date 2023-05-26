@@ -29,7 +29,7 @@ public class ReservationDetailResponse {
                 .dogId(reservation.getDog().getDogId())
                 .dogName(reservation.getDog().getName())
                 .dogImg(reservation.getDog().getProfile_img())
-                .cost(reservation.getPay().getCost())
+                .cost(reservation.getTotalPrice())
                 .checkIn(reservation.getCheckIn().toLocalDate().toString())
                 .checkOut(reservation.getCheckOut().toLocalDate().toString())
                 .socializationTemperature(reservation.getDog().getSocializationTemperature())
