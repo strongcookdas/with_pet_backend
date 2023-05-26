@@ -11,7 +11,6 @@ import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterSer
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.House;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
@@ -22,7 +21,6 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.HouseRepository;
-import com.ajou_nice.with_pet.repository.PetSitterApplicantRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
@@ -44,8 +42,6 @@ public class PetSitterService {
 
 	private final PetSitterRepository petSitterRepository;
 	private final PetSitterServiceRepository petSitterServiceRepository;
-	private final PetSitterApplicantRepository petSitterApplicantRepository;
-
 	private final WithPetServiceRepository withPetServiceRepository;
 	private final UserRepository userRepository;
 	private final HouseRepository houseRepository;
@@ -70,11 +66,7 @@ public class PetSitterService {
 	public PetSitterModifyInfoResponse showMyInfo(String userId){
 		User findUser = userService.findUser(userId);
 
-		PetSitterApplicant findApplicant = petSitterApplicantRepository.findByUser(findUser).orElseThrow(()->{
-			throw new AppException(ErrorCode.APPLICANT_NOT_FOUND, ErrorCode.APPLICANT_NOT_FOUND.getMessage());
-		});
-
-		PetSitter petSitter = petSitterRepository.findByApplicant(findApplicant).orElseThrow(()->{
+		PetSitter petSitter = petSitterRepository.findByUser(findUser).orElseThrow(()->{
 			throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
 		});
 
@@ -92,11 +84,7 @@ public class PetSitterService {
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
-		PetSitterApplicant findApplicant = petSitterApplicantRepository.findByUser(findUser).orElseThrow(()->{
-			throw new AppException(ErrorCode.APPLICANT_NOT_FOUND, ErrorCode.APPLICANT_NOT_FOUND.getMessage());
-		});
-
-		PetSitter petSitter = petSitterRepository.findByApplicant(findApplicant).orElseThrow(()->{
+		PetSitter petSitter = petSitterRepository.findByUser(findUser).orElseThrow(()->{
 			throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
 		});
 

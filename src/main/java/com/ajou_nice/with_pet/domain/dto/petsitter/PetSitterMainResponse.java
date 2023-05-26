@@ -39,7 +39,7 @@ public class PetSitterMainResponse {
 									ErrorCode.PETSITTER_MAIN_HOUSE_NOT_FOUND.getMessage());
 						})
 						.getHouse_img())
-				.userName(petSitter.getApplicant().getUser().getName())
+				.userName(petSitter.getPetSitterName())
 				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 				.review_count(petSitter.getReview_count())
 				.star_rate(petSitter.getStar_rate())

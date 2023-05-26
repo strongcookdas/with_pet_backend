@@ -2,19 +2,16 @@ package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
 import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
-import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
 import com.ajou_nice.with_pet.repository.DiaryRepository;
 import com.ajou_nice.with_pet.repository.DogRepository;
-import com.ajou_nice.with_pet.repository.PetSitterApplicantRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
@@ -27,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PetSitterDiaryService {
 
     private final UserRepository userRepository;
-    private final PetSitterApplicantRepository applicantRepository;
     private final PetSitterRepository petSitterRepository;
     private final DiaryRepository diaryRepository;
     private final DogRepository dogRepository;
@@ -38,11 +34,8 @@ public class PetSitterDiaryService {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
-        PetSitterApplicant applicant = applicantRepository.findByUser(user).orElseThrow(() -> {
-            throw new AppException(ErrorCode.APPLICANT_NOT_FOUND,
-                    ErrorCode.APPLICANT_NOT_FOUND.getMessage());
-        });
-        PetSitter petSitter = petSitterRepository.findByApplicant(applicant).orElseThrow(() -> {
+
+        PetSitter petSitter = petSitterRepository.findByUser(user).orElseThrow(() -> {
             throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
                     ErrorCode.PETSITTER_NOT_FOUND.getMessage());
         });

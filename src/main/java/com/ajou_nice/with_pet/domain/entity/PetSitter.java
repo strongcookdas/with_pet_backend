@@ -2,7 +2,6 @@ package com.ajou_nice.with_pet.domain.entity;
 
 
 import com.ajou_nice.with_pet.enums.DogSize;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,9 +36,31 @@ public class PetSitter extends BaseEntity {
 	private Long id;
 
 	@NotNull
+	private String petSitterName;
+
+	@Lob
+	private String profileImg;
+
+	@NotNull
+	private String petSitterPhone;
+
+	@NotNull
+	@Lob
+	private String petSitterLicenseImg;
+
+	@NotNull
+	private String petSitterZipCode;
+
+	@NotNull
+	private String petSitterStreetAdr;
+
+	@NotNull
+	private String petSitterDetailAdr;
+
+	@NotNull
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="applicant_id",unique = true, nullable = false)
-	private PetSitterApplicant applicant;
+	@JoinColumn(name="userId",unique = true, nullable = false)
+	private User user;
 
 	@OneToMany(mappedBy = "petSitter")
 	private List<PetSitterWithPetService> petSitterWithPetServiceList;
@@ -78,10 +99,17 @@ public class PetSitter extends BaseEntity {
 		this.introduction = introduction;
 	}
 
-	public static PetSitter toEntity(PetSitterApplicant petSitterApplicant){
+	public static PetSitter toEntity(User user){
 
 		return PetSitter.builder()
-				.applicant(petSitterApplicant)
+				.petSitterName(user.getName())
+				.petSitterPhone(user.getPhone())
+				.profileImg(user.getProfileImg())
+				.petSitterLicenseImg(user.getLicenseImg())
+				.petSitterZipCode(user.getAddress().getZipcode())
+				.petSitterStreetAdr(user.getAddress().getStreetAdr())
+				.petSitterDetailAdr(user.getAddress().getDetailAdr())
+				.user(user)
 				.valid(false)
 				.review_count(0)
 				.star_rate(0.0)

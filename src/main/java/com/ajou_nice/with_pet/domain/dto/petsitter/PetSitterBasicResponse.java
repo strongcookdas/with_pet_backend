@@ -31,10 +31,10 @@ public class PetSitterBasicResponse {
 	public static PetSitterBasicResponse of(PetSitter petSitter){
 		return PetSitterBasicResponse.builder()
 				.petSitterId(petSitter.getId())
-				.userName(petSitter.getApplicant().getUser().getName())
-				.userId(petSitter.getApplicant().getUser().getId())
-				.userProfileImg(petSitter.getApplicant().getUser().getProfileImg())
-				.userPhone(petSitter.getApplicant().getUser().getPhone())
+				.userName(petSitter.getPetSitterName())
+				.userId(petSitter.getUser().getId())
+				.userProfileImg(petSitter.getProfileImg())
+				.userPhone(petSitter.getPetSitterPhone())
 				.report_count(petSitter.getReport_count())
 				.build();
 	}
@@ -42,10 +42,10 @@ public class PetSitterBasicResponse {
 	public static List<PetSitterBasicResponse> toList(List<PetSitter> petSitters){
 		return petSitters.stream().map(petSitter-> PetSitterBasicResponse.builder()
 				.petSitterId(petSitter.getId())
-				.userName(petSitter.getApplicant().getUser().getName())
-				.userId(petSitter.getApplicant().getUser().getId())
-				.userProfileImg(petSitter.getApplicant().getUser().getProfileImg())
-				.userPhone(petSitter.getApplicant().getUser().getPhone())
+				.userName(petSitter.getPetSitterName())
+				.userId(petSitter.getUser().getId())
+				.userProfileImg(petSitter.getProfileImg())
+				.userPhone(petSitter.getPetSitterPhone())
 				.report_count(petSitter.getReport_count())
 				.build()).collect(Collectors.toList());
 	}

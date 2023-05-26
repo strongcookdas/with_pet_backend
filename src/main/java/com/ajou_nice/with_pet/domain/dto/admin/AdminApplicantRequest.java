@@ -14,9 +14,5 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AdminApplicantRequest {
-
-	private Long applicantId;
-	private Long applicant_userId;
-	private ApplicantStatus applicantStatus;
-
+	private Long userId;
 }
