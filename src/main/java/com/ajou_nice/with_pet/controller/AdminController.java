@@ -67,12 +67,12 @@ public class AdminController {
 		return Response.success(applicantList);
 	}
 
-	@GetMapping("/api/v1/show-applicant/{applicantId}")
+	@GetMapping("/api/v1/show-applicant/{userId}")
 	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-	public Response<ApplicantInfoResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("applicantId")Long applicantId){
+	public Response<ApplicantInfoResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("applicantId")Long userId){
 
 		ApplicantInfoResponse applicantInfoResponse = adminService.getApplicantInfo(
-				authentication.getName(), applicantId);
+				authentication.getName(), userId);
 
 		return Response.success(applicantInfoResponse);
 	}

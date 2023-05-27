@@ -5,7 +5,12 @@ import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterMainResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterModifyInfoRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterCriticalServicesRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHashTagsRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHousesRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterIntroRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterWithPetServicesRequest;
 import com.ajou_nice.with_pet.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +24,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,18 +63,72 @@ public class PetSitterController {
 		return Response.success(modifyInfoResponse);
 	}
 
-	// 펫시터 my Info 수정  //
-	@PutMapping("/api/v1/petsitter/update-myinfo")
-	@ApiOperation(value = "펫시터의 펫시터정보 수정")
-	public Response<PetSitterModifyInfoResponse> modifyPetSitterInfo(@ApiIgnore Authentication authentication,
-			@RequestBody @Valid PetSitterModifyInfoRequest petSitterModifyInfoRequest){
-		log.info("=============== petSitter modify info request : {} ================", petSitterModifyInfoRequest);
+	// 펫시터 my Info 등록  //
+	@PostMapping("/api/v1/petsitter/register-myinfo")
+	@ApiOperation(value = "펫시터의 펫시터정보 등록")
+	public Response<PetSitterModifyInfoResponse> registerPetSitterInfo(@ApiIgnore Authentication authentication,
+			@RequestBody @Valid PetSitterRequest.PetSitterInfoRequest petSitterInfoRequest){
+		log.info("=============== petSitter register info request : {} ================", petSitterInfoRequest);
 
-		PetSitterModifyInfoResponse modifyInfoResponse = petSitterService.updateMyInfo(petSitterModifyInfoRequest,
+		PetSitterModifyInfoResponse modifyInfoResponse = petSitterService.registerPetSitterInfo(petSitterInfoRequest,
 				authentication.getName());
 
-		log.info("=============== petSitter modify info response : {} ================", modifyInfoResponse);
+		log.info("=============== petSitter register info response : {} ================", modifyInfoResponse);
 		return Response.success(modifyInfoResponse);
+	}
+
+	// 펫시터 house 수정 //
+	@PutMapping("/api/v1/petsitter/update-houses")
+	@ApiOperation(value = "펫시터 펫시터집 사진 수정")
+	public Response modifyPetSitterHouses(@RequestBody @Valid PetSitterHousesRequest petSitterHousesRequest,
+			@ApiIgnore Authentication authentication){
+
+		petSitterService.updateHouseInfo(petSitterHousesRequest, authentication.getName());
+
+		return Response.success("수정이 완료되었습니다.");
+	}
+
+	// 펫시터 HashTag 수정 //
+	@PutMapping("/api/v1/petsitter/update-hashtags")
+	@ApiOperation(value = "펫시터 해시태그 수정")
+	public Response modifyPetSitterHashTags(@RequestBody @Valid PetSitterHashTagsRequest petSitterHashTagsRequest,
+			@ApiIgnore Authentication authentication){
+
+		petSitterService.updateHashTagInfo(petSitterHashTagsRequest, authentication.getName());
+
+		return Response.success("수정이 완료되었습니다.");
+	}
+
+	//펫시터 withPetService 정보 수정 //
+	@PutMapping("/api/v1/petsitter/update-service")
+	@ApiOperation(value = "펫시터 위드펫 서비스 수정")
+	public Response modifyPetSitterService(@RequestBody @Valid PetSitterWithPetServicesRequest withPetServicesRequest,
+			@ApiIgnore Authentication authentication){
+
+		petSitterService.updatePetSitterService(withPetServicesRequest, authentication.getName());
+
+		return Response.success("수정이 완료되었습니다.");
+	}
+
+	// 펫시터 critical withpetService 정보 수정 //
+	@PutMapping("/api/v1/petsitter/update-criticalservice")
+	@ApiOperation(value = "펫시터 필수 위드펫 서비스 수정")
+	public Response modifyCriticalService(@RequestBody @Valid PetSitterCriticalServicesRequest criticalServicesRequest,
+			@ApiIgnore Authentication authentication){
+
+		petSitterService.updateCriticalService(criticalServicesRequest, authentication.getName());
+		return Response.success("수정이 완료되었습니다.");
+	}
+
+	// 펫시터 introduction 정보 수정 //
+	@PutMapping("/api/v1/petsitter/update-intro")
+	@ApiOperation(value = "펫시터 introduction 정보 수정")
+	public Response modifyIntro(@RequestBody PetSitterIntroRequest petSitterIntroRequest,
+			@ApiIgnore Authentication authentication){
+
+		petSitterService.updatePetSitterIntro(petSitterIntroRequest, authentication.getName());
+
+		return Response.success("수정이 완료되었습니다.");
 	}
 
 	// 메인페이지 펫시터 조회 //

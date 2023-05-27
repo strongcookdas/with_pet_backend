@@ -3,6 +3,7 @@ package com.ajou_nice.with_pet.domain.entity;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -41,6 +43,9 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "petsitter_id")
     private PetSitter petSitter;
 
+    @OneToMany(mappedBy = "reservation")
+    private List<ReservationPetSitterService> reservationPetSitterServiceList;
+
     @NotNull
     private LocalDateTime checkIn;
 
@@ -50,12 +55,10 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "critical_service_id", nullable = false)
-    private PetSitterCriticalService petSitterCriticalService;
-
-    @OneToOne(mappedBy = "reservation")
-    private Pay pay;
+    private Long petSitterCriticalServiceId;
+    private String criticalServiceName;
+    private Integer criticalServicePrice;
+    private Integer totalPrice;
 
     public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
             PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
@@ -66,8 +69,15 @@ public class Reservation extends BaseEntity {
                 .checkIn(reservationRequest.getCheckIn())
                 .checkOut(reservationRequest.getCheckOut())
                 .reservationStatus(ReservationStatus.WAIT)
-                .petSitterCriticalService(petSitterCriticalService)
+                .petSitterCriticalServiceId(petSitterCriticalService.getId())
+                .criticalServiceName(petSitterCriticalService.getCriticalService().getServiceName())
+                .criticalServicePrice(petSitterCriticalService.getPrice())
+                .totalPrice(0)
                 .build();
+    }
+
+    public void updateTotalPrice(int price){
+        this.totalPrice = price;
     }
 
     public void updateStatus(String status) {
