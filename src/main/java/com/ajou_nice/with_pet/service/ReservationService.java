@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
@@ -49,7 +50,7 @@ public class ReservationService {
 
     //리팩토링이 절대적으로 필요해 보인다......
     @Transactional
-    public void createReservation(String userId, ReservationRequest reservationRequest) {
+    public ReservationCreateResponse createReservation(String userId, ReservationRequest reservationRequest) {
         int cost = 0;
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -106,6 +107,8 @@ public class ReservationService {
 
         reservationServiceRepository.saveAll(reservationServices);
         reservation.updateTotalPrice(cost);
+
+        return ReservationCreateResponse.of(reservation);
     }
 
     private void isDuplicatedReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog,

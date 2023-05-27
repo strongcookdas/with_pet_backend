@@ -17,15 +17,52 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@NoArgsConstructor
 	@Getter
 	@ToString
-	public static class PetSitterModifyInfoRequest{
+	public static class PetSitterInfoRequest{
 
 		private List<PetSitterHouseRequest> petSitterHouseRequests;
 		private List<PetSitterHashTagRequest> petSitterHashTagRequests;
+
+		@Lob
 		private String introduction;
 		private List<PetSitterServiceRequest> petSitterServiceRequests;
 		private List<PetSitterCriticalServiceRequest> petSitterCriticalServiceRequests;
 
 	}
+
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterIntroRequest{
+		@Lob
+		private String introduction;
+	}
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterHousesRequest{
+		private List<PetSitterHouseRequest> petSitterHousesRequests;
+	}
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterHashTagsRequest{
+		private List<PetSitterHashTagRequest> petSitterHashTagRequests;
+	}
+
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterCriticalServicesRequest{
+		private List<PetSitterCriticalServiceRequest> petSitterCriticalServiceRequests;
+	}
+
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterWithPetServicesRequest{
+		private List<PetSitterServiceRequest> petSitterServiceRequests;
+	}
+
 
 	@AllArgsConstructor
 	@NoArgsConstructor

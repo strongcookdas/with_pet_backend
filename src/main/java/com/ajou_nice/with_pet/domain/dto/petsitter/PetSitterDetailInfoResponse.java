@@ -56,7 +56,6 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 				.petSitterLicenseImg(petSitter.getPetSitterLicenseImg())
 				.build();
 	}
-
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Getter
