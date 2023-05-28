@@ -106,6 +106,7 @@ public class ReservationService {
         }
 
         reservationServiceRepository.saveAll(reservationServices);
+        reservation.updateReservationServices(reservationServices);
         reservation.updateTotalPrice(cost);
 
         return ReservationCreateResponse.of(reservation);
