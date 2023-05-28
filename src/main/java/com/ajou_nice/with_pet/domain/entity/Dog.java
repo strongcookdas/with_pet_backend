@@ -72,6 +72,7 @@ public class Dog extends BaseEntity {
         this.profile_img = dogInfoRequest.getDog_img();
         this.breed = dogInfoRequest.getDog_breed();
         this.isbn = dogInfoRequest.getDog_isbn();
+        this.dogSize = dogSize;
     }
 
     public void updateSocialization(int dogSocialization){
