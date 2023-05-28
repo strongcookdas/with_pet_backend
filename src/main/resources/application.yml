@@ -10,7 +10,7 @@ spring:
 #  address: localhost
 #  port: 8000
 
-#spring:git s
+#spring:
 #  mvc:
 #    pathmatch:
 #      matching-strategy: ant_path_matcher
