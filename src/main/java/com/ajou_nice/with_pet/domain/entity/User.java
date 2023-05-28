@@ -1,8 +1,11 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
+import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest.ApplicantModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyRequest;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
+import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -58,6 +61,30 @@ public class User extends BaseEntity {
     })
     private Address address;
 
+    private String identification;
+
+    @Lob
+    private String licenseImg;
+    private Boolean isSmoking;
+    private Boolean havingWithPet;
+
+    @Lob
+    private String careExperience;
+
+    @Lob
+    private String animalCareer;
+
+    @Lob
+    private String petSitterCareer;
+
+    @Lob
+    private String motivate;
+
+    @Enumerated(EnumType.STRING)
+    private ApplicantStatus applicantStatus;
+
+    //몇번 지원했는지 count
+    private Integer applicantCount;
 
     public void updateUserRole(UserRole userRole){
         this.role = userRole;
@@ -70,6 +97,30 @@ public class User extends BaseEntity {
         this.profileImg = modifyRequest.getProfileImg();
         this.phone = modifyRequest.getPhoneNum();
         this.address = Address.toAddressEntity(modifyRequest.getAddress());
+    }
+
+    public void updateApplicateCount(){
+        applicantCount++;
+    }
+    public void updateApplicantStatus(ApplicantStatus status){
+        this.applicantStatus = status;
+    }
+    public void registerApplicantInfo(ApplicantInfoRequest applicantInfoRequest){
+        this.identification = applicantInfoRequest.getApplicant_identification();
+        this.licenseImg = applicantInfoRequest.getApplicant_license_img();
+        this.isSmoking = applicantInfoRequest.getApplicant_is_smoking();
+        this.havingWithPet = applicantInfoRequest.getApplicant_having_with_pet();
+        this.careExperience = applicantInfoRequest.getApplicant_care_experience();
+        this.animalCareer = applicantInfoRequest.getApplicant_animal_career();
+        this.petSitterCareer = applicantInfoRequest.getApplicant_petsitter_career();
+        this.motivate = applicantInfoRequest.getApplicant_motivate();
+    }
+
+    public void updateApplicantInfo(ApplicantModifyRequest applicantModifyRequest){
+        this.petSitterCareer = applicantModifyRequest.getApplicant_petsitter_career();
+        this.careExperience = applicantModifyRequest.getApplicant_care_experience();
+        this.animalCareer = applicantModifyRequest.getApplicant_animal_career();
+        this.motivate = applicantModifyRequest.getApplicant_motivate();
     }
 
     public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
@@ -90,6 +141,7 @@ public class User extends BaseEntity {
                 .profileImg(img)
                 .phone(userSignUpRequest.getPhoneNum())
                 .address(Address.toAddressEntity(userSignUpRequest.getAddress()))
+                .applicantCount(0)
                 .build();
     }
 }

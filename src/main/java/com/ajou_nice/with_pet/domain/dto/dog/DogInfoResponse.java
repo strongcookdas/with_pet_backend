@@ -39,9 +39,11 @@ public class DogInfoResponse {
 
     private Double affectionTemperature;
 
-    private List<PartyMemberResponse> partyMemberResponses;
-    private DogSize dogSize;
+    private String partyIsbn;
 
+    private List<PartyMemberResponse> partyMemberResponses;
+
+    private DogSize dogSize;
 
 
     public static List<DogInfoResponse> toList(List<Dog> dogs) {
@@ -74,6 +76,7 @@ public class DogInfoResponse {
                 .dog_birth(dog.getBirth())
                 .dog_weight(dog.getWeight())
                 .dog_isbn(dog.getIsbn())
+                .partyIsbn(dog.getParty().getPartyIsbn())
                 .partyMemberResponses(
                         dog.getParty().getUserPartyList().stream().map(PartyMemberResponse::of)
                                 .collect(

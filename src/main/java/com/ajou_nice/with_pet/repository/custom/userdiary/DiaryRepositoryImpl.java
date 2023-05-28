@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 
-public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements DiaryRepositoryCustom {
+public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements
+        DiaryRepositoryCustom {
 
     @Autowired
     private JPAQueryFactory queryFactory;
@@ -23,13 +24,13 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements Di
 
     @Override
     public List<Diary> findByMonthDate(Long userId, Long dogId, Long categoryId,
-            LocalDate month) {
+            LocalDate month, String petsitterCheck) {
 
         List<Diary> userDiaries = queryFactory.select(diary).from(diary, userParty)
                 .where(diary.dog.party.eq(userParty.party).and(userParty.user.userId.eq(userId)
                                 .and(diary.createdAt.between(month.withDayOfMonth(1),
                                         month.withDayOfMonth(month.lengthOfMonth())))),
-                        containsDog(dogId), containsCategory(categoryId))
+                        containsDog(dogId), containsCategory(categoryId),containsPetsitter(petsitterCheck))
                 .orderBy(diary.createdAt.desc())
                 .fetch();
         return userDiaries;
@@ -37,11 +38,11 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements Di
 
     @Override
     public List<Diary> findByDayDate(Long userId, Long dogId, Long categoryId,
-            LocalDate day) {
+            LocalDate day, String petsitterCheck) {
         List<Diary> userDiaries = queryFactory.select(diary).from(diary, userParty)
                 .where(diary.dog.party.eq(userParty.party).and(userParty.user.userId.eq(userId)
                                 .and(diary.createdAt.eq(day))),
-                        containsDog(dogId), containsCategory(categoryId))
+                        containsDog(dogId), containsCategory(categoryId), containsPetsitter(petsitterCheck))
                 .orderBy(diary.createdAt.desc())
                 .fetch();
         return userDiaries;
@@ -59,6 +60,19 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements Di
             return null;
         }
         return diary.category.categoryId.eq(categoryId);
+    }
+
+    private BooleanExpression containsPetsitter(String petsitterCheck) {
+        if (petsitterCheck == null || petsitterCheck.isEmpty()) {
+            return null;
+        }
+        if (petsitterCheck.equals("PETSITTER")) {
+            return diary.petSitter.isNotNull();
+        } else if (petsitterCheck.equals("USER")) {
+            return diary.petSitter.isNull();
+        }
+
+        return null;
     }
 
 }

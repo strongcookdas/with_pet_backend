@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
@@ -35,11 +36,14 @@ public class ReservationController {
 
     @PostMapping
     @ApiOperation(value = "예약 하기")
-    public Response createReservation(@ApiIgnore Authentication authentication,
+    public Response<ReservationCreateResponse> createReservation(@ApiIgnore Authentication authentication,
             @RequestBody ReservationRequest reservationRequest) {
         log.info("=======================ReservationRequest : {}=============================",reservationRequest);
-        reservationService.createReservation(authentication.getName(), reservationRequest);
-        return Response.success("예약이 완료되었습니다.");
+        ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(authentication.getName(), reservationRequest);
+
+        log.info("=======================ReservationResponse : {}=============================",reservationCreateResponse);
+
+        return Response.success(reservationCreateResponse);
     }
 
 

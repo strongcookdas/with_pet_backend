@@ -9,9 +9,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 @Slf4j
@@ -22,18 +19,6 @@ public class DogRepositoryImpl extends QuerydslRepositorySupport implements DogR
 
     public DogRepositoryImpl() {
         super(Dog.class);
-    }
-
-    @Override
-    public Page<Dog> findAllByUserParty(Pageable pageable, String userId) {
-        List<Dog> dogs = queryFactory.select(dog)
-                .from(dog, userParty)
-                .where(dog.party.eq(userParty.party).and(userParty.user.id.eq(userId))).fetch();
-        log.info(
-                "--------------------------------Query DSL 디버깅----------------------------------------");
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), dogs.size());
-        return new PageImpl<Dog>(dogs.subList(start, end), pageable, dogs.size());
     }
 
     @Override

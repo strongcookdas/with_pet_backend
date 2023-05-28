@@ -5,7 +5,6 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
-import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
@@ -24,8 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,12 +114,12 @@ public class DogService {
     }
 
     //여기가 제일 문제다....
-    public Page<DogInfoResponse> getDogInfos(Pageable pageable, String userId) {
-        userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
-        Page<Dog> dogs = dogRepository.findAllByUserParty(pageable, userId);
-        return dogs.map(DogInfoResponse::of);
+    public List<DogInfoResponse> getDogInfos(String userId) {
+        List<Long> userPartyList = userPartyRepository.findAllUserPartyIdByUserId(userId);
+        log.info("==================================== findAllUserDogs Start ==============================================");
+        List<Dog> dogs = dogRepository.findAllUserDogs(userPartyList);
+        log.info("==================================== findAllUserDogs End ==============================================");
+        return dogs.stream().map(DogInfoResponse::of).collect(Collectors.toList());
     }
 
     public List<DogSimpleInfoResponse> getDogSimpleInfos(String userId) {

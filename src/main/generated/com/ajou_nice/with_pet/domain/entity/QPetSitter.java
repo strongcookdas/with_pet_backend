@@ -24,8 +24,6 @@ public class QPetSitter extends EntityPathBase<PetSitter> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
-    public final QPetSitterApplicant applicant;
-
     public final EnumPath<com.ajou_nice.with_pet.enums.DogSize> availableDogSize = createEnum("availableDogSize", com.ajou_nice.with_pet.enums.DogSize.class);
 
     //inherited
@@ -43,17 +41,33 @@ public class QPetSitter extends EntityPathBase<PetSitter> {
 
     public final ListPath<PetSitterCriticalService, QPetSitterCriticalService> petSitterCriticalServiceList = this.<PetSitterCriticalService, QPetSitterCriticalService>createList("petSitterCriticalServiceList", PetSitterCriticalService.class, QPetSitterCriticalService.class, PathInits.DIRECT2);
 
+    public final StringPath petSitterDetailAdr = createString("petSitterDetailAdr");
+
     public final ListPath<PetSitterHashTag, QPetSitterHashTag> petSitterHashTagList = this.<PetSitterHashTag, QPetSitterHashTag>createList("petSitterHashTagList", PetSitterHashTag.class, QPetSitterHashTag.class, PathInits.DIRECT2);
 
     public final ListPath<House, QHouse> petSitterHouseList = this.<House, QHouse>createList("petSitterHouseList", House.class, QHouse.class, PathInits.DIRECT2);
 
+    public final StringPath petSitterLicenseImg = createString("petSitterLicenseImg");
+
+    public final StringPath petSitterName = createString("petSitterName");
+
+    public final StringPath petSitterPhone = createString("petSitterPhone");
+
+    public final StringPath petSitterStreetAdr = createString("petSitterStreetAdr");
+
     public final ListPath<PetSitterWithPetService, QPetSitterWithPetService> petSitterWithPetServiceList = this.<PetSitterWithPetService, QPetSitterWithPetService>createList("petSitterWithPetServiceList", PetSitterWithPetService.class, QPetSitterWithPetService.class, PathInits.DIRECT2);
+
+    public final StringPath petSitterZipCode = createString("petSitterZipCode");
+
+    public final StringPath profileImg = createString("profileImg");
 
     public final NumberPath<Integer> report_count = createNumber("report_count", Integer.class);
 
     public final NumberPath<Integer> review_count = createNumber("review_count", Integer.class);
 
     public final NumberPath<Double> star_rate = createNumber("star_rate", Double.class);
+
+    public final QUser user;
 
     public final BooleanPath valid = createBoolean("valid");
 
@@ -75,7 +89,7 @@ public class QPetSitter extends EntityPathBase<PetSitter> {
 
     public QPetSitter(Class<? extends PetSitter> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.applicant = inits.isInitialized("applicant") ? new QPetSitterApplicant(forProperty("applicant"), inits.get("applicant")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

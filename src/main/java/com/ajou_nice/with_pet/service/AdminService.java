@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantRequest;
-import com.ajou_nice.with_pet.domain.dto.admin.AdminAcceptApplicantResponse;
 import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantResponse;
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest.CriticalServiceModifyRequest;
@@ -14,7 +13,6 @@ import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.Wi
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
@@ -22,7 +20,6 @@ import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
-import com.ajou_nice.with_pet.repository.PetSitterApplicantRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
@@ -35,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-
-	private final PetSitterApplicantRepository petSitterApplicantRepository;
 	private final UserRepository userRepository;
 	private final PetSitterRepository petSitterRepository;
 	private final WithPetServiceRepository withPetServiceRepository;
@@ -46,10 +41,10 @@ public class AdminService {
 	private final CriticalServiceRepository criticalServiceRepository;
 
 	// == 관리자의 펫시터 지원자 리스트 전체 확인 == //
+	// 리팩토링 완 -> Authentication자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
 	public List<ApplicantBasicInfoResponse> showApplicants(String userId){
 
-		User findUser = userService.findUser(userId);
-		List<PetSitterApplicant> petSitterApplicantList = petSitterApplicantRepository.findAllInQuery(ApplicantStatus.WAIT);
+		List<User> petSitterApplicantList = userRepository.findApplicantAllInQuery(UserRole.ROLE_APPLICANT, ApplicantStatus.WAIT);
 
 		return ApplicantBasicInfoResponse.toList(petSitterApplicantList);
 	}
@@ -63,60 +58,51 @@ public class AdminService {
 	}
 
 	// == 관리자의 펫시터 지원자 수락 == //
+	// 리팩토링 완 -> Authentication 자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
 	@Transactional
 	public PetSitterBasicResponse createPetsitter(String userId, AdminApplicantRequest adminApplicantRequest){
-		User findAdminUser = userService.findUser(userId);
-
-		adminApplicantRequest.setApplicantStatus(ApplicantStatus.APPROVE);
-
-		//펫시터 불러오기
-		PetSitterApplicant petSitterApplicant = petSitterApplicantRepository.findById(
-				adminApplicantRequest.getApplicantId()).orElseThrow(()->{
-					throw new AppException(ErrorCode.APPLICANT_NOT_FOUND, ErrorCode.APPLICANT_NOT_FOUND.getMessage());
-		});
-		//펫시터 지원자 상태 변경 + userRole 변경
-		petSitterApplicant.updateApplicantState(adminApplicantRequest.getApplicantStatus());
 		//유저 불러오기
-		User findUser = userRepository.findByUserId(adminApplicantRequest.getApplicant_userId()).orElseThrow(()->{
+		User findUser = userRepository.findByUserId(adminApplicantRequest.getUserId()).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
+		//펫시터 지원자 상태 변경 + userRole 변경
+		findUser.updateApplicantStatus(ApplicantStatus.APPROVE);
 		findUser.updateUserRole(UserRole.ROLE_PETSITTER);
 
-		PetSitter petSitter = PetSitter.toEntity(petSitterApplicant);
+		PetSitter petSitter = PetSitter.toEntity(findUser);
 		PetSitter newPetSitter = petSitterRepository.save(petSitter);
 
 		return PetSitterBasicResponse.of(newPetSitter);
-
 	}
+
 	// == 관리자의 펫시터 지원자 거절 == //
+	// 리팩토링 완 -> Authentication 자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
 	@Transactional
 	public AdminApplicantResponse refuseApplicant(String userId, AdminApplicantRequest adminApplicantRequest){
-		User findUser = userService.findUser(userId);
-		adminApplicantRequest.setApplicantStatus(ApplicantStatus.REFUSE);
 
-		//Refuse로 들어와야 한다.
-		if(adminApplicantRequest.getApplicantStatus() != ApplicantStatus.REFUSE){
-			throw new IllegalArgumentException(ErrorCode.BAD_REQUEST_APPLICANT_STATUS.getMessage());
-		}
-		//펫시터 지원자 불러오기
-		PetSitterApplicant findApplicant = petSitterApplicantRepository.findById(
-				adminApplicantRequest.getApplicantId()).orElseThrow(()->{
-			throw new AppException(ErrorCode.APPLICANT_NOT_FOUND, ErrorCode.APPLICANT_NOT_FOUND.getMessage());
+		//유저 불러오기
+		User findUser = userRepository.findByUserId(adminApplicantRequest.getUserId()).orElseThrow(()->{
+			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
-		findApplicant.updateApplicantState(adminApplicantRequest.getApplicantStatus());
 
-		return AdminApplicantResponse.of(findApplicant);
+		//펫시터 지원자 상태 변경 + userRole 변경
+		findUser.updateApplicantStatus(ApplicantStatus.REFUSE);
+		findUser.updateUserRole(UserRole.ROLE_USER);
+
+		return AdminApplicantResponse.of(findUser);
 	}
 
 
 	// == 관리자의 펫시터 지원자 한명 상세정보 확인 == //
-	public ApplicantInfoResponse getApplicantInfo(String userId, Long applicantId){
-		User findUser = userService.findUser(userId);
-		PetSitterApplicant petSitterApplicant = petSitterApplicantRepository.findById(applicantId).orElseThrow(()->{
-			throw new AppException(ErrorCode.APPLICANT_NOT_FOUND, ErrorCode.APPLICANT_NOT_FOUND.getMessage());
+	// 리팩토링 완
+	public ApplicantInfoResponse getApplicantInfo(String id, Long userId){
+		//유저 불러오기
+		User findUser = userRepository.findByUserId(userId).orElseThrow(()->{
+			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
-		return ApplicantInfoResponse.ofAll(petSitterApplicant);
+
+		return ApplicantInfoResponse.ofAll(findUser);
 	}
 
 	// == 관리자의 위드펫 서비스 리스트 조회 == //

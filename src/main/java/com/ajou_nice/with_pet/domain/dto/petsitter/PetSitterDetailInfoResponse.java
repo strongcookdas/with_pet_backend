@@ -45,18 +45,17 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 	public static PetSitterDetailInfoResponse of(PetSitter petSitter){
 		return PetSitterDetailInfoResponse.builder()
 				.petSitterId(petSitter.getId())
-				.petSitterName(petSitter.getApplicant().getUser().getName())
-				.petSitterProfileImg(petSitter.getApplicant().getUser().getProfileImg())
-				.petSitterAddress(petSitter.getApplicant().getUser().getAddress().getStreetAdr())
+				.petSitterName(petSitter.getPetSitterName())
+				.petSitterProfileImg(petSitter.getProfileImg())
+				.petSitterAddress(petSitter.getPetSitterStreetAdr())
 				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 				.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
 				.petSitterServices(PetSitterServiceResponse.toList(petSitter.getPetSitterWithPetServiceList()))
 				.petSitterCriticalServices(PetSitterCriticalServiceResponse.toList(petSitter.getPetSitterCriticalServiceList()))
 				.introduction(petSitter.getIntroduction())
-				.petSitterLicenseImg(petSitter.getApplicant().getLicense_img())
+				.petSitterLicenseImg(petSitter.getPetSitterLicenseImg())
 				.build();
 	}
-
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Getter
@@ -79,7 +78,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 					.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
 					.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 					.introduction(petSitter.getIntroduction())
-					.petSitterLicenseImg(petSitter.getApplicant().getLicense_img())
+					.petSitterLicenseImg(petSitter.getPetSitterLicenseImg())
 					.petSitterCriticalServices(PetSitterCriticalServiceResponse.toList(petSitter.getPetSitterCriticalServiceList()))
 					.criticalServices(CriticalServiceResponse.toList(criticalServiceList))
 					.petSitterServices(PetSitterServiceResponse.toList(petSitter.getPetSitterWithPetServiceList()))

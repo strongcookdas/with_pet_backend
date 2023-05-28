@@ -3,7 +3,6 @@ package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantRequest;
-import com.ajou_nice.with_pet.domain.dto.admin.AdminAcceptApplicantResponse;
 import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantResponse;
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
@@ -13,8 +12,6 @@ import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRespons
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
-import com.ajou_nice.with_pet.domain.entity.CriticalService;
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +20,6 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,12 +67,12 @@ public class AdminController {
 		return Response.success(applicantList);
 	}
 
-	@GetMapping("/api/v1/show-applicant/{applicantId}")
+	@GetMapping("/api/v1/show-applicant/{userId}")
 	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-	public Response<ApplicantInfoResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("applicantId")Long applicantId){
+	public Response<ApplicantInfoResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("applicantId")Long userId){
 
 		ApplicantInfoResponse applicantInfoResponse = adminService.getApplicantInfo(
-				authentication.getName(), applicantId);
+				authentication.getName(), userId);
 
 		return Response.success(applicantInfoResponse);
 	}
@@ -118,8 +114,12 @@ public class AdminController {
 	@ApiOperation(value = "관리자의 필수 서비스 추가")
 	public Response<CriticalServiceResponse> addCriticalService(@ApiIgnore Authentication authentication, @RequestBody @Valid
 			CriticalServiceRequest criticalServiceRequest){
+		log.info("=============== refuse petsitter info : {} ==================",criticalServiceRequest);
 		CriticalServiceResponse criticalServiceResponse = adminService.addCriticalService(
 				authentication.getName(),criticalServiceRequest);
+
+
+		log.info("=============== refuse petsitter info : {} ==================",criticalServiceResponse);
 
 		return Response.success(criticalServiceResponse);
 	}

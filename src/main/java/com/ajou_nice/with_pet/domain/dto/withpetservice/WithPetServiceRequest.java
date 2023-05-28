@@ -34,6 +34,6 @@ public class WithPetServiceRequest {
 		@Lob
 		private String serviceImg;
 
-		private String serviceIntro;
+		private String serviceIntroduction;
 	}
 }

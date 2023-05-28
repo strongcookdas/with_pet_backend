@@ -1,28 +1,25 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
-import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
-import com.ajou_nice.with_pet.domain.entity.ReservationPetsitterService;
+import com.ajou_nice.with_pet.domain.entity.ReservationPetSitterService;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
-import com.ajou_nice.with_pet.repository.PayRepository;
-import com.ajou_nice.with_pet.repository.PetSitterApplicantRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
-import com.ajou_nice.with_pet.repository.ReservationPetsitterServiceRepository;
+import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
@@ -43,11 +40,9 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final DogRepository dogRepository;
     private final PetSitterRepository petSitterRepository;
-    private final PetSitterApplicantRepository applicantRepository;
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final PetSitterServiceRepository serviceRepository;
-    private final ReservationPetsitterServiceRepository reservationServiceRepository;
-    private final PayRepository payRepository;
+    private final ReservationPetSitterServiceRepository reservationServiceRepository;
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.USE, ReservationStatus.APPROVAL,
@@ -55,7 +50,7 @@ public class ReservationService {
 
     //리팩토링이 절대적으로 필요해 보인다......
     @Transactional
-    public void createReservation(String userId, ReservationRequest reservationRequest) {
+    public ReservationCreateResponse createReservation(String userId, ReservationRequest reservationRequest) {
         int cost = 0;
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -68,6 +63,7 @@ public class ReservationService {
         isDuplicatedReservation(reservationRequest.getCheckIn(), reservationRequest.getCheckOut(),
                 dog, reservationStatuses);
 
+        //펫시터 유효 체크
         PetSitter petSitter = petSitterRepository.findById(reservationRequest.getPetsitterId())
                 .orElseThrow(() -> {
                     throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
@@ -89,23 +85,31 @@ public class ReservationService {
         List<PetSitterWithPetService> withPetServices = serviceRepository.findAllById(
                 reservationRequest.getOptionId());
 
+        //시간에 따라 요금 계산 (날짜 * 필수 옵션 가격)
+        Period diff = Period.between(reservationRequest.getCheckIn().toLocalDate(),
+                reservationRequest.getCheckOut().toLocalDate());
+        cost *= diff.getDays();
         Reservation reservation = reservationRepository.save(
                 Reservation.of(reservationRequest, user, dog, petSitter, criticalService));
 
-        Period diff = Period.between(reservation.getCheckIn().toLocalDate(),
-                reservation.getCheckOut().toLocalDate());
-        cost *= diff.getDays();
+        List<ReservationPetSitterService> reservationServices = new ArrayList<>();
 
         for (PetSitterWithPetService withPetService : withPetServices) {
             if (!withPetService.getPetSitter().getId().equals(petSitter.getId())) {
                 throw new AppException(ErrorCode.PETSITTER_SERVICE_NOT_FOUND,
                         "해당 펫시터가 제공하는 서비스가 아닙니다.");
             }
-            reservationServiceRepository.save(
-                    ReservationPetsitterService.of(reservation, withPetService));
+            ReservationPetSitterService reservationService =
+                    ReservationPetSitterService.of(reservation, withPetService);
+            reservationServices.add(reservationService);
             cost += withPetService.getPrice();
         }
-        payRepository.save(Pay.of(reservation, cost));
+
+        reservationServiceRepository.saveAll(reservationServices);
+        reservation.updateReservationServices(reservationServices);
+        reservation.updateTotalPrice(cost);
+
+        return ReservationCreateResponse.of(reservation);
     }
 
     private void isDuplicatedReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog,
@@ -157,7 +161,7 @@ public class ReservationService {
         });
 
         //예약의 펫시터가 아니라면
-        if (!reservation.getPetSitter().getApplicant().getUser().equals(user)) {
+        if (!reservation.getPetSitter().getUser().equals(user)) {
             throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
                     ErrorCode.PETSITTER_NOT_FOUND.getMessage());
         }
@@ -225,7 +229,7 @@ public class ReservationService {
                     ErrorCode.RESERVATION_NOT_FOUND.getMessage());
         });
 
-        if (!reservation.getPetSitter().getApplicant().getUser().getId().equals(userId)) {
+        if (!reservation.getPetSitter().getUser().getId().equals(userId)) {
             throw new AppException(ErrorCode.UNAUTHORIZED_RESERVATION,
                     ErrorCode.UNAUTHORIZED_RESERVATION.getMessage());
         }
@@ -255,12 +259,7 @@ public class ReservationService {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
-        PetSitterApplicant applicant = applicantRepository.findByUser(user).orElseThrow(() -> {
-            throw new AppException(ErrorCode.APPLICANT_NOT_FOUND,
-                    ErrorCode.APPLICANT_NOT_FOUND.getMessage());
-        });
-
-        PetSitter petSitter = petSitterRepository.findByApplicant(applicant).orElseThrow(() -> {
+        PetSitter petSitter = petSitterRepository.findByUser(user).orElseThrow(() -> {
             throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
                     ErrorCode.PETSITTER_NOT_FOUND.getMessage());
         });
