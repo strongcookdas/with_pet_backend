@@ -11,10 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,7 +71,9 @@ public class DogController {
     @ApiOperation(value = "반려견 상세정보 목록")
     public Response<List<DogInfoResponse>> getDogInfos(@ApiIgnore Authentication authentication) {
 
+        log.info("================================= 반려견 상세정보 목록 시작 =================================");
         List<DogInfoResponse> dogInfoResponses = dogService.getDogInfos(authentication.getName());
+        log.info("================================= 반려견 상세정보 목록 끝 =================================");
         return Response.success(dogInfoResponses);
     }
 

@@ -25,13 +25,13 @@ public class Party extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partyId;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
     private User user;
     private String name;
     private String partyIsbn;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "party")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "party")
     private List<UserParty> userPartyList = new ArrayList<>();
 
     public Party(User user) {
