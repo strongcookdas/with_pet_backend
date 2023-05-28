@@ -76,6 +76,10 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 
+    public void updateReservationServices(List<ReservationPetSitterService> petSitterServices){
+        this.reservationPetSitterServiceList = petSitterServices;
+    }
+
     public void updateTotalPrice(int price){
         this.totalPrice = price;
     }
