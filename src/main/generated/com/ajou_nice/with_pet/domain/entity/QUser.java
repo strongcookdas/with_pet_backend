@@ -26,8 +26,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final com.ajou_nice.with_pet.domain.entity.embedded.QAddress address;
 
-<<<<<<< HEAD
-=======
     public final StringPath animalCareer = createString("animalCareer");
 
     public final NumberPath<Integer> applicantCount = createNumber("applicantCount", Integer.class);
@@ -36,7 +34,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath careExperience = createString("careExperience");
 
->>>>>>> developer
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
@@ -45,13 +42,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath email = createString("email");
 
-<<<<<<< HEAD
-    public final StringPath id = createString("id");
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> lastModifiedAt = _super.lastModifiedAt;
-
-=======
     public final BooleanPath havingWithPet = createBoolean("havingWithPet");
 
     public final StringPath id = createString("id");
@@ -67,16 +57,12 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath motivate = createString("motivate");
 
->>>>>>> developer
     public final StringPath name = createString("name");
 
     public final StringPath password = createString("password");
 
-<<<<<<< HEAD
-=======
     public final StringPath petSitterCareer = createString("petSitterCareer");
 
->>>>>>> developer
     public final StringPath phone = createString("phone");
 
     public final StringPath profileImg = createString("profileImg");

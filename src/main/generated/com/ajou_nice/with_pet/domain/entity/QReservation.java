@@ -31,13 +31,10 @@ public class QReservation extends EntityPathBase<Reservation> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-<<<<<<< HEAD
-=======
     public final StringPath criticalServiceName = createString("criticalServiceName");
 
     public final NumberPath<Integer> criticalServicePrice = createNumber("criticalServicePrice", Integer.class);
 
->>>>>>> developer
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
 
@@ -46,18 +43,6 @@ public class QReservation extends EntityPathBase<Reservation> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedAt = _super.lastModifiedAt;
 
-<<<<<<< HEAD
-    public final QPay pay;
-
-    public final QPetSitter petSitter;
-
-    public final QPetSitterCriticalService petSitterCriticalService;
-
-    public final NumberPath<Long> reservationId = createNumber("reservationId", Long.class);
-
-    public final EnumPath<com.ajou_nice.with_pet.enums.ReservationStatus> reservationStatus = createEnum("reservationStatus", com.ajou_nice.with_pet.enums.ReservationStatus.class);
-
-=======
     public final QPetSitter petSitter;
 
     public final NumberPath<Long> petSitterCriticalServiceId = createNumber("petSitterCriticalServiceId", Long.class);
@@ -70,7 +55,6 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public final NumberPath<Integer> totalPrice = createNumber("totalPrice", Integer.class);
 
->>>>>>> developer
     public final QUser user;
 
     public QReservation(String variable) {
@@ -92,13 +76,7 @@ public class QReservation extends EntityPathBase<Reservation> {
     public QReservation(Class<? extends Reservation> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.dog = inits.isInitialized("dog") ? new QDog(forProperty("dog"), inits.get("dog")) : null;
-<<<<<<< HEAD
-        this.pay = inits.isInitialized("pay") ? new QPay(forProperty("pay"), inits.get("pay")) : null;
         this.petSitter = inits.isInitialized("petSitter") ? new QPetSitter(forProperty("petSitter"), inits.get("petSitter")) : null;
-        this.petSitterCriticalService = inits.isInitialized("petSitterCriticalService") ? new QPetSitterCriticalService(forProperty("petSitterCriticalService"), inits.get("petSitterCriticalService")) : null;
-=======
-        this.petSitter = inits.isInitialized("petSitter") ? new QPetSitter(forProperty("petSitter"), inits.get("petSitter")) : null;
->>>>>>> developer
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 

@@ -11,6 +11,7 @@ import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class KaKaoPayService {
 	private final ReservationRepository reservationRepository;
 
 	static final String cid = "TC0ONETIME"; //테스트 코드
-	static final String admin_Key = "$df8802c35fc381b40d27d3646109831e"; //장승현이 부여받은 admin key
+	static final String admin_Key = "df8802c35fc381b40d27d3646109831e"; //장승현이 부여받은 admin key
 
 	private PayReadyResponse payReadyResponse;
 	private HttpHeaders getHeaders(){
@@ -44,8 +45,6 @@ public class KaKaoPayService {
 	@Transactional
 	public PayReadyResponse payReady(String userId, Long reservationId){
 
-		//cost계산은 여기서
-		int cost = 0;
 
 		User findUser = userRepository.findById(userId).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());

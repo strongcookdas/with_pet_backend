@@ -50,6 +50,8 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+kakao:
+  admin_key: df8802c35fc381b40d27d3646109831e
 
 ajou:
   nice: hello
