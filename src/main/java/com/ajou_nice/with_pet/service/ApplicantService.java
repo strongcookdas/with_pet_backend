@@ -43,6 +43,7 @@ public class ApplicantService {
 
 		//유저 지원 상태 wait으로 변경
 		findUser.updateApplicantStatus(ApplicantStatus.WAIT);
+		findUser.updateUserRole(UserRole.ROLE_APPLICANT);
 
 		//유저 지원정보 등록
 		findUser.registerApplicantInfo(applicantInfoRequest);
