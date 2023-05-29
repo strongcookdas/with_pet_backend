@@ -5,11 +5,13 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayCancelResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
+import com.ajou_nice.with_pet.domain.dto.kakaopay.PayRequest.PaySimpleRequest;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,10 +26,11 @@ public class KaKaoPayController {
 
 	//결제 요청 -> 클라이언트에서는
 	@PostMapping("/ready")
-	public Response<PayReadyResponse> readyToKakaoPay(@ApiIgnore Authentication authentication){
+	public Response<PayReadyResponse> readyToKakaoPay(@ApiIgnore Authentication authentication,
+			@RequestBody PaySimpleRequest paySimpleRequest){
 
 		//reservation과 동기화 필요
-		PayReadyResponse payReadyResponse = kaKaoPayService.payReady(authentication.getName(), (long)1);
+		PayReadyResponse payReadyResponse = kaKaoPayService.payReady(authentication.getName(), paySimpleRequest.getReservationId());
 		return Response.success(payReadyResponse);
 	}
 

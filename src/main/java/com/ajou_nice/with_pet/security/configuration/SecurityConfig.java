@@ -40,7 +40,7 @@ public class SecurityConfig {
             "/api/v1/users/login",
             "/api/v1/admin/*",
             "/api/v1/users/applicate-petsitter",
-            "/api/v1/file/*"
+            "/api/v1/file/upload"
     };
     private final String[] PUT_PERMIT_URL = {
             "/api/v1/petsitter/*",

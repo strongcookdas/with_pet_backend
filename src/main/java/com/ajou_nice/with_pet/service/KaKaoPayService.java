@@ -58,11 +58,11 @@ public class KaKaoPayService {
 		// 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
-		parameters.add("partner_order_id", "가맹점 주문 번호");
-		parameters.add("partner_user_id", "가맹점 회원 ID");
+		parameters.add("partner_order_id", "withpet");
+		parameters.add("partner_user_id", findUser.getId());
 		parameters.add("item_name", "펫시터 예약");
 		parameters.add("quantity", "1");
-		parameters.add("total_amount", "총 금액");
+		parameters.add("total_amount", reservation.getTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
 		parameters.add("approval_url", "http://localhost:8080/payment/success"); // 성공 시 redirect url
