@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.service.AwsS3Service;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -13,7 +14,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/file")
+@ApiOperation("image api")
+@RequestMapping("/api/v1/file")
 public class AmazonS3Controller {
 
 	private final AwsS3Service awsS3Service;

@@ -34,11 +34,10 @@ public class AwsS3Service {
 	private String bucket;
 
 	private final AmazonS3 amazonS3;
-	private final UserRepository userRepository;
 
 	//여러개가 들어와야 한다. (house image같은 경우는 여러장을 한꺼번에 넘기기 때문에)
 	//house일때 어떻게 구분해주냐가 관건인거같다 ..젠장 (아니면 controller에서 요청자체가 다르게
-	//할 것인가도 생각해봐야겠음
+	//할 것인가도 생각해봐야겠음l
 	public List<String> uploadFile(List<MultipartFile> multipartFiles){
 
 		List<String> fileNameList = new ArrayList<>();
