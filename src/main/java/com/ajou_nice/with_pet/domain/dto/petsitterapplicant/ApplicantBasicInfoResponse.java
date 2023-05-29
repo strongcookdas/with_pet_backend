@@ -45,6 +45,7 @@ public class ApplicantBasicInfoResponse {
 				.applicant_user_name(applicant.getName())
 				.applicant_user_id(applicant.getUserId())
 				.applicant_user_profileImg(applicant.getProfileImg())
+				.applicant_user_auth_id(applicant.getId())
 				.applicant_user_phone(applicant.getPhone())
 				.applicant_status(applicant.getApplicantStatus())
 				.build()).collect(Collectors.toList());
