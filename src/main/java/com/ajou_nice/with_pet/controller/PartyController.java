@@ -47,7 +47,7 @@ public class PartyController {
     @ApiOperation(value = "그룹 상세 리스트 조회")
     public Response<List<PartyInfoResponse>> getPartyInfoList(
             @ApiIgnore Authentication authentication) {
-        return null;
+        return Response.success(partyService.getPartyInfoList(authentication.getName()));
     }
 
 

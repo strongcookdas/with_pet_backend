@@ -1,9 +1,12 @@
 package com.ajou_nice.with_pet.domain.dto.party;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
+import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,17 +19,32 @@ import lombok.NoArgsConstructor;
 public class PartyInfoResponse {
 
     private Long partyId;
-    private String leader;
+    private String partyName;
+    private String leaderName;
+    private String leaderId;
+    private String leaderImg;
     private String partyIsbn;
-    private List<UserParty> userPartyList;
+    private List<PartyMemberResponse> userPartyList;
     private List<DogInfoResponse> dogInfoResponseList;
 
     public static PartyInfoResponse of(Party party) {
         return PartyInfoResponse.builder()
                 .partyId(party.getPartyId())
-                .leader(party.getUser().getName())
+                .partyName(party.getName())
+                .leaderId(party.getUser().getId())
+                .leaderImg(party.getUser().getProfileImg())
+                .leaderName(party.getUser().getName())
                 .partyIsbn(party.getPartyIsbn())
+                .userPartyList(
+                        party.getUserPartyList().stream().filter(userParty -> userParty.getUser().getUserId()!=party.getUser().getUserId()).map(PartyMemberResponse::of).collect(
+                                Collectors.toList()))
+                .dogInfoResponseList(new ArrayList<>())
                 .build();
+    }
+
+    public void updatePartyInfoResponse(Dog dog) {
+        System.out.println("업데이트");
+        this.dogInfoResponseList.add(DogInfoResponse.of(dog));
     }
 
 }
