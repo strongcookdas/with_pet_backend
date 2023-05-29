@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-@PropertySource("classpath:application.yml")
+@PropertySource("classpath:application-aws.yml")
 @RequiredArgsConstructor
 @Slf4j
 public class AwsS3Service {
