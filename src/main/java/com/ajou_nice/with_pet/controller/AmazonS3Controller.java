@@ -19,9 +19,9 @@ public class AmazonS3Controller {
 	private final AwsS3Service awsS3Service;
 
 	@PostMapping("/upload")
-	public Response<List<String>> uploadFile(@ApiIgnore Authentication authentication, List<MultipartFile> multipartFiles){
+	public Response<List<String>> uploadFile(List<MultipartFile> multipartFiles){
 
-		List<String> uploadedUrls = awsS3Service.uploadFile(authentication.getName(), multipartFiles);
+		List<String> uploadedUrls = awsS3Service.uploadFile(multipartFiles);
 		return Response.success(uploadedUrls);
 	}
 }
