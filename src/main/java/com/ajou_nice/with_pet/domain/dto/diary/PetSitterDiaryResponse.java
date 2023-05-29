@@ -15,7 +15,8 @@ import lombok.Setter;
 @Setter
 public class PetSitterDiaryResponse {
 
-    private Long userDiaryId;
+    private Long petSitterDiaryId;
+    private Long categoryId;
     private String categoryName;
     private String title;
     private String contentBody;
@@ -24,7 +25,8 @@ public class PetSitterDiaryResponse {
 
     public static PetSitterDiaryResponse of(Diary diary) {
         return PetSitterDiaryResponse.builder()
-                .userDiaryId(diary.getDiaryId())
+                .petSitterDiaryId(diary.getDiaryId())
+                .categoryId(diary.getCategory().getCategoryId())
                 .categoryName(diary.getCategory().getName())
                 .title(diary.getTitle())
                 .contentBody(diary.getContent())
