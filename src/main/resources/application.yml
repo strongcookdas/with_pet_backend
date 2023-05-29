@@ -26,11 +26,5 @@ spring:
 #      ddl-auto: update
 #    properties:
 #      hibernate:
-        #        show_sql: true
+#                show_sql: true
 #        format_sql: true
-#jwt:
-#  token:
-#    secret: ajounicewithpet0302
-
-#ajou:
-#  nice: hello

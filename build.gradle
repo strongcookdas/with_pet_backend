@@ -27,6 +27,18 @@ sourceSets {
 }
 
 dependencies {
+
+    //s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    // WebSocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // sockjs
+    implementation 'org.webjars:sockjs-client:1.5.1'
+    // stomp
+    implementation 'org.webjars:stomp-websocket:2.3.4'
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     //MySQL 연동
     implementation 'com.mysql:mysql-connector-j:8.0.32'
