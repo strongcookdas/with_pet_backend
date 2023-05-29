@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@PropertySource("classpath:application.yml") //나중에 application-aws.yml파일에 옮기고 classpath:application-aws.yml로 바꾸기
+@PropertySource("classpath:application-aws.yml") //나중에 application-aws.yml파일에 옮기고 classpath:application-aws.yml로 바꾸기
 public class AwsS3Config {
 
 	@Value("${cloud.aws.credentials.secret-key}")

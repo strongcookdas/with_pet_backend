@@ -1,57 +1,30 @@
-#spring:
-#  config:
-#    import: application-aws.yml
-
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-server:
-  address: localhost
-  port: 8000
-
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/temp?createDatabaseIfNotExist=true&characterEncoding=UTF-8&characterSetResult=UTF-8
-    username: root
-    password: wkdtmdgus1!
+  config:
+    import: application-aws.yml
+
   jpa:
-    database: mysql
-    show-sql: true
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-                show_sql: true
+    show-sql: true
+#server:
+#  address: localhost
+#  port: 8000
+
+#spring:
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/temp?createDatabaseIfNotExist=true&characterEncoding=UTF-8&characterSetResult=UTF-8
+#    username: root
+#    password: wkdtmdgus1!
+#  jpa:
+#    database: mysql
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#                show_sql: true
 #        format_sql: true
-jwt:
-  token:
-    secret: ajounicewithpet0302
-
-cloud:
-  aws:
-    credentials:
-      access-key: AKIA3RLWRH5UZTYF6YD7
-      secret-key: KWLzlv3HjNKbriYSoFwWkmHkEfyG33VuxI+qOdf
-    S3:
-      bucket: withpetoriginimage
-    region:
-      static: ap-northeast-1
-    stack:
-      auto: false
-
-logging:
-  level:
-    com:
-      amazonaws:
-        util:
-          EC2MetadataUtils: error
-kakao:
-  admin_key: df8802c35fc381b40d27d3646109831e
-
-ajou:
-  nice: hello
