@@ -36,7 +36,8 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
         QPetSitterWithPetService petSitterWithPetService = new QPetSitterWithPetService("w");
 
         List<PetSitter> petSitters = queryFactory.selectFrom(petSitter)
-                .where(containsDogSize(petSitterCriticalService, petSitter, dogSize),
+                .where(petSitter.valid.eq(true),
+                        containsDogSize(petSitterCriticalService, petSitter, dogSize),
                         containService(petSitterWithPetService, petSitter, service),
                         containAddress(address))
                 .fetch();
@@ -67,7 +68,7 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
         List<Long> petSitterIdList = queryFactory.select(petSitterWithPetService.petSitter.id)
                 .from(petSitterWithPetService)
                 .innerJoin(petSitterWithPetService.petSitter, petSitter).fetchJoin()
-                .where(petSitter.valid.eq(true), petSitterWithPetService.withPetService.name.eq(service)).fetch();
+                .where(petSitterWithPetService.withPetService.name.eq(service)).fetch();
         return petSitter.id.in(petSitterIdList);
     }
 
