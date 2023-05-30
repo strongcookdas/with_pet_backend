@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.service.DogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,17 +31,13 @@ public class DogController {
 
     private final DogService dogService;
 
-    @PostMapping("/register-dog")
+    @PostMapping("/register-dog/{partyId}")
     @ApiOperation(value = "반려견 등록")
-    public Response<DogInfoResponse> registerDog(@ApiIgnore Authentication authentication,
+    public Response<PartyInfoResponse> registerDog(@ApiIgnore Authentication authentication,
+            @PathVariable Long partyId,
             @RequestBody DogInfoRequest dogInfoRequest) {
-        log.info("---------------------dog Register Request : {}--------------------------",
-                dogInfoRequest);
-        DogInfoResponse dogInfoResponse = dogService.registerDog(dogInfoRequest,
-                authentication.getName());
-        log.info("---------------------dog Register Response : {}--------------------------",
-                dogInfoResponse);
-        return Response.success(dogInfoResponse);
+        return Response.success(dogService.registerDog(dogInfoRequest, partyId,
+                authentication.getName()));
     }
 
     @GetMapping("/{dogId}")
@@ -71,9 +68,11 @@ public class DogController {
     @ApiOperation(value = "반려견 상세정보 목록")
     public Response<List<DogInfoResponse>> getDogInfos(@ApiIgnore Authentication authentication) {
 
-        log.info("================================= 반려견 상세정보 목록 시작 =================================");
+        log.info(
+                "================================= 반려견 상세정보 목록 시작 =================================");
         List<DogInfoResponse> dogInfoResponses = dogService.getDogInfos(authentication.getName());
-        log.info("================================= 반려견 상세정보 목록 끝 =================================");
+        log.info(
+                "================================= 반려견 상세정보 목록 끝 =================================");
         return Response.success(dogInfoResponses);
     }
 

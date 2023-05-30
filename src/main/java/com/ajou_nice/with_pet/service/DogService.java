@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
@@ -40,30 +41,37 @@ public class DogService {
 
 
     @Transactional
-    public DogInfoResponse registerDog(DogInfoRequest dogInfoRequest, String userId) {
+    public PartyInfoResponse registerDog(DogInfoRequest dogInfoRequest, Long partyId,
+            String userId) {
         // 유저 존재 체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
-        // 파티 생성
-        Party party = partyRepository.save(new Party(user));
-        party.updateParty(party.getPartyId().toString(), party.getPartyId().toString());
+        // 파티 존재 체크
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND,
+                    ErrorCode.GROUP_NOT_FOUND.getMessage());
+        });
 
+        if (!userPartyRepository.existsUserPartyByUserAndParty(user, party)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 그룹에 반려견을 추가할 권한이 없습니다.");
+        }
         //반려견 사이즈 체크
         DogSize myDogSize;
-        if(dogInfoRequest.getDog_weight() > 18){
+        if (dogInfoRequest.getDog_weight() > 18) {
             myDogSize = DogSize.대형견;
-        }else if(dogInfoRequest.getDog_weight() > 10){
+        } else if (dogInfoRequest.getDog_weight() > 10) {
             myDogSize = DogSize.중형견;
-        }else{
+        } else {
             myDogSize = DogSize.소형견;
         }
-
         // 반려견 추가
         Dog dog = dogRepository.save(Dog.of(dogInfoRequest, party, myDogSize));
-        userPartyRepository.save(UserParty.of(user, party));
 
-        return DogInfoResponse.of(dog);
+        PartyInfoResponse partyInfoResponse = PartyInfoResponse.of(party);
+        partyInfoResponse.updatePartyInfoResponse(dogRepository.findAllByParty(party));
+
+        return partyInfoResponse;
     }
 
     public DogInfoResponse getDogInfo(Long dogId, String userId) {
@@ -100,11 +108,11 @@ public class DogService {
         }
 
         DogSize myDogSize;
-        if(dogInfoRequest.getDog_weight() > 18){
+        if (dogInfoRequest.getDog_weight() > 18) {
             myDogSize = DogSize.대형견;
-        }else if(dogInfoRequest.getDog_weight() > 10){
+        } else if (dogInfoRequest.getDog_weight() > 10) {
             myDogSize = DogSize.중형견;
-        }else{
+        } else {
             myDogSize = DogSize.소형견;
         }
 
@@ -116,9 +124,11 @@ public class DogService {
     //여기가 제일 문제다....
     public List<DogInfoResponse> getDogInfos(String userId) {
         List<Long> userPartyList = userPartyRepository.findAllUserPartyIdByUserId(userId);
-        log.info("==================================== findAllUserDogs Start ==============================================");
+        log.info(
+                "==================================== findAllUserDogs Start ==============================================");
         List<Dog> dogs = dogRepository.findAllUserDogs(userPartyList);
-        log.info("==================================== findAllUserDogs End ==============================================");
+        log.info(
+                "==================================== findAllUserDogs End ==============================================");
         return dogs.stream().map(DogInfoResponse::of).collect(Collectors.toList());
     }
 
@@ -131,7 +141,8 @@ public class DogService {
     }
 
     @Transactional
-    public DogInfoResponse modifyDogSocialization(String userId, Long dogId, DogSocializationRequest dogSocializationRequest){
+    public DogInfoResponse modifyDogSocialization(String userId, Long dogId,
+            DogSocializationRequest dogSocializationRequest) {
         //유저 체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -146,8 +157,11 @@ public class DogService {
         }
 
         //사회성 정도
-        int dogSocialization = (int)((dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()+ dogSocializationRequest.getQ3()+
-                dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5())/5)*20;
+        int dogSocialization =
+                (int) ((dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()
+                        + dogSocializationRequest.getQ3() +
+                        dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5()) / 5)
+                        * 20;
 
         dog.updateSocialization(dogSocialization);
         return DogInfoResponse.of(dog);
@@ -156,18 +170,23 @@ public class DogService {
     public List<DogListInfoResponse> getDogListInfoResponse(String userId, Long petSitterId) {
 
         List<Dog> dogs = dogRepository.findAllByUserParty(userId);
-        List<PetSitterCriticalService> criticalServices = criticalServiceRepository.findAllByPetSitterId(petSitterId);
+        List<PetSitterCriticalService> criticalServices = criticalServiceRepository.findAllByPetSitterId(
+                petSitterId);
         List<DogListInfoResponse> dogInfoResponses = new ArrayList<>();
         boolean check;
-        for(Dog dog: dogs){
+        for (Dog dog : dogs) {
             check = false;
-            for(PetSitterCriticalService criticalService : criticalServices){
-                log.info("================Dog Size : {}, Critical Size : {} ================================",dog.getDogSize().toString(),criticalService.getCriticalService().getServiceName());
-                if(dog.getDogSize().toString().equals(criticalService.getCriticalService().getServiceName())){
-                   check=true;
+            for (PetSitterCriticalService criticalService : criticalServices) {
+                log.info(
+                        "================Dog Size : {}, Critical Size : {} ================================",
+                        dog.getDogSize().toString(),
+                        criticalService.getCriticalService().getServiceName());
+                if (dog.getDogSize().toString()
+                        .equals(criticalService.getCriticalService().getServiceName())) {
+                    check = true;
                 }
             }
-            dogInfoResponses.add(DogListInfoResponse.of(dog,check));
+            dogInfoResponses.add(DogListInfoResponse.of(dog, check));
         }
         return dogInfoResponses;
     }
