@@ -67,7 +67,7 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
         List<Long> petSitterIdList = queryFactory.select(petSitterWithPetService.petSitter.id)
                 .from(petSitterWithPetService)
                 .innerJoin(petSitterWithPetService.petSitter, petSitter).fetchJoin()
-                .where(petSitterWithPetService.withPetService.name.eq(service)).fetch();
+                .where(petSitter.valid.eq(true), petSitterWithPetService.withPetService.name.eq(service)).fetch();
         return petSitter.id.in(petSitterIdList);
     }
 
