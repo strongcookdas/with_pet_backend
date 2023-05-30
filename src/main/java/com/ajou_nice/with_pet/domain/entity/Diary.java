@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
+import com.ajou_nice.with_pet.domain.dto.diary.DiaryModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -94,5 +95,14 @@ public class Diary {
         this.dog = dog;
         this.media = diaryRequest.getDogImgToday();
         this.createdAt = diaryRequest.getCreatedAt();
+    }
+
+    public void update(DiaryModifyRequest diaryModifyRequest, Category category) {
+        this.category = category;
+        this.content = diaryModifyRequest.getContentBody();
+        this.title = diaryModifyRequest.getTitle();
+        this.dog = dog;
+        this.media = diaryModifyRequest.getDogImgToday();
+        this.createdAt = diaryModifyRequest.getCreatedAt();
     }
 }

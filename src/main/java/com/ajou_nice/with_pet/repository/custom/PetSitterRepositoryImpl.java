@@ -29,7 +29,7 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public Page<PetSitter> searchPage(Pageable pageable, String dogSize, String service,
+    public Page<PetSitter> searchPage(Pageable pageable, String dogSize, List<String> service,
             String address) {
         log.info("======================= 메인필터링 시작 ========================");
 
@@ -64,14 +64,14 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
 
     private BooleanExpression containService(QPetSitterWithPetService petSitterWithPetService,
             QPetSitter petSitter,
-            String service) {
+            List<String> service) {
         log.info("======================= 서비스 필터 시작 ========================");
         if (service == null || service.isEmpty()) {
             return null;
         }
         List<Long> petSitterIdList = queryFactory.select(petSitterWithPetService.petSitter.id)
                 .from(petSitterWithPetService)
-                .where(petSitterWithPetService.withPetService.name.eq(service)).fetch();
+                .where(petSitterWithPetService.withPetService.name.in(service)).fetch();
         log.info("======================= 서비스 필터 끝 ========================");
 
         return petSitter.id.in(petSitterIdList);

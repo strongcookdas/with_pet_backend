@@ -14,6 +14,7 @@ import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterWit
 import com.ajou_nice.with_pet.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -149,7 +150,7 @@ public class PetSitterController {
     public Response<Page<PetSitterMainResponse>> showPetSitters(
             @ApiIgnore @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
             @RequestParam(required = false) String dogSize,
-            @RequestParam(required = false) String service,
+            @RequestParam(required = false) List<String> service,
             @RequestParam(required = false) String address) {
         log.info("=================== 필터링 {},{},{} ======================",dogSize,service,address);
         Page<PetSitterMainResponse> petSitterMainResponses = petSitterService.getPetSitters(
