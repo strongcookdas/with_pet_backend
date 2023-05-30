@@ -151,6 +151,7 @@ public class PetSitterController {
             @RequestParam(required = false) String dogSize,
             @RequestParam(required = false) String service,
             @RequestParam(required = false) String address) {
+        log.info("=================== 필터링 {},{},{} ======================",dogSize,service,address);
         Page<PetSitterMainResponse> petSitterMainResponses = petSitterService.getPetSitters(
                 pageable, dogSize, service, address);
         return Response.success(petSitterMainResponses);

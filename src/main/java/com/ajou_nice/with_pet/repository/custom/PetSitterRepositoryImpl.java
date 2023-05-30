@@ -49,7 +49,7 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
     private BooleanExpression containsDogSize(QPetSitterCriticalService petSitterCriticalService,
             QPetSitter petSitter,
             String dogSize) {
-        if (dogSize == null) {
+        if (dogSize == null || dogSize.isEmpty()) {
             return null;
         }
         List<Long> petSitterIdList = queryFactory.select(petSitterCriticalService.petSitter.id)
@@ -62,7 +62,7 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
     private BooleanExpression containService(QPetSitterWithPetService petSitterWithPetService,
             QPetSitter petSitter,
             String service) {
-        if (service == null) {
+        if (service == null || service.isEmpty()) {
             return null;
         }
         List<Long> petSitterIdList = queryFactory.select(petSitterWithPetService.petSitter.id)
@@ -73,7 +73,7 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
     }
 
     private BooleanExpression containAddress(String address) {
-        if (address == null) {
+        if (address == null || address.isEmpty()) {
             return null;
         }
         log.info("======================= address : {} ========================", address);
