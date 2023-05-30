@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
+import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryListResponse;
 import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Diary;
@@ -88,7 +89,7 @@ public class PetSitterDiaryService {
         return PetSitterDiaryResponse.of(diary);
     }
 
-    public List<PetSitterDiaryResponse> getPetSitterDiaries(String userId, Long dogId) {
+    public PetSitterDiaryListResponse getPetSitterDiaries(String userId, Long dogId) {
         //유저 체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -103,9 +104,11 @@ public class PetSitterDiaryService {
             throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
         });
         //펫시터가 작성한 해당 반려견에 대한 일지 조회
-        log.info("=======================================펫시터가 작성한 반려견 일지 조회 START=======================================");
+        log.info(
+                "=======================================펫시터가 작성한 반려견 일지 조회 START=======================================");
         List<Diary> diaries = diaryRepository.findAllByPetSitterAndDog(petSitter, dog);
-        log.info("=======================================펫시터가 작성한 반려견 일지 조회 END=======================================");
-        return diaries.stream().map(PetSitterDiaryResponse::of).collect(Collectors.toList());
+        log.info(
+                "=======================================펫시터가 작성한 반려견 일지 조회 END=======================================");
+        return PetSitterDiaryListResponse.of(dog, diaries);
     }
 }
