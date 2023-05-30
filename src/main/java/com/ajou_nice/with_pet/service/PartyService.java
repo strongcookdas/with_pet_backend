@@ -120,7 +120,7 @@ public class PartyService {
             myDogSize = DogSize.소형견;
         }
         Dog dog = Dog.of(partyRequest, party, myDogSize);
-        dogRepository.save(dog);
+        dog = dogRepository.save(dog);
         return PartyInfoResponse.of(dog);
     }
 }

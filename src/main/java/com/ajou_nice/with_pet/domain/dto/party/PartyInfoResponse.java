@@ -54,13 +54,7 @@ public class PartyInfoResponse {
                 .leaderImg(dog.getParty().getUser().getProfileImg())
                 .leaderName(dog.getParty().getUser().getName())
                 .partyIsbn(dog.getParty().getPartyIsbn())
-                .userPartyList(
-                        dog.getParty().getUserPartyList().stream()
-                                .filter(userParty -> userParty.getUser().getUserId()
-                                        != dog.getParty().getUser().getUserId())
-                                .map(PartyMemberResponse::of)
-                                .collect(
-                                        Collectors.toList()))
+                .userPartyList(new ArrayList<>())
                 .dogInfoResponseList(Arrays.asList(DogInfoResponse.of(dog)))
                 .build();
     }
