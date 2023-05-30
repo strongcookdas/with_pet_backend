@@ -93,5 +93,6 @@ public class Diary {
         this.title = diaryRequest.getTitle();
         this.dog = dog;
         this.media = diaryRequest.getDogImgToday();
+        this.createdAt = diaryRequest.getCreatedAt();
     }
 }
