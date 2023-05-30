@@ -306,8 +306,8 @@ public class PetSitterService {
 	// == 메인페이지 펫시터들 정보 조회 == //
 	// 리팩토링 무조건 무조건 필요 .. 쿼리가 너무 많이 나간다.
 	// userName을 불러오기 위해서 user테이블에서 조회하는 쿼리가 생기는데 이를 해결해야 한다..
-	public Page getPetSitters(Pageable pageable){
-		Page<PetSitter> petSitters = petSitterRepository.searchPage(pageable);
+	public Page getPetSitters(Pageable pageable, String dogSize, String service, String address){
+		Page<PetSitter> petSitters = petSitterRepository.searchPage(pageable, dogSize, service, address);
 		return petSitters.map(PetSitterMainResponse::of);
 	}
 }

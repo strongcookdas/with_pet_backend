@@ -6,5 +6,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PetSitterRespositoryCustom {
-	Page<PetSitter> searchPage(Pageable pageable);
+	Page<PetSitter> searchPage(Pageable pageable, String dogSize, String service, String address);
 }
