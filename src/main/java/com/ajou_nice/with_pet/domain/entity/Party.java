@@ -42,4 +42,14 @@ public class Party extends BaseEntity {
         this.name = name;
         this.partyIsbn = isbn;
     }
+
+    public void updateParty(String isbn){
+        this.partyIsbn = isbn;
+    }
+    public static Party of(User user, String partyName) {
+        return Party.builder()
+                .user(user)
+                .name(partyName)
+                .build();
+    }
 }
