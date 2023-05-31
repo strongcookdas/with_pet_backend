@@ -15,6 +15,7 @@ import com.ajou_nice.with_pet.repository.DiaryRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class UserDiaryService {
     private final CategoryRepository categoryRepository;
 
 
+    @Transactional
     public UserDiaryResponse writeUserDiary(String userId, DiaryRequest diaryRequest) {
         //유저 체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -56,6 +58,20 @@ public class UserDiaryService {
 
         Diary diary = userDiaryRepository.save(
                 Diary.of(diaryRequest, dog, user, category));
+        LocalDate createdAt = dog.getCreatedAt().toLocalDate();
+        int days = Period.between(createdAt, LocalDate.now()).getDays()+1;
+        int diaryDayCount = userDiaryRepository.countDiaryDay(dog.getDogId(),
+                dog.getCreatedAt().toLocalDate()).intValue();
+        int diaryCount = userDiaryRepository.countDiary(dog.getDogId(),
+                dog.getCreatedAt().toLocalDate()).intValue();
+
+        double temp = 37.5 + diaryCount - ((days - diaryDayCount) * 0.5);
+        dog.updateAffectionTemperature(temp);
+
+        log.info(
+                "================= days : {}, diaryDayCount : {}, diaryCount : {}, temp : {} =====================",
+                days, diaryDayCount, diaryCount, temp);
+
         return UserDiaryResponse.of(diary);
     }
 
@@ -101,7 +117,7 @@ public class UserDiaryService {
         });
 
         List<Diary> userDiaries = userDiaryRepository.findByMonthDate(user.getUserId(),
-                dogId, categoryId, LocalDate.parse(month + "-01"),petsitterCheck);
+                dogId, categoryId, LocalDate.parse(month + "-01"), petsitterCheck);
         return userDiaries.stream().map(UserDiaryMonthResponse::of).collect(Collectors.toList());
     }
 

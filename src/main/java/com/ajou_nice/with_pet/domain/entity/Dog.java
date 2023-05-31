@@ -84,6 +84,10 @@ public class Dog extends BaseEntity {
         this.socializationTemperature = this.socializationTemperature + score;
     }
 
+    public void updateAffectionTemperature(double temp){
+        this.affectionTemperature = temp;
+    }
+
     public static Dog of(DogInfoRequest dogInfoRequest, Party party, DogSize dogSize) {
         //이미지 null 체크 null이면 기본이미지로 insert
         String img = dogInfoRequest.getDog_img();
