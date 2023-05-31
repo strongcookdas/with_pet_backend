@@ -19,6 +19,4 @@ public class PayRequest {
 		@NotNull
 		private Long reservationId;
 	}
-
-
 }
