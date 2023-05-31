@@ -30,4 +30,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     @Query("select r from Reservation r where r.user.id=:userId and r.reservationStatus=:status")
     List<Reservation> findReservationByStatus(@Param("userId") String userId, @Param("status") String status);
+
+    List<Reservation> findAllByPetSitterAndReservationStatus(PetSitter petSitter, ReservationStatus status);
 }
