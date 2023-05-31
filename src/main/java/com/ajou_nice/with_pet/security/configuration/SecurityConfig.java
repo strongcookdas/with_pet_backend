@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.security.configuration;
 
+import com.ajou_nice.with_pet.security.filter.ApiKeyAuthFilter;
 import com.ajou_nice.with_pet.security.filter.JwtFilter;
 import com.ajou_nice.with_pet.security.handler.AuthenticationManager;
 import com.ajou_nice.with_pet.security.handler.CustomAccessDeniedHandler;
@@ -40,7 +41,9 @@ public class SecurityConfig {
             "/api/v1/users/login",
             "/api/v1/admin/*",
             "/api/v1/users/applicate-petsitter",
-            "/api/v1/file/upload"
+            "/api/v1/file/upload",
+            "/payment/ready",
+            "https://kapi.kakao.com/v1/payment/ready"
     };
     private final String[] PUT_PERMIT_URL = {
             "/api/v1/petsitter/*",

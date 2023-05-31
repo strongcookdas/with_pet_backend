@@ -10,7 +10,6 @@ import lombok.ToString;
 public class PayReadyResponse {
 
 	private String tid;	//결제건의 고유번호
-	private String next_redirect_pc_url;
-	private String partner_order_id; //결제건에 대한 가맹점의 주문번호
+	private String next_redirect_pc_url; //pc redirect 할 url
 	private LocalDateTime created_at; //언제 결제를 요청했는지
 }

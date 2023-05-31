@@ -9,11 +9,12 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import com.ajou_nice.with_pet.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -26,34 +27,36 @@ import org.springframework.web.client.RestTemplate;
 public class KaKaoPayService {
 
 	private final UserRepository userRepository;
+	private final JwtTokenUtil jwtTokenUtil;
 	private final ReservationRepository reservationRepository;
 
 	static final String cid = "TC0ONETIME"; //테스트 코드
 	static final String admin_Key = "df8802c35fc381b40d27d3646109831e"; //장승현이 부여받은 admin key
 
 	private PayReadyResponse payReadyResponse;
-	private HttpHeaders getHeaders(){
+	private HttpHeaders getHeaders(String tempToken){
 		//카카오 페이 서버로 요청할 header
 		HttpHeaders httpHeaders = new HttpHeaders();
 
 		String auth = "KaKaoAK " + admin_Key;
 		httpHeaders.set("Authorization", auth);
 		httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
+		httpHeaders.setBearerAuth(tempToken);
 		return httpHeaders;
 	}
 	@Transactional
-	public PayReadyResponse payReady(String userId, Long reservationId){
+	public PayReadyResponse payReady(Authentication authentication, Long reservationId){
 
 
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
+		User findUser = userRepository.findById(authentication.getName()).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
 		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
 			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
 		});
-		
+
+		String tempToken = jwtTokenUtil.createToken(findUser.getId(), findUser.getRole().toString());
 
 		// 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
@@ -65,20 +68,21 @@ public class KaKaoPayService {
 		parameters.add("total_amount", reservation.getTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
-		parameters.add("approval_url", "http://localhost:8080/payment/success"); // 성공 시 redirect url
-		parameters.add("cancel_url", "http://localhost:8080/payment/cancel"); // 취소 시 redirect url
-		parameters.add("fail_url", "http://localhost:8080/payment/fail"); // 실패 시 redirect url
+		parameters.add("approval_url", "http://localhost:8000/payment/success"); // 성공 시 redirect url
+		parameters.add("cancel_url", "http://localhost:8000/payment/cancel"); // 취소 시 redirect url
+		parameters.add("fail_url", "http://localhost:8000/payment/fail"); // 실패 시 redirect url
 		//redirect url의 경우 나중에 연동시 프론트에서의 URL을 입력해주고 , 꼭 내가 도메인 변경을 해주어야 한다.
 
 		//파라미터와 header설정
-		HttpEntity<MultiValueMap<String, String>> requests = new HttpEntity<>(parameters, this.getHeaders());
+		HttpEntity<MultiValueMap<String, String>> requests = new HttpEntity<>(parameters, this.getHeaders(tempToken));
+		System.out.println(requests);
 
 		//외부에 보낼 url
 		RestTemplate restTemplate = new RestTemplate();
 
 		payReadyResponse = restTemplate.postForObject(
 				"https://kapi.kakao.com/v1/payment/ready",
-				requests, com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse.class);
+				requests, PayReadyResponse.class);
 
 		return payReadyResponse;
 	}
@@ -91,6 +95,8 @@ public class KaKaoPayService {
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
+		String tempToken = jwtTokenUtil.createToken(findUser.getId(), findUser.getRole().toString());
+
 		// 카카오 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
@@ -100,7 +106,7 @@ public class KaKaoPayService {
 		parameters.add("pg_token", pgToken);
 
 		// 파라미터, 헤더
-		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders(tempToken));
 
 		// 외부에 보낼 url
 		RestTemplate restTemplate = new RestTemplate();
@@ -135,6 +141,9 @@ public class KaKaoPayService {
 		User findUser = userRepository.findById(userId).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
+
+		String tempToken = jwtTokenUtil.createToken(findUser.getId(), findUser.getRole().toString());
+
 		// 카카오페이 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
@@ -144,7 +153,7 @@ public class KaKaoPayService {
 		parameters.add("cancel_vat_amount", "환불 부가세");
 
 		// 파라미터, 헤더
-		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders(tempToken));
 
 		// 외부에 보낼 url
 		RestTemplate restTemplate = new RestTemplate();
