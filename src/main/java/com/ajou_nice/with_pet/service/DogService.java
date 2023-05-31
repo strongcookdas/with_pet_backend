@@ -41,7 +41,7 @@ public class DogService {
 
 
     @Transactional
-    public PartyInfoResponse registerDog(DogInfoRequest dogInfoRequest, Long partyId,
+    public DogInfoResponse registerDog(DogInfoRequest dogInfoRequest, Long partyId,
             String userId) {
         // 유저 존재 체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -68,10 +68,7 @@ public class DogService {
         // 반려견 추가
         Dog dog = dogRepository.save(Dog.of(dogInfoRequest, party, myDogSize));
 
-        PartyInfoResponse partyInfoResponse = PartyInfoResponse.of(party);
-        partyInfoResponse.updatePartyInfoResponse(dogRepository.findAllByParty(party));
-
-        return partyInfoResponse;
+        return DogInfoResponse.of(dog);
     }
 
     public DogInfoResponse getDogInfo(Long dogId, String userId) {

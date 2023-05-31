@@ -33,7 +33,7 @@ public class DogController {
 
     @PostMapping("/register-dog/{partyId}")
     @ApiOperation(value = "반려견 등록")
-    public Response<PartyInfoResponse> registerDog(@ApiIgnore Authentication authentication,
+    public Response<DogInfoResponse> registerDog(@ApiIgnore Authentication authentication,
             @PathVariable Long partyId,
             @RequestBody DogInfoRequest dogInfoRequest) {
         return Response.success(dogService.registerDog(dogInfoRequest, partyId,
