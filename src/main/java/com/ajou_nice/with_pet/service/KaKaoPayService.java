@@ -3,18 +3,25 @@ package com.ajou_nice.with_pet.service;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayCancelResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
+import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
+import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.enums.PayStatus;
+import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.utils.JwtTokenUtil;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,28 +34,28 @@ import org.springframework.web.client.RestTemplate;
 public class KaKaoPayService {
 
 	private final UserRepository userRepository;
-	private final JwtTokenUtil jwtTokenUtil;
 	private final ReservationRepository reservationRepository;
+	private final PayRepository payRepository;
 
 	static final String cid = "TC0ONETIME"; //테스트 코드
-	static final String admin_Key = "df8802c35fc381b40d27d3646109831e"; //장승현이 부여받은 admin key
+	static final String admin_Key = "059c166f6891b7508def2a190d83955f"; //장승현이 부여받은 admin key
 
 	private PayReadyResponse payReadyResponse;
-	private HttpHeaders getHeaders(String tempToken){
+	private HttpHeaders getHeaders(){
 		//카카오 페이 서버로 요청할 header
 		HttpHeaders httpHeaders = new HttpHeaders();
 
-		String auth = "KaKaoAK " + admin_Key;
+		String auth = "KakaoAK " + admin_Key;
 		httpHeaders.set("Authorization", auth);
 		httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-		httpHeaders.setBearerAuth(tempToken);
 		return httpHeaders;
 	}
+
+	//pay ready를 요청하면 pay entity 생성 후 pay status wait
 	@Transactional
-	public PayReadyResponse payReady(Authentication authentication, Long reservationId){
+	public PayReadyResponse payReady(String userId, Long reservationId){
 
-
-		User findUser = userRepository.findById(authentication.getName()).orElseThrow(()->{
+		User findUser = userRepository.findById(userId).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
@@ -56,104 +63,120 @@ public class KaKaoPayService {
 			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
 		});
 
-		String tempToken = jwtTokenUtil.createToken(findUser.getId(), findUser.getRole().toString());
+		Optional<Pay> existPay = payRepository.findByReservation(reservation);
+
+		//이미 pay가 존재한다면 (재결제 요청) -> 원래 있던 pay 정보 삭제
+		if(!existPay.isEmpty()){
+			payRepository.deleteById(existPay.get().getId());
+		}
 
 		// 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
-		parameters.add("partner_order_id", "withpet");
-		parameters.add("partner_user_id", findUser.getId());
+		parameters.add("partner_order_id", reservation.getPetSitter().getId().toString());
+		parameters.add("partner_user_id", findUser.getId().toString());
 		parameters.add("item_name", "펫시터 예약");
 		parameters.add("quantity", "1");
 		parameters.add("total_amount", reservation.getTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
-		parameters.add("approval_url", "http://localhost:8000/payment/success"); // 성공 시 redirect url
-		parameters.add("cancel_url", "http://localhost:8000/payment/cancel"); // 취소 시 redirect url
-		parameters.add("fail_url", "http://localhost:8000/payment/fail"); // 실패 시 redirect url
+		parameters.add("approval_url", "http://localhost:8000/payment/success"); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
+		parameters.add("cancel_url", "http://localhost:8000/payment/cancel"); // 취소 시 redirect url -> 서버의 주소
+		parameters.add("fail_url", "http://localhost:8000/payment/fail"); // 실패 시 redirect url -> 서버의 주소
 		//redirect url의 경우 나중에 연동시 프론트에서의 URL을 입력해주고 , 꼭 내가 도메인 변경을 해주어야 한다.
 
 		//파라미터와 header설정
-		HttpEntity<MultiValueMap<String, String>> requests = new HttpEntity<>(parameters, this.getHeaders(tempToken));
+		HttpEntity<MultiValueMap<String, String>> requests = new HttpEntity<>(parameters, this.getHeaders());
 		System.out.println(requests);
+		System.out.println(requests.getHeaders());
+		System.out.println(requests.getBody());
 
-		//외부에 보낼 url
+		// RestTemplate 객체 생성
 		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
+		//restTemplate를 이용한 api 호출 카카오 페이
 		payReadyResponse = restTemplate.postForObject(
 				"https://kapi.kakao.com/v1/payment/ready",
 				requests, PayReadyResponse.class);
+
+		Pay pay = Pay.of(reservation, payReadyResponse.getTid());
+		payRepository.save(pay);
+		reservation.updatePay(pay);
 
 		return payReadyResponse;
 	}
 
 
-	//결제 완료
-	public PayApproveResponse approveResponse(String userId, String pgToken){
+	//결제 완료 -> 예약상태 payed , payed 상태 success update
+	@Transactional
+	public PayApproveResponse approvePay(String userId, String pgToken, String tid){
 
+		//사용자 인증 체크
 		User findUser = userRepository.findById(userId).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
-		String tempToken = jwtTokenUtil.createToken(findUser.getId(), findUser.getRole().toString());
+		Reservation reservation = reservationRepository.findByTid(tid).orElseThrow(()->{
+			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+		});
 
 		// 카카오 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
-		parameters.add("tid", payReadyResponse.getTid());
-		parameters.add("partner_order_id", "가맹점 주문 번호");
-		parameters.add("partner_user_id", "가맹점 회원 ID");
+		parameters.add("tid", tid);
+		parameters.add("partner_order_id", reservation.getPetSitter().getId().toString());
+		parameters.add("partner_user_id", reservation.getUser().getUserId().toString());
 		parameters.add("pg_token", pgToken);
 
 		// 파라미터, 헤더
-		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders(tempToken));
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
-		// 외부에 보낼 url
+		// RestTemplate 객체 생성
 		RestTemplate restTemplate = new RestTemplate();
 
+		//restTemplate를 이용한 api 호출 카카오 페이
 		PayApproveResponse approveResponse = restTemplate.postForObject(
 				"https://kapi.kakao.com/v1/payment/approve",
 				requestEntity,
 				PayApproveResponse.class);
+
+		reservation.updateStatus(ReservationStatus.PAYED.toString());
+
+		Pay pay = payRepository.findByReservation(reservation).orElseThrow(()->{
+			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
+		});
+		pay.approve(PayStatus.SUCCESS, approveResponse.getItem_name(), approveResponse.getQuantity(), approveResponse.getApproved_at());
+
 		return approveResponse;
 	}
 
-	//결제 진행 중 취소
-	public void cancelPayment(String userId){
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+	//결제 진행 중 취소 혹은 결제 실패 -> pay 정보 삭제 됨(새로운 요청을 위해)
+	@Transactional
+	public void deletePayment() {
+		Pay pay = payRepository.findByTid(payReadyResponse.getTid()).orElseThrow(() -> {
+			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
 		});
 
-		throw new AppException(ErrorCode.PAYMENT_CANCEL, ErrorCode.PAYMENT_CANCEL.getMessage());
+		payRepository.deleteById(pay.getId());
 	}
 
-	//결제 실패
-	public void failPayment(String userId){
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+	@Transactional
+	public void refundAuto(Reservation reservation){
+
+		Pay pay = payRepository.findByReservation(reservation).orElseThrow(()->{
+			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
 		});
-
-		throw new AppException(ErrorCode.PAYMENT_FAIL, ErrorCode.PAYMENT_FAIL.getMessage());
-	}
-
-	//결제 환불
-	public PayCancelResponse refundPayment(String userId){
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
-
-		String tempToken = jwtTokenUtil.createToken(findUser.getId(), findUser.getRole().toString());
 
 		// 카카오페이 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
-		parameters.add("tid", "환불할 결제 고유 번호");
-		parameters.add("cancel_amount", "환불 금액");
-		parameters.add("cancel_tax_free_amount", "환불 비과세 금액");
-		parameters.add("cancel_vat_amount", "환불 부가세");
+		parameters.add("tid", pay.getTid());
+		parameters.add("cancel_amount", Integer.toString(pay.getPay_amount()));
+		parameters.add("cancel_tax_free_amount", Integer.toString(0));
 
 		// 파라미터, 헤더
-		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders(tempToken));
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
 		// 외부에 보낼 url
 		RestTemplate restTemplate = new RestTemplate();
@@ -163,6 +186,68 @@ public class KaKaoPayService {
 				requestEntity,
 				PayCancelResponse.class);
 
-		return payCancelResponse;
+		//예약 상태 cancel update
+		reservation.updateStatus(ReservationStatus.CANCEL.toString());
+
+		//pay 상태 cancel update -> soft delete 기법 사용 (삭제는 하지 않는다) -> 추후 환불에 대한 내역을 볼 수 있도록
+		pay.cancel(PayStatus.CANCEL, payCancelResponse.getCanceled_amount().getTotal(), payCancelResponse.getCanceled_at());
+	}
+
+	//결제 환불
+	//예약 상태 -> cancel, pay 상태 -> cancel , pay entity 환불금액 update
+	@Transactional
+	public RefundResponse refundPayment(String userId, Long reservationId){
+
+		//사용자 인증
+		User findUser = userRepository.findById(userId).orElseThrow(()->{
+			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+		});
+
+		//예약 유효 인증
+		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+		});
+
+		//결제 정보 확인 인증
+		Pay pay = payRepository.findByReservation(reservation).orElseThrow(()->{
+			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
+		});
+
+		Period period = Period.between(LocalDate.now(), reservation.getCheckIn().toLocalDate());
+		int cancel_amount = 0; //환불 금액
+
+		//환불 금액 판정 -> 예약날짜가 7일 이내로 남았을 경우 50%환불, 예약날짜가 7일 초과라면 100% 환불
+		if(period.getDays() > 7){
+			cancel_amount = pay.getPay_amount();
+		}else if(period.getDays() <= 7){
+			cancel_amount = (int)(pay.getPay_amount()*0.5);
+		}
+
+
+		// 카카오페이 요청
+		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+		parameters.add("cid", cid);
+		parameters.add("tid", pay.getTid());
+		parameters.add("cancel_amount", Integer.toString(cancel_amount));
+		parameters.add("cancel_tax_free_amount", Integer.toString(0));
+
+		// 파라미터, 헤더
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+
+		// 외부에 보낼 url
+		RestTemplate restTemplate = new RestTemplate();
+
+		PayCancelResponse payCancelResponse = restTemplate.postForObject(
+				"https://kapi.kakao.com/v1/payment/cancel",
+				requestEntity,
+				PayCancelResponse.class);
+
+		//예약 상태 cancel update
+		reservation.updateStatus(ReservationStatus.CANCEL.toString());
+
+		//pay 상태 cancel update -> soft delete 기법 사용 (삭제는 하지 않는다) -> 추후 환불에 대한 내역을 볼 수 있도록
+		pay.cancel(PayStatus.CANCEL, payCancelResponse.getCanceled_amount().getTotal(), payCancelResponse.getCanceled_at());
+
+		return RefundResponse.of(pay);
 	}
 }

@@ -2,11 +2,15 @@ package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationStatusRequest;
+import com.ajou_nice.with_pet.exception.AppException;
+import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.service.KaKaoPayService;
 import com.ajou_nice.with_pet.service.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -34,6 +38,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final KaKaoPayService kaKaoPayService;
 
     @PostMapping
     @ApiOperation(value = "예약 하기")
@@ -73,8 +78,8 @@ public class ReservationController {
                         month));
     }
 
-    @PutMapping("/reservation-status")
-    @ApiOperation(value = "예약 상태 변경")
+    @PutMapping("/reservation-accept")
+    @ApiOperation(value = "예약 수락")
     public Response<ReservationDetailResponse> updateReservationStatus(
             @ApiIgnore Authentication authentication,
             @RequestBody ReservationStatusRequest reservationStatusRequest) {
@@ -87,6 +92,22 @@ public class ReservationController {
         return Response.success(detailResponse);
     }
 
+    @PostMapping("/reservation-refuse")
+    @ApiOperation(value = "예약 거절")
+    public Response<RefundResponse> refuseReservation(@ApiIgnore Authentication authentication,
+            @RequestBody ReservationStatusRequest reservationStatusRequest){
+        log.info(
+                "============================ReservationStatusRequest : {}==============================",
+                reservationStatusRequest);
+        if(!reservationStatusRequest.getStatus().equals("REFUSE")){
+            throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS, ErrorCode.BAD_REQUEST_APPLICANT_STATUS.getMessage());
+        }
+        RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(), reservationStatusRequest.getReservationId());
+
+        log.info("=======================payCancelResponse : {}=============================",refundResponse);
+        return Response.success(refundResponse);
+    }
+
     @GetMapping("/petsitter/reservations")
     @ApiOperation(value = "펫시터 월별 예약 목록 조회")
     public Response<List<ReservationResponse>> getMonthlyReservations(
@@ -95,15 +116,5 @@ public class ReservationController {
         return Response.success(
                 reservationService.getMonthlyReservations(authentication.getName(), month));
     }
-
-    /*
-    @DeleteMapping("/{reservationId}")
-    @ApiOperation(value = "사용자의 예약 취소 api")
-    public Response cancelReservation(@ApiIgnore Authentication authentication,
-            @PathVariable("reservationId") Long reservationId){
-
-    }
-
-     */
 
 }

@@ -26,6 +26,8 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+    org.apache.http: DEBUG
+    httpclient.wire: DEBUG
 spring:
   mvc:
     pathmatch:

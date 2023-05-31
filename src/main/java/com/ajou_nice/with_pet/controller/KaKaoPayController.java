@@ -6,6 +6,7 @@ import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayCancelResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayRequest.PaySimpleRequest;
+import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,41 +34,49 @@ public class KaKaoPayController {
 
 		log.info("=======================payRequest : {}=============================",paySimpleRequest);
 		//reservation과 동기화 필요
-		PayReadyResponse payReadyResponse = kaKaoPayService.payReady(authentication, paySimpleRequest.getReservationId());
+		PayReadyResponse payReadyResponse = kaKaoPayService.payReady(authentication.getName(), paySimpleRequest.getReservationId());
 		log.info("=======================payResponse : {}=============================",payReadyResponse);
 		return Response.success(payReadyResponse);
 	}
 
 	//결제 성공
 	@GetMapping("/success")
-	public Response<PayApproveResponse> afterPay(@ApiIgnore Authentication authentication,@RequestParam("pg_token") String pgToken){
-		PayApproveResponse payApproveResponse = kaKaoPayService.approveResponse(
-				authentication.getName(), pgToken);
+	public Response<PayApproveResponse> afterPay(@ApiIgnore Authentication authentication, @RequestParam("pg_token") String pgToken, @RequestParam("tid") String tid){
+		PayApproveResponse payApproveResponse = kaKaoPayService.approvePay(authentication.getName(),pgToken, tid);
+
+		log.info("=======================paySuccessResponse : {}=============================", payApproveResponse);
 		return Response.success(payApproveResponse);
 	}
 
 
 	//결제 진행 중 취소
 	@GetMapping("/cancel")
-	public void cancel(@ApiIgnore Authentication authentication){
-		kaKaoPayService.cancelPayment(authentication.getName());
+	public Response cancel(){
+		kaKaoPayService.deletePayment();
+
+		return Response.success("결제가 취소되었습니다.");
 	}
 
 	//결제 실패
 	@GetMapping("/fail")
-	public void failPayment(@ApiIgnore Authentication authentication){
-		kaKaoPayService.failPayment(authentication.getName());
+	public Response failPayment(){
+		kaKaoPayService.deletePayment();
+
+		return Response.success("결제에 실패하였습니다.");
 	}
 
-	//결제 환불
+	//결제 환불 -> 사용자의 결제 취소를 담당
 	@PostMapping("/refund")
-	public Response<PayCancelResponse> refundPay(@ApiIgnore Authentication authentication){
+	public Response<RefundResponse> refundPay(@ApiIgnore Authentication authentication, PaySimpleRequest paySimpleRequest){
 
-		PayCancelResponse payCancelResponse = kaKaoPayService.refundPayment(authentication.getName());
+		log.info("=======================payCancelRequest : {}=============================",paySimpleRequest);
 
-		return Response.success(payCancelResponse);
+		RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(),
+				paySimpleRequest.getReservationId());
+
+		log.info("=======================payCancelResponse : {}=============================",refundResponse);
+
+		return Response.success(refundResponse);
 	}
-
-
 
 }
