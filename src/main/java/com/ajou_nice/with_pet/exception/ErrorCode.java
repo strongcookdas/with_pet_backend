@@ -36,7 +36,9 @@ public enum ErrorCode {
     CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 채팅룸입니다."),
     PAYMENT_CANCEL(HttpStatus.OK, "결제를 취소하였습니다."),
     PAYMENT_FAIL(HttpStatus.NOT_ACCEPTABLE, "결제에 실패하였습니다."),
-    TO_MANY_APPLICATE(HttpStatus.NOT_ACCEPTABLE,"더 이상 지원할 수 없습니다.");
+    TO_MANY_APPLICATE(HttpStatus.NOT_ACCEPTABLE,"더 이상 지원할 수 없습니다."),
+    PAY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 결제정보입니다."),
+    BAD_REQUEST_RESERVATION_STATSUS(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
     private HttpStatus status;
     private String message;
 }

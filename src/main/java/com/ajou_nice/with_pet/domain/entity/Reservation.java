@@ -46,6 +46,9 @@ public class Reservation extends BaseEntity {
     @OneToMany(mappedBy = "reservation")
     private List<ReservationPetSitterService> reservationPetSitterServiceList;
 
+    @OneToOne(mappedBy = "reservation")
+    private Pay pay;
+
     @NotNull
     private LocalDateTime checkIn;
 
@@ -59,6 +62,7 @@ public class Reservation extends BaseEntity {
     private String criticalServiceName;
     private Integer criticalServicePrice;
     private Integer totalPrice;
+
 
     public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
             PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
@@ -74,6 +78,10 @@ public class Reservation extends BaseEntity {
                 .criticalServicePrice(petSitterCriticalService.getPrice())
                 .totalPrice(0)
                 .build();
+    }
+
+    public void updatePay(Pay pay){
+        this.pay = pay;
     }
 
     public void updateReservationServices(List<ReservationPetSitterService> petSitterServices){

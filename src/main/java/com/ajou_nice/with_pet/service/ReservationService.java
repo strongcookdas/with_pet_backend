@@ -183,6 +183,7 @@ public class ReservationService {
         }
     }
 
+    // 이 코드 중 왜 reservationStatuses로 가져오는지 확인 필요 -> approval하나로만 생각하면 된다.
     public List<String> getUnavailableDates(String userId, Long petsitterId, String month) {
 
         List<String> unavailableDates = new ArrayList<>();
@@ -220,6 +221,11 @@ public class ReservationService {
     @Transactional
     public ReservationDetailResponse approveReservation(String userId, Long reservationId, String status) {
 
+        //상태 변경 값이 잘 들어왔는지 유효 체크
+        if(!status.equals(ReservationStatus.APPROVAL.toString())){
+            throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS, ErrorCode.BAD_REQUEST_RESERVATION_STATSUS.getMessage());
+        }
+
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
@@ -229,6 +235,7 @@ public class ReservationService {
                     ErrorCode.RESERVATION_NOT_FOUND.getMessage());
         });
 
+        // 이 검증을 굳이 해야할 필요가 있나?
         if (!reservation.getPetSitter().getUser().getId().equals(userId)) {
             throw new AppException(ErrorCode.UNAUTHORIZED_RESERVATION,
                     ErrorCode.UNAUTHORIZED_RESERVATION.getMessage());

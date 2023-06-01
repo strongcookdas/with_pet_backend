@@ -3,11 +3,14 @@ package com.ajou_nice.with_pet.repository;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.repository.custom.reservation.ReservationRepositoryCustom;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -32,4 +35,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     List<Reservation> findReservationByStatus(@Param("userId") String userId, @Param("status") String status);
 
     List<Reservation> findAllByPetSitterAndReservationStatus(PetSitter petSitter, ReservationStatus status);
+    @Query("select r from Reservation r where r.pay.tid=:tid")
+    Optional<Reservation> findByTid(@Param("tid") String tid);
+
+    @Query("select r from Reservation r where r.checkIn >: nowPlusSevenDays and r.reservationStatus=:status")
+    List<Reservation> findReservationByDateAndStatus(@Param("nowPlusSevenDays") LocalDateTime nowPlusSevenDays, @Param("status") String status);
+
 }
