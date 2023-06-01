@@ -7,6 +7,7 @@ import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -30,7 +31,8 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements
                 .where(diary.dog.party.eq(userParty.party).and(userParty.user.userId.eq(userId)
                                 .and(diary.createdAt.between(month.withDayOfMonth(1),
                                         month.withDayOfMonth(month.lengthOfMonth())))),
-                        containsDog(dogId), containsCategory(categoryId),containsPetsitter(petsitterCheck))
+                        containsDog(dogId), containsCategory(categoryId),
+                        containsPetsitter(petsitterCheck))
                 .orderBy(diary.createdAt.desc())
                 .fetch();
         return userDiaries;
@@ -42,10 +44,23 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements
         List<Diary> userDiaries = queryFactory.select(diary).from(diary, userParty)
                 .where(diary.dog.party.eq(userParty.party).and(userParty.user.userId.eq(userId)
                                 .and(diary.createdAt.eq(day))),
-                        containsDog(dogId), containsCategory(categoryId), containsPetsitter(petsitterCheck))
+                        containsDog(dogId), containsCategory(categoryId),
+                        containsPetsitter(petsitterCheck))
                 .orderBy(diary.createdAt.desc())
                 .fetch();
         return userDiaries;
+    }
+
+    @Override
+    public Long countDiaryDay(Long dogId, LocalDate createdAt) {
+        return queryFactory.select(diary.dog.dogId.countDistinct()).from(diary)
+                .where(diary.createdAt.between(createdAt, LocalDate.now()).and(diary.dog.dogId.eq(dogId))).fetchOne();
+    }
+
+    @Override
+    public Long countDiary(Long dogId, LocalDate createdAt) {
+        return queryFactory.select(diary.dog.dogId.count()).from(diary)
+                .where(diary.createdAt.between(createdAt, LocalDate.now()).and(diary.dog.dogId.eq(dogId))).fetchOne();
     }
 
     private BooleanExpression containsDog(Long dogId) {

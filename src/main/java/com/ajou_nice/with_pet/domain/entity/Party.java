@@ -31,7 +31,7 @@ public class Party extends BaseEntity {
     private String name;
     private String partyIsbn;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "party")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "party")
     private List<UserParty> userPartyList = new ArrayList<>();
 
     public Party(User user) {
@@ -41,5 +41,15 @@ public class Party extends BaseEntity {
     public void updateParty(String name, String isbn) {
         this.name = name;
         this.partyIsbn = isbn;
+    }
+
+    public void updateParty(String isbn){
+        this.partyIsbn = isbn;
+    }
+    public static Party of(User user, String partyName) {
+        return Party.builder()
+                .user(user)
+                .name(partyName)
+                .build();
     }
 }

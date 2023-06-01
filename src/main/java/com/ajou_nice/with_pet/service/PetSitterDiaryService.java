@@ -1,6 +1,8 @@
 package com.ajou_nice.with_pet.service;
 
+import com.ajou_nice.with_pet.domain.dto.diary.DiaryModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
+import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryListResponse;
 import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Diary;
@@ -57,7 +59,8 @@ public class PetSitterDiaryService {
     }
 
     @Transactional
-    public PetSitterDiaryResponse updatePetSitterDiary(String userId, DiaryRequest diaryRequest,
+    public PetSitterDiaryResponse updatePetSitterDiary(String userId,
+            DiaryModifyRequest diaryModifyRequest,
             Long diaryId) {
         //유저 체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -68,12 +71,8 @@ public class PetSitterDiaryService {
             throw new AppException(ErrorCode.DIARY_NOT_FOUND,
                     ErrorCode.DIARY_NOT_FOUND.getMessage());
         });
-        //반려견 체크
-        Dog dog = dogRepository.findById(diaryRequest.getDogId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
         //카테고리 체크
-        Category category = categoryRepository.findById(diaryRequest.getCategoryId())
+        Category category = categoryRepository.findById(diaryModifyRequest.getCategoryId())
                 .orElseThrow(() -> {
                     throw new AppException(ErrorCode.CATEGORY_NOT_FOUND,
                             ErrorCode.CATEGORY_NOT_FOUND.getMessage());
@@ -84,11 +83,11 @@ public class PetSitterDiaryService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "일지를 수정할 권한이 없습니다.");
         }
         //수정
-        diary.update(diaryRequest, dog, category);
+        diary.update(diaryModifyRequest, category);
         return PetSitterDiaryResponse.of(diary);
     }
 
-    public List<PetSitterDiaryResponse> getPetSitterDiaries(String userId, Long dogId) {
+    public PetSitterDiaryListResponse getPetSitterDiaries(String userId, Long dogId) {
         //유저 체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -103,9 +102,11 @@ public class PetSitterDiaryService {
             throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
         });
         //펫시터가 작성한 해당 반려견에 대한 일지 조회
-        log.info("=======================================펫시터가 작성한 반려견 일지 조회 START=======================================");
+        log.info(
+                "=======================================펫시터가 작성한 반려견 일지 조회 START=======================================");
         List<Diary> diaries = diaryRepository.findAllByPetSitterAndDog(petSitter, dog);
-        log.info("=======================================펫시터가 작성한 반려견 일지 조회 END=======================================");
-        return diaries.stream().map(PetSitterDiaryResponse::of).collect(Collectors.toList());
+        log.info(
+                "=======================================펫시터가 작성한 반려견 일지 조회 END=======================================");
+        return PetSitterDiaryListResponse.of(dog, diaries);
     }
 }

@@ -4,6 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.party.PartyMemberRequest;
+import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
 import com.ajou_nice.with_pet.service.PartyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,11 +30,10 @@ public class PartyController {
 
     @PostMapping("/member")
     @ApiOperation(value = "그룹 멤버 추가")
-    public Response<List<DogInfoResponse>> addMember(@ApiIgnore Authentication authentication,
+    public Response<PartyInfoResponse> addMember(@ApiIgnore Authentication authentication,
             @RequestBody PartyMemberRequest partyMemberRequest) {
-        List<DogInfoResponse> dogInfoResponses = partyService.addMember(authentication.getName(),
-                partyMemberRequest);
-        return Response.success(dogInfoResponses);
+        return Response.success(
+                partyService.addMember(authentication.getName(), partyMemberRequest));
     }
 
 
@@ -47,7 +47,15 @@ public class PartyController {
     @ApiOperation(value = "그룹 상세 리스트 조회")
     public Response<List<PartyInfoResponse>> getPartyInfoList(
             @ApiIgnore Authentication authentication) {
-        return null;
+        return Response.success(partyService.getPartyInfoList(authentication.getName()));
+    }
+
+    @PostMapping
+    @ApiOperation("그룹 생성")
+    public Response<PartyInfoResponse> createParty(@ApiIgnore Authentication authentication,
+            @RequestBody PartyRequest partyRequest) {
+
+        return Response.success(partyService.createParty(authentication.getName(), partyRequest));
     }
 
 

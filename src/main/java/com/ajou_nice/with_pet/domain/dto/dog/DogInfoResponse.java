@@ -32,17 +32,9 @@ public class DogInfoResponse {
     private LocalDate dog_birth;
     private Float dog_weight;
     private String dog_isbn;
-
     private Double socializationTemperature;
-
     private Integer socializationDegree;
-
     private Double affectionTemperature;
-
-    private String partyIsbn;
-
-    private List<PartyMemberResponse> partyMemberResponses;
-
     private DogSize dogSize;
 
 
@@ -76,11 +68,6 @@ public class DogInfoResponse {
                 .dog_birth(dog.getBirth())
                 .dog_weight(dog.getWeight())
                 .dog_isbn(dog.getIsbn())
-                .partyIsbn(dog.getParty().getPartyIsbn())
-                .partyMemberResponses(
-                        dog.getParty().getUserPartyList().stream().map(PartyMemberResponse::of)
-                                .collect(
-                                        Collectors.toList()))
                 .socializationTemperature(dog.getSocializationTemperature())
                 .socializationDegree(dog.getSocializationDegree())
                 .affectionTemperature(dog.getAffectionTemperature())
