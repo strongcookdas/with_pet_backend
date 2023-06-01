@@ -79,7 +79,7 @@ public class KaKaoPayService {
 		parameters.add("total_amount", reservation.getTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
-		parameters.add("approval_url", "http://localhost:3000/petsitter/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
+		parameters.add("approval_url", "http://localhost:3000/petsitterdetail/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
 		parameters.add("cancel_url", "http://localhost:8000/payment/cancel"); // 취소 시 redirect url -> 서버의 주소
 		parameters.add("fail_url", "http://localhost:8000/payment/fail"); // 실패 시 redirect url -> 서버의 주소
 		//redirect url의 경우 나중에 연동시 프론트에서의 URL을 입력해주고 , 꼭 내가 도메인 변경을 해주어야 한다.
