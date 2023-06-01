@@ -38,7 +38,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     @Query("select r from Reservation r where r.pay.tid=:tid")
     Optional<Reservation> findByTid(@Param("tid") String tid);
 
-    @Query("select r from Reservation r where r.checkIn >: nowPlusSevenDays and r.reservationStatus=:status")
-    List<Reservation> findReservationByDateAndStatus(@Param("nowPlusSevenDays") LocalDateTime nowPlusSevenDays, @Param("status") String status);
-
 }
