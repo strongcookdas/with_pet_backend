@@ -36,7 +36,6 @@ public class KaKaoPayService {
 	private final UserRepository userRepository;
 	private final ReservationRepository reservationRepository;
 	private final PayRepository payRepository;
-
 	static final String cid = "TC0ONETIME"; //테스트 코드
 	static final String admin_Key = "059c166f6891b7508def2a190d83955f"; //장승현이 부여받은 admin key
 
@@ -80,7 +79,7 @@ public class KaKaoPayService {
 		parameters.add("total_amount", reservation.getTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
-		parameters.add("approval_url", "http://localhost:8000/payment/success"); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
+		parameters.add("approval_url", "http://localhost:3000/petsitter/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
 		parameters.add("cancel_url", "http://localhost:8000/payment/cancel"); // 취소 시 redirect url -> 서버의 주소
 		parameters.add("fail_url", "http://localhost:8000/payment/fail"); // 실패 시 redirect url -> 서버의 주소
 		//redirect url의 경우 나중에 연동시 프론트에서의 URL을 입력해주고 , 꼭 내가 도메인 변경을 해주어야 한다.
