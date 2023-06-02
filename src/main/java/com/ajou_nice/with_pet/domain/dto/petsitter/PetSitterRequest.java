@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.domain.dto.petsitter;
 
 
 import java.util.List;
+import javax.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +17,14 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@NoArgsConstructor
 	@Getter
 	@ToString
-	public static class PetSitterModifyInfoRequest{
+	public static class PetSitterInfoRequest{
 
 		private List<PetSitterHouseRequest> petSitterHouseRequests;
 		private List<PetSitterHashTagRequest> petSitterHashTagRequests;
+
+		@Lob
 		private String introduction;
 		private List<PetSitterServiceRequest> petSitterServiceRequests;
-
 		private List<PetSitterCriticalServiceRequest> petSitterCriticalServiceRequests;
 
 	}
@@ -30,8 +32,46 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Getter
+	public static class PetSitterIntroRequest{
+		@Lob
+		private String introduction;
+	}
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterHousesRequest{
+		private List<PetSitterHouseRequest> petSitterHousesRequests;
+	}
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterHashTagsRequest{
+		private List<PetSitterHashTagRequest> petSitterHashTagRequests;
+	}
+
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterCriticalServicesRequest{
+		private List<PetSitterCriticalServiceRequest> petSitterCriticalServiceRequests;
+	}
+
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	public static class PetSitterWithPetServicesRequest{
+		private List<PetSitterServiceRequest> petSitterServiceRequests;
+	}
+
+
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
 	@ToString
 	public static class PetSitterHouseRequest{
+
+		private Long houseId;
+		@Lob
 		private String houseImg;
 		private Boolean representative;
 	}
@@ -41,6 +81,8 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@Getter
 	@ToString
 	public static class PetSitterHashTagRequest{
+
+		private Long petSitterhashTagId;
 		private String hashTagName;
 	}
 
@@ -50,7 +92,8 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@Getter
 	@ToString
 	public static class PetSitterServiceRequest{
-		private Long serviceIds;
+		private Long serviceId;
+		private String serviceName;
 		private int price;
 	}
 
@@ -61,5 +104,6 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	public static class PetSitterCriticalServiceRequest{
 		private Long serviceId;
 		private int price;
+		private String serviceName;
 	}
 }

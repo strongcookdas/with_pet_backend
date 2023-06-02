@@ -2,8 +2,7 @@ spring:
   config:
     import: application-aws.yml
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true

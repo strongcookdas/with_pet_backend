@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "Test API")
 public class HelloController {
 
+    /*
+    테스트
+     */
     @GetMapping
     @ApiOperation(value = "CICD 테스트 API")
     public Response hello(Authentication authentication) {

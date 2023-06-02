@@ -1,14 +1,20 @@
 package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
+import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.party.PartyMemberRequest;
+import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
 import com.ajou_nice.with_pet.service.PartyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -24,12 +30,33 @@ public class PartyController {
 
     @PostMapping("/member")
     @ApiOperation(value = "그룹 멤버 추가")
-    public Response addMember(@ApiIgnore Authentication authentication,
-            PartyMemberRequest partyMemberRequest) {
-        partyService.addMember(authentication.getName(), partyMemberRequest);
-        return Response.success("그룹에 추가되었습니다.");
+    public Response<PartyInfoResponse> addMember(@ApiIgnore Authentication authentication,
+            @RequestBody PartyMemberRequest partyMemberRequest) {
+        return Response.success(
+                partyService.addMember(authentication.getName(), partyMemberRequest));
     }
 
+
+    /**
+     * 유저가 속한 그룹과 그룹안 반려견까지 반환하는 GET 메소드
+     *
+     * @param authentication
+     * @return Response<List < PartyInfoResponse>>
+     */
+    @GetMapping("/group-infos")
+    @ApiOperation(value = "그룹 상세 리스트 조회")
+    public Response<List<PartyInfoResponse>> getPartyInfoList(
+            @ApiIgnore Authentication authentication) {
+        return Response.success(partyService.getPartyInfoList(authentication.getName()));
+    }
+
+    @PostMapping
+    @ApiOperation("그룹 생성")
+    public Response<PartyInfoResponse> createParty(@ApiIgnore Authentication authentication,
+            @RequestBody PartyRequest partyRequest) {
+
+        return Response.success(partyService.createParty(authentication.getName(), partyRequest));
+    }
 
 
 }

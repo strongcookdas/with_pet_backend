@@ -3,15 +3,15 @@ package com.ajou_nice.with_pet.controller;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.service.DogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,17 +31,13 @@ public class DogController {
 
     private final DogService dogService;
 
-    @PostMapping("/register-dog")
+    @PostMapping("/register-dog/{partyId}")
     @ApiOperation(value = "반려견 등록")
     public Response<DogInfoResponse> registerDog(@ApiIgnore Authentication authentication,
+            @PathVariable Long partyId,
             @RequestBody DogInfoRequest dogInfoRequest) {
-        log.info("---------------------dog Register Request : {}--------------------------",
-                dogInfoRequest);
-        DogInfoResponse dogInfoResponse = dogService.registerDog(dogInfoRequest,
-                authentication.getName());
-        log.info("---------------------dog Register Response : {}--------------------------",
-                dogInfoResponse);
-        return Response.success(dogInfoResponse);
+        return Response.success(dogService.registerDog(dogInfoRequest, partyId,
+                authentication.getName()));
     }
 
     @GetMapping("/{dogId}")
@@ -70,12 +66,44 @@ public class DogController {
 
     @GetMapping
     @ApiOperation(value = "반려견 상세정보 목록")
-    public Response<Page<DogInfoResponse>> getDogInfos(
-            @ApiIgnore @PageableDefault(size = 10, sort = "createdAt", direction = Direction.ASC)
-            Pageable pageable, @ApiIgnore Authentication authentication) {
+    public Response<List<DogInfoResponse>> getDogInfos(@ApiIgnore Authentication authentication) {
 
-        Page<DogInfoResponse> dogInfoResponses = dogService.getDogInfos(pageable,
-                authentication.getName());
+        log.info(
+                "================================= 반려견 상세정보 목록 시작 =================================");
+        List<DogInfoResponse> dogInfoResponses = dogService.getDogInfos(authentication.getName());
+        log.info(
+                "================================= 반려견 상세정보 목록 끝 =================================");
         return Response.success(dogInfoResponses);
+    }
+
+    @PutMapping("/temperature/{dogId}")
+    @ApiOperation(value = "반려견 사회화 정도 등록")
+    public Response<DogInfoResponse> modifyDogSocialization(
+            @ApiIgnore Authentication authentication,
+            @PathVariable Long dogId,
+            @RequestBody DogSocializationRequest dogSocializationRequest) {
+
+        log.info(
+                "---------------------dog Modify socialization Request : {}--------------------------",
+                dogSocializationRequest);
+
+        DogInfoResponse dogInfoResponse = dogService.modifyDogSocialization(
+                authentication.getName(), dogId, dogSocializationRequest);
+
+        log.info(
+                "---------------------dog Modify socialization Response : {}--------------------------",
+                dogInfoResponse);
+
+        return Response.success(dogInfoResponse);
+    }
+
+    @GetMapping("/reservation-dogs")
+    @ApiOperation(value = "예약 페이지 반려견 리스트 조회")
+    public Response<List<DogListInfoResponse>> getDogListInfoResponses(
+            @ApiIgnore Authentication authentication,
+            Long petSitterId) {
+        List<DogListInfoResponse> list = dogService.getDogListInfoResponse(authentication.getName(),
+                petSitterId);
+        return Response.success(list);
     }
 }

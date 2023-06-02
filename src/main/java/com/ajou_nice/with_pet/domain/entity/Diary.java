@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
+import com.ajou_nice.with_pet.domain.dto.diary.DiaryModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,12 +26,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @Builder
 @ToString
-@Table(name = "user_diary")
-public class UserDiary {
+@Table(name = "diary")
+public class Diary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userDiaryId;
+    private Long diaryId;
 
     @ManyToOne
     @JoinColumn(name = "categoryId", nullable = false)
@@ -40,11 +41,16 @@ public class UserDiary {
     @NotNull
     @Lob
     private String content;
+    @Lob
     private String media;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "petsitter_id")
+    private PetSitter petSitter;
 
     @ManyToOne
     @JoinColumn(name = "dogId", nullable = false)
@@ -58,8 +64,8 @@ public class UserDiary {
 
     private LocalDateTime deletedAt;
 
-    public static UserDiary of(DiaryRequest diaryRequest, Dog dog, User user, Category category) {
-        return UserDiary.builder()
+    public static Diary of(DiaryRequest diaryRequest, Dog dog, User user, Category category) {
+        return Diary.builder()
                 .category(category)
                 .title(diaryRequest.getTitle())
                 .content(diaryRequest.getContentBody())
@@ -69,6 +75,18 @@ public class UserDiary {
                 .createdAt(diaryRequest.getCreatedAt())
                 .build();
     }
+    public static Diary of(DiaryRequest diaryRequest, Dog dog, User user, Category category, PetSitter petSitter) {
+        return Diary.builder()
+                .category(category)
+                .title(diaryRequest.getTitle())
+                .content(diaryRequest.getContentBody())
+                .media(diaryRequest.getDogImgToday())
+                .user(user)
+                .dog(dog)
+                .createdAt(diaryRequest.getCreatedAt())
+                .petSitter(petSitter)
+                .build();
+    }
 
     public void update(DiaryRequest diaryRequest, Dog dog, Category category) {
         this.category = category;
@@ -76,5 +94,15 @@ public class UserDiary {
         this.title = diaryRequest.getTitle();
         this.dog = dog;
         this.media = diaryRequest.getDogImgToday();
+        this.createdAt = diaryRequest.getCreatedAt();
+    }
+
+    public void update(DiaryModifyRequest diaryModifyRequest, Category category) {
+        this.category = category;
+        this.content = diaryModifyRequest.getContentBody();
+        this.title = diaryModifyRequest.getTitle();
+        this.dog = dog;
+        this.media = diaryModifyRequest.getDogImgToday();
+        this.createdAt = diaryModifyRequest.getCreatedAt();
     }
 }

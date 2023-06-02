@@ -27,7 +27,18 @@ public enum ErrorCode {
     PETSITTER_SERVICE_NOT_FOUND(HttpStatus.NOT_FOUND, "등록되지 않은 서비스입니다."),
     PETSITTER_HOUSE_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 집 정보가 없습니다."),
     PETSITTER_HASHTAG_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 해시태그가 없습니다."),
-    PETSITTER_MAIN_HOUSE_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 대표 집 사진이 없습니다.");
+    PETSITTER_MAIN_HOUSE_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 대표 집 사진이 없습니다."),
+    DUPLICATED_RESERVATION(HttpStatus.CONFLICT, "해당 반려견은 예약할 수 없습니다."),
+    RESERVATION_CONFLICT(HttpStatus.CONFLICT, "해당 기간에는 예약할 수 없습니다."),
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 예약을 찾을 수 없습니다."),
+    UNAUTHORIZED_RESERVATION(HttpStatus.UNAUTHORIZED, "해당 예약에 대한 권한이 없습니다."),
+    DUPlICATED_SERVICE(HttpStatus.CONFLICT, "해당 이름의 서비스가 이미 존재합니다."),
+    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 채팅룸입니다."),
+    PAYMENT_CANCEL(HttpStatus.OK, "결제를 취소하였습니다."),
+    PAYMENT_FAIL(HttpStatus.NOT_ACCEPTABLE, "결제에 실패하였습니다."),
+    TO_MANY_APPLICATE(HttpStatus.NOT_ACCEPTABLE,"더 이상 지원할 수 없습니다."),
+    PAY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 결제정보입니다."),
+    BAD_REQUEST_RESERVATION_STATSUS(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
     private HttpStatus status;
     private String message;
 }

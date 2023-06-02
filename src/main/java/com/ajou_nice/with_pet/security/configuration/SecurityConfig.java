@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -17,7 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig{
 
     private final AuthenticationManager authenticationManager;
     private final CustomAccessDeniedHandler accessDeniedHandler;
@@ -39,7 +40,10 @@ public class SecurityConfig {
             "/api/v1/users/signup",
             "/api/v1/users/login",
             "/api/v1/admin/*",
-            "/api/v1/users/applicate-petsitter"
+            "/api/v1/users/applicate-petsitter",
+            "/api/v1/file/upload",
+            "/payment/ready",
+            "https://kapi.kakao.com/v1/payment/ready"
     };
     private final String[] PUT_PERMIT_URL = {
             "/api/v1/petsitter/*",
@@ -48,6 +52,10 @@ public class SecurityConfig {
     };
     private final String[] DELETE_PERMIT_URL = {
             "/api/v1/admin/service"
+    };
+    private final String[] NO_TOKEN_URL = {
+            "https://kapi.kakao.com/v1/payment/ready",
+            "/payment/ready"
     };
 
     private static final String[] DOC_URLS = {
@@ -76,8 +84,8 @@ public class SecurityConfig {
                 .antMatchers(DELETE_PERMIT_URL).permitAll()
                 .antMatchers(DOC_URLS).permitAll()
                 .antMatchers(HttpMethod.GET).authenticated()
-                .antMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
+                .antMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.DELETE).authenticated();
 
         http

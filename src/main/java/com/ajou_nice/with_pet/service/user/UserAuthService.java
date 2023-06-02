@@ -61,6 +61,10 @@ public class UserAuthService {
         cookieUtil.addCookie(response, "token", accessToken, "/");
 
         //테스트로 반환
-        return UserLoginResponse.of("token : " + accessToken);
+        return UserLoginResponse.of(findUser);
+    }
+
+    public void logout(HttpServletResponse response){
+        cookieUtil.initCookie(response,"token",null,"/");
     }
 }

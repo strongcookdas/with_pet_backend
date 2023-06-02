@@ -1,33 +1,31 @@
 package com.ajou_nice.with_pet.domain.dto.admin;
 
 
-import com.ajou_nice.with_pet.domain.entity.PetSitterApplicant;
+
+import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@SuperBuilder
+@Builder
 @ToString
 public class AdminApplicantResponse {
 
-	protected Long applicant_id;
+	private Long user_id;
+	private String applicant_userName;
+	private ApplicantStatus applicantStatus;
 
-	protected Long applicant_userId;
-
-	protected String applicant_userName;
-	protected ApplicantStatus applicantStatus;
-
-	public static AdminApplicantResponse of(PetSitterApplicant petSitterApplicant){
+	public static AdminApplicantResponse of(User user){
 		return AdminApplicantResponse.builder()
-				.applicant_id(petSitterApplicant.getId())
-				.applicant_userId(petSitterApplicant.getUser().getUserId())
-				.applicant_userName(petSitterApplicant.getUser().getName())
-				.applicantStatus(petSitterApplicant.getApplicantStatus())
+				.user_id(user.getUserId())
+				.applicant_userName(user.getName())
+				.applicantStatus(user.getApplicantStatus())
 				.build();
 	}
 }

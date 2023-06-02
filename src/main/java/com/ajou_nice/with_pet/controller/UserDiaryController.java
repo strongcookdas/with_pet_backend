@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
+import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryMonthResponse;
 import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.service.UserDiaryService;
 import io.swagger.annotations.Api;
@@ -67,15 +68,16 @@ public class UserDiaryController {
      */
     @GetMapping("/month")
     @ApiOperation(value = "월별 캘린더 일지 조회")
-    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true)
-    public Response<List<UserDiaryResponse>> getUserMonthDiary(
+    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
+    public Response<List<UserDiaryMonthResponse>> getUserMonthDiary(
             @ApiIgnore Authentication authentication,
             @RequestParam(required = false) Long dogId,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam String month) {
+            @RequestParam String month,
+            @RequestParam(required = false) String petsitterCheck) {
 
-        List<UserDiaryResponse> userDiaryResponses = userDiaryService.getUserMonthDiary(
-                authentication.getName(), dogId, categoryId, month);
+        List<UserDiaryMonthResponse> userDiaryResponses = userDiaryService.getUserMonthDiary(
+                authentication.getName(), dogId, categoryId, month, petsitterCheck);
         return Response.success(userDiaryResponses);
     }
 
@@ -90,15 +92,16 @@ public class UserDiaryController {
      */
     @GetMapping("/day")
     @ApiOperation(value = "일별 캘린더 일지 조회")
-    @ApiImplicitParam(name = "day", value = "해당 년 월 일", example = "2023-05-12", required = true)
+    @ApiImplicitParam(name = "day", value = "해당 년 월 일", example = "2023-05-12", required = true, dataTypeClass = String.class)
     public Response<List<UserDiaryResponse>> getUserDayDiary(
             @ApiIgnore Authentication authentication,
             @RequestParam(required = false) Long dogId,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam String day) {
+            @RequestParam String day,
+            @RequestParam(required = false) String petsitterCheck) {
 
         List<UserDiaryResponse> userDiaryResponses = userDiaryService.getUserDayDiary(
-                authentication.getName(), dogId, categoryId, day);
+                authentication.getName(), dogId, categoryId, day, petsitterCheck);
         return Response.success(userDiaryResponses);
     }
 }

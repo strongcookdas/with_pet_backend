@@ -25,7 +25,7 @@ public class Party extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partyId;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
     private User user;
     private String name;
@@ -41,5 +41,15 @@ public class Party extends BaseEntity {
     public void updateParty(String name, String isbn) {
         this.name = name;
         this.partyIsbn = isbn;
+    }
+
+    public void updateParty(String isbn){
+        this.partyIsbn = isbn;
+    }
+    public static Party of(User user, String partyName) {
+        return Party.builder()
+                .user(user)
+                .name(partyName)
+                .build();
     }
 }
