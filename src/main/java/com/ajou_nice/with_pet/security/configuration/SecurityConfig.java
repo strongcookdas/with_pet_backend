@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.security.handler.AuthenticationManager;
 import com.ajou_nice.with_pet.security.handler.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -81,11 +82,11 @@ public class SecurityConfig{
         //URL 관리
         http
                 .authorizeRequests()
+                .antMatchers("/payment-cancel", "/payment-fail").permitAll()
                 .antMatchers(GET_PERMIT_URL).permitAll()
                 .antMatchers(POST_PERMIT_URL).permitAll()
                 .antMatchers(PUT_PERMIT_URL).permitAll()
                 .antMatchers(DELETE_PERMIT_URL).permitAll()
-                .antMatchers("/resources/**").permitAll()
                 .antMatchers(DOC_URLS).permitAll()
                 .antMatchers(HttpMethod.GET).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
