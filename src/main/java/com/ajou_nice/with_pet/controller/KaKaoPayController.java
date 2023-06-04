@@ -52,23 +52,6 @@ public class KaKaoPayController {
 		return Response.success(payApproveResponse);
 	}
 
-
-	//결제 진행 중 취소
-	@GetMapping("/payment-cancel")
-	public String cancel() {
-		kaKaoPayService.deletePayment();
-
-		return "payment-cancel";
-	}
-
-	//결제 실패
-	@GetMapping("/payment-fail")
-	public String failPayment() {
-		kaKaoPayService.deletePayment();
-
-		return "payment-fail";
-	}
-
 	//결제 환불 -> 사용자의 결제 취소를 담당
 	@PostMapping("/refund")
 	public Response<RefundResponse> refundPay(@ApiIgnore Authentication authentication, PaySimpleRequest paySimpleRequest){
