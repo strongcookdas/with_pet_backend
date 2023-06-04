@@ -155,7 +155,7 @@ public class KaKaoPayService {
 
 	//결제 진행 중 취소 혹은 결제 실패 -> pay 정보 삭제 됨(새로운 요청을 위해)
 	@Transactional
-	public String deletePayment() {
+	public void deletePayment() {
 		Pay pay = payRepository.findByTid(payReadyResponse.getTid()).orElseThrow(() -> {
 			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
 		});
@@ -163,11 +163,7 @@ public class KaKaoPayService {
 			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
 		});
 
-		String redirectUrl = new String("http:localhost:3000/petsitterdetail"+reservation.getPetSitter().getId().toString());
-
 		payRepository.deleteById(pay.getId());
-
-		return redirectUrl;
 	}
 
 	@Transactional

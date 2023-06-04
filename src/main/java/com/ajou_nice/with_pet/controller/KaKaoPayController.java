@@ -56,24 +56,18 @@ public class KaKaoPayController {
 
 	//결제 진행 중 취소
 	@GetMapping("/cancel")
-	public ResponseEntity<Object> cancel() throws URISyntaxException {
-		String redirectUrl = kaKaoPayService.deletePayment();
-		URI redirectUri = new URI(redirectUrl);
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.setLocation(redirectUri);
+	public Response cancel() throws URISyntaxException {
+		kaKaoPayService.deletePayment();
 
-		return new ResponseEntity<>("결제를 취소하였습니다.", httpHeaders, HttpStatus.TEMPORARY_REDIRECT);
+		return Response.success("결제를 취소셨습니다.");
 	}
 
 	//결제 실패
 	@GetMapping("/fail")
-	public ResponseEntity<Object> failPayment() throws URISyntaxException{
-		String redirectUrl = kaKaoPayService.deletePayment();
-		URI redirectUri = new URI(redirectUrl);
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.setLocation(redirectUri);
+	public Response failPayment() throws URISyntaxException{
+		kaKaoPayService.deletePayment();
 
-		return new ResponseEntity<>("결제를 취소하였습니다.", httpHeaders, HttpStatus.TEMPORARY_REDIRECT);
+		return Response.success("결제에 실패하였습니다.");
 	}
 
 	//결제 환불 -> 사용자의 결제 취소를 담당
