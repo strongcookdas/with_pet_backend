@@ -56,18 +56,18 @@ public class KaKaoPayController {
 
 	//결제 진행 중 취소
 	@GetMapping("/cancel")
-	public Response cancel() throws URISyntaxException {
+	public String cancel() {
 		kaKaoPayService.deletePayment();
 
-		return Response.success("결제를 취소셨습니다.");
+		return "paymentcancel";
 	}
 
 	//결제 실패
 	@GetMapping("/fail")
-	public Response failPayment() throws URISyntaxException{
+	public String failPayment() throws URISyntaxException{
 		kaKaoPayService.deletePayment();
 
-		return Response.success("결제에 실패하였습니다.");
+		return "paymentfail";
 	}
 
 	//결제 환불 -> 사용자의 결제 취소를 담당

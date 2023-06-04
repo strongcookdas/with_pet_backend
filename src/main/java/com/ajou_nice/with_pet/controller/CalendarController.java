@@ -29,6 +29,7 @@ public class CalendarController {
     private final CategoryService categoryService;
     private final CalendarService calendarService;
 
+
     //사이드바에 필요한 정보 조회
     @GetMapping
     @ApiOperation(value = "반려인 캘린더 사이드바 조회")
