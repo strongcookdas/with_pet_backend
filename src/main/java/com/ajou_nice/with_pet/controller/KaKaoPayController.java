@@ -54,7 +54,7 @@ public class KaKaoPayController {
 
 
 	//결제 진행 중 취소
-	@GetMapping("payment-cancel")
+	@GetMapping("/payment-cancel")
 	public String cancel() {
 		kaKaoPayService.deletePayment();
 
@@ -62,8 +62,8 @@ public class KaKaoPayController {
 	}
 
 	//결제 실패
-	@GetMapping("payment-fail")
-	public String failPayment() throws URISyntaxException{
+	@GetMapping("/payment-fail")
+	public String failPayment() {
 		kaKaoPayService.deletePayment();
 
 		return "payment-fail";
