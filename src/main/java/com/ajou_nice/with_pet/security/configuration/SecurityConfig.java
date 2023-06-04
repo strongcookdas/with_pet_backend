@@ -35,7 +35,6 @@ public class SecurityConfig{
             "/api/v1/show-services",
             "/api/v1/show-critical-services",
             "/api/v1/users/show-applicateInfo",
-            "/payment/cancel", "/payment/fail",
             "/payment/success", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail"
     };
@@ -86,6 +85,7 @@ public class SecurityConfig{
                 .antMatchers(POST_PERMIT_URL).permitAll()
                 .antMatchers(PUT_PERMIT_URL).permitAll()
                 .antMatchers(DELETE_PERMIT_URL).permitAll()
+                .antMatchers("/resources/**").permitAll()
                 .antMatchers(DOC_URLS).permitAll()
                 .antMatchers(HttpMethod.GET).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
