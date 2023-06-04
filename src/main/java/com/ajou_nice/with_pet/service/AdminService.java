@@ -62,7 +62,7 @@ public class AdminService {
 	@Transactional
 	public PetSitterBasicResponse createPetsitter(String userId, AdminApplicantRequest adminApplicantRequest){
 		//유저 불러오기
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
+		User findUser = userRepository.findByUserId(adminApplicantRequest.getUserId()).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 		//펫시터 지원자 상태 변경 + userRole 변경
