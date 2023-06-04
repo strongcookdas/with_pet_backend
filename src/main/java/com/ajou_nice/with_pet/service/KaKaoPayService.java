@@ -14,6 +14,7 @@ import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
@@ -27,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -80,8 +83,8 @@ public class KaKaoPayService {
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
 		parameters.add("approval_url", "http://localhost:3000/petsitterdetail/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
-		parameters.add("cancel_url", "http://localhost:3000/petsitterdetail/"+reservation.getPetSitter().getId().toString()); // 취소 시 redirect url -> 서버의 주소
-		parameters.add("fail_url", "http://localhost:3000/petsitterdetail/"+reservation.getPetSitter().getId().toString()); // 실패 시 redirect url -> 서버의 주소
+		parameters.add("cancel_url", "ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com/payment/cancel"); // 취소 시 redirect url -> 서버의 주소
+		parameters.add("fail_url", "ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com/payment/fail"); // 실패 시 redirect url -> 서버의 주소
 		//redirect url의 경우 나중에 연동시 프론트에서의 URL을 입력해주고 , 꼭 내가 도메인 변경을 해주어야 한다.
 
 		//파라미터와 header설정
@@ -125,7 +128,7 @@ public class KaKaoPayService {
 		parameters.add("cid", cid);
 		parameters.add("tid", tid);
 		parameters.add("partner_order_id", reservation.getPetSitter().getId().toString());
-		parameters.add("partner_user_id", reservation.getUser().getUserId().toString());
+		parameters.add("partner_user_id", reservation.getUser().getId().toString());
 		parameters.add("pg_token", pgToken);
 
 		// 파라미터, 헤더
@@ -152,12 +155,19 @@ public class KaKaoPayService {
 
 	//결제 진행 중 취소 혹은 결제 실패 -> pay 정보 삭제 됨(새로운 요청을 위해)
 	@Transactional
-	public void deletePayment() {
+	public String deletePayment() {
 		Pay pay = payRepository.findByTid(payReadyResponse.getTid()).orElseThrow(() -> {
 			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
 		});
+		Reservation reservation = reservationRepository.findByTid(payReadyResponse.getTid()).orElseThrow(()->{
+			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+		});
+
+		String redirectUrl = new String("http:localhost:3000/petsitterdetail"+reservation.getPetSitter().getId().toString());
 
 		payRepository.deleteById(pay.getId());
+
+		return redirectUrl;
 	}
 
 	@Transactional

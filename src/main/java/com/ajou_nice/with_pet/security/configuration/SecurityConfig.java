@@ -34,7 +34,9 @@ public class SecurityConfig{
             "/api/v1/show-applicant/{applicantId}",
             "/api/v1/show-services",
             "/api/v1/show-critical-services",
-            "/api/v1/users/show-applicateInfo"
+            "/api/v1/users/show-applicateInfo",
+            "/payment/cancel", "/payment/fail",
+            "payment/success"
     };
     private final String[] POST_PERMIT_URL = {
             "/api/v1/users/signup",
@@ -43,7 +45,8 @@ public class SecurityConfig{
             "/api/v1/users/applicate-petsitter",
             "/api/v1/file/upload",
             "/payment/ready",
-            "https://kapi.kakao.com/v1/payment/ready"
+            "https://kapi.kakao.com/v1/payment/ready",
+            "payment/refund"
     };
     private final String[] PUT_PERMIT_URL = {
             "/api/v1/petsitter/*",

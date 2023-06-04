@@ -8,8 +8,13 @@ import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayRequest.PaySimpleRequest;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
+import java.net.URI;
+import java.net.URISyntaxException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,18 +56,24 @@ public class KaKaoPayController {
 
 	//결제 진행 중 취소
 	@GetMapping("/cancel")
-	public Response cancel(){
-		kaKaoPayService.deletePayment();
+	public ResponseEntity<Object> cancel() throws URISyntaxException {
+		String redirectUrl = kaKaoPayService.deletePayment();
+		URI redirectUri = new URI(redirectUrl);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setLocation(redirectUri);
 
-		return Response.success("결제가 취소되었습니다.");
+		return new ResponseEntity<>("결제를 취소하였습니다.", httpHeaders, HttpStatus.TEMPORARY_REDIRECT);
 	}
 
 	//결제 실패
 	@GetMapping("/fail")
-	public Response failPayment(){
-		kaKaoPayService.deletePayment();
+	public ResponseEntity<Object> failPayment() throws URISyntaxException{
+		String redirectUrl = kaKaoPayService.deletePayment();
+		URI redirectUri = new URI(redirectUrl);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setLocation(redirectUri);
 
-		return Response.success("결제에 실패하였습니다.");
+		return new ResponseEntity<>("결제를 취소하였습니다.", httpHeaders, HttpStatus.TEMPORARY_REDIRECT);
 	}
 
 	//결제 환불 -> 사용자의 결제 취소를 담당
