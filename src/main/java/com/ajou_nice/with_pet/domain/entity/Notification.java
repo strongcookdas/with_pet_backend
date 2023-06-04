@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
