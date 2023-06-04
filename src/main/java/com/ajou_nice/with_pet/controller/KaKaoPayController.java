@@ -26,14 +26,13 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
-@RequestMapping("/payment")
 @RequiredArgsConstructor
 public class KaKaoPayController {
 
 	private final KaKaoPayService kaKaoPayService;
 
 	//결제 요청 -> 클라이언트에서는
-	@PostMapping("/ready")
+	@PostMapping("/payment/ready")
 	public Response<PayReadyResponse> readyToKakaoPay(@ApiIgnore Authentication authentication,
 			@RequestBody PaySimpleRequest paySimpleRequest){
 
@@ -45,7 +44,7 @@ public class KaKaoPayController {
 	}
 
 	//결제 성공
-	@GetMapping("/success")
+	@GetMapping("/payment/success")
 	public Response<PayApproveResponse> afterPay(@ApiIgnore Authentication authentication, @RequestParam("pg_token") String pgToken, @RequestParam("tid") String tid){
 		PayApproveResponse payApproveResponse = kaKaoPayService.approvePay(authentication.getName(),pgToken, tid);
 
@@ -55,19 +54,19 @@ public class KaKaoPayController {
 
 
 	//결제 진행 중 취소
-	@GetMapping("/cancel")
+	@GetMapping("payment-cancel")
 	public String cancel() {
 		kaKaoPayService.deletePayment();
 
-		return "paymentcancel";
+		return "payment-cancel";
 	}
 
 	//결제 실패
-	@GetMapping("/fail")
+	@GetMapping("payment-fail")
 	public String failPayment() throws URISyntaxException{
 		kaKaoPayService.deletePayment();
 
-		return "paymentfail";
+		return "payment-fail";
 	}
 
 	//결제 환불 -> 사용자의 결제 취소를 담당
