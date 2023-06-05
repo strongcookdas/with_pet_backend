@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    @Query("select distinct n from Notification  n join fetch n.receiver where n.receiver.id =: userId order by n.createdAt desc ")
+    @Query("select distinct n from Notification  n join fetch n.receiver where n.receiver.userId =:userId order by n.createdAt desc ")
     List<Notification> findAllByReceiver(@Param("userId") Long userId);
 }
