@@ -6,12 +6,14 @@ import com.ajou_nice.with_pet.service.NotificationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.awt.PageAttributes.MediaType;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,8 +31,17 @@ public class NotificationController {
 
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
     @ApiIgnore
-    public SseEmitter subscribe(Authentication authentication){
-        return notificationService.subscribe(authentication.getName());
+    public SseEmitter subscribe(Authentication authentication,
+            @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId)
+            throws IOException {
+
+        log.info("==== subscribe ====");
+
+        if (authentication == null) {
+            return null;
+        }
+
+        return notificationService.subscribe(authentication.getName(), lastEventId);
     }
 
     @GetMapping
