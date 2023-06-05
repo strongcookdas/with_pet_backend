@@ -69,7 +69,7 @@ public class AdminController {
 
 	@GetMapping("/api/v1/show-applicant/{userId}")
 	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-	public Response<ApplicantInfoResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("applicantId")Long userId){
+	public Response<ApplicantInfoResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId")Long userId){
 
 		ApplicantInfoResponse applicantInfoResponse = adminService.getApplicantInfo(
 				authentication.getName(), userId);

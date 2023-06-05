@@ -281,4 +281,14 @@ public class ReservationService {
 
         return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
     }
+
+    /*
+    //예약 내역 반려인 입장에서
+    public String getReservationDoc(String userId){
+        User user = userRepository.findById(userId).orElseThrow(()->{
+
+        })
+    }
+
+     */
 }
