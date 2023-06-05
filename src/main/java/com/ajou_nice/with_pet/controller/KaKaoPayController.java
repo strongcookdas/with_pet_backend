@@ -26,13 +26,14 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
+@RequestMapping("/payment")
 @RequiredArgsConstructor
 public class KaKaoPayController {
 
 	private final KaKaoPayService kaKaoPayService;
 
 	//결제 요청 -> 클라이언트에서는
-	@PostMapping("/payment/ready")
+	@PostMapping("/ready")
 	public Response<PayReadyResponse> readyToKakaoPay(@ApiIgnore Authentication authentication,
 			@RequestBody PaySimpleRequest paySimpleRequest){
 
@@ -44,7 +45,7 @@ public class KaKaoPayController {
 	}
 
 	//결제 성공
-	@GetMapping("/payment/success")
+	@GetMapping("/success")
 	public Response<PayApproveResponse> afterPay(@ApiIgnore Authentication authentication, @RequestParam("pg_token") String pgToken, @RequestParam("tid") String tid){
 		PayApproveResponse payApproveResponse = kaKaoPayService.approvePay(authentication.getName(),pgToken, tid);
 

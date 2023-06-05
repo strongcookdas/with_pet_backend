@@ -6,6 +6,7 @@ import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
@@ -16,6 +17,7 @@ import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
+import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
@@ -27,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,8 +47,10 @@ public class ReservationService {
     private final PetSitterServiceRepository serviceRepository;
     private final ReservationPetSitterServiceRepository reservationServiceRepository;
 
+    private final PayRepository payRepository;
+
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
-            List.of(ReservationStatus.USE, ReservationStatus.APPROVAL,
+            List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
                     ReservationStatus.WAIT));
 
     //리팩토링이 절대적으로 필요해 보인다......
@@ -142,7 +147,6 @@ public class ReservationService {
                     ErrorCode.RESERVATION_CONFLICT.getMessage());
         }
     }
-
 
     @Transactional
     // 펫시터가 완료된 예약의 반려견의 사회화 온도 평가

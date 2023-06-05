@@ -18,16 +18,12 @@ public class ViewPaymentController {
 	//결제 진행 중 취소
 	@RequestMapping("/payment-cancel")
 	public String cancel() {
-		kaKaoPayService.deletePayment();
-
 		return "payment-cancel";
 	}
 
 	//결제 실패
 	@RequestMapping("/payment-fail")
 	public String failPayment() {
-		kaKaoPayService.deletePayment();
-
 		return "payment-fail";
 	}
 }

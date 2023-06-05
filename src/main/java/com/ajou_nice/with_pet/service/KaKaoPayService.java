@@ -53,7 +53,7 @@ public class KaKaoPayService {
 		return httpHeaders;
 	}
 
-	//pay ready를 요청하면 pay entity 생성 후 pay status wait
+	//pay ready를 요청하면 pay entity 생성 x
 	@Transactional
 	public PayReadyResponse payReady(String userId, Long reservationId){
 
@@ -64,13 +64,6 @@ public class KaKaoPayService {
 		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
 			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
 		});
-
-		Optional<Pay> existPay = payRepository.findByReservation(reservation);
-
-		//이미 pay가 존재한다면 (재결제 요청) -> 원래 있던 pay 정보 삭제
-		if(!existPay.isEmpty()){
-			payRepository.deleteById(existPay.get().getId());
-		}
 
 		// 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
@@ -102,15 +95,13 @@ public class KaKaoPayService {
 				"https://kapi.kakao.com/v1/payment/ready",
 				requests, PayReadyResponse.class);
 
-		Pay pay = Pay.of(reservation, payReadyResponse.getTid());
-		payRepository.save(pay);
-		reservation.updatePay(pay);
+		reservation.updateTid(payReadyResponse.getTid());
 
 		return payReadyResponse;
 	}
 
 
-	//결제 완료 -> 예약상태 payed , payed 상태 success update
+	//결제 완료 -> 예약상태 payed , payed 생성 후 success update
 	@Transactional
 	public PayApproveResponse approvePay(String userId, String pgToken, String tid){
 
@@ -143,63 +134,14 @@ public class KaKaoPayService {
 				requestEntity,
 				PayApproveResponse.class);
 
-		reservation.updateStatus(ReservationStatus.PAYED.toString());
-
-		Pay pay = payRepository.findByReservation(reservation).orElseThrow(()->{
-			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
-		});
-		pay.approve(PayStatus.SUCCESS, approveResponse.getItem_name(), approveResponse.getQuantity(), approveResponse.getApproved_at());
+		Pay pay = Pay.of(reservation, approveResponse);
+		reservation.approvePay(ReservationStatus.PAYED, pay);
 
 		return approveResponse;
 	}
 
-	//결제 진행 중 취소 혹은 결제 실패 -> pay 정보 삭제 됨(새로운 요청을 위해)
-	@Transactional
-	public void deletePayment() {
-		Pay pay = payRepository.findByTid(payReadyResponse.getTid()).orElseThrow(() -> {
-			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
-		});
-		Reservation reservation = reservationRepository.findByTid(payReadyResponse.getTid()).orElseThrow(()->{
-			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
-		});
-
-		payRepository.deleteById(pay.getId());
-	}
-
-	@Transactional
-	public void refundAuto(Reservation reservation){
-
-		Pay pay = payRepository.findByReservation(reservation).orElseThrow(()->{
-			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
-		});
-
-		// 카카오페이 요청
-		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-		parameters.add("cid", cid);
-		parameters.add("tid", pay.getTid());
-		parameters.add("cancel_amount", Integer.toString(pay.getPay_amount()));
-		parameters.add("cancel_tax_free_amount", Integer.toString(0));
-
-		// 파라미터, 헤더
-		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
-
-		// 외부에 보낼 url
-		RestTemplate restTemplate = new RestTemplate();
-
-		PayCancelResponse payCancelResponse = restTemplate.postForObject(
-				"https://kapi.kakao.com/v1/payment/cancel",
-				requestEntity,
-				PayCancelResponse.class);
-
-		//예약 상태 cancel update
-		reservation.updateStatus(ReservationStatus.CANCEL.toString());
-
-		//pay 상태 cancel update -> soft delete 기법 사용 (삭제는 하지 않는다) -> 추후 환불에 대한 내역을 볼 수 있도록
-		pay.cancel(PayStatus.CANCEL, payCancelResponse.getCanceled_amount().getTotal(), payCancelResponse.getCanceled_at());
-	}
-
 	//결제 환불
-	//예약 상태 -> cancel, pay 상태 -> cancel , pay entity 환불금액 update
+	//예약 상태 -> cancel, pay 상태 -> Refund , pay entity 환불금액 update
 	@Transactional
 	public RefundResponse refundPayment(String userId, Long reservationId){
 
@@ -250,8 +192,8 @@ public class KaKaoPayService {
 		//예약 상태 cancel update
 		reservation.updateStatus(ReservationStatus.CANCEL.toString());
 
-		//pay 상태 cancel update -> soft delete 기법 사용 (삭제는 하지 않는다) -> 추후 환불에 대한 내역을 볼 수 있도록
-		pay.cancel(PayStatus.CANCEL, payCancelResponse.getCanceled_amount().getTotal(), payCancelResponse.getCanceled_at());
+		//pay 상태 refund update -> soft delete 기법 사용 (삭제는 하지 않는다) -> 추후 환불에 대한 내역을 볼 수 있도록
+		pay.refund(PayStatus.REFUND, payCancelResponse.getCanceled_amount().getTotal(), payCancelResponse.getCanceled_at());
 
 		return RefundResponse.of(pay);
 	}
