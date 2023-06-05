@@ -40,7 +40,7 @@ public class ChatController {
 	//유저의 채팅룸 생성
 	@PostMapping("/chat/room")
 	public Response<ChatRoomResponse> createChatRoom(@ApiIgnore Authentication authentication,
-			ChatRoomRequest chatRoomRequest){
+			@RequestBody ChatRoomRequest chatRoomRequest){
 
 		ChatRoomResponse chatRoomResponse = chatService.createChatRoom(authentication.getName(), chatRoomRequest);
 

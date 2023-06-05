@@ -18,7 +18,7 @@ import lombok.ToString;
 public class ChatMessageResponse {
 
 	private String message;
-	private String senderId;
+	private Long senderId;
 	private LocalDateTime sendTime;
 
 	public static ChatMessageResponse of(ChatMessage chatMessage){

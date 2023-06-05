@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.security.handler.AuthenticationManager;
 import com.ajou_nice.with_pet.security.handler.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,7 +35,10 @@ public class SecurityConfig{
             "/api/v1/show-applicant/{applicantId}",
             "/api/v1/show-services",
             "/api/v1/show-critical-services",
-            "/api/v1/users/show-applicateInfo"
+            "/api/v1/users/show-applicateInfo",
+            "/payment/success", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
+            "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail",
+            "/chat/*"
     };
     private final String[] POST_PERMIT_URL = {
             "/api/v1/users/signup",
@@ -43,7 +47,9 @@ public class SecurityConfig{
             "/api/v1/users/applicate-petsitter",
             "/api/v1/file/upload",
             "/payment/ready",
-            "https://kapi.kakao.com/v1/payment/ready"
+            "https://kapi.kakao.com/v1/payment/ready",
+            "/payment/refund",
+            "/chat/room"
     };
     private final String[] PUT_PERMIT_URL = {
             "/api/v1/petsitter/*",
@@ -78,6 +84,8 @@ public class SecurityConfig{
         //URL 관리
         http
                 .authorizeRequests()
+                .antMatchers("/ws/chat").permitAll()
+                .antMatchers("/payment-cancel", "/payment-fail").permitAll()
                 .antMatchers(GET_PERMIT_URL).permitAll()
                 .antMatchers(POST_PERMIT_URL).permitAll()
                 .antMatchers(PUT_PERMIT_URL).permitAll()

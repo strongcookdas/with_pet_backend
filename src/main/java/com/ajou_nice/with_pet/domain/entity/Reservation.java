@@ -63,6 +63,9 @@ public class Reservation extends BaseEntity {
     private Integer criticalServicePrice;
     private Integer totalPrice;
 
+    //결제 건의 고유번호
+    private String tid;
+
 
     public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
             PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
@@ -80,7 +83,12 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 
-    public void updatePay(Pay pay){
+    public void updateTid(String tid){
+        this.tid = tid;
+    }
+
+    public void approvePay(ReservationStatus reservationStatus, Pay pay){
+        this.reservationStatus = reservationStatus;
         this.pay = pay;
     }
 

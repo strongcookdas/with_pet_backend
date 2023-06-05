@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
-	@Query("select c from ChatRoom c where c.me.id=:userId")
-	List<ChatRoom> findChatRoomByMyId(@Param("userId") String userId);
+	@Query("select c from ChatRoom c where c.me.userId=:userId")
+	List<ChatRoom> findChatRoomByMyId(@Param("userId") Long userId);
 }

@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
+import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
 import com.ajou_nice.with_pet.enums.PayStatus;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -57,7 +58,7 @@ public class Pay {
 
 
 
-    public void cancel(PayStatus payStatus, int refund_amount, String canceled_at){
+    public void refund(PayStatus payStatus, int refund_amount, String canceled_at){
         this.payStatus = payStatus;
         this.refund_amount = refund_amount;
         this.canceled_at = canceled_at;
@@ -70,12 +71,15 @@ public class Pay {
         this.approved_at = approved_at;
     }
 
-    public static Pay of(Reservation reservation, String tid) {
+    public static Pay of(Reservation reservation, PayApproveResponse approveResponse) {
         return Pay.builder()
                 .reservation(reservation)
-                .payStatus(PayStatus.WAIT)
-                .tid(tid)
-                .pay_amount(reservation.getTotalPrice())
+                .payStatus(PayStatus.SUCCESS)
+                .item_name(approveResponse.getItem_name())
+                .tid(approveResponse.getTid())
+                .quantity(approveResponse.getQuantity())
+                .approved_at(approveResponse.getApproved_at())
+                .pay_amount(approveResponse.getAmount().getTotal())
                 .build();
     }
 }

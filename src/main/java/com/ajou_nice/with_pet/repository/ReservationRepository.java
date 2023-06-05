@@ -9,9 +9,13 @@ import com.ajou_nice.with_pet.repository.custom.reservation.ReservationRepositor
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long>,
@@ -31,11 +35,26 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Boolean existsByCheckOutBetweenAndDogAndReservationStatusIn(LocalDateTime checkIn,
             LocalDateTime checkOut, Dog dog, List<ReservationStatus> reservationStatuses);
 
+    @Query("select r from Reservation r where r.reservationStatus = :payedstatus and "
+            + "function('datediff', r.checkIn, now()) < 3")
+    Optional<List<Reservation>> findNeedRefundReservation(@Param("payedstatus") ReservationStatus paystatus);
+
     @Query("select r from Reservation r where r.user.id=:userId and r.reservationStatus=:status")
     List<Reservation> findReservationByStatus(@Param("userId") String userId, @Param("status") String status);
 
+    @Modifying(clearAutomatically = true)
+    @Query("update Reservation r set r.reservationStatus = :changestatus where r.reservationStatus = :waitstatus and "
+            + "function('datediff', r.checkIn, now() ) < 7")
+    void executeAutoCancel(@Param("changestatus") ReservationStatus changeStatus, @Param("waitstatus") ReservationStatus waitstatus);
+
+
+    @Modifying(clearAutomatically = true)
+    @Query("update Reservation r set r.reservationStatus = :donestatus where r.reservationStatus = :payedstatus and "
+            + "function('datediff', now(), r.checkOut) > 2")
+    void executeAutoDone(@Param("donestatus") ReservationStatus doneStatus, @Param("payedstatus") ReservationStatus payedstatus);
+
     List<Reservation> findAllByPetSitterAndReservationStatus(PetSitter petSitter, ReservationStatus status);
-    @Query("select r from Reservation r where r.pay.tid=:tid")
+    @Query("select r from Reservation r where r.tid=:tid")
     Optional<Reservation> findByTid(@Param("tid") String tid);
 
 }

@@ -40,7 +40,7 @@ public class ChatService {
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
-		List<ChatRoom> myChatRooms = chatRoomRepository.findChatRoomByMyId(me.getId());
+		List<ChatRoom> myChatRooms = chatRoomRepository.findChatRoomByMyId(me.getUserId());
 
 		return ChatMainResponse.toList(myChatRooms);
 
@@ -59,9 +59,7 @@ public class ChatService {
 
 		ChatRoom newChatRoom = ChatRoom.toEntity(me, other, chatRoomRequest.getCreateTime());
 		chatRoomRepository.save(newChatRoom);
-		List<ChatMessage> messages = chatMessageRepository.findAllByChatRoomOrderBySendTimeAsc(newChatRoom);
-
-		return ChatRoomResponse.of(newChatRoom, ChatMessageResponse.toList(messages));
+		return ChatRoomResponse.of(newChatRoom);
 	}
 
 	//채팅방 채팅들 불러오기
@@ -95,7 +93,7 @@ public class ChatService {
 			throw new AppException(ErrorCode.CHATROOM_NOT_FOUND, ErrorCode.CHATROOM_NOT_FOUND.getMessage());
 		});
 
-		ChatMessage chatMessage = ChatMessage.toEntity(chatMessageRequest,findRoom,userId);
+		ChatMessage chatMessage = ChatMessage.toEntity(chatMessageRequest,findRoom,findUser.getUserId());
 		chatMessageRepository.save(chatMessage);
 
 		//채팅룸 마지막으로 내가 확인한 시간과 업데이트 시간을 업데이트
