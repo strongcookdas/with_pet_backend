@@ -35,6 +35,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Boolean existsByCheckOutBetweenAndDogAndReservationStatusIn(LocalDateTime checkIn,
             LocalDateTime checkOut, Dog dog, List<ReservationStatus> reservationStatuses);
 
+    @Query("select r from Reservation r where r.reservationStatus = :payedstatus and "
+            + "function('datediff', r.checkIn, now()) < 3")
+    Optional<List<Reservation>> findNeedRefundReservation(@Param("payedstatus") ReservationStatus paystatus);
+
     @Query("select r from Reservation r where r.user.id=:userId and r.reservationStatus=:status")
     List<Reservation> findReservationByStatus(@Param("userId") String userId, @Param("status") String status);
 

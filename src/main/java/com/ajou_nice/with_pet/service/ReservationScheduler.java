@@ -9,6 +9,7 @@ import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,12 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservationScheduler {
 
 	private final ReservationRepository reservationRepository;
-	private final ReservationService reservationService;
+	private final KaKaoPayService kaKaoPayService;
 
 	//매일 새벽 3시에 reservation status가 WAIT이지만 예약이 7일 이내로 남았을 경우
 	//즉, 결제에 실패하고 나서 checkin이 7일이내로 남았지만, 아직 결제가 안된 경우
 	//예약의 상태를 AUTO CANCEL로 업데이트시킨다.
-	@Scheduled(fixedRate = 500000)
+	@Scheduled(fixedRate = 600000)
 	@Async
 	public void scheduleReservation(){
 
@@ -37,7 +38,7 @@ public class ReservationScheduler {
 
 	//매일 새벽 3시에 reservation status가 Approval일때, 이용완료를 3일이내로 변경해줌
 	//이용완료된 예약 내역을 위해서 reservation status를 DONE으로 변경시켜준다.
-	@Scheduled(fixedRate = 500000)
+	@Scheduled(fixedRate = 600000)
 	@Async
 	public void scheduleDoneReservation(){
 		reservationRepository.executeAutoDone(ReservationStatus.DONE, ReservationStatus.APPROVAL);
@@ -48,12 +49,16 @@ public class ReservationScheduler {
 	// reservation status를 자동으로 AUTO_CANCEL로 변경해줌 + 자동 환불
 	// 자동 환불의 경우 kakaopay와 연동되어 환불이 실제로 일어나야 하므로 bulk 연산 x
 	// 하나씩 해야한다.
-	/*
-	@Scheduled(fixedRate = 10000)
+	@Scheduled(fixedRate = 600000)
 	@Async
 	public void autoRefund(){
-		List<Reservation> reservations = reservationRepository.find
-	}
 
-	 */
+		Optional<List<Reservation>> reservations = reservationRepository.findNeedRefundReservation(ReservationStatus.PAYED);
+
+		if(!reservations.isEmpty()){
+			for(Reservation reservation : reservations.get()){
+				kaKaoPayService.autoRefund(reservation);
+			}
+		}
+	}
 }

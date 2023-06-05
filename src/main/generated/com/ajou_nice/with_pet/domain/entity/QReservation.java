@@ -55,6 +55,8 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public final EnumPath<com.ajou_nice.with_pet.enums.ReservationStatus> reservationStatus = createEnum("reservationStatus", com.ajou_nice.with_pet.enums.ReservationStatus.class);
 
+    public final StringPath tid = createString("tid");
+
     public final NumberPath<Integer> totalPrice = createNumber("totalPrice", Integer.class);
 
     public final QUser user;
