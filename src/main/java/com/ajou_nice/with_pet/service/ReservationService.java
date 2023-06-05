@@ -276,8 +276,8 @@ public class ReservationService {
                     ErrorCode.PETSITTER_NOT_FOUND.getMessage());
         });
 
-        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonth(petSitter,
-                LocalDate.parse(month + "-01"));
+        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(petSitter,
+                LocalDate.parse(month + "-01"), reservationStatuses);
 
         return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
     }

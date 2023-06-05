@@ -27,7 +27,7 @@ public class ReservationScheduler {
 	//매일 새벽 3시에 reservation status가 WAIT이지만 예약이 7일 이내로 남았을 경우
 	//즉, 결제에 실패하고 나서 checkin이 7일이내로 남았지만, 아직 결제가 안된 경우
 	//예약의 상태를 AUTO CANCEL로 업데이트시킨다.
-	@Scheduled(fixedRate = 10000)
+	@Scheduled(fixedRate = 500000)
 	@Async
 	public void scheduleReservation(){
 
@@ -37,7 +37,7 @@ public class ReservationScheduler {
 
 	//매일 새벽 3시에 reservation status가 Approval일때, 이용완료를 3일이내로 변경해줌
 	//이용완료된 예약 내역을 위해서 reservation status를 DONE으로 변경시켜준다.
-	@Scheduled(fixedRate = 10000)
+	@Scheduled(fixedRate = 500000)
 	@Async
 	public void scheduleDoneReservation(){
 		reservationRepository.executeAutoDone(ReservationStatus.DONE, ReservationStatus.APPROVAL);
