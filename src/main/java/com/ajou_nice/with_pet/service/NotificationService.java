@@ -29,6 +29,7 @@ public class NotificationService {
     private final EmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public List<NotificationResponse> getNotification(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -74,14 +75,11 @@ public class NotificationService {
     }
 
     @Transactional
-    public void send(String content, String url, Boolean isRead, NotificationType notificationType,
-            User receiver) {
-
-        Notification notification = Notification.of(content, url, notificationType, receiver);
+    public void send(Notification notification) {
         notificationRepository.save(notification);
         log.info("==== 알림 저장 =====");
 
-        String receiverId = String.valueOf(receiver.getId());
+        String receiverId = String.valueOf(notification.getReceiver().getId());
 
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByUserId(
                 receiverId);
@@ -94,6 +92,11 @@ public class NotificationService {
         log.info("==== SSE 처리 완료 ====");
     }
 
+    public void sendEmail(Notification notification) {
+        emailService.sendEmail(notification.getReceiver().getEmail(),
+                "위드펫" + notification.getNotificationType().name() + "알림",
+                notification.getContent());
+    }
 
 
 }
