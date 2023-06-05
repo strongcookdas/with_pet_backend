@@ -5,17 +5,21 @@ import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.repository.EmitterRepository;
 import com.ajou_nice.with_pet.repository.NotificationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
 
+    private static final Long TIMEOUT = 60 * 1000 * 60L;
+    private final EmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
@@ -26,5 +30,9 @@ public class NotificationService {
         List<Notification> notifications = notificationRepository.findAllByReceiver(
                 user.getUserId());
         return notifications.stream().map(NotificationResponse::of).collect(Collectors.toList());
+    }
+
+    public SseEmitter subscribe(String userId) {
+        return null;
     }
 }
