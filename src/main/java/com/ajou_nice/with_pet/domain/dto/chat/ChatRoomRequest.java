@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ChatRoomRequest {
 
-	private String otherId;
+	private Long otherId;
 	private LocalDateTime createTime;
 }

@@ -35,11 +35,25 @@ public class ReservationScheduler {
 	}
 
 
-	//매일 새벽 3시에 reservation status가 PAYED일때, 이용완료를 3일이내로 변경해줌
+	//매일 새벽 3시에 reservation status가 Approval일때, 이용완료를 3일이내로 변경해줌
 	//이용완료된 예약 내역을 위해서 reservation status를 DONE으로 변경시켜준다.
 	@Scheduled(fixedRate = 10000)
 	@Async
 	public void scheduleDoneReservation(){
-		reservationRepository.executeAutoDone(ReservationStatus.DONE, ReservationStatus.PAYED);
+		reservationRepository.executeAutoDone(ReservationStatus.DONE, ReservationStatus.APPROVAL);
 	}
+
+
+	// 매일 새벽 3시에 reservation status가 Payed이며 checkin까지 3일이내로 남았을때
+	// reservation status를 자동으로 AUTO_CANCEL로 변경해줌 + 자동 환불
+	// 자동 환불의 경우 kakaopay와 연동되어 환불이 실제로 일어나야 하므로 bulk 연산 x
+	// 하나씩 해야한다.
+	/*
+	@Scheduled(fixedRate = 10000)
+	@Async
+	public void autoRefund(){
+		List<Reservation> reservations = reservationRepository.find
+	}
+
+	 */
 }

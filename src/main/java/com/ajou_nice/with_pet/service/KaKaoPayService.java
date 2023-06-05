@@ -139,6 +139,16 @@ public class KaKaoPayService {
 
 		return approveResponse;
 	}
+	// 결제 자동 환불
+	// 결제는 되었으나, 펫시터가 예약 승락을 안해줌
+	@Transactional
+	public void autoRefund(Reservation reservation){
+
+		reservation.updateStatus(ReservationStatus.AUTO_CANCEL.toString());
+
+
+	}
+
 
 	//결제 환불
 	//예약 상태 -> cancel, pay 상태 -> Refund , pay entity 환불금액 update

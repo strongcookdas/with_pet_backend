@@ -39,10 +39,10 @@ public class ChatMessage {
 	private ChatRoom chatRoom;
 
 	//메시지를 작성한 사람의 Id(user의) -> withPet3 처럼
-	private String senderId;
+	private Long senderId;
 	private LocalDateTime sendTime;
 
-	public static ChatMessage toEntity(ChatMessageRequest chatMessageRequest,ChatRoom chatRoom, String userId){
+	public static ChatMessage toEntity(ChatMessageRequest chatMessageRequest,ChatRoom chatRoom, Long userId){
 
 		return ChatMessage.builder()
 				.message(chatMessageRequest.getMessage())
