@@ -3,7 +3,6 @@ package com.ajou_nice.with_pet.service;
 import com.ajou_nice.with_pet.domain.dto.NotificationResponse;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.EmitterRepository;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -92,10 +92,20 @@ public class NotificationService {
         log.info("==== SSE 처리 완료 ====");
     }
 
+    @Async("threadPoolTaskExecutor")
     public void sendEmail(Notification notification) {
         emailService.sendEmail(notification.getReceiver().getEmail(),
                 "위드펫" + notification.getNotificationType().name() + "알림",
                 notification.getContent());
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public void sendEmails(List<Notification> notifications) {
+        notifications.forEach(n -> {
+            emailService.sendEmail(n.getReceiver().getEmail(),
+                    "위드펫" + n.getNotificationType().name() + "알림",
+                    n.getContent());
+        });
     }
 
 
