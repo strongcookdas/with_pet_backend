@@ -52,8 +52,8 @@ public class NotificationService {
         emitter.onError((e) -> emitterRepository.deleteById(emitterId));
 
         //503 에러 방지 더미데이터
-        emitter.send(SseEmitter.event().name("connect"));
-
+        emitter.send(SseEmitter.event().name("connect").data("connect!"));
+        log.info("=== sse 연결완료 ===");
         return emitter;
     }
 
@@ -64,11 +64,13 @@ public class NotificationService {
     private void sendNotification(SseEmitter emitter, String eventId,
             NotificationResponse notificationResponse) {
         try {
+            log.info("=== 알림 보내기 성공 ===");
             emitter.send(SseEmitter.event()
                     .id(eventId)
                     .name("sse")
                     .data(notificationResponse, MediaType.APPLICATION_JSON));
         } catch (IOException e) {
+            log.info("=== 알림 보내기 실패 ===");
             emitterRepository.deleteById(eventId);
             log.error("SSE Connect Error", e);
         }
@@ -86,6 +88,7 @@ public class NotificationService {
 
         emitters.forEach(
                 (key, emitter) -> {
+                    log.info("=== send emitters key : {} ===", key);
                     sendNotification(emitter, receiverId, NotificationResponse.of(notification));
                 }
         );
