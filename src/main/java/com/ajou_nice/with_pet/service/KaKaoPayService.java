@@ -147,7 +147,6 @@ public class KaKaoPayService {
 
 		reservation.updateStatus(ReservationStatus.AUTO_CANCEL.toString());
 
-
 	}
 
 

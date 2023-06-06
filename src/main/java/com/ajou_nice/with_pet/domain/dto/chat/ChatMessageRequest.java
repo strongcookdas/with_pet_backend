@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class ChatMessageRequest {
 	@Lob
 	private String message;
 
+	@DateTimeFormat(iso = ISO.DATE_TIME)
 	private LocalDateTime sendTime;
 
 	private String receiverId;
