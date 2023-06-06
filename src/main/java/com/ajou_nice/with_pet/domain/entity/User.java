@@ -130,6 +130,19 @@ public class User extends BaseEntity {
         this.motivate = applicantModifyRequest.getApplicant_motivate();
     }
 
+    public static User simpleUserForTest(String userName, String userId, String password, String email, UserRole userRole, String phone,
+            Address address){
+        return User.builder()
+                .name(userName)
+                .id(userId)
+                .password(password)
+                .email(email)
+                .role(userRole)
+                .phone(phone)
+                .address(address)
+                .build();
+    }
+
     public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
 
         //이미지 null 체크 null이면 기본이미지로 insert
