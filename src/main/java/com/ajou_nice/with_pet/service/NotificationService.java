@@ -25,7 +25,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private static final Long TIMEOUT = 60 * 1000 * 60L;
+    private static final Long TIMEOUT = 1000 * 60L;
     private final EmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
