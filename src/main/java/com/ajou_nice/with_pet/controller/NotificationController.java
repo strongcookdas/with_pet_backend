@@ -38,6 +38,7 @@ public class NotificationController {
         log.info("==== subscribe ====");
 
         if (authentication == null) {
+            log.info("==== authentication = null ====");
             return null;
         }
 
