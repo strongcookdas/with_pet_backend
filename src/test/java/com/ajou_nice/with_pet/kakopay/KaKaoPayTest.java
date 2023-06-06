@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.kakopay;
 
 
+import com.ajou_nice.with_pet.controller.KaKaoPayController;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
@@ -38,6 +39,9 @@ public class KaKaoPayTest {
 	@Autowired
 	PetSitterRepository petSitterRepository;
 
+	@Autowired
+	KaKaoPayController kaKaoPayController;
+
 	static final String cid = "TC0ONETIME"; //테스트 코드
 	static final String admin_Key = "059c166f6891b7508def2a190d83955f";
 	private PayReadyResponse payReadyResponse;
@@ -64,7 +68,7 @@ public class KaKaoPayTest {
 		parameters.add("total_amount", reservation.getTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
-		parameters.add("approval_url", "http://localhost:3000/petsitterdetail/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
+		parameters.add("approval_url", "http://localhost:8080/payment/test/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
 		parameters.add("cancel_url", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel"); // 취소 시 redirect url -> 서버의 주소
 		parameters.add("fail_url", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail"); // 실패 시 redirect url -> 서버의 주소
 		//redirect url의 경우 나중에 연동시 프론트에서의 URL을 입력해주고 , 꼭 내가 도메인 변경을 해주어야 한다.
