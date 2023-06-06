@@ -90,8 +90,9 @@ public class UserDiaryService {
                     "redirect url",
                     NotificationType.반려인_일지, userParty.getUser());
             notifications.add(notification);
+            notificationService.send(notification);
         }
-        notificationService.sendEmails(notifications);
+//        notificationService.sendEmails(notifications);
         notificationRepository.saveAll(notifications);
         return UserDiaryResponse.of(diary);
     }
