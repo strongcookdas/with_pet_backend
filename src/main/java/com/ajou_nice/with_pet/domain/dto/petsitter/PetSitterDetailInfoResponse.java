@@ -24,6 +24,8 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 
 	private Long petSitterId;
 
+	private Long petSitterUserId;
+
 	private String petSitterName;
 
 	private String petSitterProfileImg;
@@ -45,6 +47,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 	public static PetSitterDetailInfoResponse of(PetSitter petSitter){
 		return PetSitterDetailInfoResponse.builder()
 				.petSitterId(petSitter.getId())
+				.petSitterUserId(petSitter.getUser().getUserId())
 				.petSitterName(petSitter.getPetSitterName())
 				.petSitterProfileImg(petSitter.getProfileImg())
 				.petSitterAddress(petSitter.getPetSitterStreetAdr())

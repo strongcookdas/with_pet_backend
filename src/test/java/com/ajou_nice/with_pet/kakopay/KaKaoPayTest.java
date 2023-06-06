@@ -5,13 +5,13 @@ import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.UserRole;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,11 +32,18 @@ public class KaKaoPayTest {
 	@Autowired
 	KaKaoPayService kaKaoPayService;
 
+	@Autowired
+	UserRepository userRepository;
+
+	@Autowired
+	PetSitterRepository petSitterRepository;
+
 	static final String cid = "TC0ONETIME"; //테스트 코드
 	static final String admin_Key = "059c166f6891b7508def2a190d83955f";
 	private PayReadyResponse payReadyResponse;
+	private String next_url;
 
-	private HttpHeaders getHeaders(){
+	public HttpHeaders getHeaders(){
 		//카카오 페이 서버로 요청할 header
 		HttpHeaders httpHeaders = new HttpHeaders();
 
@@ -75,28 +82,40 @@ public class KaKaoPayTest {
 				requests, PayReadyResponse.class);
 
 		reservation.updateTid(payReadyResponse.getTid());
+		next_url = payReadyResponse.getNext_redirect_pc_url();
 	}
 
 	@Transactional
 	@Test
-	public void kakaoPayTest() throws Exception{
+	public void kaKaoPayTest() throws Exception {
 		//given
 		// 2023-06-05 checkIn - 06-06 checkout 설정 (WAIT) -> 결제 전 AUTOCANCEL이 먹히는지 확인
-		User user1 = new User();
-		PetSitter petSitter1 = new PetSitter();
+		Address address = Address.simpleAddressGenerator("213","adasd", "244");
+		User user1 = User.simpleUserForTest("장승현", "simpleuser", "1234", "jason5102@ajou.ac.kr",
+				UserRole.ROLE_USER, "010-3931-5102", address);
+		User user2 = User.simpleUserForTest("장승현2", "simplepetsitter", "1234", "jason5102@ajou.ac.kr",
+				UserRole.ROLE_PETSITTER, "010-3931-5102", address);
+
+		userRepository.save(user1); userRepository.save(user2);
+
+		PetSitter petSitter1 = PetSitter.simplePetSitterForTest(user2.getName(), user2.getPhone(), "www.google.com", "213", "sdfs",
+				"dsfds", user2);
+		petSitterRepository.save(petSitter1);
+
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 5, 5, 13);
-		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 6, 6,13);
-		Reservation reservation = Reservation.forKaKaoPayTest(checkIn, checkOut, user1, petSitter1, 30000);
+		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 6, 6, 13);
+
+		Reservation reservation = Reservation.forKaKaoPayTest(checkIn, checkOut, user1, petSitter1,
+				30000);
 		reservationRepository.save(reservation);
 		simplePayReady(reservation);
 
-	    //when
-	  
-	    //then
+		//when
+
+		//then
+		System.out.println(next_url);
 
 		//Assertions.assertEquals()
-	    
-	 }
-	  
 
+	}
 }

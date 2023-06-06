@@ -128,7 +128,8 @@ public class User extends BaseEntity {
         this.motivate = applicantModifyRequest.getApplicant_motivate();
     }
 
-    public static User simpleUserForTest(String userName, String userId, String password, String email, UserRole userRole, String phone){
+    public static User simpleUserForTest(String userName, String userId, String password, String email, UserRole userRole, String phone,
+            Address address){
         return User.builder()
                 .name(userName)
                 .id(userId)
@@ -136,6 +137,7 @@ public class User extends BaseEntity {
                 .email(email)
                 .role(userRole)
                 .phone(phone)
+                .address(address)
                 .build();
     }
 
