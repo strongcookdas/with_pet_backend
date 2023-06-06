@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @AllArgsConstructor
@@ -129,8 +130,7 @@ public class User extends BaseEntity {
         this.motivate = applicantModifyRequest.getApplicant_motivate();
     }
 
-    public static User toUserEntity(UserSignUpRequest userSignUpRequest,
-            BCryptPasswordEncoder encoder) {
+    public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
 
         //이미지 null 체크 null이면 기본이미지로 insert
         String img = userSignUpRequest.getProfileImg();

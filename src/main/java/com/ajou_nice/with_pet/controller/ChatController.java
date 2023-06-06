@@ -64,7 +64,7 @@ public class ChatController {
 			@RequestBody ChatMessageRequest chatMessageRequest, @DestinationVariable Long roomId){
 
 		ChatMessageResponse chatMessageResponse = chatService.saveChat(authentication.getName(), chatMessageRequest, roomId);
-		template.convertAndSend("/sub/chat/receive/chatroom", chatMessageResponse);
+		template.convertAndSend("/sub/chat/receive/"+roomId, chatMessageResponse);
 
 		return Response.success(chatMessageResponse);
 	}

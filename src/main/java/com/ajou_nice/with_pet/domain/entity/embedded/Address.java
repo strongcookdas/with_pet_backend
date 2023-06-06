@@ -29,4 +29,12 @@ public class Address {
                 .detailAdr(addressDto.getDetailAdr())
                 .build();
     }
+
+    public static Address simpleAddressGenerator(String zipcode, String streetAdr, String detailAdr){
+        return Address.builder()
+                .zipcode(zipcode)
+                .streetAdr(streetAdr)
+                .detailAdr(detailAdr)
+                .build();
+    }
 }

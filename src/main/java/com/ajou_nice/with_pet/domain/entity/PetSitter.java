@@ -99,6 +99,19 @@ public class PetSitter extends BaseEntity {
 		this.introduction = introduction;
 	}
 
+	public static PetSitter simplePetSitterForTest(String userName, String phone, String licenseImg,
+			String zipcode, String streetAdr, String detailAdr, User user){
+		return PetSitter.builder()
+				.petSitterName(userName)
+				.petSitterPhone(phone)
+				.petSitterLicenseImg(licenseImg)
+				.petSitterZipCode(zipcode)
+				.petSitterStreetAdr(streetAdr)
+				.petSitterDetailAdr(detailAdr)
+				.user(user)
+				.review_count(0).report_count(0).build();
+	}
+
 	public static PetSitter toEntity(User user){
 
 		return PetSitter.builder()

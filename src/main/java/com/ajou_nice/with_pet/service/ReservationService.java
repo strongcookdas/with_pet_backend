@@ -286,9 +286,12 @@ public class ReservationService {
     //예약 내역 반려인 입장에서
     public String getReservationDoc(String userId){
         User user = userRepository.findById(userId).orElseThrow(()->{
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
 
-        })
+
     }
 
      */
+
 }

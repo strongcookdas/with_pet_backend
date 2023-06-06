@@ -83,6 +83,24 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 
+    public static Reservation forSchedulerTest(LocalDateTime checkIn, LocalDateTime checkOut){
+        return Reservation.builder()
+                .checkIn(checkIn)
+                .checkOut(checkOut)
+                .reservationStatus(ReservationStatus.WAIT)
+                .build();
+    }
+
+    public static Reservation forKaKaoPayTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost){
+        return Reservation.builder()
+                .checkIn(checkIn)
+                .checkOut(checkOut)
+                .user(user)
+                .petSitter(petSitter)
+                .totalPrice(totalCost)
+                .build();
+    }
+
     public void updateTid(String tid){
         this.tid = tid;
     }

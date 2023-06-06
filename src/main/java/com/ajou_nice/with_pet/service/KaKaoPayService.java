@@ -146,8 +146,30 @@ public class KaKaoPayService {
 	public void autoRefund(Reservation reservation){
 
 		reservation.updateStatus(ReservationStatus.AUTO_CANCEL.toString());
+		Pay pay = payRepository.findByReservation(reservation).orElseThrow(()->{
+			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
+		});
 
+		// 카카오페이 요청
+		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+		parameters.add("cid", cid);
+		parameters.add("tid", pay.getTid());
+		parameters.add("cancel_amount", pay.getPay_amount().toString());
+		parameters.add("cancel_tax_free_amount", Integer.toString(0));
 
+		// 파라미터, 헤더
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+
+		// 외부에 보낼 url
+		RestTemplate restTemplate = new RestTemplate();
+
+		PayCancelResponse payCancelResponse = restTemplate.postForObject(
+				"https://kapi.kakao.com/v1/payment/cancel",
+				requestEntity,
+				PayCancelResponse.class);
+
+		//pay 상태 refund update -> soft delete 기법 사용 (삭제는 하지 않는다) -> 추후 환불에 대한 내역을 볼 수 있도록
+		pay.refund(PayStatus.REFUND, payCancelResponse.getCanceled_amount().getTotal(), payCancelResponse.getCanceled_at());
 	}
 
 
