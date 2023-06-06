@@ -21,6 +21,7 @@ import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,9 +42,11 @@ public class ChatService {
 		});
 
 		List<ChatRoom> myChatRooms = chatRoomRepository.findChatRoomByMyId(me.getUserId());
+		if(myChatRooms.isEmpty()){
+			myChatRooms = chatRoomRepository.findChatRoomByOtherId(me.getUserId());
+		}
 
 		return ChatMainResponse.toList(myChatRooms);
-
 	}
 
 	@Transactional
@@ -57,9 +60,18 @@ public class ChatService {
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
-		ChatRoom newChatRoom = ChatRoom.toEntity(me, other, chatRoomRequest.getCreateTime());
-		chatRoomRepository.save(newChatRoom);
-		return ChatRoomResponse.of(newChatRoom);
+		Optional<ChatRoom> chatRoom = chatRoomRepository.findChatRoomByMeAndOther(me, other);
+		//이미 존재한다면 기존의 chatRoom에 대한 response return
+		if(!chatRoom.isEmpty()){
+			return ChatRoomResponse.of(chatRoom.get());
+		}
+		// 존재하지 않았다면 새로 생성한 후 새로운 chatRoom에 대한 response return
+		else{
+			ChatRoom newChatRoom = ChatRoom.toEntity(me, other, chatRoomRequest.getCreateTime());
+
+			chatRoomRepository.save(newChatRoom);
+			return ChatRoomResponse.of(newChatRoom);
+		}
 	}
 
 	//채팅방 채팅들 불러오기

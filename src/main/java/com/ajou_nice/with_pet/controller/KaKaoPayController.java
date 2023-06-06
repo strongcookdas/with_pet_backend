@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,10 @@ public class KaKaoPayController {
 		PayReadyResponse payReadyResponse = kaKaoPayService.payReady(authentication.getName(), paySimpleRequest.getReservationId());
 		log.info("=======================payResponse : {}=============================",payReadyResponse);
 		return Response.success(payReadyResponse);
+	}
+	@GetMapping("/test{petSitterId}")
+	public String forTestPgToken(@PathVariable("petSitterId")Long petSitterId, @RequestParam("pg_token") String pgToken){
+		return pgToken;
 	}
 
 	//결제 성공
