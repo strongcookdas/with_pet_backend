@@ -54,7 +54,7 @@ public class NotificationService {
         //503 에러 방지 더미데이터
         emitter.send(SseEmitter.event().name("connect"));
 
-        return null;
+        return emitter;
     }
 
     private String makeTimeIncludeId(String userId) {
