@@ -44,9 +44,11 @@ public class ChatService {
 		List<ChatRoom> myChatRooms = chatRoomRepository.findChatRoomByMyId(me.getUserId());
 		if(myChatRooms.isEmpty()){
 			myChatRooms = chatRoomRepository.findChatRoomByOtherId(me.getUserId());
+			return ChatMainResponse.forPetSitterList(myChatRooms);
 		}
-
-		return ChatMainResponse.toList(myChatRooms);
+		else {
+			return ChatMainResponse.toList(myChatRooms);
+		}
 	}
 
 	@Transactional
