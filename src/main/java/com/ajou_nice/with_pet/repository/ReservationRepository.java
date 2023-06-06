@@ -49,9 +49,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
 
     @Modifying(clearAutomatically = true)
-    @Query("update Reservation r set r.reservationStatus = :donestatus where r.reservationStatus = :payedstatus and "
-            + "function('datediff', now(), r.checkOut) > 2")
-    void executeAutoDone(@Param("donestatus") ReservationStatus doneStatus, @Param("payedstatus") ReservationStatus payedstatus);
+    @Query("update Reservation r set r.reservationStatus = :donestatus where r.reservationStatus = :approvalstatus and "
+            + "function('datediff', now(), r.checkOut) > 1")
+    void executeAutoDone(@Param("donestatus") ReservationStatus doneStatus, @Param("approvalstatus") ReservationStatus approvalstatus);
 
     List<Reservation> findAllByPetSitterAndReservationStatus(PetSitter petSitter, ReservationStatus status);
     @Query("select r from Reservation r where r.tid=:tid")

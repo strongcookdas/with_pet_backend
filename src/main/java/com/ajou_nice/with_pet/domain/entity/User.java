@@ -24,9 +24,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
@@ -125,6 +127,17 @@ public class User extends BaseEntity {
         this.careExperience = applicantModifyRequest.getApplicant_care_experience();
         this.animalCareer = applicantModifyRequest.getApplicant_animal_career();
         this.motivate = applicantModifyRequest.getApplicant_motivate();
+    }
+
+    public static User simpleUserForTest(String userName, String userId, String password, String email, UserRole userRole, String phone){
+        return User.builder()
+                .name(userName)
+                .id(userId)
+                .password(password)
+                .email(email)
+                .role(userRole)
+                .phone(phone)
+                .build();
     }
 
     public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
