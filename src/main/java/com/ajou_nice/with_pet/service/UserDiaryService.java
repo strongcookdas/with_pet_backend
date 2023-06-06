@@ -40,6 +40,7 @@ public class UserDiaryService {
     private final CategoryRepository categoryRepository;
 
     private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
 
     @Transactional
@@ -84,10 +85,12 @@ public class UserDiaryService {
 
         List<Notification> notifications = new ArrayList<>();
         for (UserParty userParty : userParties) {
-            notifications.add(
-                    Notification.of(user.getName() + "님이 " + dog.getName() + "의 일지를 작성했습니다.",
-                            "redirect url",
-                            NotificationType.DIARY, userParty.getUser()));
+            Notification notification = Notification.of(
+                    user.getName() + "님이 " + dog.getName() + "의 일지를 작성했습니다.",
+                    "redirect url",
+                    NotificationType.반려인_일지, userParty.getUser());
+            notifications.add(notification);
+            notificationService.sendEmail(notification);
         }
 
         notificationRepository.saveAll(notifications);
