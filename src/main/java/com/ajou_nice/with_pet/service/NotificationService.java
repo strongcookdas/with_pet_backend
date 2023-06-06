@@ -64,11 +64,11 @@ public class NotificationService {
     private void sendNotification(SseEmitter emitter, String eventId,
             NotificationResponse notificationResponse) {
         try {
-            log.info("=== 알림 보내기 성공 ===");
             emitter.send(SseEmitter.event()
                     .id(eventId)
                     .name("sse")
                     .data(notificationResponse, MediaType.APPLICATION_JSON));
+            log.info("=== 알림 보내기 성공 ===");
         } catch (IOException e) {
             log.info("=== 알림 보내기 실패 ===");
             emitterRepository.deleteById(eventId);
