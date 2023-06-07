@@ -34,6 +34,8 @@ public class ChatService {
 	private final UserRepository userRepository;
 	private final ChatMessageRepository chatMessageRepository;
 
+	private final PetSitterRepository petSitterRepository;
+
 	//채팅방 목록 조회
 	public List<ChatMainResponse> showRooms(String userId){
 
@@ -90,7 +92,15 @@ public class ChatService {
 		//마지막 내가 본 시점 수정 + showMessageCount ++
 		chatRoom.updateMyLastShowTime(LocalDateTime.now());
 
-		return ChatRoomResponse.of(chatRoom, ChatMessageResponse.toList(messages));
+		Optional<PetSitter> existPetSitter = petSitterRepository.findByUser(me);
+
+		//펫시터일때
+		if(!existPetSitter.isEmpty()){
+			return ChatRoomResponse.ofPetSitter(chatRoom, ChatMessageResponse.toList(messages));
+		}
+		else{
+			return ChatRoomResponse.of(chatRoom, ChatMessageResponse.toList(messages));
+		}
 	}
 
 	@Transactional
