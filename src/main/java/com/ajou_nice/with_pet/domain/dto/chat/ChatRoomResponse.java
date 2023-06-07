@@ -20,15 +20,15 @@ public class ChatRoomResponse {
 	private Long chatRoomId;
 
 	private List<ChatMessageResponse> chatMessages;
-	private String myName;
-	private String otherName;
+	private Long myId;
+	private Long otherId;
 
 
 	public static ChatRoomResponse of(ChatRoom chatRoom, List<ChatMessageResponse> chatMessages){
 		return ChatRoomResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())
-				.myName(chatRoom.getMe().getName())
-				.otherName(chatRoom.getOther().getName())
+				.myId(chatRoom.getMe().getUserId())
+				.otherId(chatRoom.getOther().getUserId())
 				.chatMessages(chatMessages)
 				.build();
 	}
@@ -36,8 +36,8 @@ public class ChatRoomResponse {
 	public static ChatRoomResponse ofPetSitter(ChatRoom chatRoom, List<ChatMessageResponse> chatMessages){
 		return ChatRoomResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())
-				.myName(chatRoom.getOther().getName())
-				.otherName(chatRoom.getMe().getName())
+				.myId(chatRoom.getOther().getUserId())
+				.otherId(chatRoom.getMe().getUserId())
 				.chatMessages(chatMessages)
 				.build();
 	}
@@ -45,8 +45,8 @@ public class ChatRoomResponse {
 	public static ChatRoomResponse of(ChatRoom chatRoom){
 		return ChatRoomResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())
-				.myName(chatRoom.getMe().getName())
-				.otherName(chatRoom.getOther().getName())
+				.myId(chatRoom.getMe().getUserId())
+				.otherId(chatRoom.getOther().getUserId())
 				.build();
 	}
 }
