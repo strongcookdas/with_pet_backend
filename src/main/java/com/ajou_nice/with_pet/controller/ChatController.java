@@ -40,7 +40,7 @@ public class ChatController {
 	//유저의 채팅룸 생성
 	@PostMapping("/chat/room")
 	public Response<ChatRoomResponse> createChatRoom(@ApiIgnore Authentication authentication,
-			ChatRoomRequest chatRoomRequest){
+			@RequestBody ChatRoomRequest chatRoomRequest){
 
 		ChatRoomResponse chatRoomResponse = chatService.createChatRoom(authentication.getName(), chatRoomRequest);
 
@@ -64,7 +64,7 @@ public class ChatController {
 			@RequestBody ChatMessageRequest chatMessageRequest, @DestinationVariable Long roomId){
 
 		ChatMessageResponse chatMessageResponse = chatService.saveChat(authentication.getName(), chatMessageRequest, roomId);
-		template.convertAndSend("/sub/chat/receive/chatroom", chatMessageResponse);
+		template.convertAndSend("/sub/chat/receive/"+roomId, chatMessageResponse);
 
 		return Response.success(chatMessageResponse);
 	}

@@ -5,17 +5,22 @@ import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryMonthResponse;
 import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.domain.entity.UserParty;
+import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.DiaryRepository;
+import com.ajou_nice.with_pet.repository.NotificationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +38,9 @@ public class UserDiaryService {
     private final UserPartyRepository userPartyRepository;
     private final DiaryRepository userDiaryRepository;
     private final CategoryRepository categoryRepository;
+
+    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
 
     @Transactional
@@ -59,7 +67,7 @@ public class UserDiaryService {
         Diary diary = userDiaryRepository.save(
                 Diary.of(diaryRequest, dog, user, category));
         LocalDate createdAt = dog.getCreatedAt().toLocalDate();
-        int days = Period.between(createdAt, LocalDate.now()).getDays()+1;
+        int days = Period.between(createdAt, LocalDate.now()).getDays() + 1;
         int diaryDayCount = userDiaryRepository.countDiaryDay(dog.getDogId(),
                 dog.getCreatedAt().toLocalDate()).intValue();
         int diaryCount = userDiaryRepository.countDiary(dog.getDogId(),
@@ -72,6 +80,22 @@ public class UserDiaryService {
                 "================= days : {}, diaryDayCount : {}, diaryCount : {}, temp : {} =====================",
                 days, diaryDayCount, diaryCount, temp);
 
+        List<UserParty> userParties = userPartyRepository.findAllByPartyAndUser(
+                dog.getParty().getPartyId(), user.getUserId());
+
+        List<Notification> notifications = new ArrayList<>();
+
+        for (UserParty userParty : userParties) {
+            Notification notification = Notification.of(
+                    user.getName() + "님이 " + dog.getName() + "의 일지를 작성했습니다.",
+                    "http://localhost:3000/calendar",
+                    NotificationType.반려인_일지, userParty.getUser());
+            notifications.add(notification);
+            notificationService.send(notification);
+            notificationService.sendEmail(notification);
+        }
+
+        notificationRepository.saveAll(notifications);
         return UserDiaryResponse.of(diary);
     }
 

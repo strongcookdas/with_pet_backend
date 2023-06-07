@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,23 +32,20 @@ public class Reservation extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dogId")
     private Dog dog;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petsitter_id")
     private PetSitter petSitter;
 
     @OneToMany(mappedBy = "reservation")
     private List<ReservationPetSitterService> reservationPetSitterServiceList;
-
-    @OneToOne(mappedBy = "reservation")
-    private Pay pay;
 
     @NotNull
     private LocalDateTime checkIn;
@@ -62,6 +60,9 @@ public class Reservation extends BaseEntity {
     private String criticalServiceName;
     private Integer criticalServicePrice;
     private Integer totalPrice;
+
+    //결제 건의 고유번호
+    private String tid;
 
 
     public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
@@ -80,8 +81,30 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 
-    public void updatePay(Pay pay){
-        this.pay = pay;
+    public static Reservation forSchedulerTest(LocalDateTime checkIn, LocalDateTime checkOut){
+        return Reservation.builder()
+                .checkIn(checkIn)
+                .checkOut(checkOut)
+                .reservationStatus(ReservationStatus.WAIT)
+                .build();
+    }
+
+    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost){
+        return Reservation.builder()
+                .checkIn(checkIn)
+                .checkOut(checkOut)
+                .user(user)
+                .petSitter(petSitter)
+                .totalPrice(totalCost)
+                .build();
+    }
+
+    public void updateTid(String tid){
+        this.tid = tid;
+    }
+
+    public void approvePay(ReservationStatus reservationStatus){
+        this.reservationStatus = reservationStatus;
     }
 
     public void updateReservationServices(List<ReservationPetSitterService> petSitterServices){

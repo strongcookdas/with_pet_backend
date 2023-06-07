@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @AllArgsConstructor
@@ -86,7 +87,7 @@ public class User extends BaseEntity {
     //몇번 지원했는지 count
     private Integer applicantCount;
 
-    public void updateUserRole(UserRole userRole){
+    public void updateUserRole(UserRole userRole) {
         this.role = userRole;
     }
 
@@ -99,16 +100,18 @@ public class User extends BaseEntity {
         this.address = Address.toAddressEntity(modifyRequest.getAddress());
     }
 
-    public void updateApplicateCount(){
+    public void updateApplicateCount() {
         applicantCount++;
     }
-    public void updateApplicantStatus(ApplicantStatus status){
+
+    public void updateApplicantStatus(ApplicantStatus status) {
         this.applicantStatus = status;
     }
-    public void registerApplicantInfo(ApplicantInfoRequest applicantInfoRequest){
-        if(applicantInfoRequest.getApplicant_license_img().isEmpty()){
+
+    public void registerApplicantInfo(ApplicantInfoRequest applicantInfoRequest) {
+        if (applicantInfoRequest.getApplicant_license_img().isEmpty()) {
             this.licenseImg = "https://withpetoriginimage.s3.ap-northeast-1.amazonaws.com/default.png";
-        }else{
+        } else {
             this.licenseImg = applicantInfoRequest.getApplicant_license_img();
         }
         this.identification = applicantInfoRequest.getApplicant_identification();
@@ -120,11 +123,24 @@ public class User extends BaseEntity {
         this.motivate = applicantInfoRequest.getApplicant_motivate();
     }
 
-    public void updateApplicantInfo(ApplicantModifyRequest applicantModifyRequest){
+    public void updateApplicantInfo(ApplicantModifyRequest applicantModifyRequest) {
         this.petSitterCareer = applicantModifyRequest.getApplicant_petsitter_career();
         this.careExperience = applicantModifyRequest.getApplicant_care_experience();
         this.animalCareer = applicantModifyRequest.getApplicant_animal_career();
         this.motivate = applicantModifyRequest.getApplicant_motivate();
+    }
+
+    public static User simpleUserForTest(String userName, String userId, String password, String email, UserRole userRole, String phone,
+            Address address){
+        return User.builder()
+                .name(userName)
+                .id(userId)
+                .password(password)
+                .email(email)
+                .role(userRole)
+                .phone(phone)
+                .address(address)
+                .build();
     }
 
     public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
@@ -145,6 +161,26 @@ public class User extends BaseEntity {
                 .profileImg(img)
                 .phone(userSignUpRequest.getPhoneNum())
                 .address(Address.toAddressEntity(userSignUpRequest.getAddress()))
+                .applicantCount(0)
+                .build();
+    }
+
+    public static User createTestEntity() {
+
+        return User.builder()
+                .userId(1L)
+                .name("홍길동")
+                .id("user1")
+                .password("password")
+                .email("email@gmail.com")
+                .role(UserRole.ROLE_USER)
+                .profileImg("image")
+                .phone("010-0000-0000")
+                .address(Address.builder()
+                        .zipcode("123456")
+                        .streetAdr("아주대로")
+                        .detailAdr("팔달관")
+                        .build())
                 .applicantCount(0)
                 .build();
     }

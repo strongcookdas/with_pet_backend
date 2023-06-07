@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +15,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ChatRoomRequest {
 
-	private String otherId;
+	private Long otherId;
+
+	@DateTimeFormat(iso = ISO.DATE_TIME)
 	private LocalDateTime createTime;
 }
