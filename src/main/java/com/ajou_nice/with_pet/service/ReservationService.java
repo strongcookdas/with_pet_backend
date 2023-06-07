@@ -3,6 +3,7 @@ package com.ajou_nice.with_pet.service;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
@@ -289,7 +290,7 @@ public class ReservationService {
 
 
     //예약 내역 반려인 입장에서
-    public void getReservationDoc(String userId){
+    public ReservationDocsResponse getReservationDoc(String userId){
 
         User user = userRepository.findById(userId).orElseThrow(()->{
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -316,8 +317,8 @@ public class ReservationService {
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.DONE)).collect(
                 Collectors.toList());
 
-
-
+        return ReservationDocsResponse.of(waitReservations, payedReservations, approveReservations,useReservations,
+                doneReservations);
     }
 
 }

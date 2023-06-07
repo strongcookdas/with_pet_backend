@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationStatusRequest;
@@ -135,8 +136,10 @@ public class ReservationController {
 
     @GetMapping("/user/show-reservations")
     @ApiOperation(value = "유저의 예약 리스트 조회")
-    public void getMyReservations(String userId){
+    public Response<ReservationDocsResponse> getMyReservations(@ApiIgnore Authentication authentication){
 
+        ReservationDocsResponse docsResponse = reservationService.getReservationDoc(authentication.getName());
 
+        return Response.success(docsResponse);
     }
 }
