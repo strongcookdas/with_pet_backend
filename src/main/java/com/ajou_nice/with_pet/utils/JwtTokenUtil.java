@@ -22,7 +22,7 @@ public class JwtTokenUtil {
     private final CookieUtil cookieUtil;
     @Value("${jwt.token.secret}")
     private String key;
-    private final long expireTimeMs = 1000 * 60 * 60L;
+    private final long expireTimeMs = 1000 * 60L;
 
     private Jws<Claims> extractClaims(String token) {
         return Jwts.parser().setSigningKey(key).parseClaimsJws(token);
