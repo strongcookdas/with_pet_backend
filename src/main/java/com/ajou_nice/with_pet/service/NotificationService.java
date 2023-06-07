@@ -104,7 +104,7 @@ public class NotificationService {
     public void sendEmail(Notification notification) {
         emailService.sendEmail(notification.getReceiver().getEmail(),
                 "위드펫" + notification.getNotificationType().name() + "알림",
-                notification.getContent());
+                String.format(notification.getContent()+"/n"+notification.getUrl()));
     }
 
     /* 여러개의 이메일 알림 전송 메서드 */
