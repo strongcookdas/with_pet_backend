@@ -296,6 +296,27 @@ public class ReservationService {
         });
 
         Optional<List<Reservation>> myReservations = reservationRepository.findAllByUser(user);
+        List<Reservation> waitReservations = myReservations.get().stream().filter(
+                reservation -> reservation.getReservationStatus().equals(ReservationStatus.WAIT)).collect(
+                Collectors.toList());
+
+        List<Reservation> payedReservations = myReservations.get().stream().filter(
+                reservation -> reservation.getReservationStatus().equals(ReservationStatus.PAYED)).collect(
+                Collectors.toList());
+
+        List<Reservation> approveReservations = myReservations.get().stream().filter(
+                reservation -> reservation.getReservationStatus().equals(ReservationStatus.APPROVAL)).collect(
+                Collectors.toList());
+
+        List<Reservation> useReservations = myReservations.get().stream().filter(
+                reservation -> reservation.getReservationStatus().equals(ReservationStatus.USE)).collect(
+                Collectors.toList());
+
+        List<Reservation> doneReservations = myReservations.get().stream().filter(
+                reservation -> reservation.getReservationStatus().equals(ReservationStatus.DONE)).collect(
+                Collectors.toList());
+
+
 
     }
 

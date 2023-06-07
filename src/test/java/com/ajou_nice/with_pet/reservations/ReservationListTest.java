@@ -15,6 +15,7 @@ import com.ajou_nice.with_pet.service.ReservationService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -90,10 +91,13 @@ public class ReservationListTest {
 
 	    //when
 		Optional<List<Reservation>> myReservations = reservationRepository.findAllByUser(user);
+		List<Reservation> waitReservations = myReservations.get().stream().filter(
+				reservation -> reservation.getReservationStatus().equals(ReservationStatus.WAIT)).collect(
+				Collectors.toList());
 
 	    //then
-		System.out.println(myReservations.get().toString());
-	    
+		Assertions.assertEquals(waitReservations.get(0),reservation2);
+
 	 }
 	  
 }

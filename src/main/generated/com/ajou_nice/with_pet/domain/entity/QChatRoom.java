@@ -32,11 +32,15 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public final QUser other;
 
+    public final DateTimePath<java.time.LocalDateTime> otherLastShowTime = createDateTime("otherLastShowTime", java.time.LocalDateTime.class);
+
     public final NumberPath<Long> roomId = createNumber("roomId", Long.class);
 
     public final ListPath<ChatMessage, QChatMessage> roomMessages = this.<ChatMessage, QChatMessage>createList("roomMessages", ChatMessage.class, QChatMessage.class, PathInits.DIRECT2);
 
-    public final NumberPath<Integer> showMessageCount = createNumber("showMessageCount", Integer.class);
+    public final NumberPath<Integer> showMyMessageCount = createNumber("showMyMessageCount", Integer.class);
+
+    public final NumberPath<Integer> showOtherMessageCount = createNumber("showOtherMessageCount", Integer.class);
 
     public QChatRoom(String variable) {
         this(ChatRoom.class, forVariable(variable), INITS);
