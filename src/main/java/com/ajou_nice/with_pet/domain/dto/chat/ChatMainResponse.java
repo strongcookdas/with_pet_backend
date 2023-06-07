@@ -26,14 +26,24 @@ public class ChatMainResponse {
 
 
 
-	//유저에게는 other이 petSitter이기 때문 (채팅은
+	//유저에게는 other이 petSitter
 	public static List<ChatMainResponse> toList(List<ChatRoom> chatRooms){
 		return chatRooms.stream().map(chatRoom -> ChatMainResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())
 				.otherProfileImg(chatRoom.getOther().getProfileImg())
 				.otherName(chatRoom.getOther().getName())
 				.recentMessageTime(chatRoom.getLastModifiedTime())
-				.notReceivedCount(chatRoom.getAllMessageCount() - chatRoom.getShowMessageCount())
+				.notReceivedCount(chatRoom.getAllMessageCount() - chatRoom.getShowMyMessageCount())
+				.build()).collect(Collectors.toList());
+	}
+
+	public static List<ChatMainResponse> forPetSitterList(List<ChatRoom> chatRooms){
+		return chatRooms.stream().map(chatRoom -> ChatMainResponse.builder()
+				.chatRoomId(chatRoom.getRoomId())
+				.otherProfileImg(chatRoom.getMe().getProfileImg())
+				.otherName(chatRoom.getMe().getName())
+				.recentMessageTime(chatRoom.getLastModifiedTime())
+				.notReceivedCount(chatRoom.getAllMessageCount() - chatRoom.getShowOtherMessageCount())
 				.build()).collect(Collectors.toList());
 	}
 }

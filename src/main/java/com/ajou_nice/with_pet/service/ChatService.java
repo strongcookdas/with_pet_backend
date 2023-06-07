@@ -21,6 +21,7 @@ import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,8 @@ public class ChatService {
 	private final UserRepository userRepository;
 	private final ChatMessageRepository chatMessageRepository;
 
+	private final PetSitterRepository petSitterRepository;
+
 	//채팅방 목록 조회
 	public List<ChatMainResponse> showRooms(String userId){
 
@@ -41,9 +44,13 @@ public class ChatService {
 		});
 
 		List<ChatRoom> myChatRooms = chatRoomRepository.findChatRoomByMyId(me.getUserId());
-
-		return ChatMainResponse.toList(myChatRooms);
-
+		if(myChatRooms.isEmpty()){
+			myChatRooms = chatRoomRepository.findChatRoomByOtherId(me.getUserId());
+			return ChatMainResponse.forPetSitterList(myChatRooms);
+		}
+		else {
+			return ChatMainResponse.toList(myChatRooms);
+		}
 	}
 
 	@Transactional
@@ -57,9 +64,18 @@ public class ChatService {
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
-		ChatRoom newChatRoom = ChatRoom.toEntity(me, other, chatRoomRequest.getCreateTime());
-		chatRoomRepository.save(newChatRoom);
-		return ChatRoomResponse.of(newChatRoom);
+		Optional<ChatRoom> chatRoom = chatRoomRepository.findChatRoomByMeAndOther(me, other);
+		//이미 존재한다면 기존의 chatRoom에 대한 response return
+		if(!chatRoom.isEmpty()){
+			return ChatRoomResponse.of(chatRoom.get());
+		}
+		// 존재하지 않았다면 새로 생성한 후 새로운 chatRoom에 대한 response return
+		else{
+			ChatRoom newChatRoom = ChatRoom.toEntity(me, other, chatRoomRequest.getCreateTime());
+
+			chatRoomRepository.save(newChatRoom);
+			return ChatRoomResponse.of(newChatRoom);
+		}
 	}
 
 	//채팅방 채팅들 불러오기
@@ -73,10 +89,19 @@ public class ChatService {
 
 		List<ChatMessage> messages = chatMessageRepository.findAllByChatRoomOrderBySendTimeAsc(chatRoom);
 
-		//마지막 내가 본 시점 수정 + showMessageCount ++
-		chatRoom.updateMyLastShowTime(LocalDateTime.now());
 
-		return ChatRoomResponse.of(chatRoom, ChatMessageResponse.toList(messages));
+		Optional<PetSitter> existPetSitter = petSitterRepository.findByUser(me);
+
+		//펫시터일때
+		if(!existPetSitter.isEmpty()){
+			chatRoom.updateOtherLastShowTime(LocalDateTime.now());
+			return ChatRoomResponse.ofPetSitter(chatRoom, ChatMessageResponse.toList(messages));
+		}
+		else{
+			//마지막 내가 본 시점 수정 + showMessageCount ++
+			chatRoom.updateMyLastShowTime(LocalDateTime.now());
+			return ChatRoomResponse.of(chatRoom, ChatMessageResponse.toList(messages));
+		}
 	}
 
 	@Transactional
@@ -96,9 +121,19 @@ public class ChatService {
 		ChatMessage chatMessage = ChatMessage.toEntity(chatMessageRequest,findRoom,findUser.getUserId());
 		chatMessageRepository.save(chatMessage);
 
-		//채팅룸 마지막으로 내가 확인한 시간과 업데이트 시간을 업데이트
-		// + 모든 메시지 count ++, showMessageCount ++
-		findRoom.updateModifiedTime(chatMessageRequest.getSendTime());
+		Optional<PetSitter> existPetSitter = petSitterRepository.findByUser(findUser);
+
+		//펫시터일때
+		if(!existPetSitter.isEmpty()){
+			//채팅룸 마지막으로 내가 확인한 시간과 업데이트 시간을 업데이트
+			// + 모든 메시지 count ++, showMessageCount ++
+			findRoom.updateOtherModifiedTime(chatMessageRequest.getSendTime());
+		}
+		else{
+			//채팅룸 마지막으로 내가 확인한 시간과 업데이트 시간을 업데이트
+			// + 모든 메시지 count ++, showMessageCount ++
+			findRoom.updateMyModifiedTime(chatMessageRequest.getSendTime());
+		}
 
 		return ChatMessageResponse.of(chatMessage);
 	}

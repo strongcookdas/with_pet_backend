@@ -93,7 +93,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation-refuse")
-    @ApiOperation(value = "예약 거절")
+    @ApiOperation(value = "펫시터의 예약 거절")
     public Response<RefundResponse> refuseReservation(@ApiIgnore Authentication authentication,
             @RequestBody ReservationStatusRequest reservationStatusRequest){
         log.info(
@@ -116,5 +116,27 @@ public class ReservationController {
         return Response.success(
                 reservationService.getMonthlyReservations(authentication.getName(), month));
     }
+    @PostMapping("/user/done-reservation")
+    @ApiOperation(value = "사용자의 이용 완료 신청")
+    public Response doneReservation(@ApiIgnore Authentication authentication, Long reservationId){
+        reservationService.doneReservation(authentication.getName(), reservationId);
 
+        return Response.success("완료 되었습니다. 만족스러우셨다면 후기를 작성해주세요.");
+    }
+
+    @PostMapping("/user/cancel-reservation")
+    @ApiOperation(value = "사용자의 예약 취소 (결제 전 예약건에 대해)")
+    public Response cancelReservation(@ApiIgnore Authentication authentication, Long reservationId){
+
+        reservationService.cancelReservation(authentication.getName(), reservationId);
+
+        return Response.success("취소가 완료 되었습니다.");
+    }
+
+    @GetMapping("/user/show-reservations")
+    @ApiOperation(value = "유저의 예약 리스트 조회")
+    public void getMyReservations(String userId){
+
+
+    }
 }

@@ -31,7 +31,7 @@ public class ApplicantService {
 
 		// 유저 펫시터 지원 중복 체크
 		// 유저의 role이 지원자이고 , 지원상태가 WAIT일때는 중복 지원 금지
-		if(findUser.getRole().equals("ROLE_APPLICANT") && findUser.getApplicantStatus().equals("WAIT")){
+		if(findUser.getRole().equals(UserRole.ROLE_APPLICANT) && findUser.getApplicantStatus().equals(ApplicantStatus.WAIT)){
 			throw new AppException(ErrorCode.DUPLICATED_APPLICATION, ErrorCode.DUPLICATED_APPLICATION.getMessage());
 		}
 		//지원 횟수가 3번을 초과했다면 지원 x

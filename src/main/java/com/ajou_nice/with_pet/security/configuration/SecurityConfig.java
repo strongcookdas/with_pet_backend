@@ -99,6 +99,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/v1/petsitter/show-myinfo").hasRole("PETSITTER")
                 .antMatchers("/ws/chat").permitAll()
+                .antMatchers("/payment/test/*").permitAll()
                 .antMatchers("/payment-cancel", "/payment-fail").permitAll()
                 .antMatchers(HttpMethod.GET,GET_PERMIT_URL).permitAll()
                 .antMatchers(POST_PERMIT_URL).permitAll()

@@ -36,7 +36,7 @@ class EmitterRepositoryImplTest {
         Long memberId = 1L;
         String eventCacheId = memberId + "_" + System.currentTimeMillis();
         Notification notification = new Notification(1L, "test", "test", false,
-                NotificationType.DIARY,
+                NotificationType.반려인_일지,
                 user);
 
         //when, then
@@ -75,21 +75,21 @@ class EmitterRepositoryImplTest {
         Long memberId = 1L;
         String eventCacheId1 = memberId + "_" + System.currentTimeMillis();
         Notification notification1 = new Notification(1L, "test", "test", false,
-                NotificationType.DIARY,
+                NotificationType.반려인_일지,
                 user);
         emitterRepository.saveEventCache(eventCacheId1, notification1);
 
         Thread.sleep(100);
         String eventCacheId2 = memberId + "_" + System.currentTimeMillis();
         Notification notification2 = new Notification(1L, "test", "test", false,
-                NotificationType.DIARY,
+                NotificationType.반려인_일지,
                 user);
         emitterRepository.saveEventCache(eventCacheId2, notification2);
 
         Thread.sleep(100);
         String eventCacheId3 = memberId + "_" + System.currentTimeMillis();
         Notification notification3 = new Notification(1L, "test", "test", false,
-                NotificationType.DIARY,
+                NotificationType.반려인_일지,
                 user);
         emitterRepository.saveEventCache(eventCacheId3, notification3);
 
@@ -145,14 +145,14 @@ class EmitterRepositoryImplTest {
         Long memberId = 1L;
         String eventCacheId1 = memberId + "_" + System.currentTimeMillis();
         Notification notification1 = new Notification(1L, "test", "test", false,
-                NotificationType.DIARY,
+                NotificationType.반려인_일지,
                 user);
         emitterRepository.saveEventCache(eventCacheId1, notification1);
 
         Thread.sleep(100);
         String eventCacheId2 = memberId + "_" + System.currentTimeMillis();
         Notification notification2 = new Notification(1L, "test", "test", false,
-                NotificationType.DIARY,
+                NotificationType.반려인_일지,
                 user);
         emitterRepository.saveEventCache(eventCacheId2, notification2);
 

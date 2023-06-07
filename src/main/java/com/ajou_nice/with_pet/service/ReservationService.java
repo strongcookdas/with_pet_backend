@@ -47,13 +47,11 @@ public class ReservationService {
     private final PetSitterServiceRepository serviceRepository;
     private final ReservationPetSitterServiceRepository reservationServiceRepository;
 
-    private final PayRepository payRepository;
-
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
-                    ReservationStatus.WAIT));
+                    ReservationStatus.USE, ReservationStatus.WAIT));
 
-    //리팩토링이 절대적으로 필요해 보인다......
+
     @Transactional
     public ReservationCreateResponse createReservation(String userId, ReservationRequest reservationRequest) {
         int cost = 0;
@@ -187,7 +185,6 @@ public class ReservationService {
         }
     }
 
-    // 이 코드 중 왜 reservationStatuses로 가져오는지 확인 필요 -> approval하나로만 생각하면 된다.
     public List<String> getUnavailableDates(String userId, Long petsitterId, String month) {
 
         List<String> unavailableDates = new ArrayList<>();
@@ -219,10 +216,6 @@ public class ReservationService {
         return dateRange;
     }
 
-    /*
-      예약에 대한 상태가 많아서 승인/거절에 대한 메소드를 분리한 것이 아닌 그냥 상태를 수정하는 메소드를 선언
-      이게 맞는건지는 고민이 필요....
-     */
     @Transactional
     public ReservationDetailResponse approveReservation(String userId, Long reservationId, String status) {
 
@@ -240,7 +233,6 @@ public class ReservationService {
                     ErrorCode.RESERVATION_NOT_FOUND.getMessage());
         });
 
-        // 이 검증을 굳이 해야할 필요가 있나?
         if (!reservation.getPetSitter().getUser().getId().equals(userId)) {
             throw new AppException(ErrorCode.UNAUTHORIZED_RESERVATION,
                     ErrorCode.UNAUTHORIZED_RESERVATION.getMessage());
@@ -250,22 +242,6 @@ public class ReservationService {
         return ReservationDetailResponse.of(reservation);
     }
 
-    /*
-    예약 내역 페이지(유저) -> 결제를 위해 reservation_status가 approval인 예약 리스트 불러오기
-     */
-    public List<ReservationResponse> showApprovalReservation(String userId){
-
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
-
-        List<Reservation> reservations = reservationRepository.findReservationByStatus(userId,
-                String.valueOf(ReservationStatus.APPROVAL));
-
-        return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
-    }
-
-    //펫시터 입장에서 ReservationList를 불러올때 reservationStatus가 payed인 List만 불러오는게 좋을 것 같다.
     public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -282,16 +258,45 @@ public class ReservationService {
         return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
     }
 
-    /*
+    // 반려인의 예약 취소
+    // 승인 전 예약 건에 대해서
+    @Transactional
+    public void cancelReservation(String userId, Long reservationId){
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
+
+        reservation.updateStatus(ReservationStatus.CANCEL.toString());
+    }
+
+    // 반려인의 이용 완료
+    @Transactional
+    public void doneReservation(String userId, Long reservationId){
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
+
+        reservation.updateStatus(ReservationStatus.DONE.toString());
+    }
+
+
     //예약 내역 반려인 입장에서
-    public String getReservationDoc(String userId){
+    public void getReservationDoc(String userId){
+
         User user = userRepository.findById(userId).orElseThrow(()->{
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
+        Optional<List<Reservation>> myReservations = reservationRepository.findAllByUser(user);
 
     }
-
-     */
 
 }

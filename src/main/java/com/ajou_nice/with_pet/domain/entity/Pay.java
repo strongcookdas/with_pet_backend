@@ -71,6 +71,12 @@ public class Pay {
         this.approved_at = approved_at;
     }
 
+    public static Pay simplePayForTest(Reservation reservation){
+        return Pay.builder()
+                .reservation(reservation)
+                .build();
+    }
+
     public static Pay of(Reservation reservation, PayApproveResponse approveResponse) {
         return Pay.builder()
                 .reservation(reservation)

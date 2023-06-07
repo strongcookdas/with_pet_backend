@@ -33,6 +33,15 @@ public class ChatRoomResponse {
 				.build();
 	}
 
+	public static ChatRoomResponse ofPetSitter(ChatRoom chatRoom, List<ChatMessageResponse> chatMessages){
+		return ChatRoomResponse.builder()
+				.chatRoomId(chatRoom.getRoomId())
+				.myId(chatRoom.getOther().getUserId())
+				.otherId(chatRoom.getMe().getUserId())
+				.chatMessages(chatMessages)
+				.build();
+	}
+
 	public static ChatRoomResponse of(ChatRoom chatRoom){
 		return ChatRoomResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())

@@ -35,9 +35,9 @@ public class ReservationCreateResponse {
 	public static ReservationCreateResponse of(Reservation reservation){
 		return ReservationCreateResponse.builder()
 				.reservationId(reservation.getReservationId())
-				.reservationDate(String.valueOf(LocalDate.now()))
-				.checkIn(reservation.getCheckIn().toLocalDate().toString())
-				.checkOut(reservation.getCheckOut().toLocalDate().toString())
+				.reservationDate(reservation.getCreatedAt().toString())
+				.checkIn(reservation.getCheckIn().toString())
+				.checkOut(reservation.getCheckOut().toString())
 				.dogName(reservation.getDog().getName())
 				.dogSize(reservation.getDog().getDogSize().toString())
 				.petSitterName(reservation.getPetSitter().getPetSitterName())

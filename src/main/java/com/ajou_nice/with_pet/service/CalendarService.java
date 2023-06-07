@@ -34,7 +34,7 @@ public class CalendarService {
         });
 
         List<Reservation> useReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
-                LocalDate.parse(month + "-01"), ReservationStatus.APPROVAL);
+                LocalDate.parse(month + "-01"), ReservationStatus.USE);
         List<Reservation> waitReservation = reservationRepository.findAllByPetSitterAndReservationStatus(
                 petSitter, ReservationStatus.PAYED);
         List<Reservation> doneReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
