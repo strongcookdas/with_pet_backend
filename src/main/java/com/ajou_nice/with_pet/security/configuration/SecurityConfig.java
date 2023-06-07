@@ -28,6 +28,7 @@ public class SecurityConfig {
     private final String[] GET_PERMIT_URL = {
             "/api/v1/petsitter/*",
             "/api/v1/show-petsitter",
+            "/api/v1/show-services",
             "/api/v1/reservation",
             "/payment/success",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
@@ -47,7 +48,6 @@ public class SecurityConfig {
     private final String[] ADMIN_GET_API = {
             "/api/v1/show-applicants",
             "/api/v1/show-applicant/*",
-            "/api/v1/show-services",
             "/api/v1/show-criticalservices"
     };
 
