@@ -28,7 +28,5 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setCharacterEncoding("utf-8");
         Response errorResponse = Response.error(ErrorCode.INVALID_PERMISSION.getMessage());
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
-        response.sendRedirect("http://ec2-13-125-242-183.ap-northeast-2.compute.amazonaws.com/login");
-        response.setHeader("Access-Control-Allow-Origin", "*");
     }
 }
