@@ -3,6 +3,7 @@ package com.ajou_nice.with_pet.service;
 import com.ajou_nice.with_pet.domain.dto.NotificationResponse;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.EmitterRepository;
@@ -25,12 +26,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private static final Long TIMEOUT = 1000 * 60L;
+    private static final Long TIMEOUT = 60 * 1000 * 60L;
     private final EmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
 
+    /* 알림 목록 조회 */
     public List<NotificationResponse> getNotification(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -40,6 +42,7 @@ public class NotificationService {
         return notifications.stream().map(NotificationResponse::of).collect(Collectors.toList());
     }
 
+    /* SSE 구독 메서드 */
     public SseEmitter subscribe(String userId, String lastEventId) throws IOException {
         String emitterId = makeTimeIncludeId(userId);
         log.info("emitterId = {}", emitterId);
@@ -77,6 +80,7 @@ public class NotificationService {
     }
 
     @Transactional
+    @Async("threadPoolTaskExecutor")
     public void send(Notification notification) {
         notificationRepository.save(notification);
         log.info("==== 알림 저장 =====");
@@ -95,6 +99,7 @@ public class NotificationService {
         log.info("==== SSE 처리 완료 ====");
     }
 
+    /* 이메일 알림 전송 메서드 */
     @Async("threadPoolTaskExecutor")
     public void sendEmail(Notification notification) {
         emailService.sendEmail(notification.getReceiver().getEmail(),
@@ -102,6 +107,7 @@ public class NotificationService {
                 notification.getContent());
     }
 
+    /* 여러개의 이메일 알림 전송 메서드 */
     @Async("threadPoolTaskExecutor")
     public void sendEmails(List<Notification> notifications) {
         notifications.forEach(n -> {
@@ -110,6 +116,5 @@ public class NotificationService {
                     n.getContent());
         });
     }
-
 
 }

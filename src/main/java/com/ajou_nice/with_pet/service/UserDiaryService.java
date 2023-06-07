@@ -83,15 +83,19 @@ public class UserDiaryService {
         List<UserParty> userParties = userPartyRepository.findAllByPartyAndUser(
                 dog.getParty().getPartyId(), user.getUserId());
 
+        List<Notification> notifications = new ArrayList<>();
+
         for (UserParty userParty : userParties) {
             Notification notification = Notification.of(
                     user.getName() + "님이 " + dog.getName() + "의 일지를 작성했습니다.",
-                    "redirect url",
+                    "http://localhost:3000/calendar",
                     NotificationType.반려인_일지, userParty.getUser());
-            notificationRepository.save(notification);
+            notifications.add(notification);
             notificationService.send(notification);
+            notificationService.sendEmail(notification);
         }
-//        notificationService.sendEmails(notifications);
+
+        notificationRepository.saveAll(notifications);
         return UserDiaryResponse.of(diary);
     }
 

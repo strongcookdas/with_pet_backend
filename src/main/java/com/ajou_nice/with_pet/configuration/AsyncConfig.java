@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.configuration;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -15,7 +14,7 @@ public class AsyncConfig {
     public Executor threadPoolTaskExecutor(){
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(3); // 기본 스레드 수
-        taskExecutor.setMaxPoolSize(30); // 최대 스레드 수
+        taskExecutor.setMaxPoolSize(100); // 최대 스레드 수
         taskExecutor.setQueueCapacity(100); // Queue 사이즈
         taskExecutor.setThreadNamePrefix("Executor-");
         return taskExecutor;
