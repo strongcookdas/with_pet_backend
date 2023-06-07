@@ -7,8 +7,11 @@ import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.domain.entity.UserParty;
+import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
@@ -17,6 +20,7 @@ import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +39,7 @@ public class PetSitterDiaryService {
     private final DogRepository dogRepository;
     private final UserPartyRepository userPartyRepository;
     private final CategoryRepository categoryRepository;
+    private final NotificationService notificationService;
 
     public PetSitterDiaryResponse writePetsitterDiary(String userId, DiaryRequest diaryRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -55,6 +60,20 @@ public class PetSitterDiaryService {
                 });
 
         Diary diary = diaryRepository.save(Diary.of(diaryRequest, dog, user, category, petSitter));
+        // 그룹원에게 알림
+        List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
+        List<Notification> notifications = new ArrayList<>();
+        userParties.forEach(u -> {
+            Notification notification = Notification.of(
+                    petSitter.getPetSitterName() + "펫시터 님이 " + dog.getName() + "의 일지를 작성했습니다.",
+                    "http://localhost:3000/calendar",
+                    NotificationType.펫시터_일지, u.getUser());
+            notifications.add(notification);
+            notificationService.send(notification);
+            notificationService.sendEmail(notification);
+        });
+        notificationService.saveAllNotification(notifications);
+
         return PetSitterDiaryResponse.of(diary);
     }
 

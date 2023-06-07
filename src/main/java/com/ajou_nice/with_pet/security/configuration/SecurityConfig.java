@@ -19,49 +19,62 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig{
+public class SecurityConfig {
 
     private final AuthenticationManager authenticationManager;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final JwtFilter jwtFilter;
 
     private final String[] GET_PERMIT_URL = {
-            "/api/v1/dogs/*",
-            "/api/v1/dogs",
             "/api/v1/petsitter/*",
             "/api/v1/show-petsitter",
-            "/api/v1/admin/*",
-            "/api/v1/show-applicants",
-            "/api/v1/show-applicant/{applicantId}",
-            "/api/v1/show-services",
-            "/api/v1/show-critical-services",
-            "/api/v1/users/show-applicateInfo",
-            "/payment/success", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
+            "/api/v1/reservation",
+            "/payment/success",
+            "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail",
             "/chat/*"
     };
     private final String[] POST_PERMIT_URL = {
             "/api/v1/users/signup",
             "/api/v1/users/login",
-            "/api/v1/admin/*",
-            "/api/v1/users/applicate-petsitter",
             "/api/v1/file/upload",
             "/payment/ready",
             "https://kapi.kakao.com/v1/payment/ready",
             "/payment/refund",
             "/chat/room"
     };
-    private final String[] PUT_PERMIT_URL = {
-            "/api/v1/petsitter/*",
-            "/api/v1/admin/*",
+
+    private final String[] ADMIN_GET_API = {
+            "/api/v1/show-applicants",
+            "/api/v1/show-applicant/*",
+            "/api/v1/show-services",
+            "/api/v1/show-criticalservices"
+    };
+
+    private final String[] PETSITTER_APPLICANT_GET_API = {
+            "/api/v1/users/show-applicateInfo",
+    };
+    private final String[] APPLICANT_PUT_API = {
             "/api/v1/users/update-applicateInfo"
     };
-    private final String[] DELETE_PERMIT_URL = {
-            "/api/v1/admin/service"
+    private final String[] USER_API = {
+            "/api/v1/calendar",
+            "/api/v1/dogs/**",
+            "/api/v1/groups/**",
+            "/api/v1/userdiaries/**"
     };
-    private final String[] NO_TOKEN_URL = {
-            "https://kapi.kakao.com/v1/payment/ready",
-            "/payment/ready"
+
+    private final String[] USER_POST_API = {
+            "/api/v1/reservation",
+            "/api/v1/users/applicate-petsitter"
+    };
+
+    private final String[] PETSITTER_API = {
+            "/api/v1/calendar/petsitter-calendar",
+            "/api/v1/petsitter/**",
+            "/api/v1/petsitter-diaries/**",
+            "/api/v1/reservation/**"
+
     };
 
     private static final String[] DOC_URLS = {
@@ -84,14 +97,21 @@ public class SecurityConfig{
         //URL 관리
         http
                 .authorizeRequests()
+                .antMatchers("/api/v1/petsitter/show-myinfo").hasRole("PETSITTER")
                 .antMatchers("/ws/chat").permitAll()
                 .antMatchers("/payment/test/*").permitAll()
                 .antMatchers("/payment-cancel", "/payment-fail").permitAll()
-                .antMatchers(GET_PERMIT_URL).permitAll()
+                .antMatchers(HttpMethod.GET,GET_PERMIT_URL).permitAll()
                 .antMatchers(POST_PERMIT_URL).permitAll()
-                .antMatchers(PUT_PERMIT_URL).permitAll()
-                .antMatchers(DELETE_PERMIT_URL).permitAll()
                 .antMatchers(DOC_URLS).permitAll()
+                .antMatchers(HttpMethod.POST, USER_POST_API).hasRole("USER")
+                .antMatchers(HttpMethod.GET, PETSITTER_APPLICANT_GET_API)
+                .access("hasRole('PETSITTER') or hasRole('APPLICANT')")
+                .antMatchers(HttpMethod.PUT, APPLICANT_PUT_API).hasRole("APPLICANT")
+                .antMatchers(USER_API).hasRole("USER")
+                .antMatchers(PETSITTER_API).hasRole("PETSITTER")
+                .antMatchers(HttpMethod.GET, ADMIN_GET_API).hasRole("ADMIN")
+                .antMatchers("/api/v1/admin/**", "/api/v1/category").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET).authenticated()
                 .antMatchers(HttpMethod.PUT).authenticated()
                 .antMatchers(HttpMethod.POST).authenticated()
