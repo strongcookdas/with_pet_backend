@@ -47,6 +47,10 @@ public class KaKaoPayTest {
 	private PayReadyResponse payReadyResponse;
 	private String next_url;
 
+	static{
+		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+	}
+
 	public HttpHeaders getHeaders(){
 		//카카오 페이 서버로 요청할 header
 		HttpHeaders httpHeaders = new HttpHeaders();
@@ -109,17 +113,13 @@ public class KaKaoPayTest {
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 5, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 6, 6, 13);
 
-		Reservation reservation = Reservation.forKaKaoPayTest(checkIn, checkOut, user1, petSitter1,
+		Reservation reservation = Reservation.forSimpleTest(checkIn, checkOut, user1, petSitter1,
 				30000);
 		reservationRepository.save(reservation);
 		simplePayReady(reservation);
-
 		//when
 
 		//then
 		System.out.println(next_url);
-
-		//Assertions.assertEquals()
-
 	}
 }

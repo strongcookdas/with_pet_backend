@@ -173,6 +173,8 @@ public class KaKaoPayService {
 	}
 
 
+
+
 	//결제 환불
 	//예약 상태 -> cancel, pay 상태 -> Refund , pay entity 환불금액 update
 	@Transactional
@@ -192,17 +194,27 @@ public class KaKaoPayService {
 		Pay pay = payRepository.findByReservation(reservation).orElseThrow(()->{
 			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
 		});
-
 		Period period = Period.between(LocalDate.now(), reservation.getCheckIn().toLocalDate());
 		int cancel_amount = 0; //환불 금액
 
-		//환불 금액 판정 -> 예약날짜가 7일 이내로 남았을 경우 50%환불, 예약날짜가 7일 초과라면 100% 환불
-		if(period.getDays() > 7){
-			cancel_amount = pay.getPay_amount();
-		}else if(period.getDays() <= 7){
-			cancel_amount = (int)(pay.getPay_amount()*0.5);
-		}
 
+		//만약 결제 환불을 요청한 사람이 petsitter라면 100% 환불
+		//결제 환불을 요청한 사람이 user라면
+		//아직 승인받지 못한 예약의 경우 100% 환불 (PAYED)
+		//
+		if(reservation.getPetSitter().getUser().equals(findUser)){
+			cancel_amount = pay.getPay_amount();
+		}else{
+			if(reservation.getReservationStatus().equals(ReservationStatus.PAYED.toString())){
+
+			}
+			//환불 금액 판정 -> 예약날짜가 7일 이내로 남았을 경우 50%환불, 예약날짜가 7일 초과라면 100% 환불
+			if(period.getDays() > 7){
+				cancel_amount = pay.getPay_amount();
+			}else if(period.getDays() <= 7){
+				cancel_amount = (int)(pay.getPay_amount()*0.5);
+			}
+		}
 
 		// 카카오페이 요청
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();

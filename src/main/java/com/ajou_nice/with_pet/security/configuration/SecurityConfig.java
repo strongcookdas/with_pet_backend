@@ -85,6 +85,7 @@ public class SecurityConfig{
         http
                 .authorizeRequests()
                 .antMatchers("/ws/chat").permitAll()
+                .antMatchers("/payment/test/*").permitAll()
                 .antMatchers("/payment-cancel", "/payment-fail").permitAll()
                 .antMatchers(GET_PERMIT_URL).permitAll()
                 .antMatchers(POST_PERMIT_URL).permitAll()

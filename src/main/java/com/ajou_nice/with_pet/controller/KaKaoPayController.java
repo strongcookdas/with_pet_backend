@@ -8,6 +8,8 @@ import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayRequest.PaySimpleRequest;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.net.URI;
 import java.net.URISyntaxException;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +31,14 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/payment")
 @RequiredArgsConstructor
+@Api(tags = "KaKaoPay API")
 public class KaKaoPayController {
 
 	private final KaKaoPayService kaKaoPayService;
 
 	//결제 요청 -> 클라이언트에서는
 	@PostMapping("/ready")
+	@ApiOperation(value = "결제 요청")
 	public Response<PayReadyResponse> readyToKakaoPay(@ApiIgnore Authentication authentication,
 			@RequestBody PaySimpleRequest paySimpleRequest){
 
@@ -44,13 +48,10 @@ public class KaKaoPayController {
 		log.info("=======================payResponse : {}=============================",payReadyResponse);
 		return Response.success(payReadyResponse);
 	}
-	@GetMapping("/test{petSitterId}")
-	public String forTestPgToken(@PathVariable("petSitterId")Long petSitterId, @RequestParam("pg_token") String pgToken){
-		return pgToken;
-	}
 
 	//결제 성공
 	@GetMapping("/success")
+	@ApiOperation(value = "결제 성공")
 	public Response<PayApproveResponse> afterPay(@ApiIgnore Authentication authentication, @RequestParam("pg_token") String pgToken, @RequestParam("tid") String tid){
 		PayApproveResponse payApproveResponse = kaKaoPayService.approvePay(authentication.getName(),pgToken, tid);
 
@@ -60,6 +61,7 @@ public class KaKaoPayController {
 
 	//결제 환불 -> 사용자의 결제 취소를 담당
 	@PostMapping("/refund")
+	@ApiOperation(value = "사용자의 결제 취소(환불)")
 	public Response<RefundResponse> refundPay(@ApiIgnore Authentication authentication, PaySimpleRequest paySimpleRequest){
 
 		log.info("=======================payCancelRequest : {}=============================",paySimpleRequest);

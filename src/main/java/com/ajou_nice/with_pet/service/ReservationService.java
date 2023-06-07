@@ -282,16 +282,42 @@ public class ReservationService {
         return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
     }
 
-    /*
-    //예약 내역 반려인 입장에서
-    public String getReservationDoc(String userId){
-        User user = userRepository.findById(userId).orElseThrow(()->{
+    // 반려인의 예약 취소
+    // 승인 전 예약 건에 대해서
+    @Transactional
+    public void cancelReservation(String userId, Long reservationId){
+        User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
 
+        reservation.updateStatus(ReservationStatus.CANCEL.toString());
     }
 
-     */
+    // 반려인의 이용 완료
+    @Transactional
+    public void doneReservation(String userId, Long reservationId){
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
+
+        reservation.updateStatus(ReservationStatus.DONE.toString());
+    }
+
+
+    //예약 내역 반려인 입장에서
+    public void getReservationDoc(String userId){
+
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+    }
 
 }
