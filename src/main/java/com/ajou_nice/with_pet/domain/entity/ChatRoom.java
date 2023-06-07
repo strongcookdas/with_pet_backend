@@ -49,12 +49,14 @@ public class ChatRoom {
 	public void updateMyModifiedTime(LocalDateTime lastModifiedTime){
 		this.lastModifiedTime = lastModifiedTime;
 		myLastShowTime = lastModifiedTime;
+		showMyMessageCount = allMessageCount;
 		showMyMessageCount++;
 		allMessageCount++;
 	}
 	public void updateOtherModifiedTime(LocalDateTime lastModifiedTime){
 		this.lastModifiedTime = lastModifiedTime;
 		otherLastShowTime = lastModifiedTime;
+		showOtherMessageCount = allMessageCount;
 		showOtherMessageCount++;
 		allMessageCount++;
 	}
