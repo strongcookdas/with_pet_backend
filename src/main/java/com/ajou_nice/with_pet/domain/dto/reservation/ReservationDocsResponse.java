@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ReservationDocsResponse {
 
-
-
-
+	private String name;
 
 	@AllArgsConstructor
 	@NoArgsConstructor
