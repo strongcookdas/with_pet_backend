@@ -44,14 +44,22 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     @Modifying(clearAutomatically = true)
     @Query("update Reservation r set r.reservationStatus = :changestatus where r.reservationStatus = :waitstatus and "
-            + "function('datediff', r.checkIn, now() ) < 7")
+            + "(function('datediff', now(), r.createdAt ) > 1 or function('datediff', r.checkIn, now()) <= 1)")
     void executeAutoCancel(@Param("changestatus") ReservationStatus changeStatus, @Param("waitstatus") ReservationStatus waitstatus);
 
 
     @Modifying(clearAutomatically = true)
-    @Query("update Reservation r set r.reservationStatus = :donestatus where r.reservationStatus = :approvalstatus and "
-            + "function('datediff', now(), r.checkOut) > 1")
-    void executeAutoDone(@Param("donestatus") ReservationStatus doneStatus, @Param("approvalstatus") ReservationStatus approvalstatus);
+    @Query("update Reservation r set r.reservationStatus = :donestatus where r.reservationStatus = :usestatus and "
+            + "function('datediff', now(), r.checkOut) >= 2")
+    void executeAutoDone(@Param("donestatus") ReservationStatus doneStatus, @Param("usestatus") ReservationStatus usestatus);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update Reservation r set r.reservationStatus = :useStatus where r.reservationStatus = :approvalStatus and "
+            + "function('datediff', now(), r.checkIn) = 0")
+    void executeAutoUse(@Param("useStatus") ReservationStatus useStatus, @Param("approvalStatus") ReservationStatus approvalStatus);
+
+
+
 
     List<Reservation> findAllByPetSitterAndReservationStatus(PetSitter petSitter, ReservationStatus status);
     @Query("select r from Reservation r where r.tid=:tid")

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,22 +32,22 @@ public class Reservation extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dogId")
     private Dog dog;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "petsitter_id")
     private PetSitter petSitter;
 
     @OneToMany(mappedBy = "reservation")
     private List<ReservationPetSitterService> reservationPetSitterServiceList;
 
-    @OneToOne(mappedBy = "reservation")
+    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
     private Pay pay;
 
     @NotNull

@@ -12,7 +12,6 @@ import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,12 +65,28 @@ public class ReservationTest {
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 5, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 6, 6, 13);
 		Reservation reservation = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 30000);
-		reservation.updateStatus(ReservationStatus.WAIT.toString());
+		reservation.updateStatus(ReservationStatus.APPROVAL.toString());
 		reservationRepository.save(reservation);
 	    //when
-		reservationController.cancelReservation(reservation.getUser().getId(), reservation.getReservationId());
+		reservationController.doneReservation(reservation.getUser().getId(), reservation.getReservationId());
 	    //then
-		Assertions.assertEquals(reservation.getReservationStatus(), ReservationStatus.CANCEL);
+		Assertions.assertEquals(reservation.getReservationStatus(), ReservationStatus.DONE);
 	 }
-	  
+ 	@DisplayName("사용자의 결제 전 예약건에 대한 예약 취소")
+ 	@Transactional
+ 	@Test
+ 	public void reservationCacnelTest() throws Exception{
+	     //given
+		 initialize();
+		 LocalDateTime checkIn = LocalDateTime.of(2023, 6, 5, 5, 13);
+		 LocalDateTime checkOut = LocalDateTime.of(2023, 6, 6, 6, 13);
+		 Reservation reservation = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 30000);
+		 reservation.updateStatus(ReservationStatus.WAIT.toString());
+		 reservationRepository.save(reservation);
+	     //when
+		 reservationController.cancelReservation(reservation.getUser().getId(), reservation.getReservationId());
+	   
+	     //then
+		 Assertions.assertEquals(reservation.getReservationStatus(), ReservationStatus.CANCEL);
+	}
 }

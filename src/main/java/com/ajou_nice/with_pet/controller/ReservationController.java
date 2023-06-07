@@ -118,8 +118,8 @@ public class ReservationController {
     }
     @PostMapping("/user/done-reservation")
     @ApiOperation(value = "사용자의 이용 완료 신청")
-    public Response doneReservation(@ApiIgnore Authentication authentication, Long reservationId){
-        reservationService.doneReservation(authentication.getName(),reservationId);
+    public Response doneReservation(String userId, Long reservationId){
+        reservationService.doneReservation(userId,reservationId);
 
         return Response.success("완료 되었습니다. 만족스러우셨다면 후기를 작성해주세요.");
     }
@@ -135,8 +135,8 @@ public class ReservationController {
 
     @GetMapping("/user/show-reservations")
     @ApiOperation(value = "유저의 예약 리스트 조회")
-    public void getMyReservations(@ApiIgnore Authentication authentication){
-        
-    }
+    public void getMyReservations(String userId){
 
+
+    }
 }
