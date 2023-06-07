@@ -117,4 +117,12 @@ public class NotificationService {
         });
     }
 
+    public Notification saveNotification(Notification notification) {
+        return notificationRepository.save(notification);
+    }
+
+    public void saveAllNotification(List<Notification> notifications) {
+        notificationRepository.saveAll(notifications);
+    }
+
 }
