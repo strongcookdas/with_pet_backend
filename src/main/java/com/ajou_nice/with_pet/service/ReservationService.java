@@ -185,7 +185,7 @@ public class ReservationService {
         }
     }
 
-    public List<String> getUnavailableDates(String userId, Long petsitterId, String month) {
+    public List<String> getUnavailableDates(Long petsitterId, String month) {
 
         List<String> unavailableDates = new ArrayList<>();
 
