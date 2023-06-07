@@ -47,8 +47,6 @@ public class ReservationService {
     private final PetSitterServiceRepository serviceRepository;
     private final ReservationPetSitterServiceRepository reservationServiceRepository;
 
-    private final PayRepository payRepository;
-
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
                     ReservationStatus.USE, ReservationStatus.WAIT));
@@ -244,21 +242,6 @@ public class ReservationService {
         return ReservationDetailResponse.of(reservation);
     }
 
-    /*
-    예약 내역 페이지(유저) -> 결제를 위해 reservation_status가 approval인 예약 리스트 불러오기
-     */
-    public List<ReservationResponse> showApprovalReservation(String userId){
-
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
-
-        List<Reservation> reservations = reservationRepository.findReservationByStatus(userId,
-                String.valueOf(ReservationStatus.APPROVAL));
-
-        return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
-    }
-
     public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -311,6 +294,9 @@ public class ReservationService {
         User user = userRepository.findById(userId).orElseThrow(()->{
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
+
+        Optional<List<Reservation>> myReservations = reservationRepository.findAllByUser(user);
+
     }
 
 }

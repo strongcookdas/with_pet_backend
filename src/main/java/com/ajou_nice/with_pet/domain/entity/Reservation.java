@@ -47,9 +47,6 @@ public class Reservation extends BaseEntity {
     @OneToMany(mappedBy = "reservation")
     private List<ReservationPetSitterService> reservationPetSitterServiceList;
 
-    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
-    private Pay pay;
-
     @NotNull
     private LocalDateTime checkIn;
 
@@ -106,9 +103,8 @@ public class Reservation extends BaseEntity {
         this.tid = tid;
     }
 
-    public void approvePay(ReservationStatus reservationStatus, Pay pay){
+    public void approvePay(ReservationStatus reservationStatus){
         this.reservationStatus = reservationStatus;
-        this.pay = pay;
     }
 
     public void updateReservationServices(List<ReservationPetSitterService> petSitterServices){

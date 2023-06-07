@@ -63,4 +63,13 @@ public class ReservationScheduler {
 			}
 		}
 	}
+
+	//매일 새벽 00시 reservation Status가 Approval인 reservation에 대해 checkIn 날짜가 오늘과 같은
+	//reservation status -> USE 로 변경
+	@Scheduled(fixedRate = 600000)
+	@Async
+	public void autoUse(){
+
+		reservationRepository.executeAutoUse(ReservationStatus.USE, ReservationStatus.APPROVAL);
+	}
 }

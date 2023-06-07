@@ -136,7 +136,7 @@ public class KaKaoPayService {
 
 		Pay pay = Pay.of(reservation, approveResponse);
 		payRepository.save(pay);
-		reservation.approvePay(ReservationStatus.PAYED, pay);
+		reservation.approvePay(ReservationStatus.PAYED);
 
 		return approveResponse;
 	}

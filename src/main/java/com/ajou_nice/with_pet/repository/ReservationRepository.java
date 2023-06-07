@@ -58,10 +58,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
             + "function('datediff', now(), r.checkIn) = 0")
     void executeAutoUse(@Param("useStatus") ReservationStatus useStatus, @Param("approvalStatus") ReservationStatus approvalStatus);
 
-
+    @Query("select r from Reservation r where r.user =:user")
+    Optional<List<Reservation>> findAllByUser(@Param("user") User user);
 
 
     List<Reservation> findAllByPetSitterAndReservationStatus(PetSitter petSitter, ReservationStatus status);
+
     @Query("select r from Reservation r where r.tid=:tid")
     Optional<Reservation> findByTid(@Param("tid") String tid);
 
