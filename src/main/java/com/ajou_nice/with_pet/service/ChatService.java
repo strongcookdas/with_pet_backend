@@ -89,16 +89,17 @@ public class ChatService {
 
 		List<ChatMessage> messages = chatMessageRepository.findAllByChatRoomOrderBySendTimeAsc(chatRoom);
 
-		//마지막 내가 본 시점 수정 + showMessageCount ++
-		chatRoom.updateMyLastShowTime(LocalDateTime.now());
 
 		Optional<PetSitter> existPetSitter = petSitterRepository.findByUser(me);
 
 		//펫시터일때
 		if(!existPetSitter.isEmpty()){
+			chatRoom.updateOtherLastShowTime(LocalDateTime.now());
 			return ChatRoomResponse.ofPetSitter(chatRoom, ChatMessageResponse.toList(messages));
 		}
 		else{
+			//마지막 내가 본 시점 수정 + showMessageCount ++
+			chatRoom.updateMyLastShowTime(LocalDateTime.now());
 			return ChatRoomResponse.of(chatRoom, ChatMessageResponse.toList(messages));
 		}
 	}
@@ -120,9 +121,19 @@ public class ChatService {
 		ChatMessage chatMessage = ChatMessage.toEntity(chatMessageRequest,findRoom,findUser.getUserId());
 		chatMessageRepository.save(chatMessage);
 
-		//채팅룸 마지막으로 내가 확인한 시간과 업데이트 시간을 업데이트
-		// + 모든 메시지 count ++, showMessageCount ++
-		findRoom.updateModifiedTime(chatMessageRequest.getSendTime());
+		Optional<PetSitter> existPetSitter = petSitterRepository.findByUser(findUser);
+
+		//펫시터일때
+		if(!existPetSitter.isEmpty()){
+			//채팅룸 마지막으로 내가 확인한 시간과 업데이트 시간을 업데이트
+			// + 모든 메시지 count ++, showMessageCount ++
+			findRoom.updateOtherModifiedTime(chatMessageRequest.getSendTime());
+		}
+		else{
+			//채팅룸 마지막으로 내가 확인한 시간과 업데이트 시간을 업데이트
+			// + 모든 메시지 count ++, showMessageCount ++
+			findRoom.updateMyModifiedTime(chatMessageRequest.getSendTime());
+		}
 
 		return ChatMessageResponse.of(chatMessage);
 	}

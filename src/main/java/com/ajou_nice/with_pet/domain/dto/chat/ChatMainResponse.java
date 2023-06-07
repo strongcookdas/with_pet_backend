@@ -33,7 +33,7 @@ public class ChatMainResponse {
 				.otherProfileImg(chatRoom.getOther().getProfileImg())
 				.otherName(chatRoom.getOther().getName())
 				.recentMessageTime(chatRoom.getLastModifiedTime())
-				.notReceivedCount(chatRoom.getAllMessageCount() - chatRoom.getShowMessageCount())
+				.notReceivedCount(chatRoom.getAllMessageCount() - chatRoom.getShowMyMessageCount())
 				.build()).collect(Collectors.toList());
 	}
 
@@ -43,7 +43,7 @@ public class ChatMainResponse {
 				.otherProfileImg(chatRoom.getMe().getProfileImg())
 				.otherName(chatRoom.getMe().getName())
 				.recentMessageTime(chatRoom.getLastModifiedTime())
-				.notReceivedCount(chatRoom.getAllMessageCount() - chatRoom.getShowMessageCount())
+				.notReceivedCount(chatRoom.getAllMessageCount() - chatRoom.getShowOtherMessageCount())
 				.build()).collect(Collectors.toList());
 	}
 }

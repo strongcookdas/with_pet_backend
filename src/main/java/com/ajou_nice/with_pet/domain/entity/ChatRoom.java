@@ -40,21 +40,33 @@ public class ChatRoom {
 
 	private LocalDateTime myLastShowTime;
 	private LocalDateTime lastModifiedTime;
+	private LocalDateTime otherLastShowTime;
+	private int showMyMessageCount;
 
-	private int showMessageCount;
-
+	private int showOtherMessageCount;
 	private int allMessageCount;
 
-	public void updateModifiedTime(LocalDateTime lastModifiedTime){
+	public void updateMyModifiedTime(LocalDateTime lastModifiedTime){
 		this.lastModifiedTime = lastModifiedTime;
 		myLastShowTime = lastModifiedTime;
-		showMessageCount++;
+		showMyMessageCount++;
+		allMessageCount++;
+	}
+	public void updateOtherModifiedTime(LocalDateTime lastModifiedTime){
+		this.lastModifiedTime = lastModifiedTime;
+		otherLastShowTime = lastModifiedTime;
+		showOtherMessageCount++;
 		allMessageCount++;
 	}
 
 	public void updateMyLastShowTime(LocalDateTime lastShowTime){
 		myLastShowTime = lastShowTime;
-		showMessageCount++;
+		showMyMessageCount = allMessageCount;
+	}
+
+	public void updateOtherLastShowTime(LocalDateTime lastShowTime){
+		otherLastShowTime = lastShowTime;
+		showOtherMessageCount = allMessageCount;
 	}
 
 	public static ChatRoom toEntity(User me, User other, LocalDateTime updateTime){
@@ -62,8 +74,10 @@ public class ChatRoom {
 				.me(me)
 				.other(other)
 				.myLastShowTime(updateTime)
+				.otherLastShowTime(updateTime)
 				.lastModifiedTime(updateTime)
-				.showMessageCount(0)
+				.showMyMessageCount(0)
+				.showOtherMessageCount(0)
 				.allMessageCount(0)
 				.build();
 	}
