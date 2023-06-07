@@ -29,5 +29,6 @@ public class AuthenticationManager implements AuthenticationEntryPoint {
         Response errorResponse = Response.error(ErrorCode.INVALID_TOKEN.getMessage());
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         response.sendRedirect("http://ec2-13-125-242-183.ap-northeast-2.compute.amazonaws.com/login");
+        response.setHeader("Access-Control-Allow-Origin", "*");
     }
 }
