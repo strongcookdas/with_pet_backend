@@ -92,9 +92,8 @@ public class AdminController {
 
 	@GetMapping("/api/v1/show-services")
 	@ApiOperation(value = "위드펫 서비스 리스트 조회")
-	public Response<List<WithPetServiceResponse>> showWithPetServices(@ApiIgnore Authentication authentication){
-		List<WithPetServiceResponse> withPetServiceList = adminService.showWithPetServices(
-				authentication.getName());
+	public Response<List<WithPetServiceResponse>> showWithPetServices(){
+		List<WithPetServiceResponse> withPetServiceList = adminService.showWithPetServices();
 
 		log.info("=============== withPet service list : {} ================", withPetServiceList);
 
