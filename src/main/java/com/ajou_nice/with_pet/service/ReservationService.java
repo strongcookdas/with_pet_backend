@@ -13,6 +13,7 @@ import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.ReservationPetSitterService;
+import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
@@ -24,6 +25,7 @@ import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,6 +51,8 @@ public class ReservationService {
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final PetSitterServiceRepository serviceRepository;
     private final ReservationPetSitterServiceRepository reservationServiceRepository;
+
+    private final ReviewRepository reviewRepository;
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
@@ -291,6 +295,31 @@ public class ReservationService {
         });
 
         reservation.updateStatus(ReservationStatus.DONE.toString());
+    }
+
+    //반려인의 리뷰 작성
+    @Transactional
+    public PetSitter postReview(String userId, Long reservationId, String content, double grade){
+
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
+
+        Review review = Review.of(reservation, grade, content);
+        reviewRepository.save(review);
+
+        PetSitter petSitter = petSitterRepository.findById(reservation.getPetSitter().getId()).orElseThrow(()->{
+            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
+        });
+
+        petSitter.updateReview(grade);
+
+        return petSitter;
+
     }
 
 

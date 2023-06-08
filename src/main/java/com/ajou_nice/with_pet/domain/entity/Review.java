@@ -35,5 +35,11 @@ public class Review {
 	@Lob
 	private String content;
 
-
+	public static Review of(Reservation reservation, Double grade, String content){
+		return Review.builder()
+				.reservation(reservation)
+				.grade(grade)
+				.content(content)
+				.build();
+	}
 }

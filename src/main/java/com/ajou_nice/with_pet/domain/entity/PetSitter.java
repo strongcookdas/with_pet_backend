@@ -87,6 +87,11 @@ public class PetSitter extends BaseEntity {
 
 	private int report_count;
 
+	public void updateReview(double new_rate){
+		star_rate = ((star_rate*review_count) + new_rate)/(review_count+1);
+		review_count++;
+	}
+
 	public void changeAvailableDogSize(DogSize availableDogSize){
 		this.availableDogSize = availableDogSize;
 	}
@@ -109,7 +114,7 @@ public class PetSitter extends BaseEntity {
 				.petSitterStreetAdr(streetAdr)
 				.petSitterDetailAdr(detailAdr)
 				.user(user)
-				.review_count(0).report_count(0).build();
+				.review_count(0).report_count(0).star_rate(0.0).build();
 	}
 
 	public static PetSitter toEntity(User user){
