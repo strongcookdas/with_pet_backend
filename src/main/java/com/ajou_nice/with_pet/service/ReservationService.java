@@ -240,6 +240,9 @@ public class ReservationService {
         }
 
         reservation.updateStatus(status);
+        if(LocalDate.now().equals(reservation.getCheckIn().toLocalDate())){
+            reservation.updateStatus(ReservationStatus.USE.toString());
+        }
         return ReservationDetailResponse.of(reservation);
     }
 
