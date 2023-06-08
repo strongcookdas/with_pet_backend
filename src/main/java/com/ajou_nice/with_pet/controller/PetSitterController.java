@@ -148,7 +148,7 @@ public class PetSitterController {
     @GetMapping("/api/v1/show-petsitter")
     @ApiOperation(value = "메인페이지 펫시터들 조회")
     public Response<Page<PetSitterMainResponse>> showPetSitters(
-            @ApiIgnore @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
             @RequestParam(required = false) String dogSize,
             @RequestParam(required = false) List<String> service,
             @RequestParam(required = false) String address) {

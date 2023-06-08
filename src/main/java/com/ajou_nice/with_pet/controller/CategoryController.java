@@ -36,8 +36,7 @@ public class CategoryController {
 
     @GetMapping
     @ApiOperation(value = "카테고리 조회")
-    public Response<List<CategoryResponse>> getCategories(
-            @ApiIgnore Authentication authentication) {
+    public Response<List<CategoryResponse>> getCategories() {
         return Response.success(categoryService.getCategoryList());
     }
 }

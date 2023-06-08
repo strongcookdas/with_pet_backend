@@ -106,8 +106,7 @@ public class AdminService {
 	}
 
 	// == 관리자의 위드펫 서비스 리스트 조회 == //
-	public List<WithPetServiceResponse> showWithPetServices(String userId){
-		User findUser = userService.findUser(userId);
+	public List<WithPetServiceResponse> showWithPetServices(){
 		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
 
 		return WithPetServiceResponse.toList(withPetServiceList);

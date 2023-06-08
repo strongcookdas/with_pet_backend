@@ -17,11 +17,13 @@ import lombok.ToString;
 public class UserLoginResponse {
 
     private String userName;
+    private String userProfile;
     private String role;
 
     public static UserLoginResponse of(User user) {
         return UserLoginResponse.builder()
                 .userName(user.getName())
+                .userProfile(user.getProfileImg())
                 .role(user.getRole().name())
                 .build();
     }
