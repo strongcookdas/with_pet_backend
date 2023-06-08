@@ -26,8 +26,6 @@ public class QReview extends EntityPathBase<Review> {
 
     public final NumberPath<Double> grade = createNumber("grade", Double.class);
 
-    public final QPetSitter petSitter;
-
     public final QReservation reservation;
 
     public final NumberPath<Long> reviewId = createNumber("reviewId", Long.class);
@@ -50,7 +48,6 @@ public class QReview extends EntityPathBase<Review> {
 
     public QReview(Class<? extends Review> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.petSitter = inits.isInitialized("petSitter") ? new QPetSitter(forProperty("petSitter"), inits.get("petSitter")) : null;
         this.reservation = inits.isInitialized("reservation") ? new QReservation(forProperty("reservation"), inits.get("reservation")) : null;
     }
 
