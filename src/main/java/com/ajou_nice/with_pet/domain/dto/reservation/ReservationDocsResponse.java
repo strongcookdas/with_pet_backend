@@ -10,11 +10,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
+@ToString
 public class ReservationDocsResponse {
 
 	private List<ReservationInfoResponse> waitReservations;
@@ -38,6 +40,7 @@ public class ReservationDocsResponse {
 	@NoArgsConstructor
 	@Builder
 	@Getter
+	@ToString
 	public static class ReservationInfoResponse{
 		private String reservationStatus;
 		private String petSitterName;
@@ -63,7 +66,8 @@ public class ReservationDocsResponse {
 					.payStatus(payStatus)
 					.criticalServiceName(reservation.getCriticalServiceName())
 					.criticalServicePrice(reservation.getCriticalServicePrice())
-					.reservationServiceResponses(ReservationServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
+					.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?
+							null : ReservationServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
 					.build()).collect(Collectors.toList());
 		}
 

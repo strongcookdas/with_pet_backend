@@ -29,7 +29,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -300,25 +302,31 @@ public class ReservationService {
         });
 
         Optional<List<Reservation>> myReservations = reservationRepository.findAllByUser(user);
+
+        //w
         List<Reservation> waitReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.WAIT)).collect(
                 Collectors.toList());
 
+        //p
         List<Reservation> payedReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.PAYED)).collect(
                 Collectors.toList());
-
+        //a
         List<Reservation> approveReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.APPROVAL)).collect(
                 Collectors.toList());
 
+        //u
         List<Reservation> useReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.USE)).collect(
                 Collectors.toList());
 
+        //d
         List<Reservation> doneReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.DONE)).collect(
                 Collectors.toList());
+
 
         return ReservationDocsResponse.of(waitReservations, payedReservations, approveReservations,useReservations,
                 doneReservations);

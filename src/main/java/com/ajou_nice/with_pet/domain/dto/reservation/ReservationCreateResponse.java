@@ -43,7 +43,8 @@ public class ReservationCreateResponse {
 				.petSitterName(reservation.getPetSitter().getPetSitterName())
 				.criticalServiceName(reservation.getCriticalServiceName())
 				.criticalServicePrice(reservation.getCriticalServicePrice())
-				.reservationServiceResponses(ReservationServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
+				.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?
+						null : ReservationServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
 				.totalCost(reservation.getTotalPrice())
 				.build();
 

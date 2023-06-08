@@ -89,6 +89,11 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 
+    public void updateForTest(String criticalServiceName, int criticalServicePrice){
+        this.criticalServiceName = criticalServiceName;
+        this.criticalServicePrice = criticalServicePrice;
+    }
+
     public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost){
         return Reservation.builder()
                 .checkIn(checkIn)
