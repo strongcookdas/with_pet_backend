@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
-public class Review {
+public class Review{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +33,12 @@ public class Review {
 
 	private Double grade;
 
+	private LocalDateTime createdAt;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "petsitter_id")
+	private PetSitter petSitter;
+
 	@Lob
 	private String content;
 
@@ -40,6 +47,8 @@ public class Review {
 				.reservation(reservation)
 				.grade(grade)
 				.content(content)
+				.createdAt(LocalDateTime.now())
+				.petSitter(reservation.getPetSitter())
 				.build();
 	}
 }

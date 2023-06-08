@@ -3,12 +3,14 @@ package com.ajou_nice.with_pet.controller;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
+import com.ajou_nice.with_pet.domain.dto.reservation.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationStatusRequest;
+import com.ajou_nice.with_pet.domain.dto.review.ReviewRequest;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
@@ -150,4 +152,16 @@ public class ReservationController {
 
         return Response.success(docsResponse);
     }
+
+    @GetMapping("/show-payment/{reservationId}")
+    @ApiOperation(value = "펫시터의 예약에 대한 결제내역 확인")
+    public Response<PaymentResponseForPetSitter> showPaymentForPetSitter(@ApiIgnore Authentication authentication,
+            @PathVariable("reservationId") Long reservationId){
+
+        PaymentResponseForPetSitter paymentResponseForPetSitter = reservationService.getPaymentView(
+                authentication.getName(), reservationId);
+
+        return Response.success(paymentResponseForPetSitter);
+    }
+
 }

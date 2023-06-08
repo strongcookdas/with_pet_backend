@@ -39,8 +39,6 @@ public class QPetSitter extends EntityPathBase<PetSitter> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedAt = _super.lastModifiedAt;
 
-    public final ListPath<PetSitterCriticalService, QPetSitterCriticalService> petSitterCriticalServiceList = this.<PetSitterCriticalService, QPetSitterCriticalService>createList("petSitterCriticalServiceList", PetSitterCriticalService.class, QPetSitterCriticalService.class, PathInits.DIRECT2);
-
     public final StringPath petSitterDetailAdr = createString("petSitterDetailAdr");
 
     public final ListPath<PetSitterHashTag, QPetSitterHashTag> petSitterHashTagList = this.<PetSitterHashTag, QPetSitterHashTag>createList("petSitterHashTagList", PetSitterHashTag.class, QPetSitterHashTag.class, PathInits.DIRECT2);
@@ -54,8 +52,6 @@ public class QPetSitter extends EntityPathBase<PetSitter> {
     public final StringPath petSitterPhone = createString("petSitterPhone");
 
     public final StringPath petSitterStreetAdr = createString("petSitterStreetAdr");
-
-    public final ListPath<PetSitterWithPetService, QPetSitterWithPetService> petSitterWithPetServiceList = this.<PetSitterWithPetService, QPetSitterWithPetService>createList("petSitterWithPetServiceList", PetSitterWithPetService.class, QPetSitterWithPetService.class, PathInits.DIRECT2);
 
     public final StringPath petSitterZipCode = createString("petSitterZipCode");
 

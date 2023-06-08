@@ -62,17 +62,12 @@ public class PetSitter extends BaseEntity {
 	@JoinColumn(name="userId",unique = true, nullable = false)
 	private User user;
 
-	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterWithPetService> petSitterWithPetServiceList;
 
 	@OneToMany(mappedBy = "petSitter")
 	private List<House> petSitterHouseList;
 
 	@OneToMany(mappedBy = "petSitter")
 	private List<PetSitterHashTag> petSitterHashTagList;
-
-	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterCriticalService> petSitterCriticalServiceList;
 
 	@Enumerated(EnumType.STRING)
 	private DogSize availableDogSize;

@@ -19,6 +19,7 @@ import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
+import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import com.ajou_nice.with_pet.enums.DogSize;
@@ -30,6 +31,7 @@ import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
+import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
 import com.ajou_nice.with_pet.service.user.UserService;
@@ -56,6 +58,8 @@ public class PetSitterService {
 	private final CriticalServiceRepository criticalServiceRepository;
 
 	private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
+
+	private final ReviewRepository reviewRepository;
 	private final UserService userService;
 
 
@@ -65,7 +69,14 @@ public class PetSitterService {
 			throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
 		});
 
-		return PetSitterDetailInfoResponse.of(findPetSitter);
+		List<Review> reviews = reviewRepository.findAllByPetSitter(findPetSitter);
+		List<PetSitterWithPetService> petSitterWithPetServices = petSitterServiceRepository.findAllByPetSitterInQuery(
+				findPetSitter.getId());
+
+		List<PetSitterCriticalService> petSitterCriticalServices = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(
+				findPetSitter.getId());
+
+		return PetSitterDetailInfoResponse.of(findPetSitter, reviews, petSitterWithPetServices, petSitterCriticalServices);
 	}
 
 	// == 펫시터의 자신 정보 조회 == //
@@ -78,8 +89,12 @@ public class PetSitterService {
 
 		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
 		List<CriticalService> criticalServiceList = criticalServiceRepository.findAll();
+		List<PetSitterWithPetService> petSitterWithPetServices = petSitterServiceRepository.findAllByPetSitterInQuery(
+				petSitter.getId());
+		List<PetSitterCriticalService> petSitterCriticalServices = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(
+				petSitter.getId());
 
-		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList);
+		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, petSitterWithPetServices, petSitterCriticalServices);
 	}
 
 	// == 펫시터 my Info 등록 == //
@@ -127,11 +142,11 @@ public class PetSitterService {
 			services.add(petSitterWithPetService);
 		}
 
-		Iterator<PetSitterCriticalServiceRequest> petSitterCriticalServices = petSitterInfoRequest.getPetSitterCriticalServiceRequests().iterator();
+		Iterator<PetSitterCriticalServiceRequest> petSitterCriticalServiceRequests = petSitterInfoRequest.getPetSitterCriticalServiceRequests().iterator();
 		DogSize availableDogSize = DogSize.소형견; //initialize
 
-		while(petSitterCriticalServices.hasNext()){
-			PetSitterCriticalServiceRequest criticalServiceRequest = petSitterCriticalServices.next();
+		while(petSitterCriticalServiceRequests.hasNext()){
+			PetSitterCriticalServiceRequest criticalServiceRequest = petSitterCriticalServiceRequests.next();
 			CriticalService criticalService = criticalServiceRepository.findById(
 					criticalServiceRequest.getServiceId()).orElseThrow(()->{
 				throw new AppException(ErrorCode.CRITICAL_SERVICE_NOT_FOUND, ErrorCode.CRITICAL_SERVICE_NOT_FOUND.getMessage());
@@ -158,8 +173,12 @@ public class PetSitterService {
 
 		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
 		List<CriticalService> criticalServiceList = criticalServiceRepository.findAll();
+		List<PetSitterWithPetService> petSitterWithPetServices = petSitterServiceRepository.findAllByPetSitterInQuery(
+				petSitter.getId());
+		List<PetSitterCriticalService> petSitterCriticalServices = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(
+				petSitter.getId());
 
-		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList);
+		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, petSitterWithPetServices, petSitterCriticalServices);
 	}
 
 	// == 펫시터 houses 정보 수정 == //

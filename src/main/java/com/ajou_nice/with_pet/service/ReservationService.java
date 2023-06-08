@@ -1,11 +1,13 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
+import com.ajou_nice.with_pet.domain.dto.review.ReviewRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
@@ -31,9 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -268,6 +268,19 @@ public class ReservationService {
         return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
     }
 
+    public PaymentResponseForPetSitter getPaymentView(String userId, Long reservationId){
+
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
+        });
+
+        return PaymentResponseForPetSitter.of(reservation);
+    }
+
     // 반려인의 예약 취소
     // 승인 전 예약 건에 대해서
     @Transactional
@@ -299,26 +312,24 @@ public class ReservationService {
 
     //반려인의 리뷰 작성
     @Transactional
-    public PetSitter postReview(String userId, Long reservationId, String content, double grade){
+    public void postReview(String userId, ReviewRequest reviewRequest){
 
         User user = userRepository.findById(userId).orElseThrow(()->{
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
+        Reservation reservation = reservationRepository.findById(reviewRequest.getReservationId()).orElseThrow(()->{
             throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
         });
 
-        Review review = Review.of(reservation, grade, content);
+        Review review = Review.of(reservation, reviewRequest.getGrade(), reviewRequest.getContent());
         reviewRepository.save(review);
 
         PetSitter petSitter = petSitterRepository.findById(reservation.getPetSitter().getId()).orElseThrow(()->{
             throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
         });
 
-        petSitter.updateReview(grade);
-
-        return petSitter;
+        petSitter.updateReview(reviewRequest.getGrade());
 
     }
 

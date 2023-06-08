@@ -68,7 +68,9 @@ public class SecurityConfig {
 
     private final String[] USER_POST_API = {
             "/api/v1/reservation",
-            "/api/v1/users/applicate-petsitter"
+            "/api/v1/users/applicate-petsitter",
+            "/api/v1/reservation/user/cancel-reservation",
+            "/api/v1/reservation/user/done-reservation"
     };
 
     private final String[] PETSITTER_API = {
@@ -100,6 +102,9 @@ public class SecurityConfig {
         http
                 .authorizeRequests()
                 .antMatchers("/api/v1/petsitter/show-myinfo").hasRole("PETSITTER")
+                .antMatchers("/api/v1/review/create-review").hasRole("USER")
+                .antMatchers("/api/v1/reservation/user/show-reservations").hasRole("USER")
+                .antMatchers("/api/v1/reservation/show-payment/{reservationId}").hasRole("PETSITTER")
                 .antMatchers("/ws/chat").permitAll()
                 .antMatchers("/payment/test/*").permitAll()
                 .antMatchers("/payment-cancel", "/payment-fail").permitAll()

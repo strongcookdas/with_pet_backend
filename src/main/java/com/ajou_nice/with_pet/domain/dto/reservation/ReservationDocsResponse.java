@@ -42,6 +42,8 @@ public class ReservationDocsResponse {
 	@Getter
 	@ToString
 	public static class ReservationInfoResponse{
+
+		private Long reservationId;
 		private String reservationStatus;
 		private String petSitterName;
 		private LocalDateTime checkIn;
@@ -57,6 +59,7 @@ public class ReservationDocsResponse {
 
 		public static List<ReservationInfoResponse> toList(List<Reservation> reservations, String payStatus){
 			return reservations.stream().map(reservation -> ReservationInfoResponse.builder()
+					.reservationId(reservation.getReservationId())
 					.reservationStatus(reservation.getReservationStatus().toString())
 					.petSitterName(reservation.getPetSitter().getPetSitterName())
 					.checkIn(reservation.getCheckIn())
