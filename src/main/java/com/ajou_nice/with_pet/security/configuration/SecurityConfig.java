@@ -30,6 +30,7 @@ public class SecurityConfig {
             "/api/v1/show-petsitter",
             "/api/v1/show-services",
             "/api/v1/reservation",
+            "/api/v1/dogs/reservation-dogs",
             "/payment/success",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail",
