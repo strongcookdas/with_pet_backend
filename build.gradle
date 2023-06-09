@@ -59,6 +59,8 @@ dependencies {
     implementation 'com.querydsl:querydsl-jpa'
     // e-mail
     implementation 'org.springframework.boot:spring-boot-starter-mail:2.6.3'
+    //난수 생성
+    implementation 'org.apache.commons:commons-lang3:3.0'
     // QFile 생성 및 가져오기
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
