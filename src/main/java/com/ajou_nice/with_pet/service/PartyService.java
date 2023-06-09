@@ -15,6 +15,7 @@ import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -98,7 +99,7 @@ public class PartyService {
         party = partyRepository.save(party);
 
         //파티 코드 생성
-        party.updateParty(createInvitationCode(party));
+        party.updatePartyIsbn(createInvitationCode(party));
 
         //유저 파티 매핑
         UserParty userParty = UserParty.of(user, party);
@@ -123,7 +124,33 @@ public class PartyService {
         return RandomStringUtils.randomAlphabetic(6) + party.getPartyId().toString();
     }
 
+    @Transactional
     public String leaveParty(String userId, Long partyId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND,
+                    ErrorCode.GROUP_NOT_FOUND.getMessage());
+        });
+
+        Optional<UserParty> deleteUserParty = userPartyRepository.findByUserAndParty(user, party);
+        if (deleteUserParty.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER,
+                    ErrorCode.NOT_FOUND_GROUP_MEMBER.getMessage());
+        }
+
+        Optional<UserParty> nextLeader = userPartyRepository.findFirstByUserNotAndParty(user,
+                party);
+        if (party.getUser().getId().equals(user.getId())
+                && !nextLeader.isEmpty()) {
+            party.updatePartyLeader(
+                    userPartyRepository.findFirstByUserNotAndParty(user, party).get().getUser());
+            return nextLeader.get().getUser().getName() + "님이 방장이 되었습니다.";
+        }
+        userPartyRepository.delete(deleteUserParty.get());
 
         return "그룹에서 탈퇴되었습니다.";
     }

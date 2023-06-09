@@ -19,11 +19,11 @@ public class Fixture {
     private Address address = address = Address.simpleAddressGenerator("123456", "아주로", "팔달관");
 
     //유저
-    private User user1 = User.simpleUserForTest("유저1", "user1", "password123!", "email@gmail.com",
+    private User user1 = User.simpleUserForTest("유저", "testUser1", "password123!", "email@gmail.com",
             UserRole.ROLE_USER, "010-0302-0001", address);
-    private User user2 = User.simpleUserForTest("유저2", "user2", "password123!", "email@gmail.com",
+    private User user2 = User.simpleUserForTest("유저2", "testUser2", "password123!", "email@gmail.com",
             UserRole.ROLE_USER, "010-0302-0002", address);
-    private User user3 = User.simpleUserForTest("유저3", "user3", "password123!", "email@gmail.com",
+    private User user3 = User.simpleUserForTest("유저3", "testUser3", "password123!", "email@gmail.com",
             UserRole.ROLE_USER, "010-0302-0003", address);
 
     //파티
