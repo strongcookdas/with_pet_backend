@@ -122,4 +122,9 @@ public class PartyService {
     private String createInvitationCode(Party party) {
         return RandomStringUtils.randomAlphabetic(6) + party.getPartyId().toString();
     }
+
+    public String leaveParty(String userId, Long partyId) {
+
+        return "그룹에서 탈퇴되었습니다.";
+    }
 }
