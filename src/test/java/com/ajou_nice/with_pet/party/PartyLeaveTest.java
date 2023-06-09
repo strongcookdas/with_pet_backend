@@ -42,6 +42,7 @@ public class PartyLeaveTest {
     Address address;
     User boss;
     User member;
+    User notMember;
     Party party;
 
     UserParty userParty1;
@@ -52,12 +53,14 @@ public class PartyLeaveTest {
         address = fixture.getAddress();
         boss = fixture.getUser1();
         member = fixture.getUser2();
+        notMember = fixture.getUser3();
         party = fixture.getParty();
         userParty1 = fixture.getUserParty1();
-        userParty1 = fixture.getUserParty2();
+        userParty2 = fixture.getUserParty2();
 
         boss = userRepository.save(boss);
         member = userRepository.save(member);
+        notMember = userRepository.save(notMember);
         party = partyRepository.save(party);
         userParty1 = userPartyRepository.save(userParty1);
         userParty2 = userPartyRepository.save(userParty2);
@@ -88,13 +91,13 @@ public class PartyLeaveTest {
         //when
         String result = partyService.leaveParty(userId, partyId);
         //then
-        Assertions.assertEquals(member.getName()+"이 방장이 되었습니다.", result);
+        Assertions.assertEquals(member.getName()+"님이 방장이 되었습니다.", result);
     }
 
     @Test
     @Transactional
     @DisplayName("그룹 탈퇴 실패 - 그룹원이 아닐 때")
-    void leaveParty_fail() {
+    void leaveParty_fail1() {
         //given
         initialize();
         String userId = fixture.getUser3().getId();
@@ -104,5 +107,35 @@ public class PartyLeaveTest {
                 () -> partyService.leaveParty(userId, partyId));
         //then
         Assertions.assertEquals(ErrorCode.NOT_FOUND_GROUP_MEMBER, exception.getErrorCode());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("그룹 탈퇴 실패 - 유저가 없을 때")
+    void leaveParty_fail2() {
+        //given
+        initialize();
+        String userId = "";
+        Long partyId = party.getPartyId();
+        //when
+        AppException exception = Assertions.assertThrows(AppException.class,
+                () -> partyService.leaveParty(userId, partyId));
+        //then
+        Assertions.assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("그룹 탈퇴 실패 - 그룹이 없을 때")
+    void leaveParty_fail3() {
+        //given
+        initialize();
+        String userId = member.getId();
+        Long partyId = Long.MAX_VALUE;
+        //when
+        AppException exception = Assertions.assertThrows(AppException.class,
+                () -> partyService.leaveParty(userId, partyId));
+        //then
+        Assertions.assertEquals(ErrorCode.GROUP_NOT_FOUND, exception.getErrorCode());
     }
 }
