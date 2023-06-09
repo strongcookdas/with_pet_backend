@@ -2,7 +2,12 @@ package com.ajou_nice.with_pet.party;
 
 import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
+import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.exception.AppException;
+import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.fixture.Fixture;
+import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.PartyService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
@@ -18,12 +23,29 @@ public class PartyTest {
     @Autowired
     PartyService partyService;
 
+    @Autowired
+    UserRepository userRepository;
+
+    Fixture fixture = new Fixture();
+
+    Address address;
+    User user;
+
+    @Transactional
+    public void initialize() {
+        address = fixture.getAddress();
+        user = fixture.getUser1();
+
+        userRepository.save(user);
+    }
+
     @Test
     @Transactional
     @DisplayName("파티 생성 성공")
     void createParty() {
         //given
-        String userId = "user1";
+        initialize();
+        String userId = user.getId();
         PartyRequest partyRequest = new PartyRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
                 true,
                 LocalDate.of(2020, 10, 17), 5.0f, "123456789");
@@ -47,5 +69,26 @@ public class PartyTest {
         Assertions.assertThrows(AppException.class, () -> {
             partyService.createParty(userId, partyRequest);
         });
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("파티 생성 실패 - 그룹 생성 횟수 제한")
+    void createParty_fail_2() {
+        //given
+        initialize();
+        user.updatePartyCount(5);
+        userRepository.saveAndFlush(user);
+        String userId = user.getId();
+
+        PartyRequest partyRequest = new PartyRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
+                true,
+                LocalDate.of(2020, 10, 17), 5.0f, "123456789");
+        //when
+        AppException exception = Assertions.assertThrows(AppException.class, () -> {
+            partyService.createParty(userId, partyRequest);
+        });
+        //then
+        Assertions.assertEquals(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP);
     }
 }

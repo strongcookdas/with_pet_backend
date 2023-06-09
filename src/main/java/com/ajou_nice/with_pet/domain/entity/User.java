@@ -204,4 +204,8 @@ public class User extends BaseEntity {
                 .partyCount(0)
                 .build();
     }
+
+    public void updatePartyCount(Integer partyCount) {
+        this.partyCount = partyCount;
+    }
 }
