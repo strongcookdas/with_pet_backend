@@ -86,6 +86,7 @@ public class User extends BaseEntity {
 
     //몇번 지원했는지 count
     private Integer applicantCount;
+    private Integer partyCount;
 
     public void updateUserRole(UserRole userRole) {
         this.role = userRole;
@@ -130,8 +131,9 @@ public class User extends BaseEntity {
         this.motivate = applicantModifyRequest.getApplicant_motivate();
     }
 
-    public static User simpleUserForTest(String userName, String userId, String password, String email, UserRole userRole, String phone,
-            Address address){
+    public static User simpleUserForTest(String userName, String userId, String password,
+            String email, UserRole userRole, String phone,
+            Address address) {
         return User.builder()
                 .name(userName)
                 .id(userId)
@@ -143,7 +145,23 @@ public class User extends BaseEntity {
                 .build();
     }
 
-    public static User toUserEntity(UserSignUpRequest userSignUpRequest, BCryptPasswordEncoder encoder) {
+    public static User simpleUserForTest(String userName, String userId, String password,
+            String email, UserRole userRole, String phone,
+            Address address, Integer partyCount) {
+        return User.builder()
+                .name(userName)
+                .id(userId)
+                .password(password)
+                .email(email)
+                .role(userRole)
+                .phone(phone)
+                .address(address)
+                .partyCount(partyCount)
+                .build();
+    }
+
+    public static User toUserEntity(UserSignUpRequest userSignUpRequest,
+            BCryptPasswordEncoder encoder) {
 
         //이미지 null 체크 null이면 기본이미지로 insert
         String img = userSignUpRequest.getProfileImg();
@@ -162,6 +180,7 @@ public class User extends BaseEntity {
                 .phone(userSignUpRequest.getPhoneNum())
                 .address(Address.toAddressEntity(userSignUpRequest.getAddress()))
                 .applicantCount(0)
+                .partyCount(0)
                 .build();
     }
 
@@ -182,6 +201,7 @@ public class User extends BaseEntity {
                         .detailAdr("팔달관")
                         .build())
                 .applicantCount(0)
+                .partyCount(0)
                 .build();
     }
 }

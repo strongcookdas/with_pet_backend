@@ -182,6 +182,6 @@ public class PartyService {
 
         userPartyRepository.delete(userParty.get());
 
-        return member.getName() + "님이 그룹에서 방출되었습니다.";
+        return member.getName() + "님이 그룹에서 방출되었습니다";
     }
 }

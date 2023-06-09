@@ -18,6 +18,7 @@ public enum ErrorCode {
     DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 일지는 존재하지 않습니다."),
     DUPLICATED_GROUP_MEMBER(HttpStatus.CONFLICT, "해당 그룹에 존재하는 유저입니다."),
     NOT_FOUND_GROUP_MEMBER(HttpStatus.CONFLICT, "해당 그룹에 존재하지 않는 유저입니다."),
+    TOO_MANY_GROUP(HttpStatus.FORBIDDEN, "이미 5개의 그룹이 존재하여 그룹을 생성하지 못합니다."),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카테고리가 존재하지 않습니다."),
     APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "지원 정보가 없습니다."),
     DUPLICATED_APPLICATION(HttpStatus.CONFLICT, "중복 지원은 불가능합니다."),
