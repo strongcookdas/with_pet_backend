@@ -154,14 +154,17 @@ public class PartyService {
 
         Optional<UserParty> nextLeader = userPartyRepository.findFirstByUserNotAndParty(user,
                 party);
+
+        userPartyRepository.delete(deleteUserParty.get());
+        user.updatePartyCount(user.getPartyCount() - 1);
+
         if (party.getUser().getId().equals(user.getId())
                 && !nextLeader.isEmpty()) {
             party.updatePartyLeader(
                     userPartyRepository.findFirstByUserNotAndParty(user, party).get().getUser());
             return nextLeader.get().getUser().getName() + "님이 방장이 되었습니다.";
         }
-        userPartyRepository.delete(deleteUserParty.get());
-        user.updatePartyCount(user.getPartyCount() - 1);
+
         return "그룹에서 탈퇴되었습니다.";
     }
 
