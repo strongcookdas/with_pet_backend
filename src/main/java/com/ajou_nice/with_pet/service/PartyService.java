@@ -28,11 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class PartyService {
 
+    private final Integer partyCount = 5;
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
     private final DogRepository dogRepository;
 
+    @Transactional
     public PartyInfoResponse addMember(String userId, PartyMemberRequest partyMemberRequest) {
         //유저체크
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -54,6 +56,7 @@ public class PartyService {
 
         //유저 그룹 매핑
         userPartyRepository.save(UserParty.of(user, party));
+        user.updatePartyCount(user.getPartyCount() + 1);
 
         List<Dog> dogs = dogRepository.findAllByParty(party);
 
@@ -94,6 +97,10 @@ public class PartyService {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
+        if (user.getPartyCount() >= partyCount) {
+            throw new AppException(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP.getMessage());
+        }
+
         //파티 생성
         Party party = Party.of(user, partyRequest.getPartyName());
         party = partyRepository.save(party);
@@ -117,6 +124,9 @@ public class PartyService {
 
         Dog dog = Dog.of(partyRequest, party, myDogSize);
         dog = dogRepository.save(dog);
+
+        user.updatePartyCount(user.getPartyCount() + 1);
+
         return PartyInfoResponse.of(dog);
     }
 
@@ -144,13 +154,16 @@ public class PartyService {
 
         Optional<UserParty> nextLeader = userPartyRepository.findFirstByUserNotAndParty(user,
                 party);
+
+        userPartyRepository.delete(deleteUserParty.get());
+        user.updatePartyCount(user.getPartyCount() - 1);
+
         if (party.getUser().getId().equals(user.getId())
                 && !nextLeader.isEmpty()) {
             party.updatePartyLeader(
                     userPartyRepository.findFirstByUserNotAndParty(user, party).get().getUser());
             return nextLeader.get().getUser().getName() + "님이 방장이 되었습니다.";
         }
-        userPartyRepository.delete(deleteUserParty.get());
 
         return "그룹에서 탈퇴되었습니다.";
     }
@@ -181,7 +194,8 @@ public class PartyService {
         }
 
         userPartyRepository.delete(userParty.get());
+        member.updatePartyCount(member.getPartyCount() - 1);
 
-        return member.getName() + "님이 그룹에서 방출되었습니다.";
+        return member.getName() + "님이 그룹에서 방출되었습니다";
     }
 }

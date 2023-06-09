@@ -20,11 +20,11 @@ public class Fixture {
 
     //유저
     private User user1 = User.simpleUserForTest("유저", "testUser1", "password123!", "email@gmail.com",
-            UserRole.ROLE_USER, "010-0302-0001", address);
+            UserRole.ROLE_USER, "010-0302-0001", address,0);
     private User user2 = User.simpleUserForTest("유저2", "testUser2", "password123!", "email@gmail.com",
-            UserRole.ROLE_USER, "010-0302-0002", address);
+            UserRole.ROLE_USER, "010-0302-0002", address,0);
     private User user3 = User.simpleUserForTest("유저3", "testUser3", "password123!", "email@gmail.com",
-            UserRole.ROLE_USER, "010-0302-0003", address);
+            UserRole.ROLE_USER, "010-0302-0003", address,0);
 
     //파티
     private Party party = Party.of(user1, "party1");
