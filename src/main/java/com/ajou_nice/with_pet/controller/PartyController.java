@@ -52,12 +52,19 @@ public class PartyController {
         return Response.success(partyService.createParty(authentication.getName(), partyRequest));
     }
 
-    @DeleteMapping("/secession/{partyId}")
+    @DeleteMapping("/{partyId}")
     @ApiOperation(value = "그룹 탈퇴")
-    public Response leaveParty(@ApiIgnore Authentication authentication, @PathVariable Long partyId){
+    public Response leaveParty(@ApiIgnore Authentication authentication,
+            @PathVariable Long partyId) {
+        return Response.success(partyService.leaveParty(authentication.getName(), partyId));
+    }
 
-        partyService.leaveParty(authentication.getName(),partyId);
-        return Response.success("그룹에서 탈퇴되었습니다.");
+    @DeleteMapping("/{partyId}/members/{memberId}")
+    @ApiOperation(value = "그룹 멤버 방출")
+    public Response expelMember(@ApiIgnore Authentication authentication,
+            @PathVariable Long partyId, @PathVariable Long memberId) {
+        return Response.success(
+                partyService.expelMember(authentication.getName(), partyId, memberId));
     }
 
 

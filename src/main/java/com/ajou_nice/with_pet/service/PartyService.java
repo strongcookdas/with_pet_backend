@@ -154,4 +154,34 @@ public class PartyService {
 
         return "그룹에서 탈퇴되었습니다.";
     }
+
+    @Transactional
+    public String expelMember(String userId, Long partyId, Long memberId) {
+        User leader = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        User member = userRepository.findById(memberId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND,
+                    ErrorCode.GROUP_NOT_FOUND.getMessage());
+        });
+
+        if (!leader.getId().equals(party.getUser().getId())) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "멤버를 방출시킬 권한이 없습니다.");
+        }
+
+        Optional<UserParty> userParty = userPartyRepository.findByUserAndParty(member, party);
+        if (userParty.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER,
+                    ErrorCode.NOT_FOUND_GROUP_MEMBER.getMessage());
+        }
+
+        userPartyRepository.delete(userParty.get());
+
+        return member.getName() + "님이 그룹에서 방출되었습니다.";
+    }
 }
