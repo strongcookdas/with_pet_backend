@@ -69,7 +69,7 @@ public class PartyLeaveTest {
     @Test
     @Transactional
     @DisplayName("그룹 탈퇴 성공 - 그룹원일때")
-    void leaveParty_success2() {
+    void leaveParty_success1() {
         //given
         initialize();
         String userId = member.getId();
@@ -83,7 +83,7 @@ public class PartyLeaveTest {
     @Test
     @Transactional
     @DisplayName("그룹 탈퇴 성공 - 방장이 탈퇴할 때")
-    void leaveParty_success1() {
+    void leaveParty_success2() {
         //given
         initialize();
         String userId = boss.getId();
