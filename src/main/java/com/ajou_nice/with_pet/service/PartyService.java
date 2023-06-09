@@ -1,6 +1,5 @@
 package com.ajou_nice.with_pet.service;
 
-import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.party.PartyMemberRequest;
 import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
@@ -16,11 +15,11 @@ import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +32,6 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
     private final DogRepository dogRepository;
-
-    // 새로운 그룹생성 (그룹 이름이 없는 버전)
-
 
     public PartyInfoResponse addMember(String userId, PartyMemberRequest partyMemberRequest) {
         //유저체크
@@ -72,14 +68,8 @@ public class PartyService {
         });
 
         List<Long> userPartyIdList = userPartyRepository.findAllUserPartyIdByUserId(userId);
-
-        log.info("=============================== Party START ===============================");
         List<Party> partyList = partyRepository.findAllByUserPartyId(userPartyIdList);
-        log.info("=============================== Party END ===============================");
-
-        log.info("=============================== Dog START ===============================");
         List<Dog> dogList = dogRepository.findAllUserDogs(userPartyIdList);
-        log.info("=============================== Dog END ===============================");
 
         List<PartyInfoResponse> partyInfoResponseList = partyList.stream()
                 .map(PartyInfoResponse::of).collect(
@@ -103,13 +93,18 @@ public class PartyService {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
+
         //파티 생성
         Party party = Party.of(user, partyRequest.getPartyName());
         party = partyRepository.save(party);
-        party.updateParty(party.getPartyId().toString());
+
+        //파티 코드 생성
+        party.updatePartyIsbn(createInvitationCode(party));
+
         //유저 파티 매핑
         UserParty userParty = UserParty.of(user, party);
         userPartyRepository.save(userParty);
+
         //반려견 등록
         DogSize myDogSize;
         if (partyRequest.getDog_weight() > 18) {
@@ -119,8 +114,74 @@ public class PartyService {
         } else {
             myDogSize = DogSize.소형견;
         }
+
         Dog dog = Dog.of(partyRequest, party, myDogSize);
         dog = dogRepository.save(dog);
         return PartyInfoResponse.of(dog);
+    }
+
+    private String createInvitationCode(Party party) {
+        return RandomStringUtils.randomAlphabetic(6) + party.getPartyId().toString();
+    }
+
+    @Transactional
+    public String leaveParty(String userId, Long partyId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND,
+                    ErrorCode.GROUP_NOT_FOUND.getMessage());
+        });
+
+        Optional<UserParty> deleteUserParty = userPartyRepository.findByUserAndParty(user, party);
+        if (deleteUserParty.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER,
+                    ErrorCode.NOT_FOUND_GROUP_MEMBER.getMessage());
+        }
+
+        Optional<UserParty> nextLeader = userPartyRepository.findFirstByUserNotAndParty(user,
+                party);
+        if (party.getUser().getId().equals(user.getId())
+                && !nextLeader.isEmpty()) {
+            party.updatePartyLeader(
+                    userPartyRepository.findFirstByUserNotAndParty(user, party).get().getUser());
+            return nextLeader.get().getUser().getName() + "님이 방장이 되었습니다.";
+        }
+        userPartyRepository.delete(deleteUserParty.get());
+
+        return "그룹에서 탈퇴되었습니다.";
+    }
+
+    @Transactional
+    public String expelMember(String userId, Long partyId, Long memberId) {
+        User leader = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        User member = userRepository.findById(memberId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND,
+                    ErrorCode.GROUP_NOT_FOUND.getMessage());
+        });
+
+        if (!leader.getId().equals(party.getUser().getId())) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "멤버를 방출시킬 권한이 없습니다.");
+        }
+
+        Optional<UserParty> userParty = userPartyRepository.findByUserAndParty(member, party);
+        if (userParty.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER,
+                    ErrorCode.NOT_FOUND_GROUP_MEMBER.getMessage());
+        }
+
+        userPartyRepository.delete(userParty.get());
+
+        return member.getName() + "님이 그룹에서 방출되었습니다.";
     }
 }

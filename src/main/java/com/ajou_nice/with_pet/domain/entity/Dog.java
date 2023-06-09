@@ -63,7 +63,6 @@ public class Dog extends BaseEntity {
     private DogSize dogSize;
 
 
-
     public void update(DogInfoRequest dogInfoRequest, DogSize dogSize) {
         this.name = dogInfoRequest.getDog_name();
         this.gender = dogInfoRequest.getDog_gender();
@@ -76,15 +75,15 @@ public class Dog extends BaseEntity {
         this.dogSize = dogSize;
     }
 
-    public void updateSocialization(int dogSocialization){
+    public void updateSocialization(int dogSocialization) {
         this.socializationDegree = dogSocialization;
     }
 
-    public void updateSocializationTemperature(float score){
+    public void updateSocializationTemperature(float score) {
         this.socializationTemperature = this.socializationTemperature + score;
     }
 
-    public void updateAffectionTemperature(double temp){
+    public void updateAffectionTemperature(double temp) {
         this.affectionTemperature = temp;
     }
 
@@ -129,6 +128,27 @@ public class Dog extends BaseEntity {
                 .profile_img(img)
                 .breed(partyRequest.getDog_breed())
                 .isbn(partyRequest.getDog_isbn())
+                .socializationTemperature(37.5)
+                .socializationDegree(0)
+                .affectionTemperature(37.5)
+                .dogSize(dogSize)
+                .build();
+    }
+
+    public static Dog simpleDogForTest(String name, String gender, Party party,
+            Boolean neutralization, LocalDate birth, Float weight, String profile_img, String breed,
+            String isbn,
+            DogSize dogSize) {
+        return Dog.builder()
+                .name(name)
+                .gender(gender)
+                .party(party)
+                .neutralization(neutralization)
+                .birth(birth)
+                .weight(weight)
+                .profile_img(profile_img)
+                .breed(breed)
+                .isbn(isbn)
                 .socializationTemperature(37.5)
                 .socializationDegree(0)
                 .affectionTemperature(37.5)
