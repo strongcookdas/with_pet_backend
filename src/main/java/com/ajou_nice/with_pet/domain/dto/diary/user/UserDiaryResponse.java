@@ -21,6 +21,7 @@ public class UserDiaryResponse {
     private Long categoryId;
     private Long dogId;
     private String categoryName;
+    private String userName;
     private String title;
     private String contentBody;
     private String dogImgToday;
@@ -33,6 +34,7 @@ public class UserDiaryResponse {
                 .categoryId(diary.getCategory().getCategoryId())
                 .dogId(diary.getDog().getDogId())
                 .categoryName(diary.getCategory().getName())
+                .userName(diary.getUser().getName())
                 .title(diary.getTitle())
                 .contentBody(diary.getContent())
                 .dogImgToday(diary.getMedia())
