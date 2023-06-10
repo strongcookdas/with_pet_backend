@@ -64,7 +64,7 @@ public class ReservationListTest {
 	@Transactional
 	@Test
 	public void reservationListTest() throws Exception{
-	    //given
+	    //given 4개의 예약이 주어졌을때 (승인된 예약2개 , 결제된 예약 1개, 결제대기중 예약 1개)
 	    initialize();
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 13, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 14, 6, 13);
@@ -90,7 +90,7 @@ public class ReservationListTest {
 		reservation4.updateStatus(ReservationStatus.APPROVAL.toString());
 		reservationRepository.save(reservation4);
 
-	    //when
+	    //when (user가 자신의 예약 찾았을때)
 		Optional<List<Reservation>> myReservations = reservationRepository.findAllByUser(user);
 		List<Reservation> waitReservations = myReservations.get().stream().filter(
 				reservation -> reservation.getReservationStatus().equals(ReservationStatus.WAIT)).collect(
@@ -99,7 +99,7 @@ public class ReservationListTest {
 				reservation -> reservation.getReservationStatus().equals(ReservationStatus.DONE)).collect(
 				Collectors.toList());
 
-	    //then
+	    //then (myReservations로 waitReservations와 doneReservations로 나누었을때 잘 되는지 확인)
 		Assertions.assertEquals(waitReservations.get(0),reservation2);
 		Assertions.assertTrue(doneReservations.isEmpty());
 
@@ -110,7 +110,7 @@ public class ReservationListTest {
 	@Test
 	public void getReservationDocsTest() throws Exception{
 
-		//given
+		//given 4개의 예약이 주어졌을때 (승인된 예약2개 , 결제된 예약 1개, 결제대기중 예약 1개)
 		initialize();
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 13, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 14, 6, 13);
@@ -140,10 +140,10 @@ public class ReservationListTest {
 		reservation4.updateStatus(ReservationStatus.APPROVAL.toString());
 		reservationRepository.save(reservation4);
 	   
-		//when
+		//when ReservationDocsResponse에 매핑했을때
 		ReservationDocsResponse docsResponse = reservationService.getReservationDoc(user.getId());
 
-		//then
+		//then Dto에 생각한대로 잘 매핑되는지 출력
 		System.out.println(docsResponse);
 	     
 	}

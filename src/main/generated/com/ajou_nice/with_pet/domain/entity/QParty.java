@@ -30,8 +30,12 @@ public class QParty extends EntityPathBase<Party> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
 
+    public final NumberPath<Integer> dogCount = createNumber("dogCount", Integer.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedAt = _super.lastModifiedAt;
+
+    public final NumberPath<Integer> memberCount = createNumber("memberCount", Integer.class);
 
     public final StringPath name = createString("name");
 

@@ -32,11 +32,11 @@ public class NotificationService {
     private final UserRepository userRepository;
     private final EmailService emailService;
 
+    private final ValidateCollection valid;
+
     /* 알림 목록 조회 */
     public List<NotificationResponse> getNotification(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         List<Notification> notifications = notificationRepository.findAllByReceiver(
                 user.getUserId());
         return notifications.stream().map(NotificationResponse::of).collect(Collectors.toList());

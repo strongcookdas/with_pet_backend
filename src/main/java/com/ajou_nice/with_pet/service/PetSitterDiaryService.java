@@ -33,31 +33,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PetSitterDiaryService {
 
-    private final UserRepository userRepository;
-    private final PetSitterRepository petSitterRepository;
     private final DiaryRepository diaryRepository;
-    private final DogRepository dogRepository;
     private final UserPartyRepository userPartyRepository;
-    private final CategoryRepository categoryRepository;
     private final NotificationService notificationService;
 
-    public PetSitterDiaryResponse writePetsitterDiary(String userId, DiaryRequest diaryRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+    private final ValidateCollection valid;
 
-        PetSitter petSitter = petSitterRepository.findByUser(user).orElseThrow(() -> {
-            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
-                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
-        });
-        Dog dog = dogRepository.findById(diaryRequest.getDogId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
-        Category category = categoryRepository.findById(diaryRequest.getCategoryId())
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.GROUP_NOT_FOUND,
-                            ErrorCode.CATEGORY_NOT_FOUND.getMessage());
-                });
+    public PetSitterDiaryResponse writePetsitterDiary(String userId, DiaryRequest diaryRequest) {
+
+        User user = valid.userValidation(userId);
+
+        PetSitter petSitter = valid.petSitterValidationByUser(user);
+
+        Dog dog = valid.dogValidation(diaryRequest.getDogId());
+
+        Category category = valid.categoryValidation(diaryRequest.getCategoryId());
 
         Diary diary = diaryRepository.save(Diary.of(diaryRequest, dog, user, category, petSitter));
         // 그룹원에게 알림
@@ -82,20 +72,11 @@ public class PetSitterDiaryService {
             DiaryModifyRequest diaryModifyRequest,
             Long diaryId) {
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         //일지 체크
-        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DIARY_NOT_FOUND,
-                    ErrorCode.DIARY_NOT_FOUND.getMessage());
-        });
+        Diary diary = valid.diaryValidation(diaryId);
         //카테고리 체크
-        Category category = categoryRepository.findById(diaryModifyRequest.getCategoryId())
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.CATEGORY_NOT_FOUND,
-                            ErrorCode.CATEGORY_NOT_FOUND.getMessage());
-                });
+        Category category = valid.categoryValidation(diaryModifyRequest.getCategoryId());
 
         //작성자 비교
         if (!user.equals(diary.getUser())) {
@@ -108,18 +89,11 @@ public class PetSitterDiaryService {
 
     public PetSitterDiaryListResponse getPetSitterDiaries(String userId, Long dogId) {
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         //펫시터 체크
-        PetSitter petSitter = petSitterRepository.findByUser(user).orElseThrow(() -> {
-            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
-                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
-        });
+        PetSitter petSitter = valid.petSitterValidationByUser(user);
         //반려견 체크
-        Dog dog = dogRepository.findById(dogId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        Dog dog = valid.dogValidation(dogId);
         //펫시터가 작성한 해당 반려견에 대한 일지 조회
         log.info(
                 "=======================================펫시터가 작성한 반려견 일지 조회 START=======================================");

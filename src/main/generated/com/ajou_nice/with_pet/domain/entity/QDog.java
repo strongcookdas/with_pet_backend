@@ -36,6 +36,8 @@ public class QDog extends EntityPathBase<Dog> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
 
+    public final ListPath<Diary, QDiary> diaries = this.<Diary, QDiary>createList("diaries", Diary.class, QDiary.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> dogId = createNumber("dogId", Long.class);
 
     public final EnumPath<com.ajou_nice.with_pet.enums.DogSize> dogSize = createEnum("dogSize", com.ajou_nice.with_pet.enums.DogSize.class);
@@ -54,6 +56,8 @@ public class QDog extends EntityPathBase<Dog> {
     public final QParty party;
 
     public final StringPath profile_img = createString("profile_img");
+
+    public final ListPath<Reservation, QReservation> reservations = this.<Reservation, QReservation>createList("reservations", Reservation.class, QReservation.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> socializationDegree = createNumber("socializationDegree", Integer.class);
 
