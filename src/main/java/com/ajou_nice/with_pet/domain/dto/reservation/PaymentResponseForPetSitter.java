@@ -15,11 +15,14 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PaymentResponseForPetSitter {
 
+	private String checkIn;
+	private String checkOut;
 	private String userName;
 	private String dogName;
 	private String dogGender;
 	private String dogProfileImg;
 	private String dogBreed;
+	private Float dogWeight;
 	private String dogIsbn;
 	private Boolean dogNeutralization;
 	private Double dogSocializationTemperature;
@@ -33,12 +36,15 @@ public class PaymentResponseForPetSitter {
 
 	public static PaymentResponseForPetSitter of(Reservation reservation){
 		return PaymentResponseForPetSitter.builder()
+				.checkIn(reservation.getCheckIn().toString())
+				.checkOut(reservation.getCheckOut().toString())
 				.userName(reservation.getUser().getName())
 				.dogName(reservation.getDog().getName())
 				.dogGender(reservation.getDog().getGender())
 				.dogProfileImg(reservation.getDog().getProfile_img())
 				.dogBreed(reservation.getDog().getBreed())
 				.dogIsbn(reservation.getDog().getIsbn())
+				.dogWeight(reservation.getDog().getWeight())
 				.dogNeutralization(reservation.getDog().getNeutralization())
 				.dogSocializationTemperature(reservation.getDog().getSocializationTemperature())
 				.dogSocializationDegree(reservation.getDog().getSocializationDegree())

@@ -8,6 +8,7 @@ import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest.ReservationSimpleRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationStatusRequest;
 import com.ajou_nice.with_pet.domain.dto.review.ReviewRequest;
@@ -128,8 +129,10 @@ public class ReservationController {
 
     @PostMapping("/user/done-reservation")
     @ApiOperation(value = "사용자의 이용 완료 신청")
-    public Response doneReservation(@ApiIgnore Authentication authentication, Long reservationId) {
-        reservationService.doneReservation(authentication.getName(), reservationId);
+    public Response doneReservation(@ApiIgnore Authentication authentication,
+            @RequestBody ReservationSimpleRequest simpleRequest) {
+        reservationService.doneReservation(authentication.getName(),
+                simpleRequest.getReservationId());
 
         return Response.success("완료 되었습니다. 만족스러우셨다면 후기를 작성해주세요.");
     }
@@ -137,9 +140,10 @@ public class ReservationController {
     @PostMapping("/user/cancel-reservation")
     @ApiOperation(value = "사용자의 예약 취소 (결제 전 예약건에 대해)")
     public Response cancelReservation(@ApiIgnore Authentication authentication,
-            Long reservationId) {
+            @RequestBody ReservationSimpleRequest simpleRequest) {
 
-        reservationService.cancelReservation(authentication.getName(), reservationId);
+        reservationService.cancelReservation(authentication.getName(),
+                simpleRequest.getReservationId());
 
         return Response.success("취소가 완료 되었습니다.");
     }

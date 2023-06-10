@@ -37,4 +37,12 @@ public class ReservationRequest {
     @NotNull
     private Long petsitterId;
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @Getter
+    public static class ReservationSimpleRequest{
+        private Long reservationId;
+    }
+
 }
