@@ -104,9 +104,7 @@ public class PetSitterDiaryService {
     }
 
     public String deletePetSitterDiary(String userId, Long diaryId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> {
             throw new AppException(ErrorCode.DIARY_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
