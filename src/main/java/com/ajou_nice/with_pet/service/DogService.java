@@ -36,6 +36,7 @@ public class DogService {
     private final DogRepository dogRepository;
     private final UserPartyRepository userPartyRepository;
     private final ReservationRepository reservationRepository;
+    private final PartyRepository partyRepository;
 
     private final PetSitterCriticalServiceRepository criticalServiceRepository;
     private final ValidateCollection valid;
@@ -203,6 +204,10 @@ public class DogService {
 
         dogRepository.delete(dog);
         party.updateDogCount(party.getDogCount() - 1);
+
+        if(party.getDogCount()==0){
+            partyRepository.delete(party);
+        }
 
         return dog.getName() + "반려견이 삭제되었습니다.";
     }
