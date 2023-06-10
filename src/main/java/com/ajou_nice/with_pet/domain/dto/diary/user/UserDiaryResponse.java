@@ -19,6 +19,7 @@ public class UserDiaryResponse {
 
     private Long userDiaryId;
     private Long categoryId;
+    private Long ;
     private Long dogId;
     private String categoryName;
     private String userName;
@@ -29,9 +30,16 @@ public class UserDiaryResponse {
     private LocalDate createdAt;
 
     public static UserDiaryResponse of(Diary diary) {
+
+        Long petsitterId = null;
+        if(diary.getPetSitter()!=null){
+            petsitterId = diary.getPetSitter().getId();
+        }
+
         return UserDiaryResponse.builder()
                 .userDiaryId(diary.getDiaryId())
                 .categoryId(diary.getCategory().getCategoryId())
+                .petsitterId(petsitterId)
                 .dogId(diary.getDog().getDogId())
                 .categoryName(diary.getCategory().getName())
                 .userName(diary.getUser().getName())
