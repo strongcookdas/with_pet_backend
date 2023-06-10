@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PartyService {
 
     private final Integer partyCount = 5;
+    private final Integer partyMemberCount = 5;
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
@@ -54,9 +55,15 @@ public class PartyService {
                     ErrorCode.DUPLICATED_GROUP_MEMBER.getMessage());
         }
 
+        if (party.getMemberCount() >= partyMemberCount) {
+            throw new AppException(ErrorCode.TOO_MANY_MEMBER,
+                    ErrorCode.TOO_MANY_MEMBER.getMessage());
+        }
+
         //유저 그룹 매핑
         userPartyRepository.save(UserParty.of(user, party));
         user.updatePartyCount(user.getPartyCount() + 1);
+        party.updateMemberCount(party.getMemberCount() + 1);
 
         List<Dog> dogs = dogRepository.findAllByParty(party);
 
@@ -157,6 +164,7 @@ public class PartyService {
 
         userPartyRepository.delete(deleteUserParty.get());
         user.updatePartyCount(user.getPartyCount() - 1);
+        party.updateMemberCount(party.getMemberCount() - 1);
 
         if (party.getUser().getId().equals(user.getId())
                 && !nextLeader.isEmpty()) {
@@ -195,6 +203,7 @@ public class PartyService {
 
         userPartyRepository.delete(userParty.get());
         member.updatePartyCount(member.getPartyCount() - 1);
+        party.updateMemberCount(party.getMemberCount() - 1);
 
         return member.getName() + "님이 그룹에서 방출되었습니다";
     }
