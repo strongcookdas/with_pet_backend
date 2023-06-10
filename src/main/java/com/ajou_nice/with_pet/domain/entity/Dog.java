@@ -30,7 +30,7 @@ import org.hibernate.annotations.Where;
 @Getter
 @Builder
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE Dog SET deleted_at = CURRENT_TIMESTAMP where id = ?")
+@SQLDelete(sql = "UPDATE dog SET deleted_at = CURRENT_TIMESTAMP where dog_id = ?")
 public class Dog extends BaseEntity {
 
     @Id
