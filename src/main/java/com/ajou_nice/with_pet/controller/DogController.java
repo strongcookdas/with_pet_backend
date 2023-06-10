@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -105,5 +106,11 @@ public class DogController {
         List<DogListInfoResponse> list = dogService.getDogListInfoResponse(authentication.getName(),
                 petSitterId);
         return Response.success(list);
+    }
+
+    @DeleteMapping("/{dogId}")
+    @ApiOperation(value = "반려견 삭제")
+    public Response deleteDog(@ApiIgnore Authentication authentication, @PathVariable Long dogId){
+        return Response.success(dogService.deleteDog(authentication.getName(),dogId));
     }
 }

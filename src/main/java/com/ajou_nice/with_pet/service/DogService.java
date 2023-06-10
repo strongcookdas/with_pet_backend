@@ -5,18 +5,18 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
-import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.DogSize;
+import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
+import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ public class DogService {
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
+    private final ReservationRepository reservationRepository;
 
     private final PetSitterCriticalServiceRepository criticalServiceRepository;
 
@@ -186,5 +187,35 @@ public class DogService {
             dogInfoResponses.add(DogListInfoResponse.of(dog, check));
         }
         return dogInfoResponses;
+    }
+
+    public String deleteDog(String userId, Long dogId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+
+        Dog dog = dogRepository.findById(dogId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
+        });
+
+        Party party = dog.getParty();
+
+        if (!user.getId().equals(dog.getParty().getUser().getId())) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION,
+                    ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        List<ReservationStatus> reservationStatuses = new ArrayList<>();
+        reservationStatuses.add(ReservationStatus.APPROVAL);
+        reservationStatuses.add(ReservationStatus.PAYED);
+
+        if (reservationRepository.existsByDogAndReservationStatusIn(dog, reservationStatuses)) {
+            throw new AppException(ErrorCode.CAN_NOT_DELETE_DOG,
+                    ErrorCode.CAN_NOT_DELETE_DOG.getMessage());
+        }
+
+        dogRepository.delete(dog);
+
+        return dog.getName() + "반려견이 삭제되었습니다.";
     }
 }
