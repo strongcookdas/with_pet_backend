@@ -133,4 +133,22 @@ public class UserDiaryService {
                 categoryId, LocalDate.parse(day), petsitterCheck);
         return userDiaries.stream().map(UserDiaryResponse::of).collect(Collectors.toList());
     }
+
+    @Transactional
+    public String deleteUserDiary(String userId, Long diaryId) {
+
+        User user = valid.userValidation(userId);
+
+        Diary diary = userDiaryRepository.findById(diaryId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.DIARY_NOT_FOUND, ErrorCode.DIARY_NOT_FOUND.getMessage());
+        });
+
+        if(!diary.getUser().getId().equals(user.getId())){
+            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        userDiaryRepository.delete(diary);
+
+        return "일지가 삭제되었습니다.";
+    }
 }
