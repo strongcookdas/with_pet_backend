@@ -19,7 +19,7 @@ public class UserDiaryResponse {
 
     private Long userDiaryId;
     private Long categoryId;
-    private Long ;
+    private Long petsitterId;
     private Long dogId;
     private String categoryName;
     private String userName;
