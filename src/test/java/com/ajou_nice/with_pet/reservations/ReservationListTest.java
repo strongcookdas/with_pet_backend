@@ -3,12 +3,17 @@ package com.ajou_nice.with_pet.reservations;
 
 import com.ajou_nice.with_pet.controller.ReservationController;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
+import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
+import com.ajou_nice.with_pet.fixture.Fixture;
+import com.ajou_nice.with_pet.repository.DogRepository;
+import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
@@ -38,6 +43,14 @@ public class ReservationListTest {
 	@Autowired
 	ReservationService reservationService;
 
+	@Autowired
+	DogRepository dogRepository;
+
+	@Autowired
+	PartyRepository partyRepository;
+
+	Fixture fixture = new Fixture();
+
 	static{
 		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
 	}
@@ -45,17 +58,24 @@ public class ReservationListTest {
 	private User user;
 	private PetSitter petSitter;
 
+	private Dog dog;
+	private Party party;
+
 	@Transactional
 	public void initialize(){
 		Address address = Address.simpleAddressGenerator("213","adasd", "244");
-		user = User.simpleUserForTest("장승현3", "simpleuser3", "1234", "jason5102@ajou.ac.kr",
-				UserRole.ROLE_USER, "010-3931-5102", address);
+		user = fixture.getUser1();
 		User user2 = User.simpleUserForTest("장승현4", "simplepetsitter4", "1234", "jason5102@ajou.ac.kr",
 				UserRole.ROLE_PETSITTER, "010-3931-5102", address);
 		userRepository.save(user); userRepository.save(user2);
 
 		petSitter = PetSitter.simplePetSitterForTest(user2.getName(), user2.getPhone(), "www.google.com", "213", "sdfs",
 				"dsfds", user2);
+
+		party = fixture.getParty();
+		dog = fixture.getDog();
+		partyRepository.save(party);
+		dogRepository.save(dog);
 		petSitterRepository.save(petSitter);
 	}
 
@@ -114,30 +134,26 @@ public class ReservationListTest {
 		initialize();
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 13, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 14, 6, 13);
-		Reservation reservation1 = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 35000);
-		reservation1.updateForTest("소형견", 10000);
-		reservation1.updateStatus(ReservationStatus.APPROVAL.toString());
+		Reservation reservation1 = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 35000,
+				ReservationStatus.APPROVAL, dog, "소형견", 10000);
 		reservationRepository.save(reservation1);
 
 		checkIn = LocalDateTime.of(2023, 6, 14, 5, 13);
 		checkOut = LocalDateTime.of(2023, 6, 15, 6, 13);
-		Reservation reservation2 = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 40000);
-		reservation2.updateForTest("소형견", 10000);
-		reservation2.updateStatus(ReservationStatus.WAIT.toString());
+		Reservation reservation2 = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 40000,
+				ReservationStatus.WAIT, dog, "중형견", 20000);
 		reservationRepository.save(reservation2);
 
 		checkIn = LocalDateTime.of(2023, 6, 15, 5, 13);
 		checkOut = LocalDateTime.of(2023, 6, 16, 6, 13);
-		Reservation reservation3 = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 39000);
-		reservation3.updateForTest("소형견", 10000);
-		reservation3.updateStatus(ReservationStatus.PAYED.toString());
+		Reservation reservation3 = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 39000,
+				ReservationStatus.PAYED, dog, "대형견", 35000);
 		reservationRepository.save(reservation3);
 
 		checkIn = LocalDateTime.of(2023, 6, 7, 5, 13);
 		checkOut = LocalDateTime.of(2023, 6, 8, 6, 13);
-		Reservation reservation4 = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 47000);
-		reservation4.updateForTest("소형견", 10000);
-		reservation4.updateStatus(ReservationStatus.APPROVAL.toString());
+		Reservation reservation4 = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 47000,
+				ReservationStatus.APPROVAL, dog, "소형견", 15000);
 		reservationRepository.save(reservation4);
 	   
 		//when ReservationDocsResponse에 매핑했을때
