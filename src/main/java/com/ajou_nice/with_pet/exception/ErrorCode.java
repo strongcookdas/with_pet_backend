@@ -41,7 +41,8 @@ public enum ErrorCode {
     TO_MANY_APPLICATE(HttpStatus.NOT_ACCEPTABLE,"더 이상 지원할 수 없습니다."),
     PAY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 결제정보입니다."),
     BAD_REQUEST_RESERVATION_STATSUS(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
-    CAN_NOT_DELETE_DOG(HttpStatus.BAD_REQUEST, "반려견에게 유효한 예약이 존재하기때문에 삭제할 수 없습니다.");
+    CAN_NOT_DELETE_DOG(HttpStatus.BAD_REQUEST, "반려견에게 유효한 예약이 존재하기때문에 삭제할 수 없습니다."),
+    TOO_MANY_MEMBER(HttpStatus.BAD_REQUEST,"제한 인원 이상의 멤버 수를 추가할 수 없습니다." );
     private HttpStatus status;
     private String message;
 }

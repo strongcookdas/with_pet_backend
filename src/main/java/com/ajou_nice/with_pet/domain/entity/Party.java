@@ -30,6 +30,8 @@ public class Party extends BaseEntity {
     private User user;
     private String name;
     private String partyIsbn;
+    private Integer memberCount;
+    private Integer dogCount;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "party")
     private List<UserParty> userPartyList = new ArrayList<>();
@@ -51,10 +53,24 @@ public class Party extends BaseEntity {
         return Party.builder()
                 .user(user)
                 .name(partyName)
+                .memberCount(1)
+                .dogCount(1)
                 .build();
     }
 
     public void updatePartyLeader(User user) {
         this.user = user;
+    }
+
+    public void updateMemberCount(Integer memberCount){
+        this.memberCount = memberCount;
+    }
+
+    public void updateDogCount(Integer dogCount){
+        this.dogCount = dogCount;
+    }
+
+    public void addUserPartyForTest(UserParty userParty){
+        this.userPartyList.add(userParty);
     }
 }
