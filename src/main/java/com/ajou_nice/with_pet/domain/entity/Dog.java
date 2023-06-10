@@ -4,6 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.time.LocalDate;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,17 +15,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
 @Builder
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE dog SET deleted_at = CURRENT_TIMESTAMP where dog_id = ?")
 public class Dog extends BaseEntity {
 
     @Id
@@ -62,7 +68,11 @@ public class Dog extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DogSize dogSize;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Diary> diaries;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Reservation> reservations;
 
     public void update(DogInfoRequest dogInfoRequest, DogSize dogSize) {
         this.name = dogInfoRequest.getDog_name();
@@ -76,15 +86,15 @@ public class Dog extends BaseEntity {
         this.dogSize = dogSize;
     }
 
-    public void updateSocialization(int dogSocialization){
+    public void updateSocialization(int dogSocialization) {
         this.socializationDegree = dogSocialization;
     }
 
-    public void updateSocializationTemperature(float score){
+    public void updateSocializationTemperature(float score) {
         this.socializationTemperature = this.socializationTemperature + score;
     }
 
-    public void updateAffectionTemperature(double temp){
+    public void updateAffectionTemperature(double temp) {
         this.affectionTemperature = temp;
     }
 
@@ -129,6 +139,27 @@ public class Dog extends BaseEntity {
                 .profile_img(img)
                 .breed(partyRequest.getDog_breed())
                 .isbn(partyRequest.getDog_isbn())
+                .socializationTemperature(37.5)
+                .socializationDegree(0)
+                .affectionTemperature(37.5)
+                .dogSize(dogSize)
+                .build();
+    }
+
+    public static Dog simpleDogForTest(String name, String gender, Party party,
+            Boolean neutralization, LocalDate birth, Float weight, String profile_img, String breed,
+            String isbn,
+            DogSize dogSize) {
+        return Dog.builder()
+                .name(name)
+                .gender(gender)
+                .party(party)
+                .neutralization(neutralization)
+                .birth(birth)
+                .weight(weight)
+                .profile_img(profile_img)
+                .breed(breed)
+                .isbn(isbn)
                 .socializationTemperature(37.5)
                 .socializationDegree(0)
                 .affectionTemperature(37.5)

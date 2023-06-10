@@ -23,7 +23,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-        response.setStatus(ErrorCode.INVALID_TOKEN.getStatus().value());
+        response.setStatus(ErrorCode.INVALID_PERMISSION.getStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         Response errorResponse = Response.error(ErrorCode.INVALID_PERMISSION.getMessage());

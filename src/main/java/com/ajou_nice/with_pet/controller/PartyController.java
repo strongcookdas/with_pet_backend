@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.party.PartyMemberRequest;
 import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
@@ -12,7 +11,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,13 +37,6 @@ public class PartyController {
                 partyService.addMember(authentication.getName(), partyMemberRequest));
     }
 
-
-    /**
-     * 유저가 속한 그룹과 그룹안 반려견까지 반환하는 GET 메소드
-     *
-     * @param authentication
-     * @return Response<List < PartyInfoResponse>>
-     */
     @GetMapping("/group-infos")
     @ApiOperation(value = "그룹 상세 리스트 조회")
     public Response<List<PartyInfoResponse>> getPartyInfoList(
@@ -56,6 +50,21 @@ public class PartyController {
             @RequestBody PartyRequest partyRequest) {
 
         return Response.success(partyService.createParty(authentication.getName(), partyRequest));
+    }
+
+    @DeleteMapping("/{partyId}")
+    @ApiOperation(value = "그룹 탈퇴")
+    public Response leaveParty(@ApiIgnore Authentication authentication,
+            @PathVariable Long partyId) {
+        return Response.success(partyService.leaveParty(authentication.getName(), partyId));
+    }
+
+    @DeleteMapping("/{partyId}/members/{memberId}")
+    @ApiOperation(value = "그룹 멤버 방출")
+    public Response expelMember(@ApiIgnore Authentication authentication,
+            @PathVariable Long partyId, @PathVariable Long memberId) {
+        return Response.success(
+                partyService.expelMember(authentication.getName(), partyId, memberId));
     }
 
 

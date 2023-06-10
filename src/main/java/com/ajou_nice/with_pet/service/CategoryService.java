@@ -17,14 +17,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final ValidateCollection valid;
 
     public void addCategory(String userId, CategoryRequest categoryRequest) {
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        valid.userValidation(userId);
         //카테고리 추가
         categoryRepository.save(Category.of(categoryRequest));
     }

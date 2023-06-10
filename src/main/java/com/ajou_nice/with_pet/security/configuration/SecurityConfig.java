@@ -28,11 +28,15 @@ public class SecurityConfig {
     private final String[] GET_PERMIT_URL = {
             "/api/v1/petsitter/*",
             "/api/v1/show-petsitter",
+            "/api/v1/show-services",
             "/api/v1/reservation",
+            "/api/v1/category",
+            "/api/v1/dogs/reservation-dogs",
             "/payment/success",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail",
-            "/chat/*"
+            "/chat/*",
+            "/api/v1/certification"
     };
     private final String[] POST_PERMIT_URL = {
             "/api/v1/users/signup",
@@ -47,7 +51,6 @@ public class SecurityConfig {
     private final String[] ADMIN_GET_API = {
             "/api/v1/show-applicants",
             "/api/v1/show-applicant/*",
-            "/api/v1/show-services",
             "/api/v1/show-criticalservices"
     };
 
@@ -66,7 +69,9 @@ public class SecurityConfig {
 
     private final String[] USER_POST_API = {
             "/api/v1/reservation",
-            "/api/v1/users/applicate-petsitter"
+            "/api/v1/users/applicate-petsitter",
+            "/api/v1/reservation/user/cancel-reservation",
+            "/api/v1/reservation/user/done-reservation"
     };
 
     private final String[] PETSITTER_API = {
@@ -98,6 +103,10 @@ public class SecurityConfig {
         http
                 .authorizeRequests()
                 .antMatchers("/api/v1/petsitter/show-myinfo").hasRole("PETSITTER")
+                .antMatchers("/api/v1/review/create-review").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE,"/api/v1/petsitter-diaries/*").hasRole("USER")
+                .antMatchers("/api/v1/reservation/user/show-reservations").hasRole("USER")
+                .antMatchers("/api/v1/reservation/show-payment/{reservationId}").hasRole("PETSITTER")
                 .antMatchers("/ws/chat").permitAll()
                 .antMatchers("/payment/test/*").permitAll()
                 .antMatchers("/payment-cancel", "/payment-fail").permitAll()

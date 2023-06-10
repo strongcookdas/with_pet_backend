@@ -35,10 +35,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 @Service
 public class KaKaoPayService {
-
-	private final UserRepository userRepository;
 	private final ReservationRepository reservationRepository;
 	private final PayRepository payRepository;
+
+	private final ValidateCollection valid;
 	static final String cid = "TC0ONETIME"; //테스트 코드
 	static final String admin_Key = "059c166f6891b7508def2a190d83955f"; //장승현이 부여받은 admin key
 
@@ -57,13 +57,9 @@ public class KaKaoPayService {
 	@Transactional
 	public PayReadyResponse payReady(String userId, Long reservationId){
 
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
+		User findUser = valid.userValidation(userId);
 
-		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
-			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
-		});
+		Reservation reservation = valid.reservationValidation(reservationId);
 
 		// 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
@@ -75,7 +71,7 @@ public class KaKaoPayService {
 		parameters.add("total_amount", reservation.getTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
-		parameters.add("approval_url", "http://localhost:3000/petsitterdetail/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
+		parameters.add("approval_url", "http://ec2-13-125-242-183.ap-northeast-2.compute.amazonaws.com/petsitterdetail/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
 		parameters.add("cancel_url", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel"); // 취소 시 redirect url -> 서버의 주소
 		parameters.add("fail_url", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail"); // 실패 시 redirect url -> 서버의 주소
 		//redirect url의 경우 나중에 연동시 프론트에서의 URL을 입력해주고 , 꼭 내가 도메인 변경을 해주어야 한다.
@@ -106,9 +102,7 @@ public class KaKaoPayService {
 	public PayApproveResponse approvePay(String userId, String pgToken, String tid){
 
 		//사용자 인증 체크
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
+		valid.userValidation(userId);
 
 		Reservation reservation = reservationRepository.findByTid(tid).orElseThrow(()->{
 			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
@@ -172,23 +166,16 @@ public class KaKaoPayService {
 		pay.refund(PayStatus.REFUND, payCancelResponse.getCanceled_amount().getTotal(), payCancelResponse.getCanceled_at());
 	}
 
-
-
-
 	//결제 환불
 	//예약 상태 -> cancel, pay 상태 -> Refund , pay entity 환불금액 update
 	@Transactional
 	public RefundResponse refundPayment(String userId, Long reservationId){
 
 		//사용자 인증
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
+		User findUser = valid.userValidation(userId);
 
 		//예약 유효 인증
-		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
-			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
-		});
+		Reservation reservation = valid.reservationValidation(reservationId);
 
 		//결제 정보 확인 인증
 		Pay pay = payRepository.findByReservation(reservation).orElseThrow(()->{

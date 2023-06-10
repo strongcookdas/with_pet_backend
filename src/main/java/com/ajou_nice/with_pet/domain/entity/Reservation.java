@@ -89,6 +89,11 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 
+    public void updateForTest(String criticalServiceName, int criticalServicePrice){
+        this.criticalServiceName = criticalServiceName;
+        this.criticalServicePrice = criticalServicePrice;
+    }
+
     public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost){
         return Reservation.builder()
                 .checkIn(checkIn)
@@ -96,6 +101,33 @@ public class Reservation extends BaseEntity {
                 .user(user)
                 .petSitter(petSitter)
                 .totalPrice(totalCost)
+                .build();
+    }
+
+    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog){
+        return Reservation.builder()
+                .checkIn(checkIn)
+                .checkOut(checkOut)
+                .user(user)
+                .petSitter(petSitter)
+                .totalPrice(totalCost)
+                .reservationStatus(status)
+                .dog(dog)
+                .build();
+    }
+
+    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user,
+            PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog, String criticalServiceName, int criticalServicePrice){
+        return Reservation.builder()
+                .checkIn(checkIn)
+                .checkOut(checkOut)
+                .user(user)
+                .petSitter(petSitter)
+                .totalPrice(totalCost)
+                .reservationStatus(status)
+                .dog(dog)
+                .criticalServiceName(criticalServiceName)
+                .criticalServicePrice(criticalServicePrice)
                 .build();
     }
 

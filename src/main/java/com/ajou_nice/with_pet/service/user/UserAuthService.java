@@ -8,6 +8,7 @@ import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.utils.CookieUtil;
 import com.ajou_nice.with_pet.utils.JwtTokenUtil;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ public class UserAuthService {
     private final BCryptPasswordEncoder encoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final CookieUtil cookieUtil;
+    private final ValidateCollection valid;
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
 
@@ -46,9 +48,7 @@ public class UserAuthService {
     public UserLoginResponse login(UserLoginRequest userLoginRequest,
             HttpServletResponse response) {
 
-        User findUser = userRepository.findById(userLoginRequest.getId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User findUser = valid.userValidation(userLoginRequest.getId());
 
         if (!encoder.matches(userLoginRequest.getPassword(), findUser.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD,

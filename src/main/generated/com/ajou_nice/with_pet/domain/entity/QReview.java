@@ -24,6 +24,8 @@ public class QReview extends EntityPathBase<Review> {
 
     public final StringPath content = createString("content");
 
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
+
     public final NumberPath<Double> grade = createNumber("grade", Double.class);
 
     public final QPetSitter petSitter;

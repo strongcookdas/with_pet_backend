@@ -11,6 +11,7 @@ import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
@@ -69,33 +70,33 @@ public class ReservationTest {
 	@Transactional
 	@Test
 	public void reservationDoneTest() throws Exception{
-	    //given
+	    //given 승인된 예약이 하나 주어졌을때
 		initialize();
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 5, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 6, 6, 13);
 		Reservation reservation = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 30000);
 		reservation.updateStatus(ReservationStatus.APPROVAL.toString());
 		reservationRepository.save(reservation);
-	    //when
+	    //when 사용자가 done을 눌렀을때 (reservationService test)
 		reservationService.doneReservation(user.getId(), reservation.getReservationId());
-	    //then
+	    //then 예약 상태가 done으로 잘 바뀌는지 test
 		Assertions.assertEquals(reservation.getReservationStatus(), ReservationStatus.DONE);
 	 }
  	@DisplayName("사용자의 결제 전 예약건에 대한 예약 취소")
  	@Transactional
  	@Test
  	public void reservationCacnelTest() throws Exception{
-	     //given
+		 //given 승인된 예약이 하나 주어졌을때 (결제 대기전의 예약)
 		 initialize();
 		 LocalDateTime checkIn = LocalDateTime.of(2023, 6, 5, 5, 13);
 		 LocalDateTime checkOut = LocalDateTime.of(2023, 6, 6, 6, 13);
 		 Reservation reservation = Reservation.forSimpleTest(checkIn, checkOut, user, petSitter, 30000);
 		 reservation.updateStatus(ReservationStatus.WAIT.toString());
 		 reservationRepository.save(reservation);
-	     //when
+	     //when 사용자가 결제전 예약을 취소했을때 (reservationService test)
 		 reservationService.cancelReservation(user.getId(), reservation.getReservationId());
 	   
-	     //then
+	     //then 예약상태가 Cancel로 잘 바뀌는지
 		 Assertions.assertEquals(reservation.getReservationStatus(), ReservationStatus.CANCEL);
 	}
 
@@ -103,7 +104,7 @@ public class ReservationTest {
 	@Transactional
 	@Test
 	public void reservationQueryTest() throws Exception{
-		//given
+		//given 예약이 하나 주어졌을때 (결제 대기전)
 		initialize();
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 5, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 6, 6, 13);
@@ -111,14 +112,15 @@ public class ReservationTest {
 		reservation.updateStatus(ReservationStatus.WAIT.toString());
 		reservationRepository.save(reservation);
 
-		//when
+		//when (Pay에 Reservation을 mapping해서 저장) -> 기존의 양방향 연관관계 매핑을 단방향으로 끊어냄
 		Pay pay = Pay.simplePayForTest(reservation);
 		payRepository.save(pay);
 
 		Pay pay1 = payRepository.findById(pay.getId()).orElseThrow(()->{
 			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
 		});
-		//then
+
+		//then pay에 mapping 된 reservation이 매핑시킨 예약이 맞는지
 		Assertions.assertEquals(pay1.getReservation(), reservation);
 	}
 }

@@ -4,9 +4,13 @@ package com.ajou_nice.with_pet.domain.dto.petsitter;
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.embedded.AddressDto;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterServiceResponse.PetSitterCriticalServiceResponse;
+import com.ajou_nice.with_pet.domain.dto.review.ReviewResponse;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
+import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -44,7 +48,10 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 
 	private String petSitterLicenseImg;
 
-	public static PetSitterDetailInfoResponse of(PetSitter petSitter){
+	private List<ReviewResponse> reviewResponses;
+
+	public static PetSitterDetailInfoResponse of(PetSitter petSitter, List<Review> reviews, List<PetSitterWithPetService> petSitterWithPetServices,
+			List<PetSitterCriticalService> petSitterCriticalServices){
 		return PetSitterDetailInfoResponse.builder()
 				.petSitterId(petSitter.getId())
 				.petSitterUserId(petSitter.getUser().getUserId())
@@ -53,10 +60,12 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 				.petSitterAddress(petSitter.getPetSitterStreetAdr())
 				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 				.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
-				.petSitterServices(PetSitterServiceResponse.toList(petSitter.getPetSitterWithPetServiceList()))
-				.petSitterCriticalServices(PetSitterCriticalServiceResponse.toList(petSitter.getPetSitterCriticalServiceList()))
+				.petSitterServices(petSitterWithPetServices == null? null : PetSitterServiceResponse.toList(petSitterWithPetServices))
+				.petSitterCriticalServices(petSitterCriticalServices == null? null :
+						PetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
 				.introduction(petSitter.getIntroduction())
 				.petSitterLicenseImg(petSitter.getPetSitterLicenseImg())
+				.reviewResponses(reviews == null ? null : ReviewResponse.toList(reviews))
 				.build();
 	}
 	@AllArgsConstructor
@@ -76,15 +85,17 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 		private List<PetSitterServiceResponse> petSitterServices;
 		private List<WithPetServiceResponse> withPetServices;
 
-		public static PetSitterModifyInfoResponse of(PetSitter petSitter, List<CriticalService> criticalServiceList,  List<WithPetService> withPetServiceList){
+		public static PetSitterModifyInfoResponse of(PetSitter petSitter, List<CriticalService> criticalServiceList,  List<WithPetService> withPetServiceList,
+				List<PetSitterWithPetService> petSitterWithPetServices, List<PetSitterCriticalService> petSitterCriticalServices){
 			return PetSitterModifyInfoResponse.builder()
 					.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
 					.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 					.introduction(petSitter.getIntroduction())
 					.petSitterLicenseImg(petSitter.getPetSitterLicenseImg())
-					.petSitterCriticalServices(PetSitterCriticalServiceResponse.toList(petSitter.getPetSitterCriticalServiceList()))
+					.petSitterCriticalServices(petSitterCriticalServices == null? null :
+							PetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
 					.criticalServices(CriticalServiceResponse.toList(criticalServiceList))
-					.petSitterServices(PetSitterServiceResponse.toList(petSitter.getPetSitterWithPetServiceList()))
+					.petSitterServices(petSitterWithPetServices == null ? null : PetSitterServiceResponse.toList(petSitterWithPetServices))
 					.withPetServices(WithPetServiceResponse.toList(withPetServiceList))
 					.build();
 		}

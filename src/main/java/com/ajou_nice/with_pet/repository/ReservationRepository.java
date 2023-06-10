@@ -44,7 +44,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     @Modifying(clearAutomatically = true)
     @Query("update Reservation r set r.reservationStatus = :changestatus where r.reservationStatus = :waitstatus and "
-            + "(function('datediff', now(), r.createdAt ) > 1 or function('datediff', r.checkIn, now()) <= 1)")
+            + "(function('datediff', now(), r.createdAt ) >= 1 or function('datediff', r.checkIn, now()) <= 1)")
     void executeAutoCancel(@Param("changestatus") ReservationStatus changeStatus, @Param("waitstatus") ReservationStatus waitstatus);
 
 
@@ -67,4 +67,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     @Query("select r from Reservation r where r.tid=:tid")
     Optional<Reservation> findByTid(@Param("tid") String tid);
 
+    Boolean existsByDogAndReservationStatusIn(Dog dog,List<ReservationStatus> statuses);
 }

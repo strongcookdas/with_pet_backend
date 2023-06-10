@@ -34,44 +34,53 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "KaKaoPay API")
 public class KaKaoPayController {
 
-	private final KaKaoPayService kaKaoPayService;
+    private final KaKaoPayService kaKaoPayService;
 
-	//결제 요청 -> 클라이언트에서는
-	@PostMapping("/ready")
-	@ApiOperation(value = "결제 요청")
-	public Response<PayReadyResponse> readyToKakaoPay(@ApiIgnore Authentication authentication,
-			@RequestBody PaySimpleRequest paySimpleRequest){
+    //결제 요청 -> 클라이언트에서는
+    @PostMapping("/ready")
+    @ApiOperation(value = "결제 요청")
+    public Response<PayReadyResponse> readyToKakaoPay(@ApiIgnore Authentication authentication,
+            @RequestBody PaySimpleRequest paySimpleRequest) {
 
-		log.info("=======================payRequest : {}=============================",paySimpleRequest);
-		//reservation과 동기화 필요
-		PayReadyResponse payReadyResponse = kaKaoPayService.payReady(authentication.getName(), paySimpleRequest.getReservationId());
-		log.info("=======================payResponse : {}=============================",payReadyResponse);
-		return Response.success(payReadyResponse);
-	}
+        log.info("=======================payRequest : {}=============================",
+                paySimpleRequest);
+        //reservation과 동기화 필요
+        PayReadyResponse payReadyResponse = kaKaoPayService.payReady(authentication.getName(),
+                paySimpleRequest.getReservationId());
+        log.info("=======================payResponse : {}=============================",
+                payReadyResponse);
+        return Response.success(payReadyResponse);
+    }
 
-	//결제 성공
-	@GetMapping("/success")
-	@ApiOperation(value = "결제 성공")
-	public Response<PayApproveResponse> afterPay(@ApiIgnore Authentication authentication, @RequestParam("pg_token") String pgToken, @RequestParam("tid") String tid){
-		PayApproveResponse payApproveResponse = kaKaoPayService.approvePay(authentication.getName(),pgToken, tid);
+    //결제 성공
+    @GetMapping("/success")
+    @ApiOperation(value = "결제 성공")
+    public Response<PayApproveResponse> afterPay(@ApiIgnore Authentication authentication,
+            @RequestParam("pg_token") String pgToken, @RequestParam("tid") String tid) {
+        PayApproveResponse payApproveResponse = kaKaoPayService.approvePay(authentication.getName(),
+                pgToken, tid);
 
-		log.info("=======================paySuccessResponse : {}=============================", payApproveResponse);
-		return Response.success(payApproveResponse);
-	}
+        log.info("=======================paySuccessResponse : {}=============================",
+                payApproveResponse);
+        return Response.success(payApproveResponse);
+    }
 
-	//결제 환불 -> 사용자의 결제 취소를 담당
-	@PostMapping("/refund")
-	@ApiOperation(value = "사용자의 결제 취소(환불)")
-	public Response<RefundResponse> refundPay(@ApiIgnore Authentication authentication, PaySimpleRequest paySimpleRequest){
+    //결제 환불 -> 사용자의 결제 취소를 담당
+    @PostMapping("/refund")
+    @ApiOperation(value = "사용자의 결제 취소(환불)")
+    public Response<RefundResponse> refundPay(@ApiIgnore Authentication authentication,
+            @RequestBody PaySimpleRequest paySimpleRequest) {
 
-		log.info("=======================payCancelRequest : {}=============================",paySimpleRequest);
+        log.info("=======================payCancelRequest : {}=============================",
+                paySimpleRequest);
 
-		RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(),
-				paySimpleRequest.getReservationId());
+        RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(),
+                paySimpleRequest.getReservationId());
 
-		log.info("=======================payCancelResponse : {}=============================",refundResponse);
+        log.info("=======================payCancelResponse : {}=============================",
+                refundResponse);
 
-		return Response.success(refundResponse);
-	}
+        return Response.success(refundResponse);
+    }
 
 }

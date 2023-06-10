@@ -1,28 +1,31 @@
 package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.domain.dto.reservation.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
+import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
+import com.ajou_nice.with_pet.domain.dto.review.ReviewRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
-import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.ReservationPetSitterService;
+import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
-import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,12 +43,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
-    private final DogRepository dogRepository;
-    private final PetSitterRepository petSitterRepository;
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final PetSitterServiceRepository serviceRepository;
     private final ReservationPetSitterServiceRepository reservationServiceRepository;
+
+    private final ReviewRepository reviewRepository;
+
+    private final ValidateCollection valid;
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
@@ -55,23 +59,15 @@ public class ReservationService {
     @Transactional
     public ReservationCreateResponse createReservation(String userId, ReservationRequest reservationRequest) {
         int cost = 0;
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
-        Dog dog = dogRepository.findById(reservationRequest.getDogId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
+        Dog dog = valid.dogValidation(reservationRequest.getDogId());
 
         //반려견 예약 유효 체크
         isDuplicatedReservation(reservationRequest.getCheckIn(), reservationRequest.getCheckOut(),
                 dog, reservationStatuses);
 
         //펫시터 유효 체크
-        PetSitter petSitter = petSitterRepository.findById(reservationRequest.getPetsitterId())
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
-                            ErrorCode.PETSITTER_NOT_FOUND.getMessage());
-                });
+        PetSitter petSitter = valid.petSitterValidation(reservationRequest.getPetsitterId());
 
         //펫시터 예약 유효 체크
         isConflictReservation(reservationRequest.getCheckIn(), reservationRequest.getCheckOut(),
@@ -152,15 +148,10 @@ public class ReservationService {
             DogSocializationRequest dogSocializationRequest) {
 
         //reservation
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND,
-                    ErrorCode.RESERVATION_NOT_FOUND.getMessage());
-        });
+        Reservation reservation = valid.reservationValidation(reservationId);
 
         //user가 펫시터인지 검증
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
         //예약의 펫시터가 아니라면
         if (!reservation.getPetSitter().getUser().equals(user)) {
@@ -169,9 +160,7 @@ public class ReservationService {
         }
 
         // 예약의 펫시터가 맞다면
-        Dog dog = dogRepository.findById(reservation.getDog().getDogId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        Dog dog = valid.dogValidation(reservation.getDog().getDogId());
 
         float score = (dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()
                 + dogSocializationRequest.getQ3() +
@@ -185,14 +174,11 @@ public class ReservationService {
         }
     }
 
-    public List<String> getUnavailableDates(String userId, Long petsitterId, String month) {
+    public List<String> getUnavailableDates(Long petsitterId, String month) {
 
         List<String> unavailableDates = new ArrayList<>();
 
-        PetSitter petSitter = petSitterRepository.findById(petsitterId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
-                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
-        });
+        PetSitter petSitter = valid.petSitterValidation(petsitterId);
 
         List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(
                 petSitter,
@@ -224,14 +210,9 @@ public class ReservationService {
             throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS, ErrorCode.BAD_REQUEST_RESERVATION_STATSUS.getMessage());
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        valid.userValidation(userId);
 
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND,
-                    ErrorCode.RESERVATION_NOT_FOUND.getMessage());
-        });
+        Reservation reservation = valid.reservationValidation(reservationId);
 
         if (!reservation.getPetSitter().getUser().getId().equals(userId)) {
             throw new AppException(ErrorCode.UNAUTHORIZED_RESERVATION,
@@ -239,18 +220,16 @@ public class ReservationService {
         }
 
         reservation.updateStatus(status);
+        if(LocalDate.now().equals(reservation.getCheckIn().toLocalDate())){
+            reservation.updateStatus(ReservationStatus.USE.toString());
+        }
         return ReservationDetailResponse.of(reservation);
     }
 
     public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
-        PetSitter petSitter = petSitterRepository.findByUser(user).orElseThrow(() -> {
-            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
-                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
-        });
+        PetSitter petSitter = valid.petSitterValidationByUser(user);
 
         List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(petSitter,
                 LocalDate.parse(month + "-01"), reservationStatuses);
@@ -258,17 +237,22 @@ public class ReservationService {
         return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
     }
 
+    public PaymentResponseForPetSitter getPaymentView(String userId, Long reservationId){
+
+        valid.userValidation(userId);
+
+        Reservation reservation = valid.reservationValidation(reservationId);
+
+        return PaymentResponseForPetSitter.of(reservation);
+    }
+
     // 반려인의 예약 취소
     // 승인 전 예약 건에 대해서
     @Transactional
     public void cancelReservation(String userId, Long reservationId){
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        valid.userValidation(userId);
 
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
-            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
-        });
+        Reservation reservation = valid.reservationValidation(reservationId);
 
         reservation.updateStatus(ReservationStatus.CANCEL.toString());
     }
@@ -276,48 +260,64 @@ public class ReservationService {
     // 반려인의 이용 완료
     @Transactional
     public void doneReservation(String userId, Long reservationId){
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        valid.userValidation(userId);
 
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->{
-            throw new AppException(ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage());
-        });
-
+        Reservation reservation = valid.reservationValidation(reservationId);
         reservation.updateStatus(ReservationStatus.DONE.toString());
+    }
+
+    //반려인의 리뷰 작성
+    @Transactional
+    public void postReview(String userId, ReviewRequest reviewRequest){
+
+        valid.userValidation(userId);
+
+        Reservation reservation = valid.reservationValidation(reviewRequest.getReservationId());
+
+        Review review = Review.of(reservation, reviewRequest.getGrade(), reviewRequest.getContent());
+        reviewRepository.save(review);
+
+        PetSitter petSitter = valid.petSitterValidation(reservation.getPetSitter().getId());
+
+        petSitter.updateReview(reviewRequest.getGrade());
+
     }
 
 
     //예약 내역 반려인 입장에서
-    public void getReservationDoc(String userId){
+    public ReservationDocsResponse getReservationDoc(String userId){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
         Optional<List<Reservation>> myReservations = reservationRepository.findAllByUser(user);
+
+        //w
         List<Reservation> waitReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.WAIT)).collect(
                 Collectors.toList());
 
+        //p
         List<Reservation> payedReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.PAYED)).collect(
                 Collectors.toList());
-
+        //a
         List<Reservation> approveReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.APPROVAL)).collect(
                 Collectors.toList());
 
+        //u
         List<Reservation> useReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.USE)).collect(
                 Collectors.toList());
 
+        //d
         List<Reservation> doneReservations = myReservations.get().stream().filter(
                 reservation -> reservation.getReservationStatus().equals(ReservationStatus.DONE)).collect(
                 Collectors.toList());
 
 
-
+        return ReservationDocsResponse.of(waitReservations, payedReservations, approveReservations,useReservations,
+                doneReservations);
     }
 
 }

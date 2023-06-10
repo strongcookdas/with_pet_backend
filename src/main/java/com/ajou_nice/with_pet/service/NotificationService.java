@@ -32,11 +32,11 @@ public class NotificationService {
     private final UserRepository userRepository;
     private final EmailService emailService;
 
+    private final ValidateCollection valid;
+
     /* 알림 목록 조회 */
     public List<NotificationResponse> getNotification(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         List<Notification> notifications = notificationRepository.findAllByReceiver(
                 user.getUserId());
         return notifications.stream().map(NotificationResponse::of).collect(Collectors.toList());
@@ -104,7 +104,7 @@ public class NotificationService {
     public void sendEmail(Notification notification) {
         emailService.sendEmail(notification.getReceiver().getEmail(),
                 "위드펫" + notification.getNotificationType().name() + "알림",
-                notification.getContent());
+                String.format(notification.getContent()+"/n"+notification.getUrl()));
     }
 
     /* 여러개의 이메일 알림 전송 메서드 */

@@ -35,13 +35,12 @@ public class ChatService {
 	private final ChatMessageRepository chatMessageRepository;
 
 	private final PetSitterRepository petSitterRepository;
+	private final ValidateCollection valid;
 
 	//채팅방 목록 조회
 	public List<ChatMainResponse> showRooms(String userId){
 
-		User me = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
+		User me = valid.userValidation(userId);
 
 		List<ChatRoom> myChatRooms = chatRoomRepository.findChatRoomByMyId(me.getUserId());
 		if(myChatRooms.isEmpty()){
@@ -56,13 +55,9 @@ public class ChatService {
 	@Transactional
 	// 채팅룸 생성 (유저만 생성 가능)
 	public ChatRoomResponse createChatRoom(String userId, ChatRoomRequest chatRoomRequest){
-		User me = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
+		User me = valid.userValidation(userId);
 
-		User other = userRepository.findById(chatRoomRequest.getOtherId()).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
+		User other = valid.userValidation(chatRoomRequest.getOtherId());
 
 		Optional<ChatRoom> chatRoom = chatRoomRepository.findChatRoomByMeAndOther(me, other);
 		//이미 존재한다면 기존의 chatRoom에 대한 response return
@@ -80,12 +75,9 @@ public class ChatService {
 
 	//채팅방 채팅들 불러오기
 	public ChatRoomResponse getMessages(String userId, Long chatRoomId){
-		User me = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
-		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(()->{
-			throw new AppException(ErrorCode.CHATROOM_NOT_FOUND, ErrorCode.CHATROOM_NOT_FOUND.getMessage());
-		});
+
+		User me = valid.userValidation(userId);
+		ChatRoom chatRoom = valid.chatRoomValidation(chatRoomId);
 
 		List<ChatMessage> messages = chatMessageRepository.findAllByChatRoomOrderBySendTimeAsc(chatRoom);
 
@@ -109,14 +101,10 @@ public class ChatService {
 	public ChatMessageResponse saveChat(String userId, ChatMessageRequest chatMessageRequest, Long roomId){
 
 		//유저 검증
-		User findUser = userRepository.findById(userId).orElseThrow(()->{
-			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-		});
+		User findUser = valid.userValidation(userId);
 
 		//채팅룸이 존재하는지 확인
-		ChatRoom findRoom = chatRoomRepository.findById(roomId).orElseThrow(()->{
-			throw new AppException(ErrorCode.CHATROOM_NOT_FOUND, ErrorCode.CHATROOM_NOT_FOUND.getMessage());
-		});
+		ChatRoom findRoom = valid.chatRoomValidation(roomId);
 
 		ChatMessage chatMessage = ChatMessage.toEntity(chatMessageRequest,findRoom,findUser.getUserId());
 		chatMessageRepository.save(chatMessage);

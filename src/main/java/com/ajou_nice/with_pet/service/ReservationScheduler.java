@@ -37,9 +37,9 @@ public class ReservationScheduler {
 	}
 
 
-	//매일 새벽 3시에 reservation status가 Approval일때, 이용완료를 2일이내로 변경해줌
+	//매일 새벽 3시에 reservation status가 USE일때, 이용완료를 2일이내로 변경해줌
 	//이용완료된 예약 내역을 위해서 reservation status를 DONE으로 변경시켜준다.
-	@Scheduled(fixedRate = 600000)
+	@Scheduled(fixedRate = 1800000)
 	@Async
 	public void scheduleDoneReservation(){
 		reservationRepository.executeAutoDone(ReservationStatus.DONE, ReservationStatus.USE);

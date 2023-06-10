@@ -22,7 +22,6 @@ public class PetSitterHashTagInfoResponse {
 	private String hashTagName;
 
 
-
 	public static List<PetSitterHashTagInfoResponse> toList(List<PetSitterHashTag> petSitterHashTags){
 		return petSitterHashTags.stream().map(petSitterHashTag -> PetSitterHashTagInfoResponse.builder()
 				.petSitterHashTagId(petSitterHashTag.getId())
