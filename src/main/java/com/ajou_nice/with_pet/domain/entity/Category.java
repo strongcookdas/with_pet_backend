@@ -29,4 +29,10 @@ public class Category extends BaseEntity {
                 .build();
     }
 
+    public static Category simpleCategoryForTest(String name) {
+        return Category.builder()
+                .name(name)
+                .build();
+    }
+
 }
