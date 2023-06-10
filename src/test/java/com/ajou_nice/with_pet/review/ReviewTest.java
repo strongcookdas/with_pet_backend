@@ -67,7 +67,7 @@ public class ReviewTest {
 	@Transactional
 	@Test
 	public void postReviewTest() throws Exception{
-	    //given
+	    //given 예약이 하나 주어졌을때 (예약상태 done)
 		initialize();
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 13, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 14, 6, 13);
@@ -75,11 +75,10 @@ public class ReviewTest {
 		reservation1.updateForTest("소형견", 10000);
 		reservation1.updateStatus(ReservationStatus.DONE.toString());
 		reservationRepository.save(reservation1);
-	    //when
+	    //when (review 작성을 마쳤다면)
 		Review review = Review.of(reservation1, 3.5, "리뷰작성 test입니다.");
 		reviewRepository.save(review);
-	    //then
-
+	    //then (review의 reservation과 reservation이 같은지 test)
 		Assertions.assertEquals(review.getReservation(), reservation1);
 	    
 	}
@@ -88,7 +87,7 @@ public class ReviewTest {
 	@Transactional
 	@Test
 	public void reviewCountTest() throws Exception{
-	    //given
+	    //given 예약이 하나 주어졌을때 (예약 상태 done)
 		initialize();
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 13, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 14, 6, 13);
@@ -97,7 +96,7 @@ public class ReviewTest {
 		reservation1.updateStatus(ReservationStatus.DONE.toString());
 		reservationRepository.save(reservation1);
 	  
-	    //when
+	    //when (사용자가 예약의 펫시터에게 Review를 작성)
 		Review review = Review.of(reservation1, 3.5, "리뷰작성 test입니다.");
 		reviewRepository.save(review);
 
@@ -106,7 +105,7 @@ public class ReviewTest {
 		});
 		petsitter.updateReview(3.5);
 
-	    //then
+	    //then (펫시터에게 review 별점이 적용되었는지 확인 test)
 		Assertions.assertEquals(petsitter.getReview_count(), 1);
 		Assertions.assertEquals(petsitter.getStar_rate(), 3.5);
 	}
@@ -115,7 +114,7 @@ public class ReviewTest {
 	@Transactional
 	@Test
 	public void reviewServiceTest() throws Exception{
-	    //given
+	    //given 완료된 예약이 주어졌을때
 		initialize();
 		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 13, 5, 13);
 		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 14, 6, 13);

@@ -97,7 +97,7 @@ public class KaKaoPayTest {
 	@Test
 	public void kaKaoPayTest() throws Exception {
 		//given
-		// 2023-06-05 checkIn - 06-06 checkout 설정 (WAIT) -> 결제 전 AUTOCANCEL이 먹히는지 확인
+		//예약 initialize
 		Address address = Address.simpleAddressGenerator("213","adasd", "244");
 		User user1 = User.simpleUserForTest("장승현", "simpleuser", "1234", "jason5102@ajou.ac.kr",
 				UserRole.ROLE_USER, "010-3931-5102", address);
@@ -116,10 +116,9 @@ public class KaKaoPayTest {
 		Reservation reservation = Reservation.forSimpleTest(checkIn, checkOut, user1, petSitter1,
 				30000);
 		reservationRepository.save(reservation);
+		//when (kakao pay simplePayReady method 호출했을때)
 		simplePayReady(reservation);
-		//when
-
-		//then
+		//then (url 잘 받아오는 지 test)
 		System.out.println(next_url);
 	}
 }
