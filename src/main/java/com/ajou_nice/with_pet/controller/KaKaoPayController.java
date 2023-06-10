@@ -66,16 +66,16 @@ public class KaKaoPayController {
     }
 
     //결제 환불 -> 사용자의 결제 취소를 담당
-    @PostMapping("/refund/{reservationId}")
+    @PostMapping("/refund")
     @ApiOperation(value = "사용자의 결제 취소(환불)")
     public Response<RefundResponse> refundPay(@ApiIgnore Authentication authentication,
-            @PathVariable Long reservationId) {
+            @RequestBody PaySimpleRequest paySimpleRequest) {
 
         log.info("=======================payCancelRequest : {}=============================",
-                reservationId);
+                paySimpleRequest);
 
         RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(),
-                reservationId);
+                paySimpleRequest.getReservationId());
 
         log.info("=======================payCancelResponse : {}=============================",
                 refundResponse);
