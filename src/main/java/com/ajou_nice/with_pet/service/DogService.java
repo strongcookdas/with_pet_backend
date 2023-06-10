@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class DogService {
 
+    private final Integer dogCount = 3;
     private final DogRepository dogRepository;
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
@@ -57,6 +58,10 @@ public class DogService {
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, party)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 그룹에 반려견을 추가할 권한이 없습니다.");
         }
+
+        if(party.getDogCount()>=dogCount){
+            throw new AppException(ErrorCode.TOO_MANY_DOG,ErrorCode.TOO_MANY_DOG.getMessage());
+        }
         //반려견 사이즈 체크
         DogSize myDogSize;
         if (dogInfoRequest.getDog_weight() > 18) {
@@ -68,6 +73,7 @@ public class DogService {
         }
         // 반려견 추가
         Dog dog = dogRepository.save(Dog.of(dogInfoRequest, party, myDogSize));
+        party.updateDogCount(party.getDogCount() + 1);
 
         return DogInfoResponse.of(dog);
     }
@@ -189,6 +195,7 @@ public class DogService {
         return dogInfoResponses;
     }
 
+    @Transactional
     public String deleteDog(String userId, Long dogId) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -208,6 +215,7 @@ public class DogService {
         List<ReservationStatus> reservationStatuses = new ArrayList<>();
         reservationStatuses.add(ReservationStatus.APPROVAL);
         reservationStatuses.add(ReservationStatus.PAYED);
+        reservationStatuses.add(ReservationStatus.USE);
 
         if (reservationRepository.existsByDogAndReservationStatusIn(dog, reservationStatuses)) {
             throw new AppException(ErrorCode.CAN_NOT_DELETE_DOG,
@@ -215,6 +223,7 @@ public class DogService {
         }
 
         dogRepository.delete(dog);
+        party.updateDogCount(party.getDogCount() - 1);
 
         return dog.getName() + "반려견이 삭제되었습니다.";
     }
