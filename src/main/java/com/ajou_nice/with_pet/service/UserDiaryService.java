@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,7 @@ public class UserDiaryService {
     private final NotificationRepository notificationRepository;
     private final NotificationService notificationService;
     private final ValidateCollection valid;
+    private final DogRepository dogRepository;
 
 
     @Transactional
@@ -55,22 +58,11 @@ public class UserDiaryService {
 
         Diary diary = userDiaryRepository.save(
                 Diary.of(diaryRequest, dog, user, category));
-        LocalDate createdAt = dog.getCreatedAt().toLocalDate();
-        int days = Period.between(createdAt, LocalDate.now()).getDays() + 1;
-        int diaryDayCount = userDiaryRepository.countDiaryDay(dog.getDogId(),
-                dog.getCreatedAt().toLocalDate()).intValue();
-        int diaryCount = userDiaryRepository.countDiary(dog.getDogId(),
-                dog.getCreatedAt().toLocalDate()).intValue();
-
-        double temp = 37.5 + diaryCount - ((days - diaryDayCount) * 0.5);
-        dog.updateAffectionTemperature(temp);
-
-        log.info(
-                "================= days : {}, diaryDayCount : {}, diaryCount : {}, temp : {} =====================",
-                days, diaryDayCount, diaryCount, temp);
 
         List<UserParty> userParties = userPartyRepository.findAllByPartyAndUser(
                 dog.getParty().getPartyId(), user.getUserId());
+
+        dog.updateAffectionTemperature(this.calculateAffectionTemperature(dog));
 
         List<Notification> notifications = new ArrayList<>();
 
@@ -87,6 +79,7 @@ public class UserDiaryService {
         notificationRepository.saveAll(notifications);
         return UserDiaryResponse.of(diary);
     }
+
 
     @Transactional
     public UserDiaryResponse updateUserDiary(String userId, DiaryRequest diaryRequest,
@@ -140,15 +133,48 @@ public class UserDiaryService {
         User user = valid.userValidation(userId);
 
         Diary diary = userDiaryRepository.findById(diaryId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DIARY_NOT_FOUND, ErrorCode.DIARY_NOT_FOUND.getMessage());
+            throw new AppException(ErrorCode.DIARY_NOT_FOUND,
+                    ErrorCode.DIARY_NOT_FOUND.getMessage());
         });
 
-        if(!diary.getUser().getId().equals(user.getId())){
-            throw new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        if (!diary.getUser().getId().equals(user.getId())) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION,
+                    ErrorCode.INVALID_PERMISSION.getMessage());
         }
 
         userDiaryRepository.delete(diary);
 
         return "일지가 삭제되었습니다.";
+    }
+
+    @Scheduled(cron = "0 29 4 * * *")
+    @Async
+    @Transactional
+    public void updateAffectionTemperature() {
+
+        List<Dog> dogs = dogRepository.findAll();
+
+        for (Dog dog : dogs) {
+            dog.updateAffectionTemperature(this.calculateAffectionTemperature(dog));
+        }
+    }
+
+    private Double calculateAffectionTemperature(Dog dog) {
+
+        LocalDate createdAt = dog.getCreatedAt().toLocalDate();
+        //반려견 등록일과 오늘까지 날짜 구하기
+        int days = Period.between(createdAt, LocalDate.now()).getDays() + 1;
+        //다이어리를 작성한 날짜
+        int diaryDayCount = userDiaryRepository.countDiaryDay(dog.getDogId(),
+                dog.getCreatedAt().toLocalDate().minusDays(1)).intValue();
+        //다이어리 작성 개수
+        int diaryCount = userDiaryRepository.countDiary(dog.getDogId(),
+                dog.getCreatedAt().toLocalDate().minusDays(1)).intValue();
+
+        double temp = 37.5 + diaryCount - ((days - diaryDayCount) * 0.5);
+        log.info(
+                "================= days : {}, diaryDayCount : {}, diaryCount : {}, temp : {} =====================",
+                days, diaryDayCount, diaryCount, temp);
+        return temp;
     }
 }
