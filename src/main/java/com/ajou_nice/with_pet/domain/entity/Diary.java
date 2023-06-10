@@ -91,7 +91,7 @@ public class Diary {
     }
 
     public static Diary simpleUserDiaryForTest(Category category, String title, String content,
-            User user, Dog dog, LocalDate localDate) {
+            User user, Dog dog, LocalDate localDate, PetSitter petSitter) {
         return Diary.builder()
                 .category(category)
                 .title(title)
@@ -99,6 +99,7 @@ public class Diary {
                 .user(user)
                 .dog(dog)
                 .createdAt(localDate)
+                .petSitter(petSitter)
                 .build();
     }
 

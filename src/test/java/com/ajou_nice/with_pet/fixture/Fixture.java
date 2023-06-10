@@ -68,6 +68,9 @@ public class Fixture {
 
     //유저 일지
     Diary userDiary = Diary.simpleUserDiaryForTest(category, "산책했어용", "산책산책", user1, dog,
-            LocalDate.now());
+            LocalDate.now(),null);
+
+    //펫시터 일지
+    Diary petSitterDiary = Diary.simpleUserDiaryForTest(category, "산책", "산책했어용", user4, dog, LocalDate.now(), petSitter1);
 
 }
