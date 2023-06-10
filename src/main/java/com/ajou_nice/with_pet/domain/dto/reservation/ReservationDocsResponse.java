@@ -6,6 +6,7 @@ import com.ajou_nice.with_pet.enums.PayStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,6 +47,9 @@ public class ReservationDocsResponse {
 		private Long reservationId;
 		private String reservationStatus;
 		private String petSitterName;
+		private String dogName;
+		@Lob
+		private String dogImg;
 		private LocalDateTime checkIn;
 		private LocalDateTime checkOut;
 		private int totalCost;
@@ -62,6 +66,8 @@ public class ReservationDocsResponse {
 					.reservationId(reservation.getReservationId())
 					.reservationStatus(reservation.getReservationStatus().toString())
 					.petSitterName(reservation.getPetSitter().getPetSitterName())
+					.dogName(reservation.getDog().getName())
+					.dogImg(reservation.getDog().getProfile_img())
 					.checkIn(reservation.getCheckIn())
 					.checkOut(reservation.getCheckOut())
 					.totalCost(reservation.getTotalPrice())
