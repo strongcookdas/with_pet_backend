@@ -33,36 +33,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserDiaryService {
 
-    private final UserRepository userRepository;
-    private final DogRepository dogRepository;
     private final UserPartyRepository userPartyRepository;
     private final DiaryRepository userDiaryRepository;
-    private final CategoryRepository categoryRepository;
-
     private final NotificationRepository notificationRepository;
     private final NotificationService notificationService;
+    private final ValidateCollection valid;
 
 
     @Transactional
     public UserDiaryResponse writeUserDiary(String userId, DiaryRequest diaryRequest) {
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         //반려견 체크
-        Dog dog = dogRepository.findById(diaryRequest.getDogId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        Dog dog = valid.dogValidation(diaryRequest.getDogId());
         //반려견 그룹 유저 존재 체크
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
             throw new AppException(ErrorCode.GROUP_NOT_FOUND, "글 작성 권한이 없습니다.");
         }
         //카테고리 체크
-        Category category = categoryRepository.findById(diaryRequest.getCategoryId())
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.CATEGORY_NOT_FOUND,
-                            ErrorCode.CATEGORY_NOT_FOUND.getMessage());
-                });
+        Category category = valid.categoryValidation(diaryRequest.getCategoryId());
 
         Diary diary = userDiaryRepository.save(
                 Diary.of(diaryRequest, dog, user, category));
@@ -103,24 +92,16 @@ public class UserDiaryService {
     public UserDiaryResponse updateUserDiary(String userId, DiaryRequest diaryRequest,
             Long diaryId) {
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         //일지 체크
         Diary diary = userDiaryRepository.findById(diaryId).orElseThrow(() -> {
             throw new AppException(ErrorCode.DIARY_NOT_FOUND,
                     ErrorCode.DIARY_NOT_FOUND.getMessage());
         });
         //반려견 체크
-        Dog dog = dogRepository.findById(diaryRequest.getDogId()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        Dog dog = valid.dogValidation(diaryRequest.getDogId());
         //카테고리 체크
-        Category category = categoryRepository.findById(diaryRequest.getCategoryId())
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.CATEGORY_NOT_FOUND,
-                            ErrorCode.CATEGORY_NOT_FOUND.getMessage());
-                });
+        Category category = valid.categoryValidation(diaryRequest.getCategoryId());
 
         //작성자 비교
         if (!user.equals(diary.getUser())) {
@@ -136,9 +117,7 @@ public class UserDiaryService {
             String month, String petsitterCheck) {
 
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
         List<Diary> userDiaries = userDiaryRepository.findByMonthDate(user.getUserId(),
                 dogId, categoryId, LocalDate.parse(month + "-01"), petsitterCheck);
@@ -148,9 +127,7 @@ public class UserDiaryService {
     public List<UserDiaryResponse> getUserDayDiary(String userId, Long dogId, Long categoryId,
             String day, String petsitterCheck) {
         //유저체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
         List<Diary> userDiaries = userDiaryRepository.findByDayDate(user.getUserId(), dogId,
                 categoryId, LocalDate.parse(day), petsitterCheck);

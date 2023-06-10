@@ -59,6 +59,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Integer> partyCount = createNumber("partyCount", Integer.class);
+
     public final StringPath password = createString("password");
 
     public final StringPath petSitterCareer = createString("petSitterCareer");

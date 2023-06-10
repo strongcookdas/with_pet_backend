@@ -40,9 +40,13 @@ public class AdminService {
 
 	private final CriticalServiceRepository criticalServiceRepository;
 
+	private final ValidateCollection valid;
+
 	// == 관리자의 펫시터 지원자 리스트 전체 확인 == //
 	// 리팩토링 완 -> Authentication자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
 	public List<ApplicantBasicInfoResponse> showApplicants(String userId){
+
+		valid.userValidation(userId);
 
 		List<User> petSitterApplicantList = userRepository.findApplicantAllInQuery(UserRole.ROLE_APPLICANT, ApplicantStatus.WAIT);
 
@@ -51,7 +55,7 @@ public class AdminService {
 
 	// == 관리자의 펫시터 리스트 전체 확인 == //
 	public List<PetSitterBasicResponse> showPetSitters(String userId){
-		User findUser = userService.findUser(userId);
+		valid.userValidation(userId);
 		List<PetSitter> petSitters = petSitterRepository.findAll();
 
 		return PetSitterBasicResponse.toList(petSitters);
@@ -61,6 +65,9 @@ public class AdminService {
 	// 리팩토링 완 -> Authentication 자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
 	@Transactional
 	public PetSitterBasicResponse createPetsitter(String userId, AdminApplicantRequest adminApplicantRequest){
+
+		valid.userValidation(userId);
+
 		//유저 불러오기
 		User findUser = userRepository.findByUserId(adminApplicantRequest.getUserId()).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -80,6 +87,8 @@ public class AdminService {
 	@Transactional
 	public AdminApplicantResponse refuseApplicant(String userId, AdminApplicantRequest adminApplicantRequest){
 
+		valid.userValidation(userId);
+
 		//유저 불러오기
 		User findUser = userRepository.findByUserId(adminApplicantRequest.getUserId()).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -96,6 +105,9 @@ public class AdminService {
 	// == 관리자의 펫시터 지원자 한명 상세정보 확인 == //
 	// 리팩토링 완
 	public ApplicantInfoResponse getApplicantInfo(String id, Long userId){
+
+		valid.userValidation(id);
+
 		//유저 불러오기
 		User findUser = userRepository.findByUserId(userId).orElseThrow(()->{
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
@@ -107,6 +119,7 @@ public class AdminService {
 
 	// == 관리자의 위드펫 서비스 리스트 조회 == //
 	public List<WithPetServiceResponse> showWithPetServices(){
+
 		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
 
 		return WithPetServiceResponse.toList(withPetServiceList);
@@ -114,7 +127,7 @@ public class AdminService {
 
 	// == 관리자의 필수 서비스 리스트 조회 == //
 	public List<CriticalServiceResponse> showCriticalServices(String userId){
-		User findUser = userService.findUser(userId);
+		valid.userValidation(userId);
 		List<CriticalService> criticalServiceList = criticalServiceRepository.findAll();
 
 		return CriticalServiceResponse.toList(criticalServiceList);
@@ -123,7 +136,7 @@ public class AdminService {
 	@Transactional
 	// == 관리자의 필수 서비스 등록 == //
 	public CriticalServiceResponse addCriticalService(String userId, CriticalServiceRequest criticalServiceRequest){
-		User findUser = userService.findUser(userId);
+		valid.userValidation(userId);
 
 		List<CriticalService> criticalServiceList = criticalServiceRepository.findCritiCalServiceByServiceName(
 				criticalServiceRequest.getServiceName());
@@ -139,7 +152,7 @@ public class AdminService {
 	@Transactional
 	// == 관리자의 위드펫에서 제공하는 서비스 등록 == //
 	public WithPetServiceResponse addWithPetService(String userId, WithPetServiceRequest withPetServiceRequest){
-		User findUser = userService.findUser(userId);
+		valid.userValidation(userId);
 		WithPetService withPetService = WithPetService.toEntity(withPetServiceRequest);
 		WithPetService newWithPetService = withPetServiceRepository.save(withPetService);
 
@@ -150,11 +163,9 @@ public class AdminService {
 	// == 관리자의 필수 서비스 수정 == //
 	public CriticalServiceResponse updateCriticalService(
 			String userId, CriticalServiceModifyRequest criticalServiceModifyRequest){
-		User findUser = userService.findUser(userId);
-		CriticalService criticalService = criticalServiceRepository.findById(criticalServiceModifyRequest.getServiceId())
-				.orElseThrow(()->{
-					throw new AppException(ErrorCode.CRITICAL_SERVICE_NOT_FOUND, ErrorCode.CRITICAL_SERVICE_NOT_FOUND.getMessage());
-				});
+		valid.userValidation(userId);
+		CriticalService criticalService = valid.criticalServiceValidation(
+				criticalServiceModifyRequest.getServiceId());
 		criticalService.updateServiceInfo(criticalServiceModifyRequest);
 
 		return CriticalServiceResponse.of(criticalService);
@@ -163,11 +174,9 @@ public class AdminService {
 	@Transactional
 	// == 관리자의 위드펫에서 제공하는 서비스 수정 == //
 	public WithPetServiceResponse updateWithPetService(String userId, WithPetServiceModifyRequest withPetServiceModifyRequest){
-		User findUser = userService.findUser(userId);
-		WithPetService withPetService = withPetServiceRepository.findById(withPetServiceModifyRequest.getServiceId())
-				.orElseThrow(()->{
-					throw new AppException(ErrorCode.WITH_PET_SERVICE_NOT_FOUND, ErrorCode.WITH_PET_SERVICE_NOT_FOUND.getMessage());
-		});
+		valid.userValidation(userId);
+		WithPetService withPetService = valid.withPetServiceValidation(
+				withPetServiceModifyRequest.getServiceId());
 		withPetService.updateServiceInfo(withPetServiceModifyRequest);
 
 		return WithPetServiceResponse.of(withPetService);
@@ -176,11 +185,9 @@ public class AdminService {
 	@Transactional
 	// == 관리자의 위드펫에서 제공하는 서비스 삭제 == //
 	public List<WithPetServiceResponse> deleteWithPetService(String userId, WithPetServiceModifyRequest withPetServiceModifyRequest){
-		User findUser = userService.findUser(userId);
-		WithPetService withPetService = withPetServiceRepository.findById(
-				withPetServiceModifyRequest.getServiceId()).orElseThrow(()->{
-					throw new AppException(ErrorCode.WITH_PET_SERVICE_NOT_FOUND, ErrorCode.WITH_PET_SERVICE_NOT_FOUND.getMessage());
-		});
+		valid.userValidation(userId);
+		WithPetService withPetService = valid.withPetServiceValidation(
+				withPetServiceModifyRequest.getServiceId());
 
 		withPetServiceRepository.delete(withPetService);
 		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();

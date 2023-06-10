@@ -34,26 +34,21 @@ public class DogService {
 
     private final Integer dogCount = 3;
     private final DogRepository dogRepository;
-    private final UserRepository userRepository;
-    private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
     private final ReservationRepository reservationRepository;
 
     private final PetSitterCriticalServiceRepository criticalServiceRepository;
+    private final ValidateCollection valid;
 
 
     @Transactional
     public DogInfoResponse registerDog(DogInfoRequest dogInfoRequest, Long partyId,
             String userId) {
+
         // 유저 존재 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         // 파티 존재 체크
-        Party party = partyRepository.findById(partyId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.GROUP_NOT_FOUND,
-                    ErrorCode.GROUP_NOT_FOUND.getMessage());
-        });
+        Party party = valid.partyValidation(partyId);
 
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, party)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 그룹에 반려견을 추가할 권한이 없습니다.");
@@ -80,13 +75,10 @@ public class DogService {
 
     public DogInfoResponse getDogInfo(Long dogId, String userId) {
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
+
         //반려견 체크
-        Dog dog = dogRepository.findById(dogId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        Dog dog = valid.dogValidation(dogId);
         //그룹 체크
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
             throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
@@ -99,13 +91,9 @@ public class DogService {
     public DogInfoResponse modifyDogInfo(Long dogId, DogInfoRequest dogInfoRequest, String userId) {
 
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         //반려견 체크
-        Dog dog = dogRepository.findById(dogId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        Dog dog = valid.dogValidation(dogId);
         //그룹 체크
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
             throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
@@ -137,9 +125,8 @@ public class DogService {
     }
 
     public List<DogSimpleInfoResponse> getDogSimpleInfos(String userId) {
-        userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+
+        valid.userValidation(userId);
         List<Dog> dogs = dogRepository.findAllByUserParty(userId);
         return dogs.stream().map(DogSimpleInfoResponse::of).collect(Collectors.toList());
     }
@@ -148,13 +135,9 @@ public class DogService {
     public DogInfoResponse modifyDogSocialization(String userId, Long dogId,
             DogSocializationRequest dogSocializationRequest) {
         //유저 체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
         //반려견 체크
-        Dog dog = dogRepository.findById(dogId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        Dog dog = valid.dogValidation(dogId);
         //그룹 체크
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
             throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
@@ -197,13 +180,9 @@ public class DogService {
 
     @Transactional
     public String deleteDog(String userId, Long dogId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
-        Dog dog = dogRepository.findById(dogId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
-        });
+        Dog dog = valid.dogValidation(dogId);
 
         Party party = dog.getParty();
 
