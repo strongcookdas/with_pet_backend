@@ -7,6 +7,7 @@ import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+    private final ValidateCollection valid;
 
     public MyInfoResponse getMyInfo(String userId) {
 
-        User findUser = findUser(userId);
+        User findUser = valid.userValidation(userId);
 
         return MyInfoResponse.toMyInfoResponse(findUser);
     }
@@ -30,15 +32,9 @@ public class UserService {
     public MyInfoModifyResponse modifyMyInfo(String userId,
             MyInfoModifyRequest myInfoModifyRequest) {
 
-        User findUser = findUser(userId);
+        User findUser = valid.userValidation(userId);
 
         findUser.updateUser(myInfoModifyRequest, encoder);
         return MyInfoModifyResponse.toMyInfoModifyResponse(findUser);
-    }
-
-    public User findUser(String userId) {
-        return userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
     }
 }

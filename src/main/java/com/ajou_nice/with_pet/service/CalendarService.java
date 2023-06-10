@@ -20,18 +20,14 @@ import org.springframework.stereotype.Service;
 public class CalendarService {
 
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
-    private final PetSitterRepository petSitterRepository;
+
+    private final ValidateCollection valid;
 
     public PetSitterSideBarResponse getPetSitterSideBarInfo(String userId, String month) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
 
-        PetSitter petSitter = petSitterRepository.findByUser(user).orElseThrow(() -> {
-            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
-                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
+
+        PetSitter petSitter = valid.petSitterValidationByUser(user);
 
         List<Reservation> useReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
                 LocalDate.parse(month + "-01"), ReservationStatus.USE);

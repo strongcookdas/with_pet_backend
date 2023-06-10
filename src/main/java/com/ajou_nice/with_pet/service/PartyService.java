@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,17 +31,16 @@ public class PartyService {
 
     private final Integer partyCount = 5;
     private final Integer partyMemberCount = 5;
-    private final UserRepository userRepository;
     private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
     private final DogRepository dogRepository;
 
+    private final ValidateCollection valid;
+
     @Transactional
     public PartyInfoResponse addMember(String userId, PartyMemberRequest partyMemberRequest) {
         //유저체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
         //그룹체크
         Party party = partyRepository.findByPartyIsbn(partyMemberRequest.getPartyIsbn())
@@ -73,9 +73,8 @@ public class PartyService {
     }
 
     public List<PartyInfoResponse> getPartyInfoList(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+
+        valid.userValidation(userId);
 
         List<Long> userPartyIdList = userPartyRepository.findAllUserPartyIdByUserId(userId);
         List<Party> partyList = partyRepository.findAllByUserPartyId(userPartyIdList);
@@ -100,9 +99,7 @@ public class PartyService {
     @Transactional
     public PartyInfoResponse createParty(String userId, PartyRequest partyRequest) {
         //유저체크
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
         if (user.getPartyCount() >= partyCount) {
             throw new AppException(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP.getMessage());
@@ -144,14 +141,9 @@ public class PartyService {
     @Transactional
     public String leaveParty(String userId, Long partyId) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User user = valid.userValidation(userId);
 
-        Party party = partyRepository.findById(partyId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.GROUP_NOT_FOUND,
-                    ErrorCode.GROUP_NOT_FOUND.getMessage());
-        });
+        Party party = valid.partyValidation(partyId);
 
         Optional<UserParty> deleteUserParty = userPartyRepository.findByUserAndParty(user, party);
         if (deleteUserParty.isEmpty()) {
@@ -178,18 +170,12 @@ public class PartyService {
 
     @Transactional
     public String expelMember(String userId, Long partyId, Long memberId) {
-        User leader = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
 
-        User member = userRepository.findById(memberId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User leader = valid.userValidation(userId);
 
-        Party party = partyRepository.findById(partyId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.GROUP_NOT_FOUND,
-                    ErrorCode.GROUP_NOT_FOUND.getMessage());
-        });
+        User member = valid.userValidation(memberId);
+
+        Party party = valid.partyValidation(partyId);
 
         if (!leader.getId().equals(party.getUser().getId())) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "멤버를 방출시킬 권한이 없습니다.");
