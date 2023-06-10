@@ -4,6 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.time.LocalDate;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,17 +15,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
 @Builder
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE dog SET deleted_at = CURRENT_TIMESTAMP where dog_id = ?")
 public class Dog extends BaseEntity {
 
     @Id
@@ -62,6 +68,11 @@ public class Dog extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DogSize dogSize;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Diary> diaries;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Reservation> reservations;
 
     public void update(DogInfoRequest dogInfoRequest, DogSize dogSize) {
         this.name = dogInfoRequest.getDog_name();
