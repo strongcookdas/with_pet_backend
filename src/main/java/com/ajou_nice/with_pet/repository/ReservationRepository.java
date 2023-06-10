@@ -67,4 +67,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     @Query("select r from Reservation r where r.tid=:tid")
     Optional<Reservation> findByTid(@Param("tid") String tid);
 
+    Boolean existsByDogAndReservationStatusIn(Dog dog,List<ReservationStatus> statuses);
 }
