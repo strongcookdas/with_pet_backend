@@ -200,6 +200,7 @@ public class DogService {
         reservationStatuses.add(ReservationStatus.APPROVAL);
         reservationStatuses.add(ReservationStatus.PAYED);
         reservationStatuses.add(ReservationStatus.USE);
+        reservationStatuses.add(ReservationStatus.WAIT);
 
         if (reservationRepository.existsByDogAndReservationStatusIn(dog, reservationStatuses)) {
             throw new AppException(ErrorCode.CAN_NOT_DELETE_DOG,
