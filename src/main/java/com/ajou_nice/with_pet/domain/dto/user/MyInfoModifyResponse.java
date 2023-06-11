@@ -19,6 +19,9 @@ public class MyInfoModifyResponse {
     private Long userId;
     private String userName;
 
+    private String profileImg;
+
+
     public static MyInfoModifyResponse toMyInfoModifyResponse(User user) {
         return MyInfoModifyResponse.builder()
                 .userId(user.getUserId())

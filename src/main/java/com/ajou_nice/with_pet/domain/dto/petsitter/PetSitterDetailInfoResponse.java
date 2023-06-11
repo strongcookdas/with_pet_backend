@@ -56,7 +56,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 				.petSitterId(petSitter.getId())
 				.petSitterUserId(petSitter.getUser().getUserId())
 				.petSitterName(petSitter.getPetSitterName())
-				.petSitterProfileImg(petSitter.getProfileImg())
+				.petSitterProfileImg(petSitter.getUser().getProfileImg())
 				.petSitterAddress(petSitter.getPetSitterStreetAdr())
 				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 				.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
@@ -64,7 +64,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 				.petSitterCriticalServices(petSitterCriticalServices == null? null :
 						PetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
 				.introduction(petSitter.getIntroduction())
-				.petSitterLicenseImg(petSitter.getPetSitterLicenseImg())
+				.petSitterLicenseImg(petSitter.getUser().getLicenseImg())
 				.reviewResponses(reviews == null ? null : ReviewResponse.toList(reviews))
 				.build();
 	}
@@ -91,7 +91,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 					.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
 					.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 					.introduction(petSitter.getIntroduction())
-					.petSitterLicenseImg(petSitter.getPetSitterLicenseImg())
+					.petSitterLicenseImg(petSitter.getUser().getLicenseImg())
 					.petSitterCriticalServices(petSitterCriticalServices == null? null :
 							PetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
 					.criticalServices(CriticalServiceResponse.toList(criticalServiceList))
