@@ -59,6 +59,7 @@ public class PetSitterDiaryService {
                     "/calendar",
                     NotificationType.펫시터_일지, u.getUser());
             notificationService.saveNotification(notification);
+            notificationService.send(notification);
         });
 
         return PetSitterDiaryResponse.of(diary);
