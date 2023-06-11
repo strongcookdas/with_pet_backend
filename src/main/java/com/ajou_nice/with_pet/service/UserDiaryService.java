@@ -159,13 +159,13 @@ public class UserDiaryService {
 
         LocalDate createdAt = dog.getCreatedAt().toLocalDate();
         //반려견 등록일과 오늘까지 날짜 구하기
-        int days = Period.between(createdAt, LocalDate.now()).getDays() + 1;
+        int days = Period.between(createdAt, LocalDate.now()).getDays();
         //다이어리를 작성한 날짜
         int diaryDayCount = userDiaryRepository.countDiaryDay(dog.getDogId(),
-                dog.getCreatedAt().toLocalDate().minusDays(1)).intValue();
+                dog.getCreatedAt().toLocalDate()).intValue();
         //다이어리 작성 개수
         int diaryCount = userDiaryRepository.countDiary(dog.getDogId(),
-                dog.getCreatedAt().toLocalDate().minusDays(1)).intValue();
+                dog.getCreatedAt().toLocalDate()).intValue();
 
         double temp = 37.5 + diaryCount - ((days - diaryDayCount) * 0.5);
         log.info(
