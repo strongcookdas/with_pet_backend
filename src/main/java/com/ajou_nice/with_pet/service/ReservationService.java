@@ -9,6 +9,7 @@ import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.domain.dto.review.ReviewRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
@@ -16,6 +17,8 @@ import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.ReservationPetSitterService;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.domain.entity.UserParty;
+import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
@@ -26,6 +29,7 @@ import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
+import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,9 +59,12 @@ public class ReservationService {
             List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
                     ReservationStatus.USE, ReservationStatus.WAIT));
 
+    private final UserPartyRepository userPartyRepository;
+    private final NotificationService notificationService;
 
     @Transactional
-    public ReservationCreateResponse createReservation(String userId, ReservationRequest reservationRequest) {
+    public ReservationCreateResponse createReservation(String userId,
+            ReservationRequest reservationRequest) {
         int cost = 0;
         User user = valid.userValidation(userId);
         Dog dog = valid.dogValidation(reservationRequest.getDogId());
@@ -108,7 +115,32 @@ public class ReservationService {
         reservation.updateReservationServices(reservationServices);
         reservation.updateTotalPrice(cost);
 
+        List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
+        sendCreateReservationNotificationByEmail(userParties, user, dog, petSitter);
+
         return ReservationCreateResponse.of(reservation);
+    }
+
+    private void sendCreateReservationNotificationByEmail(List<UserParty> userParties, User user,
+            Dog dog,
+            PetSitter petSitter) {
+        List<Notification> notifications = new ArrayList<>();
+        userParties.forEach(u -> {
+            Notification notification = notificationService.sendEmail(
+                    String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다. [펫시터] %s", user.getName(),
+                            dog.getName(), petSitter.getPetSitterName()),
+                    "/usagelist",
+                    NotificationType.반려인_예약, u.getUser());
+            notifications.add(notification);
+            notificationService.send(notification);
+        });
+
+        Notification notification = notificationService.sendEmail(
+                String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다.", user.getName(), dog.getName()),
+                "/petsitterCalendar",
+                NotificationType.펫시터_예약, petSitter.getUser());
+        notifications.add(notification);
+        notificationService.saveAllNotification(notifications);
     }
 
     private void isDuplicatedReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog,
@@ -203,11 +235,13 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationDetailResponse approveReservation(String userId, Long reservationId, String status) {
+    public ReservationDetailResponse approveReservation(String userId, Long reservationId,
+            String status) {
 
         //상태 변경 값이 잘 들어왔는지 유효 체크
-        if(!status.equals(ReservationStatus.APPROVAL.toString())){
-            throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS, ErrorCode.BAD_REQUEST_RESERVATION_STATSUS.getMessage());
+        if (!status.equals(ReservationStatus.APPROVAL.toString())) {
+            throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS,
+                    ErrorCode.BAD_REQUEST_RESERVATION_STATSUS.getMessage());
         }
 
         valid.userValidation(userId);
@@ -220,24 +254,46 @@ public class ReservationService {
         }
 
         reservation.updateStatus(status);
-        if(LocalDate.now().equals(reservation.getCheckIn().toLocalDate())){
+        if (LocalDate.now().equals(reservation.getCheckIn().toLocalDate())) {
             reservation.updateStatus(ReservationStatus.USE.toString());
         }
+
+        List<UserParty> userParties = userPartyRepository.findAllByParty(reservation.getDog()
+                .getParty());
+        sendApproveReservationNotificationByEmail(userParties, reservation.getDog(),
+                reservation.getPetSitter());
         return ReservationDetailResponse.of(reservation);
     }
+
+    private void sendApproveReservationNotificationByEmail(List<UserParty> userParties, Dog dog,
+            PetSitter petSitter) {
+        List<Notification> notifications = new ArrayList<>();
+        userParties.forEach(u -> {
+            Notification notification = notificationService.sendEmail(
+                    String.format("%s 펫시터님이 %s 반려견에 대한 돌봄 서비스 예약을 승인했습니다.",
+                            petSitter.getPetSitterName(), dog.getName()),
+                    "/usagelist",
+                    NotificationType.반려인_예약, u.getUser());
+            notifications.add(notification);
+            notificationService.send(notification);
+        });
+        notificationService.saveAllNotification(notifications);
+    }
+
 
     public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
         User user = valid.userValidation(userId);
 
         PetSitter petSitter = valid.petSitterValidationByUser(user);
 
-        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(petSitter,
+        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(
+                petSitter,
                 LocalDate.parse(month + "-01"), reservationStatuses);
 
         return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
     }
 
-    public PaymentResponseForPetSitter getPaymentView(String userId, Long reservationId){
+    public PaymentResponseForPetSitter getPaymentView(String userId, Long reservationId) {
 
         valid.userValidation(userId);
 
@@ -249,7 +305,7 @@ public class ReservationService {
     // 반려인의 예약 취소
     // 승인 전 예약 건에 대해서
     @Transactional
-    public void cancelReservation(String userId, Long reservationId){
+    public void cancelReservation(String userId, Long reservationId) {
         valid.userValidation(userId);
 
         Reservation reservation = valid.reservationValidation(reservationId);
@@ -259,7 +315,7 @@ public class ReservationService {
 
     // 반려인의 이용 완료
     @Transactional
-    public void doneReservation(String userId, Long reservationId){
+    public void doneReservation(String userId, Long reservationId) {
         valid.userValidation(userId);
 
         Reservation reservation = valid.reservationValidation(reservationId);
@@ -268,13 +324,14 @@ public class ReservationService {
 
     //반려인의 리뷰 작성
     @Transactional
-    public void postReview(String userId, ReviewRequest reviewRequest){
+    public void postReview(String userId, ReviewRequest reviewRequest) {
 
         valid.userValidation(userId);
 
         Reservation reservation = valid.reservationValidation(reviewRequest.getReservationId());
 
-        Review review = Review.of(reservation, reviewRequest.getGrade(), reviewRequest.getContent());
+        Review review = Review.of(reservation, reviewRequest.getGrade(),
+                reviewRequest.getContent());
         reviewRepository.save(review);
 
         PetSitter petSitter = valid.petSitterValidation(reservation.getPetSitter().getId());
@@ -285,7 +342,7 @@ public class ReservationService {
 
 
     //예약 내역 반려인 입장에서
-    public ReservationDocsResponse getReservationDoc(String userId){
+    public ReservationDocsResponse getReservationDoc(String userId) {
 
         User user = valid.userValidation(userId);
 
@@ -293,31 +350,30 @@ public class ReservationService {
 
         //w
         List<Reservation> waitReservations = myReservations.get().stream().filter(
-                reservation -> reservation.getReservationStatus().equals(ReservationStatus.WAIT)).collect(
-                Collectors.toList());
+                        reservation -> reservation.getReservationStatus().equals(ReservationStatus.WAIT))
+                .collect(Collectors.toList());
 
         //p
         List<Reservation> payedReservations = myReservations.get().stream().filter(
-                reservation -> reservation.getReservationStatus().equals(ReservationStatus.PAYED)).collect(
-                Collectors.toList());
+                        reservation -> reservation.getReservationStatus().equals(ReservationStatus.PAYED))
+                .collect(Collectors.toList());
         //a
         List<Reservation> approveReservations = myReservations.get().stream().filter(
-                reservation -> reservation.getReservationStatus().equals(ReservationStatus.APPROVAL)).collect(
-                Collectors.toList());
+                reservation -> reservation.getReservationStatus()
+                        .equals(ReservationStatus.APPROVAL)).collect(Collectors.toList());
 
         //u
         List<Reservation> useReservations = myReservations.get().stream().filter(
-                reservation -> reservation.getReservationStatus().equals(ReservationStatus.USE)).collect(
-                Collectors.toList());
+                        reservation -> reservation.getReservationStatus().equals(ReservationStatus.USE))
+                .collect(Collectors.toList());
 
         //d
         List<Reservation> doneReservations = myReservations.get().stream().filter(
-                reservation -> reservation.getReservationStatus().equals(ReservationStatus.DONE)).collect(
-                Collectors.toList());
+                        reservation -> reservation.getReservationStatus().equals(ReservationStatus.DONE))
+                .collect(Collectors.toList());
 
-
-        return ReservationDocsResponse.of(waitReservations, payedReservations, approveReservations,useReservations,
-                doneReservations);
+        return ReservationDocsResponse.of(waitReservations, payedReservations, approveReservations,
+                useReservations, doneReservations);
     }
 
 }

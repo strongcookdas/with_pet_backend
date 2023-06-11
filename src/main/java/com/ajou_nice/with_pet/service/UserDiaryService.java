@@ -59,24 +59,20 @@ public class UserDiaryService {
         Diary diary = userDiaryRepository.save(
                 Diary.of(diaryRequest, dog, user, category));
 
-        List<UserParty> userParties = userPartyRepository.findAllByPartyAndUser(
-                dog.getParty().getPartyId(), user.getUserId());
+        List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
 
         dog.updateAffectionTemperature(this.calculateAffectionTemperature(dog));
 
-        List<Notification> notifications = new ArrayList<>();
+        log.info("======================debug==========================");
 
         for (UserParty userParty : userParties) {
-            Notification notification = Notification.of(
+            Notification notification = notificationService.sendEmail(
                     user.getName() + "님이 " + dog.getName() + "의 일지를 작성했습니다.",
-                    "http://localhost:3000/calendar",
+                    "/calendar",
                     NotificationType.반려인_일지, userParty.getUser());
-            notifications.add(notification);
+            notificationService.saveNotification(notification);
             notificationService.send(notification);
-            notificationService.sendEmail(notification);
         }
-
-        notificationRepository.saveAll(notifications);
         return UserDiaryResponse.of(diary);
     }
 
