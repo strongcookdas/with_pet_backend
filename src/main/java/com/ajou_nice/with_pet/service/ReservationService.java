@@ -35,9 +35,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
@@ -61,6 +63,7 @@ public class ReservationService {
         int cost = 0;
         User user = valid.userValidation(userId);
         Dog dog = valid.dogValidation(reservationRequest.getDogId());
+
 
         //반려견 예약 유효 체크
         isDuplicatedReservation(reservationRequest.getCheckIn(), reservationRequest.getCheckOut(),
