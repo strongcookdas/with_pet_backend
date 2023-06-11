@@ -131,16 +131,14 @@ public class ReservationService {
                             dog.getName(), petSitter.getPetSitterName()),
                     "/usagelist",
                     NotificationType.반려인_예약, u.getUser());
-            notifications.add(notification);
-            notificationService.send(notification);
+            notificationService.saveNotification(notification);
         });
 
         Notification notification = notificationService.sendEmail(
                 String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다.", user.getName(), dog.getName()),
                 "/petsitterCalendar",
                 NotificationType.펫시터_예약, petSitter.getUser());
-        notifications.add(notification);
-        notificationService.saveAllNotification(notifications);
+        notificationService.saveNotification(notification);
     }
 
     private void isDuplicatedReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog,
@@ -267,17 +265,14 @@ public class ReservationService {
 
     private void sendApproveReservationNotificationByEmail(List<UserParty> userParties, Dog dog,
             PetSitter petSitter) {
-        List<Notification> notifications = new ArrayList<>();
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s 펫시터님이 %s 반려견에 대한 돌봄 서비스 예약을 승인했습니다.",
                             petSitter.getPetSitterName(), dog.getName()),
                     "/usagelist",
                     NotificationType.반려인_예약, u.getUser());
-            notifications.add(notification);
-            notificationService.send(notification);
+            notificationService.saveNotification(notification);
         });
-        notificationService.saveAllNotification(notifications);
     }
 
 

@@ -53,16 +53,13 @@ public class PetSitterDiaryService {
 
         // 그룹원에게 알림
         List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
-        List<Notification> notifications = new ArrayList<>();
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     petSitter.getPetSitterName() + " 펫시터님이 " + dog.getName() + "의 일지를 작성했습니다.",
                     "/calendar",
                     NotificationType.펫시터_일지, u.getUser());
-            notifications.add(notification);
-            notificationService.send(notification);
+            notificationService.saveNotification(notification);
         });
-        notificationService.saveAllNotification(notifications);
 
         return PetSitterDiaryResponse.of(diary);
     }

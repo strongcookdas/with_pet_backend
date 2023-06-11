@@ -196,17 +196,14 @@ public class KaKaoPayService {
 
     private void sendAutoCancelReservationNotificationByEmail(List<UserParty> userParties,
             Dog dog, PetSitter petSitter) {
-        List<Notification> notifications = new ArrayList<>();
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s 반려견에 대한 돌봄 서비스 예약이 자동 취소되었습니다. [펫시터] %s", dog.getName(),
                             petSitter.getPetSitterName()),
                     "/usagelist",
                     NotificationType.반려인_예약취소, u.getUser());
-            notifications.add(notification);
-            notificationService.send(notification);
+            notificationService.saveNotification(notification);
         });
-        notificationService.saveAllNotification(notifications);
     }
 
     //결제 환불
@@ -282,31 +279,25 @@ public class KaKaoPayService {
 
     private void sendCancelReservationNotificationByEmail(List<UserParty> userParties,
             Dog dog, PetSitter petSitter) {
-        List<Notification> notifications = new ArrayList<>();
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s 반려견에 대한 돌봄 서비스 예약이 취소되었습니다. [펫시터] %s", dog.getName(),
                             petSitter.getPetSitterName()),
                     "/usagelist",
                     NotificationType.반려인_예약취소, u.getUser());
-            notifications.add(notification);
-            notificationService.send(notification);
+            notificationService.saveNotification(notification);
         });
-        notificationService.saveAllNotification(notifications);
     }
 
     private void sendCancelReservationNotificationByEmailByPetSitter(List<UserParty> userParties,
             Dog dog, PetSitter petSitter) {
-        List<Notification> notifications = new ArrayList<>();
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s 반려견에 대한 돌봄 서비스 예약을 거절되었습니다. [펫시터] %s", dog.getName(),
                             petSitter.getPetSitterName()),
                     "/usagelist",
                     NotificationType.반려인_예약취소, u.getUser());
-            notifications.add(notification);
-            notificationService.send(notification);
+            notificationService.saveNotification(notification);
         });
-        notificationService.saveAllNotification(notifications);
     }
 }
