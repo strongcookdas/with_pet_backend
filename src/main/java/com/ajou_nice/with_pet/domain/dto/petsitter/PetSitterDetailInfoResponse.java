@@ -55,16 +55,16 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 		return PetSitterDetailInfoResponse.builder()
 				.petSitterId(petSitter.getId())
 				.petSitterUserId(petSitter.getUser().getUserId())
-				.petSitterName(petSitter.getPetSitterName())
-				.petSitterProfileImg(petSitter.getProfileImg())
-				.petSitterAddress(petSitter.getPetSitterStreetAdr())
+				.petSitterName(petSitter.getUser().getName())
+				.petSitterProfileImg(petSitter.getUser().getProfileImg())
+				.petSitterAddress(petSitter.getUser().getAddress().getStreetAdr())
 				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 				.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
 				.petSitterServices(petSitterWithPetServices == null? null : PetSitterServiceResponse.toList(petSitterWithPetServices))
 				.petSitterCriticalServices(petSitterCriticalServices == null? null :
 						PetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
 				.introduction(petSitter.getIntroduction())
-				.petSitterLicenseImg(petSitter.getPetSitterLicenseImg())
+				.petSitterLicenseImg(petSitter.getUser().getLicenseImg())
 				.reviewResponses(reviews == null ? null : ReviewResponse.toList(reviews))
 				.build();
 	}
