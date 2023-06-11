@@ -21,10 +21,13 @@ import org.springframework.data.repository.query.Param;
 public interface ReservationRepository extends JpaRepository<Reservation, Long>,
         ReservationRepositoryCustom {
 
+
     //펫시터 입장에서 유효 체크
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Boolean existsByCheckInBetweenAndPetSitterAndReservationStatusIn(LocalDateTime checkIn,
             LocalDateTime checkOut, PetSitter petSitter, List<ReservationStatus> list);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Boolean existsByCheckOutBetweenAndPetSitterAndReservationStatusIn(LocalDateTime checkIn,
             LocalDateTime checkOut, PetSitter petSitter, List<ReservationStatus> list);
 
@@ -39,8 +42,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
             + "function('datediff', r.checkIn, now()) < 3")
     Optional<List<Reservation>> findNeedRefundReservation(@Param("payedstatus") ReservationStatus paystatus);
 
-    @Query("select r from Reservation r where r.user.id=:userId and r.reservationStatus=:status")
-    List<Reservation> findReservationByStatus(@Param("userId") String userId, @Param("status") String status);
+    @Query("select r from Reservation r where r.petSitter=:petSitter")
+    List<Reservation> findAllReservationByPetSitter(@Param("petSitter") PetSitter petSitter);
 
     @Modifying(clearAutomatically = true)
     @Query("update Reservation r set r.reservationStatus = :changestatus where r.reservationStatus = :waitstatus and "

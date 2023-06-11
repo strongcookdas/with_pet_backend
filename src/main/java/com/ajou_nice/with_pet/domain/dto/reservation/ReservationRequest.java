@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -18,6 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Builder
 @Getter
 @Setter
+@ToString
 public class ReservationRequest {
 
     @NotNull(message = "체크인 날짜를 선택해주세요.")
@@ -28,7 +30,6 @@ public class ReservationRequest {
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime checkOut;
 
-    @NotNull
     List<Long> optionId;
 
     @NotNull(message = "반려견을 선택해주세요.")
@@ -36,6 +37,16 @@ public class ReservationRequest {
 
     @NotNull
     private Long petsitterId;
+
+    public static ReservationRequest forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut,
+            Long dogId, Long petSitterId){
+        return ReservationRequest.builder()
+                .checkIn(checkIn)
+                .checkOut(checkOut)
+                .petsitterId(petSitterId)
+                .dogId(dogId)
+                .build();
+    }
 
     @AllArgsConstructor
     @NoArgsConstructor
