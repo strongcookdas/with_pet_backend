@@ -8,12 +8,15 @@ import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.DogSize;
+import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
+import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +37,7 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
     private final DogRepository dogRepository;
+    private final ReservationRepository reservationRepository;
 
     private final ValidateCollection valid;
 
@@ -145,6 +149,18 @@ public class PartyService {
 
         Party party = valid.partyValidation(partyId);
 
+        List<Dog> dogs = dogRepository.findAllByParty(party);
+
+        List<ReservationStatus> reservationStatuses = new ArrayList<>();
+        reservationStatuses.add(ReservationStatus.APPROVAL);
+        reservationStatuses.add(ReservationStatus.PAYED);
+        reservationStatuses.add(ReservationStatus.USE);
+        reservationStatuses.add(ReservationStatus.WAIT);
+
+        if(reservationRepository.existsByUserAndDogInAndReservationStatusIn(user,dogs,reservationStatuses)){
+            throw new AppException(ErrorCode.CAN_NOT_LEAVE_PARTY,ErrorCode.CAN_NOT_LEAVE_PARTY.getMessage());
+        }
+
         Optional<UserParty> deleteUserParty = userPartyRepository.findByUserAndParty(user, party);
         if (deleteUserParty.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER,
@@ -176,6 +192,18 @@ public class PartyService {
         User member = valid.userValidation(memberId);
 
         Party party = valid.partyValidation(partyId);
+
+        List<Dog> dogs = dogRepository.findAllByParty(party);
+
+        List<ReservationStatus> reservationStatuses = new ArrayList<>();
+        reservationStatuses.add(ReservationStatus.APPROVAL);
+        reservationStatuses.add(ReservationStatus.PAYED);
+        reservationStatuses.add(ReservationStatus.USE);
+        reservationStatuses.add(ReservationStatus.WAIT);
+
+        if(reservationRepository.existsByUserAndDogInAndReservationStatusIn(member,dogs,reservationStatuses)){
+            throw new AppException(ErrorCode.CAN_NOT_EXPEL_PARTY,ErrorCode.CAN_NOT_EXPEL_PARTY.getMessage());
+        }
 
         if (!leader.getId().equals(party.getUser().getId())) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "멤버를 방출시킬 권한이 없습니다.");
