@@ -44,7 +44,9 @@ public enum ErrorCode {
     CAN_NOT_DELETE_DOG(HttpStatus.BAD_REQUEST, "반려견에게 유효한 예약이 존재하기때문에 삭제할 수 없습니다."),
     TOO_MANY_MEMBER(HttpStatus.BAD_REQUEST, "제한 인원 이상의 멤버 수를 추가할 수 없습니다."),
     TOO_MANY_DOG(HttpStatus.BAD_REQUEST, "제한 반려견 수 이상의 반려견 수를 추가할 수 없습니다."),
-    TOO_MANY_SMS(HttpStatus.BAD_REQUEST,"잦은 호출로 인한 인증번호 발급이 제한되었습니다." );
+    TOO_MANY_SMS(HttpStatus.BAD_REQUEST, "잦은 호출로 인한 인증번호 발급이 제한되었습니다."),
+    DUPLICATED_PHONE(HttpStatus.CONFLICT, "이미 중복된 휴대폰입니다.");
+
     private HttpStatus status;
     private String message;
 }
