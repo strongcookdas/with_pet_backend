@@ -71,7 +71,7 @@ public class UserDiaryService {
                     "/calendar",
                     NotificationType.반려인_일지, userParty.getUser());
             notificationService.saveNotification(notification);
-            notificationService.send(notification);
+//            notificationService.send(notification);
         }
         return UserDiaryResponse.of(diary);
     }
