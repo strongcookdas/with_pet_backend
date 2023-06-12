@@ -16,15 +16,13 @@ import lombok.ToString;
 @ToString
 public class MyInfoModifyResponse {
 
+    private Long userId;
     private String userName;
-    private String userProfile;
-    private String role;
 
     public static MyInfoModifyResponse toMyInfoModifyResponse(User user) {
         return MyInfoModifyResponse.builder()
+                .userId(user.getUserId())
                 .userName(user.getName())
-                .userProfile(user.getProfileImg())
-                .role(user.getRole().name())
                 .build();
     }
 }

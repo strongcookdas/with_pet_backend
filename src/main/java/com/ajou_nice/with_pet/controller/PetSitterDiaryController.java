@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,12 +54,6 @@ public class PetSitterDiaryController {
             @ApiIgnore Authentication authentication, @RequestParam Long dogId) {
         return Response.success(
                 petSitterDiaryService.getPetSitterDiaries(authentication.getName(), dogId));
-    }
-
-    @DeleteMapping("/{diaryId}")
-    @ApiOperation("펫시터가 작성한 반려견에 대한 일지 삭제")
-    public Response deletePetSitterDiary(@ApiIgnore Authentication authentication, @PathVariable Long diaryId){
-        return Response.success(petSitterDiaryService.deletePetSitterDiary(authentication.getName(), diaryId));
     }
 
 }

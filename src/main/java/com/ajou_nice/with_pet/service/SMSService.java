@@ -2,7 +2,6 @@ package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.utils.CookieUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +21,6 @@ public class SMSService {
 
     private final Integer smsCount = 5;
     private final CookieUtil cookieUtil;
-    private final UserRepository userRepository;
     @Value("${SMS.KEY}")
     private String api_key;
 
@@ -38,15 +36,11 @@ public class SMSService {
 
     public String sendOne(String to, HttpServletRequest request, HttpServletResponse response) {
 
-        if(userRepository.existsByPhone(to)){
-            throw new AppException(ErrorCode.DUPLICATED_PHONE,ErrorCode.DUPLICATED_PHONE.getMessage());
-        }
-
         String sms = cookieUtil.getCookieValue(request, "sms");
         if (sms == null) {
             cookieUtil.addCookie(response, "sms", String.valueOf(1), "/");
         } else {
-            if (Integer.parseInt(sms) > smsCount) {
+            if (Integer.parseInt(sms) > 5) {
                 throw new AppException(ErrorCode.TOO_MANY_SMS, ErrorCode.TOO_MANY_SMS.getMessage());
             }
             cookieUtil.addCookie(response, "sms", String.valueOf(Integer.parseInt(sms) + 1), "/");

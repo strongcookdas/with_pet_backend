@@ -40,6 +40,13 @@ public class CriticalService {
 		this.serviceImg = criticalServiceModifyRequest.getServiceImg();
 		this.introduction = criticalServiceModifyRequest.getServiceIntroduction();
 	}
+	public static CriticalService forSimpleTest(String introduction, String serviceName, String serviceImg){
+		return CriticalService.builder()
+				.serviceName(serviceName)
+				.serviceImg(serviceImg)
+				.introduction(introduction)
+				.build();
+	}
 
 	public static CriticalService toEntity(CriticalServiceRequest criticalServiceRequest){
 		String img = criticalServiceRequest.getServiceImg();

@@ -77,8 +77,8 @@ public class SchedulerTest {
 	public void autoUseTest() throws Exception{
 	    //given checkIn이 오늘이어야 함
 		// autoUSE의 경우 매일 00시에 APPROVAL인 예약에 대해 checkIn날짜가 오늘이면 USE로 변경시켜준다.
-		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 10, 5, 13);
-		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 11, 1,13);
+		LocalDateTime checkIn = LocalDateTime.of(2023, 6, 12, 5, 13);
+		LocalDateTime checkOut = LocalDateTime.of(2023, 6, 13, 1,13);
 		Reservation reservation = Reservation.forSchedulerTest(checkIn, checkOut);
 		reservationRepository.save(reservation);
 	    //when autoUSE를 실행시켰을때

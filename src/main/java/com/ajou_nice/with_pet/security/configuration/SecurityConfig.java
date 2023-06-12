@@ -104,7 +104,6 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/v1/petsitter/show-myinfo").hasRole("PETSITTER")
                 .antMatchers("/api/v1/review/create-review").hasRole("USER")
-                .antMatchers(HttpMethod.DELETE,"/api/v1/petsitter-diaries/*").hasRole("USER")
                 .antMatchers("/api/v1/reservation/user/show-reservations").hasRole("USER")
                 .antMatchers("/api/v1/reservation/show-payment/{reservationId}").hasRole("PETSITTER")
                 .antMatchers("/ws/chat").permitAll()

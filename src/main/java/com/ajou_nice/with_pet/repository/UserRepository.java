@@ -17,6 +17,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select a from User a where a.role=:userRole and a.applicantStatus=:applicantStatus")
     List<User> findApplicantAllInQuery(@Param("userRole") UserRole userRole, @Param("applicantStatus")ApplicantStatus applicantStatus);
-
-    Boolean existsByPhone(String phoneNuM);
 }

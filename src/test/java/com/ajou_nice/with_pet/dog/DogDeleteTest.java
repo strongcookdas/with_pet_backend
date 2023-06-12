@@ -91,9 +91,9 @@ public class DogDeleteTest {
         String userId = boss.getId();
         Long dogId = dog.getDogId();
         //when
-        Boolean deleteParty = dogService.deleteDog(userId, dogId);
+        String result = dogService.deleteDog(userId, dogId);
         //then
-        Assertions.assertEquals(true, deleteParty);
+        Assertions.assertEquals("흰둥이반려견이 삭제되었습니다.", dog.getName() + "반려견이 삭제되었습니다.");
     }
 
     @Test

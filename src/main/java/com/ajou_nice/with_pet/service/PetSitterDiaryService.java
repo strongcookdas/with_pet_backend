@@ -50,17 +50,19 @@ public class PetSitterDiaryService {
         Category category = valid.categoryValidation(diaryRequest.getCategoryId());
 
         Diary diary = diaryRepository.save(Diary.of(diaryRequest, dog, user, category, petSitter));
-
         // 그룹원에게 알림
         List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
+        List<Notification> notifications = new ArrayList<>();
         userParties.forEach(u -> {
-            Notification notification = notificationService.sendEmail(
-                    petSitter.getPetSitterName() + " 펫시터님이 " + dog.getName() + "의 일지를 작성했습니다.",
-                    "/calendar",
+            Notification notification = Notification.of(
+                    petSitter.getPetSitterName() + "펫시터 님이 " + dog.getName() + "의 일지를 작성했습니다.",
+                    "http://localhost:3000/calendar",
                     NotificationType.펫시터_일지, u.getUser());
-            notificationService.saveNotification(notification);
-//            notificationService.send(notification);
+            notifications.add(notification);
+            notificationService.send(notification);
+            notificationService.sendEmail(notification);
         });
+        notificationService.saveAllNotification(notifications);
 
         return PetSitterDiaryResponse.of(diary);
     }
@@ -99,22 +101,5 @@ public class PetSitterDiaryService {
         log.info(
                 "=======================================펫시터가 작성한 반려견 일지 조회 END=======================================");
         return PetSitterDiaryListResponse.of(dog, diaries);
-    }
-
-    public String deletePetSitterDiary(String userId, Long diaryId) {
-        User user = valid.userValidation(userId);
-
-        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.DIARY_NOT_FOUND,
-                    ErrorCode.USER_NOT_FOUND.getMessage());
-        });
-
-        if (!diary.getDog().getParty().getUser().getId().equals(user.getId())) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION,
-                    ErrorCode.INVALID_TOKEN.getMessage());
-        }
-
-        diaryRepository.delete(diary);
-        return "일지가 삭제되었습니다.";
     }
 }

@@ -75,9 +75,7 @@ public class Diary {
                 .createdAt(diaryRequest.getCreatedAt())
                 .build();
     }
-
-    public static Diary of(DiaryRequest diaryRequest, Dog dog, User user, Category category,
-            PetSitter petSitter) {
+    public static Diary of(DiaryRequest diaryRequest, Dog dog, User user, Category category, PetSitter petSitter) {
         return Diary.builder()
                 .category(category)
                 .title(diaryRequest.getTitle())
@@ -86,19 +84,6 @@ public class Diary {
                 .user(user)
                 .dog(dog)
                 .createdAt(diaryRequest.getCreatedAt())
-                .petSitter(petSitter)
-                .build();
-    }
-
-    public static Diary simpleUserDiaryForTest(Category category, String title, String content,
-            User user, Dog dog, LocalDate localDate, PetSitter petSitter) {
-        return Diary.builder()
-                .category(category)
-                .title(title)
-                .content(content)
-                .user(user)
-                .dog(dog)
-                .createdAt(localDate)
                 .petSitter(petSitter)
                 .build();
     }

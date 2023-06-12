@@ -36,8 +36,6 @@ public class ApplicantInfoResponse extends ApplicantBasicInfoResponse {
 
 	private String applicant_motivate;
 
-	private String applicant_streetAdr;
-
 
 
 	// 위 메서드는 처음 지원하고 나서, response를 위한 메서드
@@ -56,7 +54,6 @@ public class ApplicantInfoResponse extends ApplicantBasicInfoResponse {
 				.applicant_petsitter_career(user.getPetSitterCareer())
 				.applicant_motivate(user.getMotivate())
 				.applicant_status(user.getApplicantStatus())
-				.applicant_streetAdr(user.getAddress().getStreetAdr())
 				.build();
 	}
 }
