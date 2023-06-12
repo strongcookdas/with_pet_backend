@@ -14,16 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Getter
-@Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE party SET deleted_at = CURRENT_TIMESTAMP where party_id = ?")
 public class Party extends BaseEntity {
 
     @Id
@@ -37,11 +33,8 @@ public class Party extends BaseEntity {
     private Integer memberCount;
     private Integer dogCount;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "party", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "party")
     private List<UserParty> userPartyList = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "party", orphanRemoval = true)
-    private List<Dog> dogList = new ArrayList<>();
 
     public Party(User user) {
         this.user = user;

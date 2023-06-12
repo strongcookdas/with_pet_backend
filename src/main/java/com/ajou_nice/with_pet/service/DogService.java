@@ -19,14 +19,11 @@ import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +36,6 @@ public class DogService {
     private final DogRepository dogRepository;
     private final UserPartyRepository userPartyRepository;
     private final ReservationRepository reservationRepository;
-    private final PartyRepository partyRepository;
 
     private final PetSitterCriticalServiceRepository criticalServiceRepository;
     private final ValidateCollection valid;
@@ -58,8 +54,8 @@ public class DogService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 그룹에 반려견을 추가할 권한이 없습니다.");
         }
 
-        if (party.getDogCount() >= dogCount) {
-            throw new AppException(ErrorCode.TOO_MANY_DOG, ErrorCode.TOO_MANY_DOG.getMessage());
+        if(party.getDogCount()>=dogCount){
+            throw new AppException(ErrorCode.TOO_MANY_DOG,ErrorCode.TOO_MANY_DOG.getMessage());
         }
         //반려견 사이즈 체크
         DogSize myDogSize;
@@ -183,8 +179,7 @@ public class DogService {
     }
 
     @Transactional
-    public Boolean deleteDog(String userId, Long dogId) {
-        Boolean deleteParty = false;
+    public String deleteDog(String userId, Long dogId) {
         User user = valid.userValidation(userId);
 
         Dog dog = valid.dogValidation(dogId);
@@ -209,11 +204,6 @@ public class DogService {
         dogRepository.delete(dog);
         party.updateDogCount(party.getDogCount() - 1);
 
-        if (party.getDogCount() == 0) {
-            deleteParty = true;
-            partyRepository.delete(party);
-        }
-
-        return deleteParty;
+        return dog.getName() + "반려견이 삭제되었습니다.";
     }
 }

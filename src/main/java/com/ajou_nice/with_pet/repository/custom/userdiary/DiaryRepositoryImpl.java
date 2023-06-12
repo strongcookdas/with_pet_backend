@@ -54,7 +54,7 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements
     @Override
     public Long countDiaryDay(Long dogId, LocalDate createdAt) {
         return queryFactory.select(diary.dog.dogId.countDistinct()).from(diary)
-                .where(diary.createdAt.between(createdAt, LocalDate.now()).and(diary.dog.dogId.eq(dogId)).and(diary.petSitter.isNull())).fetchOne();
+                .where(diary.createdAt.between(createdAt, LocalDate.now()).and(diary.dog.dogId.eq(dogId))).fetchOne();
     }
 
     @Override

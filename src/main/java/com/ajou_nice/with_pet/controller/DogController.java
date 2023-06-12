@@ -110,7 +110,7 @@ public class DogController {
 
     @DeleteMapping("/{dogId}")
     @ApiOperation(value = "반려견 삭제")
-    public Response<Boolean> deleteDog(@ApiIgnore Authentication authentication, @PathVariable Long dogId){
+    public Response deleteDog(@ApiIgnore Authentication authentication, @PathVariable Long dogId){
         return Response.success(dogService.deleteDog(authentication.getName(),dogId));
     }
 }

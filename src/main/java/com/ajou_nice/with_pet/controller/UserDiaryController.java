@@ -13,7 +13,6 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -104,12 +103,6 @@ public class UserDiaryController {
         List<UserDiaryResponse> userDiaryResponses = userDiaryService.getUserDayDiary(
                 authentication.getName(), dogId, categoryId, day, petsitterCheck);
         return Response.success(userDiaryResponses);
-    }
-
-    @DeleteMapping("/{diaryId}")
-    @ApiOperation(value = "일지 삭제")
-    public Response deleteUserDiary(@ApiIgnore Authentication authentication, @PathVariable Long diaryId){
-        return Response.success(userDiaryService.deleteUserDiary(authentication.getName(), diaryId));
     }
 }
 
