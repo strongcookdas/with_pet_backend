@@ -1,5 +1,7 @@
 package com.ajou_nice.with_pet.fixture;
 
+import com.ajou_nice.with_pet.domain.entity.Category;
+import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
@@ -58,6 +60,18 @@ public class Fixture {
     LocalDateTime checkOut = LocalDateTime.of(2023, 6, 14, 6, 13);
     Reservation reservation1 = Reservation.forSimpleTest(checkIn, checkOut, user2, petSitter1,
             35000,
-            ReservationStatus.PAYED,dog);
+            ReservationStatus.PAYED, dog);
+
+
+    //카테고리
+    Category category = Category.simpleCategoryForTest("산책");
+
+    //유저 일지
+    Diary userDiary = Diary.simpleUserDiaryForTest(category, "산책했어용", "산책산책", user1, dog,
+            LocalDate.of(2023, 6, 12), null);
+
+    //펫시터 일지
+    Diary petSitterDiary = Diary.simpleUserDiaryForTest(category, "산책", "산책했어용", user4, dog,
+            LocalDate.now(), petSitter1);
 
 }

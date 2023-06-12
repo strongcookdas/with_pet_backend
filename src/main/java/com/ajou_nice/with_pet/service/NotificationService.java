@@ -4,8 +4,6 @@ import com.ajou_nice.with_pet.domain.dto.NotificationResponse;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.NotificationType;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.EmitterRepository;
 import com.ajou_nice.with_pet.repository.NotificationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
@@ -29,7 +27,6 @@ public class NotificationService {
     private static final Long TIMEOUT = 60 * 1000 * 60L;
     private final EmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
-    private final UserRepository userRepository;
     private final EmailService emailService;
 
     private final ValidateCollection valid;
@@ -104,7 +101,7 @@ public class NotificationService {
     public void sendEmail(Notification notification) {
         emailService.sendEmail(notification.getReceiver().getEmail(),
                 "위드펫" + notification.getNotificationType().name() + "알림",
-                String.format(notification.getContent()+"/n"+notification.getUrl()));
+                String.format(notification.getContent() + "/n" + notification.getUrl()));
     }
 
     /* 여러개의 이메일 알림 전송 메서드 */
@@ -123,6 +120,19 @@ public class NotificationService {
 
     public void saveAllNotification(List<Notification> notifications) {
         notificationRepository.saveAll(notifications);
+    }
+
+    public Notification sendEmail(String content, String url, NotificationType notificationType,
+            User user) {
+        Notification notification = Notification.of(content, url, notificationType, user);
+        emailService.sendHtmlEmail(notification.getReceiver().getEmail(),
+                "[위드펫] " + notification.getNotificationType().name() + " 알림",
+                "https://withpetoriginimage.s3.ap-northeast-1.amazonaws.com/4bf451c1-8062-4048-b279-319325c1fa6a.png",
+                notification.getContent(),
+                "http://ec2-13-125-242-183.ap-northeast-2.compute.amazonaws.com"
+                        + notification.getUrl());
+        return notification;
+
     }
 
 }
