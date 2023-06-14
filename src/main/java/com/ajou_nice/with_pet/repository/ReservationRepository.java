@@ -71,4 +71,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Optional<Reservation> findByTid(@Param("tid") String tid);
 
     Boolean existsByDogAndReservationStatusIn(Dog dog,List<ReservationStatus> statuses);
+
+    Boolean existsByUserAndDogInAndReservationStatusIn(User user,List<Dog> dogs,
+            List<ReservationStatus> statuses);
 }
