@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.user.auth.login;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,6 +16,7 @@ import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.service.user.UserAuthService;
 import com.ajou_nice.with_pet.utils.JwtTokenUtil;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,8 +56,8 @@ public class LoginServiceTest {
                 .password("password")
                 .build();
         //when
-        when(validateCollection.userValidation(userLoginRequest.getEmail()))
-                .thenReturn(user);
+        when(userRepository.findByEmail(any()))
+                .thenReturn(Optional.of(user));
         when(encoder.matches(userLoginRequest.getPassword(), user.getPassword())).
                 thenReturn(true);
         //then
@@ -90,8 +92,8 @@ public class LoginServiceTest {
                 .password("password")
                 .build();
         //when
-        when(validateCollection.userValidation(userLoginRequest.getEmail()))
-                .thenReturn(user);
+        when(userRepository.findByEmail(any()))
+                .thenReturn(Optional.of(user));
         when(encoder.matches(userLoginRequest.getPassword(), user.getPassword())).
                 thenReturn(false);
         //then

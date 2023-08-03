@@ -44,7 +44,9 @@ public class UserAuthService {
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
 
-        User findUser = valid.userValidation(userLoginRequest.getEmail());
+        User findUser = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(()->{
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
 
         if (!encoder.matches(userLoginRequest.getPassword(), findUser.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD,
