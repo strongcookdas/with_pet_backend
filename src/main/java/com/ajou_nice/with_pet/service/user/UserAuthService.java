@@ -23,7 +23,6 @@ public class UserAuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final JwtTokenUtil jwtTokenUtil;
-    private final CookieUtil cookieUtil;
     private final ValidateCollection valid;
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
@@ -45,10 +44,9 @@ public class UserAuthService {
         return UserSignUpResponse.of(saveUser);
     }
 
-    public UserLoginResponse login(UserLoginRequest userLoginRequest,
-            HttpServletResponse response) {
+    public UserLoginResponse login(UserLoginRequest userLoginRequest) {
 
-        User findUser = valid.userValidation(userLoginRequest.getId());
+        User findUser = valid.userValidation(userLoginRequest.getEmail());
 
         if (!encoder.matches(userLoginRequest.getPassword(), findUser.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD,
@@ -58,13 +56,10 @@ public class UserAuthService {
         String accessToken = jwtTokenUtil.createToken(findUser.getId(),
                 findUser.getRole().name());
 
-        cookieUtil.addCookie(response, "token", accessToken, "/");
-
-        //테스트로 반환
-        return UserLoginResponse.of(findUser);
+        return UserLoginResponse.of(findUser,accessToken);
     }
 
-    public void logout(HttpServletResponse response){
-        cookieUtil.initCookie(response,"token",null,"/");
-    }
+//    public void logout(HttpServletResponse response){
+//        cookieUtil.initCookie(response,"token",null,"/");
+//    }
 }

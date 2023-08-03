@@ -6,6 +6,7 @@ import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
 import com.ajou_nice.with_pet.service.user.UserAuthService;
+import com.ajou_nice.with_pet.utils.CookieUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class UserAuthController {
 
     private final UserAuthService userService;
+    private final CookieUtil cookieUtil;
 
     @PostMapping("/signup")
     @ApiOperation(value = "회원가입")
@@ -47,15 +49,16 @@ public class UserAuthController {
     @ApiOperation(value = "로그인")
     public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest,
             HttpServletResponse response) {
-        UserLoginResponse userLoginResponse = userService.login(userLoginRequest, response);
+        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
+        cookieUtil.addCookie(response, "token", userLoginResponse.getToken(), "/");
         return Response.success(userLoginResponse);
     }
 
-    @GetMapping("/logout")
-    @ApiOperation(value = "로그아웃")
-    public Response logout(@ApiIgnore Authentication authentication,
-            HttpServletResponse httpServletResponse) {
-        userService.logout(httpServletResponse);
-        return Response.success("로그아웃되었습니다.");
-    }
+//    @GetMapping("/logout")
+//    @ApiOperation(value = "로그아웃")
+//    public Response logout(@ApiIgnore Authentication authentication,
+//            HttpServletResponse httpServletResponse) {
+//        userService.logout(httpServletResponse);
+//        return Response.success("로그아웃되었습니다.");
+//    }
 }

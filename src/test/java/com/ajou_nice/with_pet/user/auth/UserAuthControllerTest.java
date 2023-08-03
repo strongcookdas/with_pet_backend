@@ -59,7 +59,7 @@ public class UserAuthControllerTest extends CommonApiTest {
     @DisplayName("로그인 성공")
     @WithMockUser
     void login_success() throws Exception {
-        when(userAuthService.login(any(), any()))
+        when(userAuthService.login(any()))
                 .thenReturn(userLoginResponse);
 
         mockMvc.perform(post("/api/v2/users/login")
@@ -74,7 +74,7 @@ public class UserAuthControllerTest extends CommonApiTest {
     @DisplayName("로그인 실패1 : 이메일이 존재하지 않은 경우")
     @WithMockUser
     void login_fail1() throws Exception {
-        when(userAuthService.login(any(), any()))
+        when(userAuthService.login(any()))
                 .thenThrow(new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
 
         mockMvc.perform(post("/api/v2/users/login")
@@ -89,7 +89,7 @@ public class UserAuthControllerTest extends CommonApiTest {
     @DisplayName("로그인 실패2 : 패스워드가 다른 경우")
     @WithMockUser
     void login_fail2() throws Exception {
-        when(userAuthService.login(any(), any()))
+        when(userAuthService.login(any()))
                 .thenThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
 
         mockMvc.perform(post("/api/v2/users/login")

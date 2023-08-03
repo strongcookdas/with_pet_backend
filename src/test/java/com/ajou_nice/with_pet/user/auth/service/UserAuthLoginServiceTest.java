@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.user.auth;
+package com.ajou_nice.with_pet.user.auth.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,7 +14,6 @@ import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.service.user.UserAuthService;
-import com.ajou_nice.with_pet.utils.CookieUtil;
 import com.ajou_nice.with_pet.utils.JwtTokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +25,6 @@ public class UserAuthLoginServiceTest {
     UserAuthService userAuthService;
     UserRepository userRepository = mock(UserRepository.class);
     BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
-    CookieUtil cookieUtil = mock(CookieUtil.class);
     JwtTokenUtil jwtTokenUtil = mock(JwtTokenUtil.class);
     ValidateCollection validateCollection = mock(ValidateCollection.class);
 
@@ -69,7 +67,7 @@ public class UserAuthLoginServiceTest {
 
     @Test
     @DisplayName("로그인 실패1 : 유저가 존재하지 않은 경우")
-    void login_success() {
+    void login_fail1() {
         //given
         userLoginRequest = UserLoginRequest.builder()
                 .email("email@email.com")
@@ -85,7 +83,7 @@ public class UserAuthLoginServiceTest {
 
     @Test
     @DisplayName("로그인 실패2 : 패스워드가 같지 않은 경우")
-    void login_success() {
+    void login_fail2() {
         //given
         userLoginRequest = UserLoginRequest.builder()
                 .email("email@email.com")
@@ -95,7 +93,7 @@ public class UserAuthLoginServiceTest {
         when(validateCollection.userValidation(userLoginRequest.getEmail()))
                 .thenReturn(user);
         when(encoder.matches(userLoginRequest.getPassword(), user.getPassword())).
-                thenThrow(new AppException(ErrorCode.INVALID_PASSWORD,ErrorCode.INVALID_PASSWORD.getMessage()));
+                thenReturn(false);
         //then
         AppException exception = assertThrows(AppException.class,() -> userAuthService.login(userLoginRequest));
         assertEquals(ErrorCode.INVALID_PASSWORD,exception.getErrorCode());
