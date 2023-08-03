@@ -35,13 +35,7 @@ public class UserAuthController {
     @ApiOperation(value = "회원가입")
     public Response<UserSignUpResponse> signUp(
             @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
-        log.info(
-                "--------------------------User SignUp Request : {} -------------------------------",
-                userSignUpRequest);
         UserSignUpResponse userSignUpResponse = userService.signUp(userSignUpRequest);
-        log.info(
-                "--------------------------User SignUp Response : {} -------------------------------",
-                userSignUpRequest);
         return Response.success(userSignUpResponse);
     }
 

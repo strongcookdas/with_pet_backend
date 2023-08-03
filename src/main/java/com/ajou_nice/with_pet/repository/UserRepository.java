@@ -19,4 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findApplicantAllInQuery(@Param("userRole") UserRole userRole, @Param("applicantStatus")ApplicantStatus applicantStatus);
 
     Boolean existsByPhone(String phoneNuM);
+    Boolean existsByEmail(String email);
 }

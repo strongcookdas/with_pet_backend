@@ -9,9 +9,7 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
-import com.ajou_nice.with_pet.utils.CookieUtil;
 import com.ajou_nice.with_pet.utils.JwtTokenUtil;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,13 +26,13 @@ public class UserAuthService {
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
 
         //아이디 중복확인
-        if (userRepository.existsById(userSignUpRequest.getUserId())) {
-            throw new AppException(ErrorCode.DUPLICATED_USER_ID,
-                    ErrorCode.DUPLICATED_USER_ID.getMessage());
+        if (userRepository.existsByEmail(userSignUpRequest.getEmail())) {
+            throw new AppException(ErrorCode.DUPLICATED_EMAIL,
+                    ErrorCode.DUPLICATED_EMAIL.getMessage());
         }
 
         //비밀번호와 비밀번호 확인 비교
-        if (!userSignUpRequest.getUserPassword().equals(userSignUpRequest.getUserPasswordCheck())) {
+        if (!userSignUpRequest.getPassword().equals(userSignUpRequest.getPasswordCheck())) {
             throw new AppException(ErrorCode.PASSWORD_COMPARE_FAIL,
                     ErrorCode.PASSWORD_COMPARE_FAIL.getMessage());
         }

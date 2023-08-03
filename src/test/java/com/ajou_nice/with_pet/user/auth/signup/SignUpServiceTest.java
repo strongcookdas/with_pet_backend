@@ -1,7 +1,9 @@
 package com.ajou_nice.with_pet.user.auth.signup;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -55,6 +57,7 @@ public class SignUpServiceTest {
                 .profileImg("image")
                 .phone("010-0000-0000")
                 .build();
+        userAuthService = new UserAuthService(userRepository, encoder, jwtTokenUtil, validateCollection);
     }
 
     @Test
@@ -62,16 +65,18 @@ public class SignUpServiceTest {
     void signUp_success() {
         //given
         userSignUpRequest = UserSignUpRequest.builder()
-                .userName("user1")
-                .userEmail("email@email.com")
-                .userPassword("password")
-                .userPasswordCheck("password")
+                .name("user1")
+                .email("email@email.com")
+                .password("password")
+                .passwordCheck("password")
                 .profileImg("image")
-                .phoneNum("010-0000-0000")
+                .phone("010-0000-0000")
                 .address(address)
                 .build();
         //when
-        when(userRepository.save(user))
+        when(userRepository.existsByEmail(userSignUpRequest.getEmail()))
+                .thenReturn(false);
+        when(userRepository.save(any()))
                 .thenReturn(user);
         //then
         UserSignUpResponse result = userAuthService.signUp(userSignUpRequest);
@@ -84,20 +89,20 @@ public class SignUpServiceTest {
     void signUp_fail1() {
         //given
         userSignUpRequest = UserSignUpRequest.builder()
-                .userName("user1")
-                .userEmail("email@email.com")
-                .userPassword("password")
-                .userPasswordCheck("password")
+                .name("user1")
+                .email("email@email.com")
+                .password("password")
+                .passwordCheck("password")
                 .profileImg("image")
-                .phoneNum("010-0000-0000")
+                .phone("010-0000-0000")
                 .address(address)
                 .build();
         //when
-        when(validateCollection.userValidation(userSignUpRequest.getUserEmail()))
-                .thenThrow(new AppException(ErrorCode.DUPLICATED_USER_ID,ErrorCode.DUPLICATED_USER_ID.getMessage()));
+        when(userRepository.existsByEmail(userSignUpRequest.getEmail()))
+                .thenReturn(true);
         //then
         AppException exception = assertThrows(AppException.class,() -> userAuthService.signUp(userSignUpRequest));
-        assertEquals(ErrorCode.DUPLICATED_USER_ID,exception.getErrorCode());
+        assertEquals(ErrorCode.DUPLICATED_EMAIL,exception.getErrorCode());
     }
 
     @Test
@@ -105,12 +110,12 @@ public class SignUpServiceTest {
     void signUp_fail2() {
         //given
         userSignUpRequest = UserSignUpRequest.builder()
-                .userName("user1")
-                .userEmail("email@email.com")
-                .userPassword("password1")
-                .userPasswordCheck("password2")
+                .name("user1")
+                .email("email@email.com")
+                .password("password1")
+                .passwordCheck("password2")
                 .profileImg("image")
-                .phoneNum("010-0000-0000")
+                .phone("010-0000-0000")
                 .address(address)
                 .build();
         //when

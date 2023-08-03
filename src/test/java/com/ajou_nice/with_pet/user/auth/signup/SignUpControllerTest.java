@@ -50,12 +50,12 @@ public class SignUpControllerTest extends CommonApiTest {
                 .build();
 
         userSignUpRequest = UserSignUpRequest.builder()
-                .userName("user1")
-                .userEmail("email@email.com")
-                .userPassword("password")
-                .userPasswordCheck("password")
+                .name("user1")
+                .email("email@email.com")
+                .password("password1234!")
+                .passwordCheck("password1234!")
                 .profileImg("image")
-                .phoneNum("010-0000-0000")
+                .phone("010-0000-0000")
                 .address(address)
                 .build();
 

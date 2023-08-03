@@ -24,7 +24,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @AllArgsConstructor
@@ -40,7 +39,7 @@ public class User extends BaseEntity {
     private Long userId;
     @NotNull
     private String name;
-    @NotNull
+    //삭제할 예정
     private String id;
     @NotNull
     private String password;
@@ -136,7 +135,6 @@ public class User extends BaseEntity {
             Address address) {
         return User.builder()
                 .name(userName)
-                .id(userId)
                 .password(password)
                 .email(email)
                 .role(userRole)
@@ -150,7 +148,6 @@ public class User extends BaseEntity {
             Address address, Integer partyCount) {
         return User.builder()
                 .name(userName)
-                .id(userId)
                 .password(password)
                 .email(email)
                 .role(userRole)
@@ -171,13 +168,12 @@ public class User extends BaseEntity {
         }
 
         return User.builder()
-                .name(userSignUpRequest.getUserName())
-                .id(userSignUpRequest.getUserId())
-                .password(encoder.encode(userSignUpRequest.getUserPassword()))
-                .email(userSignUpRequest.getUserEmail())
+                .name(userSignUpRequest.getName())
+                .password(encoder.encode(userSignUpRequest.getPassword()))
+                .email(userSignUpRequest.getEmail())
                 .role(UserRole.ROLE_USER)
                 .profileImg(img)
-                .phone(userSignUpRequest.getPhoneNum())
+                .phone(userSignUpRequest.getPhone())
                 .address(Address.toAddressEntity(userSignUpRequest.getAddress()))
                 .applicantCount(0)
                 .partyCount(0)
@@ -189,7 +185,6 @@ public class User extends BaseEntity {
         return User.builder()
                 .userId(1L)
                 .name("홍길동")
-                .id("user1")
                 .password("password")
                 .email("email@gmail.com")
                 .role(UserRole.ROLE_USER)
