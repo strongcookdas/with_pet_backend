@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("api/v2/users")
 @RequiredArgsConstructor
 @Api(tags = "UserAuth API")
 @Slf4j
@@ -47,13 +47,7 @@ public class UserAuthController {
     @ApiOperation(value = "로그인")
     public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest,
             HttpServletResponse response) {
-        log.info(
-                "--------------------------User Login Request : {} -------------------------------",
-                userLoginRequest);
         UserLoginResponse userLoginResponse = userService.login(userLoginRequest, response);
-        log.info(
-                "--------------------------User Login Response : {} -------------------------------",
-                userLoginResponse);
         return Response.success(userLoginResponse);
     }
 
