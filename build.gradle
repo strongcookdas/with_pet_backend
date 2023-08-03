@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.11'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'jacoco'
 }
 
 group = 'com.ajou_nice'
@@ -82,3 +83,63 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+jacoco {
+    toolVersion = "0.8.9"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.enabled true
+
+//        xml.destination file("${buildDir}/jacoco/index.xml")
+//        csv.destination file("${buildDir}/jacoco/index.csv")
+        html.destination file("${buildDir}/jacoco/index.html")
+    }
+
+    jacocoTestCoverageVerification {
+
+        // 이 커버리지 기준은 이 글의 맨 아래에서 다시 설명하겠습니다.
+        violationRules {
+            rule {
+                element = 'CLASS'
+
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.90
+                }
+            }
+        }
+    }
+
+    test {
+        finalizedBy 'jacocoTestReport'
+        useJUnitPlatform()
+
+        jacoco {
+            def Qdomains = []
+
+            for(qPattern in 'com/ajou_nice/with_pet/domain/entity/QA' .. 'com/ajou_nice/with_pet/domain/entity/QZ'){
+                Qdomains.add(qPattern+'*')
+            }
+            excludes += Qdomains
+        }
+    }
+
+    afterEvaluate{
+        def Qdomains = []
+
+        for(qPattern in 'com/ajou_nice/with_pet/domain/entity/QA' .. 'com/ajou_nice/with_pet/domain/entity/QZ'){
+            Qdomains.add(qPattern+'*')
+        }
+        classDirectories.setFrom(files(classDirectories.files.collect{
+            fileTree(dir: it,
+                    excludes: Qdomains
+            )
+        }))
+    }
+}
+
