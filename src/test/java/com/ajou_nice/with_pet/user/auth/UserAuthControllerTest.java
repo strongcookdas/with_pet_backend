@@ -20,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(UserAuthController.class)
 public class UserAuthControllerTest {
@@ -55,10 +54,10 @@ public class UserAuthControllerTest {
         when(userAuthService.login(any(), any()))
                 .thenReturn(userLoginResponse);
 
-        mockMvc.perform(post("/api/v2/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(userLoginRequest))
+        mockMvc.perform(post("/api/v2/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(userLoginRequest)))
                 .andDo(print())
-                .andExpect(status().isOk()));
+                .andExpect(status().isOk());
     }
 }
