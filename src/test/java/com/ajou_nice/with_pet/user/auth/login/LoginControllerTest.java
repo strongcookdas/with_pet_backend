@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(UserAuthController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class UserAuthLoginControllerTest extends CommonApiTest {
+public class LoginControllerTest extends CommonApiTest {
 
     @Autowired
     MockMvc mockMvc;
