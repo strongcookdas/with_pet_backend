@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.user.auth;
+package com.ajou_nice.with_pet.user.auth.login;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(UserAuthController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class UserAuthControllerTest extends CommonApiTest {
+public class UserAuthLoginControllerTest extends CommonApiTest {
 
     @Autowired
     MockMvc mockMvc;
