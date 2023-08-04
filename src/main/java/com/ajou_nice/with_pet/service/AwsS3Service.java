@@ -58,7 +58,7 @@ public class AwsS3Service {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
 			}
 
-			String uploadUrl = "https://withpetoriginimage.s3.ap-northeast-1.amazonaws.com/" + fileName;
+			String uploadUrl = "https://withpet.s3.ap-northeast-2.amazonaws.com/" + fileName;
 			fileNameList.add(uploadUrl);
 
 		});
