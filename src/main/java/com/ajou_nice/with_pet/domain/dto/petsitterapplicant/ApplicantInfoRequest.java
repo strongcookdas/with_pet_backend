@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
+@Builder
 public class ApplicantInfoRequest {
 
 	@Pattern(regexp = "^[\\d]{6}-[1-4][\\d]{6}+$", message = "올바른 주민등록번호를 사용하세요")

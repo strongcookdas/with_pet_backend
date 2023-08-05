@@ -1,14 +1,12 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.controller.applicant;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest.ApplicantModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoResponse;
-import com.ajou_nice.with_pet.service.ApplicantService;
+import com.ajou_nice.with_pet.service.applicant.ApplicantService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,15 +26,13 @@ public class ApplicantController {
 
 	private final ApplicantService applicantService;
 
-	//페이징 필요
-	@PostMapping("/api/v1/users/applicate-petsitter")
+	@PostMapping("/api/v2/applicants")
 	@ApiOperation(value = "유저의 펫시터 지원")
-	public Response<ApplicantInfoResponse> registerApplicants(@ApiIgnore Authentication authentication
+	public Response<ApplicantInfoResponse> registerApplicant(@ApiIgnore Authentication authentication
 			,@RequestBody @Valid ApplicantInfoRequest applicantInfoRequest){
-		log.info("===================applicant register Request : {} ===================", applicantInfoRequest);
+
 		ApplicantInfoResponse applicantInfoResponse = applicantService.registerApplicant(applicantInfoRequest,
 				authentication.getName());
-		log.info("===================applicant register Response : {} ===================", applicantInfoResponse);
 
 		return Response.success(applicantInfoResponse);
 	}

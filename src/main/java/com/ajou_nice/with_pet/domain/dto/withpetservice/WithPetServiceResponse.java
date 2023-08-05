@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.withpetservice;
 
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
-import com.ajou_nice.with_pet.service.ApplicantService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
