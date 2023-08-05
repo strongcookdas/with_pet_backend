@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.applicant;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -8,7 +9,10 @@ import com.ajou_nice.with_pet.domain.dto.embedded.AddressDto;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
+import com.ajou_nice.with_pet.exception.AppException;
+import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.service.ApplicantService;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import org.junit.jupiter.api.Assertions;
@@ -27,30 +31,13 @@ public class ApplicantServiceTest {
     ApplicantInfoResponse response;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         address = AddressDto.builder()
                 .zipcode("111111")
                 .streetAdr("월드컵로")
                 .detailAdr("팔달관")
                 .build();
 
-        user = User.builder()
-                .userId(1L)
-                .name("user1")
-                .email("email@email.com")
-                .password("password")
-                .role(UserRole.ROLE_USER)
-                .profileImg("image")
-                .phone("010-0000-0000")
-                .build();
-
-        applicantService = new ApplicantService(validateCollection);
-    }
-
-    @Test
-    @DisplayName("펫시터 지원 성공")
-    void registerApplicant() {
-        //given
         request = ApplicantInfoRequest.builder()
                 .applicant_identification("000000-1000000")
                 .applicant_motivate("동기")
@@ -71,13 +58,80 @@ public class ApplicantServiceTest {
                 .applicant_motivate(request.getApplicant_motivate())
                 .applicant_streetAdr(user.getAddress().getStreetAdr())
                 .build();
+
+        applicantService = new ApplicantService(validateCollection);
+    }
+
+    @Test
+    @DisplayName("펫시터 지원 성공")
+    void registerApplicant() {
+        //given
+        user = User.builder()
+                .userId(1L)
+                .name("user1")
+                .email("email@email.com")
+                .password("password")
+                .role(UserRole.ROLE_USER)
+                .profileImg("image")
+                .phone("010-0000-0000")
+                .applicantCount(0)
+                .build();
         //when
         when(validateCollection.userValidation(user.getEmail())).thenReturn(user);
-        ApplicantInfoResponse result = applicantService.registerApplicant(request,user.getEmail());
+        ApplicantInfoResponse result = applicantService.registerApplicant(request, user.getEmail());
         //then
-        Assertions.assertEquals(result.getApplicant_petsitter_career(),response.getApplicant_petsitter_career());
-        Assertions.assertEquals(result.getApplicant_motivate(),response.getApplicant_motivate());
-        Assertions.assertEquals(result.getApplicant_identification(),response.getApplicant_identification());
+        Assertions.assertEquals(result.getApplicant_petsitter_career(),
+                response.getApplicant_petsitter_career());
+        Assertions.assertEquals(result.getApplicant_motivate(), response.getApplicant_motivate());
+        Assertions.assertEquals(result.getApplicant_identification(),
+                response.getApplicant_identification());
 
     }
+
+    @Test
+    @DisplayName("펫시터 지원 실패1 : 지원자이고 지원 상태가 WAIT일 때")
+    void registerApplicant_fail1() {
+        //given
+        user = User.builder()
+                .userId(1L)
+                .name("user1")
+                .email("email@email.com")
+                .password("password")
+                .role(UserRole.ROLE_APPLICANT)
+                .profileImg("image")
+                .phone("010-0000-0000")
+                .applicantCount(0)
+                .applicantStatus(ApplicantStatus.WAIT)
+                .build();
+        //when
+        when(validateCollection.userValidation(user.getEmail())).thenReturn(user);
+        AppException exception = assertThrows(AppException.class,
+                () -> applicantService.registerApplicant(request, user.getEmail()));
+        //then
+        assertEquals(ErrorCode.DUPLICATED_APPLICATION, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("펫시터 지원 실패2 : 지원 횟수가 3회 초과했을 때")
+    void registerApplicant_fail2() {
+        //given
+        user = User.builder()
+                .userId(1L)
+                .name("user1")
+                .email("email@email.com")
+                .password("password")
+                .role(UserRole.ROLE_USER)
+                .profileImg("image")
+                .phone("010-0000-0000")
+                .applicantCount(3)
+                .build();
+        //when
+        when(validateCollection.userValidation(user.getEmail())).thenReturn(user);
+        AppException exception = assertThrows(AppException.class,
+                () -> applicantService.registerApplicant(request, user.getEmail()));
+        //then
+        assertEquals(ErrorCode.TO_MANY_APPLICATE, exception.getErrorCode());
+    }
+
+
 }
