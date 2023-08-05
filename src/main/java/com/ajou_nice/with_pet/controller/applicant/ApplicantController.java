@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.controller.applicant;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
