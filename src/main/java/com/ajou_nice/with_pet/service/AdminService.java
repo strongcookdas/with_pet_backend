@@ -48,9 +48,9 @@ public class AdminService {
 
 	// == 관리자의 펫시터 지원자 리스트 전체 확인 == //
 	// 리팩토링 완 -> Authentication자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
-	public List<ApplicantBasicInfoResponse> showApplicants(String userId) {
+	public List<ApplicantBasicInfoResponse> showApplicants(String email) {
 
-		valid.userValidation(userId);
+		valid.userValidationByEmail(email);
 
 		List<User> petSitterApplicantList = userRepository.findApplicantAllInQuery(
 				UserRole.ROLE_APPLICANT, ApplicantStatus.WAIT);
