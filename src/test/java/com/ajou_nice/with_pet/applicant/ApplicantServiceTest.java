@@ -13,7 +13,7 @@ import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.service.ApplicantService;
+import com.ajou_nice.with_pet.service.applicant.ApplicantService;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

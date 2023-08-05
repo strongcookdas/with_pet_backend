@@ -4,7 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest.ApplicantModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoResponse;
-import com.ajou_nice.with_pet.service.ApplicantService;
+import com.ajou_nice.with_pet.service.applicant.ApplicantService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;

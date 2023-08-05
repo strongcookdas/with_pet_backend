@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ajou_nice.with_pet.CommonApiTest;
 import com.ajou_nice.with_pet.controller.applicant.ApplicantController;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
-import com.ajou_nice.with_pet.service.ApplicantService;
+import com.ajou_nice.with_pet.service.applicant.ApplicantService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
