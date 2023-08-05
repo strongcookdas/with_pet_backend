@@ -76,9 +76,9 @@ public class PetSitterService {
 	}
 
 	// == 펫시터의 자신 정보 조회 == //
-	public PetSitterModifyInfoResponse showMyInfo(String userId){
+	public PetSitterModifyInfoResponse showMyInfo(String email){
 
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationByEmail(email);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -93,9 +93,9 @@ public class PetSitterService {
 	// == 펫시터 my Info 등록 == //
 	@Transactional
 	public PetSitterModifyInfoResponse registerPetSitterInfo(
-			PetSitterInfoRequest petSitterInfoRequest, String userId){
+			PetSitterInfoRequest petSitterInfoRequest, String email){
 
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationByEmail(email);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
