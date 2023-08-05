@@ -45,10 +45,10 @@ public class JwtTokenUtil {
         return extractClaims(token).getBody().get("ROLE").toString();
     }
 
-    public String createToken(String id, String userRole) {
+    public String createToken(String email, String role) {
         //user pk 값 insert
-        Claims claims = Jwts.claims().setSubject(id);
-        claims.put("ROLE", userRole);
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put("ROLE", role);
 
         return Jwts.builder()
                 .setClaims(claims)
