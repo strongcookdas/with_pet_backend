@@ -60,6 +60,14 @@ public class ValidateCollection {
 		return findUser;
 	}
 
+	// 유저 검증 by email
+	public User userValidationByEmail(String email){
+		User findUser = userRepository.findByEmail(email).orElseThrow(()->{
+			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+		});
+
+		return findUser;
+	}
 	// 위드펫 서비스 검증
 	public WithPetService withPetServiceValidation(Long serviceId){
 		WithPetService withPetService = withPetServiceRepository.findById(serviceId)

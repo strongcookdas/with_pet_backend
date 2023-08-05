@@ -24,9 +24,9 @@ public class ApplicantService {
 	// == 유저의 펫시터 지원자 등록 == //
 	// 리팩토링 완
 	@Transactional
-	public ApplicantInfoResponse registerApplicant(ApplicantInfoRequest applicantInfoRequest, String userId){
+	public ApplicantInfoResponse registerApplicant(ApplicantInfoRequest applicantInfoRequest, String email){
 
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationByEmail(email);
 
 		// 유저 펫시터 지원 중복 체크
 		// 유저의 role이 지원자이고 , 지원상태가 WAIT일때는 중복 지원 금지

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ajou_nice.with_pet.CommonApiTest;
 import com.ajou_nice.with_pet.controller.applicant.ApplicantController;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
 import com.ajou_nice.with_pet.service.ApplicantService;
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ApplicantController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class ApplicantControllerTest {
+public class ApplicantControllerTest extends CommonApiTest {
 
     @Autowired
     MockMvc mockMvc;
