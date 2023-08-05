@@ -2,11 +2,9 @@ package com.ajou_nice.with_pet.applicant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.ajou_nice.with_pet.domain.dto.embedded.AddressDto;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -17,7 +15,6 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.service.ApplicantService;
 import com.ajou_nice.with_pet.service.ValidateCollection;
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -173,6 +170,4 @@ public class ApplicantServiceTest {
         //then
         assertEquals(ErrorCode.TO_MANY_APPLICATE, exception.getErrorCode());
     }
-
-
 }
