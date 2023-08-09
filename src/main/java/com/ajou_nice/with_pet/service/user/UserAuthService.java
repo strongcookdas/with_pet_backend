@@ -53,7 +53,7 @@ public class UserAuthService {
                     ErrorCode.INVALID_PASSWORD.getMessage());
         }
 
-        String accessToken = jwtTokenUtil.createToken(findUser.getId(),
+        String accessToken = jwtTokenUtil.createToken(findUser.getEmail(),
                 findUser.getRole().name());
 
         return UserLoginResponse.of(findUser,accessToken);
