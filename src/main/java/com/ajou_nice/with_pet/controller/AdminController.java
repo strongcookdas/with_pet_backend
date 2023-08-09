@@ -8,7 +8,7 @@ import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoResponse;
+import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
@@ -69,12 +69,12 @@ public class AdminController {
 
 	@GetMapping("/api/v1/show-applicant/{userId}")
 	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-	public Response<ApplicantInfoResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId")Long userId){
+	public Response<ApplicantCreateResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId")Long userId){
 
-		ApplicantInfoResponse applicantInfoResponse = adminService.getApplicantInfo(
+		ApplicantCreateResponse applicantCreateResponse = adminService.getApplicantInfo(
 				authentication.getName(), userId);
 
-		return Response.success(applicantInfoResponse);
+		return Response.success(applicantCreateResponse);
 	}
 
 	@PostMapping("/api/v1/admin/refuse-applicant")

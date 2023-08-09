@@ -7,7 +7,7 @@ import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest.
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoResponse;
+import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
@@ -127,7 +127,7 @@ public class AdminService {
 
 	// == 관리자의 펫시터 지원자 한명 상세정보 확인 == //
 	// 리팩토링 완
-	public ApplicantInfoResponse getApplicantInfo(String id, Long userId) {
+	public ApplicantCreateResponse getApplicantInfo(String id, Long userId) {
 
 		valid.userValidation(id);
 
@@ -136,7 +136,7 @@ public class AdminService {
 			throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
 		});
 
-		return ApplicantInfoResponse.ofAll(findUser);
+		return ApplicantCreateResponse.of(findUser);
 	}
 
 	// == 관리자의 위드펫 서비스 리스트 조회 == //

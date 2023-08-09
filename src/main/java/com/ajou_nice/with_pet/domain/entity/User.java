@@ -1,12 +1,14 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
-import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest;
-import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantInfoRequest.ApplicantModifyRequest;
+import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest;
+import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest.ApplicantModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyRequest;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
+import com.ajou_nice.with_pet.enums.Gender;
 import com.ajou_nice.with_pet.enums.UserRole;
+import java.time.LocalDate;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -37,10 +39,10 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    private String id;
     @NotNull
     private String name;
-    //삭제할 예정
-    private String id;
     @NotNull
     private String password;
     @NotNull
@@ -48,7 +50,6 @@ public class User extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
     @Lob
     private String profileImg;
     @NotNull
@@ -61,24 +62,16 @@ public class User extends BaseEntity {
     })
     private Address address;
 
-    private String identification;
-
-    @Lob
-    private String licenseImg;
+    private LocalDate birth;
     private Boolean isSmoking;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     private Boolean havingWithPet;
-
-    @Lob
-    private String careExperience;
-
     @Lob
     private String animalCareer;
-
     @Lob
-    private String petSitterCareer;
-
-    @Lob
-    private String motivate;
+    private String motivation;
+    private String licenseImg;
 
     @Enumerated(EnumType.STRING)
     private ApplicantStatus applicantStatus;
@@ -100,7 +93,7 @@ public class User extends BaseEntity {
         this.address = Address.toAddressEntity(modifyRequest.getAddress());
     }
 
-    public void updateApplicateCount() {
+    public void updateApplicantCount() {
         applicantCount++;
     }
 
@@ -108,26 +101,19 @@ public class User extends BaseEntity {
         this.applicantStatus = status;
     }
 
-    public void registerApplicantInfo(ApplicantInfoRequest applicantInfoRequest) {
-        if (applicantInfoRequest.getApplicant_license_img().isEmpty()) {
-            this.licenseImg = "https://withpetoriginimage.s3.ap-northeast-1.amazonaws.com/default.png";
-        } else {
-            this.licenseImg = applicantInfoRequest.getApplicant_license_img();
-        }
-        this.identification = applicantInfoRequest.getApplicant_identification();
-        this.isSmoking = applicantInfoRequest.getApplicant_is_smoking();
-        this.havingWithPet = applicantInfoRequest.getApplicant_having_with_pet();
-        this.careExperience = applicantInfoRequest.getApplicant_care_experience();
-        this.animalCareer = applicantInfoRequest.getApplicant_animal_career();
-        this.petSitterCareer = applicantInfoRequest.getApplicant_petsitter_career();
-        this.motivate = applicantInfoRequest.getApplicant_motivate();
+    public void registerApplicantInfo(ApplicantCreateRequest applicantCreateRequest) {
+        this.licenseImg = applicantCreateRequest.getLicenseImg();
+        this.birth = applicantCreateRequest.getBirth();
+        this.isSmoking = applicantCreateRequest.getIsSmoking();
+        this.havingWithPet = applicantCreateRequest.getHavingWithPet();
+        this.gender = applicantCreateRequest.getGender();
+        this.animalCareer = applicantCreateRequest.getAnimalCareer();
+        this.motivation = applicantCreateRequest.getMotivation();
     }
 
     public void updateApplicantInfo(ApplicantModifyRequest applicantModifyRequest) {
-        this.petSitterCareer = applicantModifyRequest.getApplicant_petsitter_career();
-        this.careExperience = applicantModifyRequest.getApplicant_care_experience();
         this.animalCareer = applicantModifyRequest.getApplicant_animal_career();
-        this.motivate = applicantModifyRequest.getApplicant_motivate();
+        this.motivation = applicantModifyRequest.getApplicant_motivate();
     }
 
     public static User simpleUserForTest(String userName, String userId, String password,
