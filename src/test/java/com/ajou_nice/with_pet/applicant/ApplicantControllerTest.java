@@ -50,30 +50,30 @@ public class ApplicantControllerTest extends CommonApiTest {
     @BeforeEach
     void setUp(){
         request = ApplicantCreateRequest.builder()
-                .birth(LocalDate.now())
-                .isSmoking(false)
-                .gender(Gender.FEMALE)
-                .havingWithPet(true)
-                .animalCareer("커리어")
-                .motivation("동기")
-                .licenseImg("이미지")
+                .applicantBirth(LocalDate.now())
+                .applicantIsSmoking(false)
+                .applicantGender(Gender.FEMALE)
+                .applicantHavingWithPet(true)
+                .applicantAnimalCareer("커리어")
+                .applicantMotivation("동기")
+                .applicantLicenseImg("이미지")
                 .build();
 
         response = ApplicantCreateResponse.builder()
-                .userId(1L)
-                .name("user1")
-                .email("email@email.com")
-                .profileImg("이미지")
-                .phone("010-0000-0000")
-                .status(ApplicantStatus.WAIT.name())
-                .birth(LocalDate.now())
-                .isSmoking(true)
-                .gender(Gender.FEMALE)
-                .havingWithPet(true)
-                .animalCareer("커리어")
-                .motivation("동기")
-                .licenseImg("이미지")
-                .streetAdr("원천동")
+                .applicantUserId(1L)
+                .applicantName("user1")
+                .applicantEmail("email@email.com")
+                .applicantProfileImg("이미지")
+                .applicantPhone("010-0000-0000")
+                .applicantStatus(ApplicantStatus.WAIT.name())
+                .applicantBirth(LocalDate.now())
+                .applicantIsSmoking(true)
+                .applicantGender(Gender.FEMALE)
+                .applicantHavingWithPet(true)
+                .applicantAnimalCareer("커리어")
+                .applicantMotivation("동기")
+                .applicantLicenseImg("이미지")
+                .applicantStreetAdr("원천동")
                 .build();
     }
     @Test
@@ -112,7 +112,7 @@ public class ApplicantControllerTest extends CommonApiTest {
         ApplicantCreateRequest requestValue = requestCaptor.getValue();
         String userNameValue = userNameCaptor.getValue();
 
-        Assertions.assertEquals(requestValue.getMotivation(),request.getMotivation());
+        Assertions.assertEquals(requestValue.getApplicantMotivation(),request.getApplicantMotivation());
         Assertions.assertEquals("test",userNameValue);
 
     }

@@ -17,37 +17,37 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class ApplicantCreateResponse {
 
-    private Long userId;
-    private String name;
-    private String email;
-    private String profileImg;
-    private String phone;
-    private String status;
-    private LocalDate birth;
-    private Boolean isSmoking;
-    private Gender gender;
-    private Boolean havingWithPet;
-    private String animalCareer;
-    private String motivation;
-    private String licenseImg;
-    private String streetAdr;
+    private Long applicantUserId;
+    private String applicantName;
+    private String applicantEmail;
+    private String applicantProfileImg;
+    private String applicantPhone;
+    private String applicantStatus;
+    private LocalDate applicantBirth;
+    private Boolean applicantIsSmoking;
+    private Gender applicantGender;
+    private Boolean applicantHavingWithPet;
+    private String applicantAnimalCareer;
+    private String applicantMotivation;
+    private String applicantLicenseImg;
+    private String applicantStreetAdr;
 
     public static ApplicantCreateResponse of(User user) {
         return ApplicantCreateResponse.builder()
-                .userId(user.getUserId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .profileImg(user.getProfileImg())
-                .phone(user.getPhone())
-                .status(user.getApplicantStatus().name())
-                .birth(user.getBirth())
-                .isSmoking(user.getIsSmoking())
-                .gender(user.getGender())
-                .havingWithPet(user.getHavingWithPet())
-                .animalCareer(user.getAnimalCareer())
-                .motivation(user.getMotivation())
-                .licenseImg(user.getLicenseImg())
-                .streetAdr(user.getAddress().getStreetAdr())
+                .applicantUserId(user.getUserId())
+                .applicantName(user.getName())
+                .applicantEmail(user.getEmail())
+                .applicantProfileImg(user.getProfileImg())
+                .applicantPhone(user.getPhone())
+                .applicantStatus(user.getApplicantStatus().name())
+                .applicantBirth(user.getBirth())
+                .applicantIsSmoking(user.getIsSmoking())
+                .applicantGender(user.getGender())
+                .applicantHavingWithPet(user.getHavingWithPet())
+                .applicantAnimalCareer(user.getAnimalCareer())
+                .applicantMotivation(user.getMotivation())
+                .applicantLicenseImg(user.getLicenseImg())
+                .applicantStreetAdr(user.getAddress().getStreetAdr())
                 .build();
     }
 }

@@ -58,20 +58,20 @@ public class ApplicantServiceTest {
                 .address(address)
                 .build();
         request = ApplicantCreateRequest.builder()
-                .birth(LocalDate.now())
-                .isSmoking(false)
-                .gender(Gender.FEMALE)
-                .havingWithPet(true)
-                .animalCareer("커리어")
-                .motivation("동기")
-                .licenseImg("이미지")
+                .applicantBirth(LocalDate.now())
+                .applicantIsSmoking(false)
+                .applicantGender(Gender.FEMALE)
+                .applicantHavingWithPet(true)
+                .applicantAnimalCareer("커리어")
+                .applicantMotivation("동기")
+                .applicantLicenseImg("이미지")
                 .build();
         //when
         when(validateCollection.userValidationByEmail(user.getEmail())).thenReturn(user);
         ApplicantCreateResponse result = service.registerApplicant(request, user.getEmail());
         //then
-        Assertions.assertEquals(user.getUserId(),result.getUserId());
-        Assertions.assertEquals(request.getMotivation(), result.getMotivation());
+        Assertions.assertEquals(user.getUserId(),result.getApplicantUserId());
+        Assertions.assertEquals(request.getApplicantMotivation(), result.getApplicantMotivation());
     }
 
     @Test
@@ -91,13 +91,13 @@ public class ApplicantServiceTest {
                 .address(address)
                 .build();
         request = ApplicantCreateRequest.builder()
-                .birth(LocalDate.now())
-                .isSmoking(false)
-                .gender(Gender.FEMALE)
-                .havingWithPet(true)
-                .animalCareer("커리어")
-                .motivation("동기")
-                .licenseImg("이미지")
+                .applicantBirth(LocalDate.now())
+                .applicantIsSmoking(false)
+                .applicantGender(Gender.FEMALE)
+                .applicantHavingWithPet(true)
+                .applicantAnimalCareer("커리어")
+                .applicantMotivation("동기")
+                .applicantLicenseImg("이미지")
                 .build();
         //when
         when(validateCollection.userValidationByEmail(user.getEmail())).thenReturn(user);
@@ -123,13 +123,13 @@ public class ApplicantServiceTest {
                 .address(address)
                 .build();
         request = ApplicantCreateRequest.builder()
-                .birth(LocalDate.now())
-                .isSmoking(false)
-                .gender(Gender.FEMALE)
-                .havingWithPet(true)
-                .animalCareer("커리어")
-                .motivation("동기")
-                .licenseImg("이미지")
+                .applicantBirth(LocalDate.now())
+                .applicantIsSmoking(false)
+                .applicantGender(Gender.FEMALE)
+                .applicantHavingWithPet(true)
+                .applicantAnimalCareer("커리어")
+                .applicantMotivation("동기")
+                .applicantLicenseImg("이미지")
                 .build();
         //when
         when(validateCollection.userValidationByEmail(user.getEmail())).thenReturn(user);

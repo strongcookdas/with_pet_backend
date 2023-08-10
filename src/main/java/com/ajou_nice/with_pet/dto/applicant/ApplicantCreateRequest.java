@@ -21,25 +21,25 @@ import lombok.ToString;
 public class ApplicantCreateRequest {
 
     @NotNull(message = "올바른 형식의 생년월일을 입력해주세요.")
-    private LocalDate birth;
+    private LocalDate applicantBirth;
 
     @NotNull(message = "흡연여부 문항을 체크해주세요.")
-    private Boolean isSmoking;
+    private Boolean applicantIsSmoking;
 
     @NotNull(message = "성별을 입력해주세요.")
-    private Gender gender;
+    private Gender applicantGender;
 
     @NotNull(message = "반려 경험 여부 문항을 체크해주세요.")
-    private Boolean havingWithPet;
+    private Boolean applicantHavingWithPet;
 
     @Lob
-    private String animalCareer;
+    private String applicantAnimalCareer;
 
     @Lob
-    private String motivation;
+    private String applicantMotivation;
 
     @NotNull(message = "자격증 업로드를 해주세요.")
-    private String licenseImg;
+    private String applicantLicenseImg;
 
 
     @Data

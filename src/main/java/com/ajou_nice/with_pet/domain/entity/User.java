@@ -102,13 +102,13 @@ public class User extends BaseEntity {
     }
 
     public void registerApplicantInfo(ApplicantCreateRequest applicantCreateRequest) {
-        this.licenseImg = applicantCreateRequest.getLicenseImg();
-        this.birth = applicantCreateRequest.getBirth();
-        this.isSmoking = applicantCreateRequest.getIsSmoking();
-        this.havingWithPet = applicantCreateRequest.getHavingWithPet();
-        this.gender = applicantCreateRequest.getGender();
-        this.animalCareer = applicantCreateRequest.getAnimalCareer();
-        this.motivation = applicantCreateRequest.getMotivation();
+        this.licenseImg = applicantCreateRequest.getApplicantLicenseImg();
+        this.birth = applicantCreateRequest.getApplicantBirth();
+        this.isSmoking = applicantCreateRequest.getApplicantIsSmoking();
+        this.havingWithPet = applicantCreateRequest.getApplicantHavingWithPet();
+        this.gender = applicantCreateRequest.getApplicantGender();
+        this.animalCareer = applicantCreateRequest.getApplicantAnimalCareer();
+        this.motivation = applicantCreateRequest.getApplicantMotivation();
     }
 
     public void updateApplicantInfo(ApplicantModifyRequest applicantModifyRequest) {
