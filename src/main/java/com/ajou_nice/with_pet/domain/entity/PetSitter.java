@@ -3,6 +3,7 @@ package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,6 +32,7 @@ public class PetSitter extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "petsitter_id")
 	private Long petSitterId;
 
 	//삭제

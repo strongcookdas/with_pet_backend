@@ -28,11 +28,11 @@ public class PetSitterCriticalService {
 	private Long id;
 
 	@ManyToOne(fetch= FetchType.LAZY)
-	@JoinColumn(name = "petsitter_id")
+	@JoinColumn(name = "petSitterId")
 	private PetSitter petSitter;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "critical_serviceId")
+	@JoinColumn(name = "criticalServiceId")
 	private CriticalService criticalService;
 
 	private int price;

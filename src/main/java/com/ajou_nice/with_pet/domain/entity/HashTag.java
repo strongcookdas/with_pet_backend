@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHashTagRequest;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,8 @@ public class HashTag {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(name = "hashtag_id")
+	private Long hashTagId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "petSitterId")

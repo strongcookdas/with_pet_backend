@@ -24,7 +24,7 @@ public class PetSitterHashTagInfoResponse {
 
 	public static List<PetSitterHashTagInfoResponse> toList(List<HashTag> hashTags){
 		return hashTags.stream().map(petSitterHashTag -> PetSitterHashTagInfoResponse.builder()
-				.petSitterHashTagId(petSitterHashTag.getId())
+				.petSitterHashTagId(petSitterHashTag.getHashTagId())
 				.hashTagName(petSitterHashTag.getName())
 				.build()).collect(Collectors.toList());
 	}
