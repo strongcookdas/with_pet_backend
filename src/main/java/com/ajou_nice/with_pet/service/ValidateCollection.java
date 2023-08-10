@@ -10,7 +10,7 @@ import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.domain.entity.WithPetService;
+import com.ajou_nice.with_pet.domain.entity.Service;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
@@ -25,10 +25,9 @@ import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
+@org.springframework.stereotype.Service
 @RequiredArgsConstructor
 public class ValidateCollection {
 
@@ -69,13 +68,13 @@ public class ValidateCollection {
 		return findUser;
 	}
 	// 위드펫 서비스 검증
-	public WithPetService withPetServiceValidation(Long serviceId){
-		WithPetService withPetService = withPetServiceRepository.findById(serviceId)
+	public Service withPetServiceValidation(Long serviceId){
+		Service service = withPetServiceRepository.findById(serviceId)
 				.orElseThrow(()->{
 					throw new AppException(ErrorCode.WITH_PET_SERVICE_NOT_FOUND, ErrorCode.WITH_PET_SERVICE_NOT_FOUND.getMessage());
 				});
 
-		return withPetService;
+		return service;
 	}
 
 	// 필수 서비스 검증 (소형견, 중형견, 대형견)

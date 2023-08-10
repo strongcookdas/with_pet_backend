@@ -33,7 +33,7 @@ public class UserDiaryResponse {
 
         Long petsitterId = null;
         if(diary.getPetSitter()!=null){
-            petsitterId = diary.getPetSitter().getId();
+            petsitterId = diary.getPetSitter().getPetSitterId();
         }
 
         return UserDiaryResponse.builder()

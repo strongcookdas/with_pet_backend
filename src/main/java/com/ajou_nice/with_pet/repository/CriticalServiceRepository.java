@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface CriticalServiceRepository extends JpaRepository<CriticalService, Long> {
 
-	@Query("select c from CriticalService c where c.serviceName=:serviceName")
+	@Query("select c from CriticalService c where c.name=:serviceName")
 	List<CriticalService> findCritiCalServiceByServiceName(@Param("serviceName") String serviceName);
 }

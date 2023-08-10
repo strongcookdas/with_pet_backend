@@ -30,10 +30,10 @@ public class PetSitterServiceResponse {
 	public static List<PetSitterServiceResponse> toList(List<PetSitterWithPetService> petSitterServiceList){
 		return petSitterServiceList.stream().map(petSitterService -> PetSitterServiceResponse.builder()
 				.petSitterServiceId(petSitterService.getId())
-				.serviceId(petSitterService.getWithPetService().getId())
-				.serviceName(petSitterService.getWithPetService().getName())
-				.serviceIntroduction(petSitterService.getWithPetService().getIntroduction())
-				.serviceImg(petSitterService.getWithPetService().getService_Img())
+				.serviceId(petSitterService.getService().getId())
+				.serviceName(petSitterService.getService().getName())
+				.serviceIntroduction(petSitterService.getService().getIntroduction())
+				.serviceImg(petSitterService.getService().getImage())
 				.price(petSitterService.getPrice())
 				.build()).collect(Collectors.toList());
 	}
@@ -56,10 +56,10 @@ public class PetSitterServiceResponse {
 		public static List<PetSitterCriticalServiceResponse> toList(List<PetSitterCriticalService> petSitterCriticalServices){
 			return petSitterCriticalServices.stream().map(petSitterCriticalService-> PetSitterCriticalServiceResponse.builder()
 					.petSitterServiceId(petSitterCriticalService.getId())
-					.serviceId(petSitterCriticalService.getCriticalService().getId())
-					.serviceName(petSitterCriticalService.getCriticalService().getServiceName())
+					.serviceId(petSitterCriticalService.getCriticalService().getCriticalServiceId())
+					.serviceName(petSitterCriticalService.getCriticalService().getName())
 					.serviceIntroduction(petSitterCriticalService.getCriticalService().getIntroduction())
-					.serviceImg(petSitterCriticalService.getCriticalService().getServiceImg())
+					.serviceImg(petSitterCriticalService.getCriticalService().getImage())
 					.price(petSitterCriticalService.getPrice())
 					.build()).collect(Collectors.toList());
 		}

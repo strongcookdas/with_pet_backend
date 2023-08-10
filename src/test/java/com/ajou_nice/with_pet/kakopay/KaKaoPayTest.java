@@ -65,14 +65,14 @@ public class KaKaoPayTest {
 		// 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
-		parameters.add("partner_order_id", reservation.getPetSitter().getId().toString());
+		parameters.add("partner_order_id", reservation.getPetSitter().getPetSitterId().toString());
 		parameters.add("partner_user_id", reservation.getUser().getId().toString());
 		parameters.add("item_name", "펫시터 예약");
 		parameters.add("quantity", "1");
 		parameters.add("total_amount", reservation.getTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
-		parameters.add("approval_url", "http://localhost:8080/payment/test/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
+		parameters.add("approval_url", "http://localhost:8080/payment/test/"+reservation.getPetSitter().getPetSitterId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
 		parameters.add("cancel_url", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel"); // 취소 시 redirect url -> 서버의 주소
 		parameters.add("fail_url", "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail"); // 실패 시 redirect url -> 서버의 주소
 		//redirect url의 경우 나중에 연동시 프론트에서의 URL을 입력해주고 , 꼭 내가 도메인 변경을 해주어야 한다.

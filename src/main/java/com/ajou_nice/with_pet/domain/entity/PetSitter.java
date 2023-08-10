@@ -3,7 +3,6 @@ package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -32,28 +31,34 @@ public class PetSitter extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "petsitter_id")
-	private Long id;
+	private Long petSitterId;
 
+	//삭제
 	@NotNull
 	private String petSitterName;
 
+	//삭제
 	@Lob
 	private String profileImg;
 
+	//삭제
 	@NotNull
 	private String petSitterPhone;
 
+	//삭제
 	@NotNull
 	@Lob
 	private String petSitterLicenseImg;
 
+	//삭제
 	@NotNull
 	private String petSitterZipCode;
 
+	//삭제
 	@NotNull
 	private String petSitterStreetAdr;
 
+	//삭제
 	@NotNull
 	private String petSitterDetailAdr;
 
@@ -62,19 +67,20 @@ public class PetSitter extends BaseEntity {
 	@JoinColumn(name="userId",unique = true, nullable = false)
 	private User user;
 
+	@OneToMany(mappedBy = "petSitter")
+	private List<House> houseList;
 
 	@OneToMany(mappedBy = "petSitter")
-	private List<House> petSitterHouseList;
+	private List<HashTag> hashTagList;
 
-	@OneToMany(mappedBy = "petSitter")
-	private List<PetSitterHashTag> petSitterHashTagList;
-
+	//삭제
 	@Enumerated(EnumType.STRING)
 	private DogSize availableDogSize;
 
 	@Lob
 	private String introduction;
 
+	//?
 	private Boolean valid;
 
 	private int review_count;

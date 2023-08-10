@@ -18,15 +18,11 @@ import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -171,9 +167,9 @@ public class DogService {
                 log.info(
                         "================Dog Size : {}, Critical Size : {} ================================",
                         dog.getDogSize().toString(),
-                        criticalService.getCriticalService().getServiceName());
+                        criticalService.getCriticalService().getName());
                 if (dog.getDogSize().toString()
-                        .equals(criticalService.getCriticalService().getServiceName())) {
+                        .equals(criticalService.getCriticalService().getName())) {
                     check = true;
                 }
             }

@@ -22,15 +22,12 @@ import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
-import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -101,7 +98,7 @@ public class ReservationService {
         List<ReservationPetSitterService> reservationServices = new ArrayList<>();
 
         for (PetSitterWithPetService withPetService : withPetServices) {
-            if (!withPetService.getPetSitter().getId().equals(petSitter.getId())) {
+            if (!withPetService.getPetSitter().getPetSitterId().equals(petSitter.getPetSitterId())) {
                 throw new AppException(ErrorCode.PETSITTER_SERVICE_NOT_FOUND,
                         "해당 펫시터가 제공하는 서비스가 아닙니다.");
             }
@@ -329,7 +326,7 @@ public class ReservationService {
                 reviewRequest.getContent());
         reviewRepository.save(review);
 
-        PetSitter petSitter = valid.petSitterValidation(reservation.getPetSitter().getId());
+        PetSitter petSitter = valid.petSitterValidation(reservation.getPetSitter().getPetSitterId());
 
         petSitter.updateReview(reviewRequest.getGrade());
 

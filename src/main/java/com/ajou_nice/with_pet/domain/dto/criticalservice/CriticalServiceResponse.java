@@ -25,18 +25,18 @@ public class CriticalServiceResponse {
 
 	public static CriticalServiceResponse of(CriticalService criticalService){
 		return CriticalServiceResponse.builder()
-				.serviceId(criticalService.getId())
-				.serviceName(criticalService.getServiceName())
-				.serviceImg(criticalService.getServiceImg())
+				.serviceId(criticalService.getCriticalServiceId())
+				.serviceName(criticalService.getName())
+				.serviceImg(criticalService.getImage())
 				.serviceIntroduction(criticalService.getIntroduction())
 				.build();
 	}
 
 	public static List<CriticalServiceResponse> toList(List<CriticalService> criticalServices){
 		return criticalServices.stream().map(criticalService->CriticalServiceResponse.builder()
-				.serviceId(criticalService.getId())
-				.serviceName(criticalService.getServiceName())
-				.serviceImg(criticalService.getServiceImg())
+				.serviceId(criticalService.getCriticalServiceId())
+				.serviceName(criticalService.getName())
+				.serviceImg(criticalService.getImage())
 				.serviceIntroduction(criticalService.getIntroduction())
 				.build()).collect(Collectors.toList());
 	}

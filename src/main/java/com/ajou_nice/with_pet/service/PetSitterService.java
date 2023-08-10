@@ -14,17 +14,15 @@ import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterInt
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterWithPetServicesRequest;
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
+import com.ajou_nice.with_pet.domain.entity.HashTag;
 import com.ajou_nice.with_pet.domain.entity.House;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
-import com.ajou_nice.with_pet.domain.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.domain.entity.WithPetService;
+import com.ajou_nice.with_pet.domain.entity.Service;
 import com.ajou_nice.with_pet.enums.DogSize;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.HouseRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
@@ -32,7 +30,6 @@ import com.ajou_nice.with_pet.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,10 +37,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@org.springframework.stereotype.Service
 @RequiredArgsConstructor
 public class PetSitterService {
 
@@ -67,10 +63,10 @@ public class PetSitterService {
 		PetSitter findPetSitter = valid.petSitterValidation(petSitterId);
 		List<Review> reviews = reviewRepository.findAllByPetSitter(findPetSitter);
 		List<PetSitterWithPetService> petSitterWithPetServices = petSitterServiceRepository.findAllByPetSitterInQuery(
-				findPetSitter.getId());
+				findPetSitter.getPetSitterId());
 
 		List<PetSitterCriticalService> petSitterCriticalServices = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(
-				findPetSitter.getId());
+				findPetSitter.getPetSitterId());
 
 		return PetSitterDetailInfoResponse.of(findPetSitter, reviews, petSitterWithPetServices, petSitterCriticalServices);
 	}
@@ -82,12 +78,12 @@ public class PetSitterService {
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
-		List<WithPetService> withPetServiceList = getWithPetServiceList();
+		List<Service> serviceList = getWithPetServiceList();
 		List<CriticalService> criticalServiceList = getCriticalServiceList();
 		List<PetSitterWithPetService> petSitterWithPetServices = getPetSitterWithPetServiceList(petSitter);
 		List<PetSitterCriticalService> petSitterCriticalServices = getPetSitterCriticalServiceList(petSitter);
 
-		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, petSitterWithPetServices, petSitterCriticalServices);
+		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, serviceList, petSitterWithPetServices, petSitterCriticalServices);
 	}
 
 	// == 펫시터 my Info 등록 == //
@@ -103,7 +99,7 @@ public class PetSitterService {
 		List<House> houses = addPetSitterHouseInfos(petSitterHouses, petSitter);
 
 		Iterator<PetSitterHashTagRequest> petSitterHashtags = petSitterInfoRequest.getPetSitterHashTagRequests().iterator();
-		List<PetSitterHashTag> hashTags = addPetSitterHashTagInfos(petSitterHashtags, petSitter);
+		List<HashTag> hashTags = addPetSitterHashTagInfos(petSitterHashtags, petSitter);
 
 		Iterator<PetSitterServiceRequest> petSitterServices = petSitterInfoRequest.getPetSitterServiceRequests().iterator();
 		List<PetSitterWithPetService> services = addPetSitterWithPetServiceInfos(petSitterServices, petSitter);
@@ -119,10 +115,10 @@ public class PetSitterService {
 		// 펫시터 정보를 입력한 다음 validation이 true로 바뀌어서 Main page에 조회가 된다.
 		petSitter.changeValidation(true);
 
-		List<WithPetService> withPetServiceList = getWithPetServiceList();
+		List<Service> serviceList = getWithPetServiceList();
 		List<CriticalService> criticalServiceList = getCriticalServiceList();
 
-		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, services, criticalServices);
+		return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, serviceList, services, criticalServices);
 	}
 
 	// == 펫시터 houses 정보 수정 == //
@@ -134,10 +130,10 @@ public class PetSitterService {
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
 		//원래 있던 정보 전체 삭제
-		List<House> petSitterHouseList = houseRepository.findAllByPetSitterInQuery(petSitter.getId());
+		List<House> petSitterHouseList = houseRepository.findAllByPetSitterInQuery(petSitter.getPetSitterId());
 
 		if(!petSitterHouseList.isEmpty()){
-			houseRepository.deleteAllByPetSitterInQuery(petSitter.getId());
+			houseRepository.deleteAllByPetSitterInQuery(petSitter.getPetSitterId());
 		}
 		//새로운 정보로 갈아 끼움 houses
 		Iterator<PetSitterHouseRequest> petSitterHouses = petSitterHousesRequest.getPetSitterHousesRequests().iterator();
@@ -154,14 +150,14 @@ public class PetSitterService {
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
-		List<PetSitterHashTag> petSitterHashTagList = petSitterHashTagRepository.findAllByPetSitterInQuery(petSitter.getId());
-		if(!petSitterHashTagList.isEmpty()){
-			petSitterHashTagRepository.deleteAllByPetSitterInQuery(petSitter.getId());
+		List<HashTag> hashTagList = petSitterHashTagRepository.findAllByPetSitterInQuery(petSitter.getPetSitterId());
+		if(!hashTagList.isEmpty()){
+			petSitterHashTagRepository.deleteAllByPetSitterInQuery(petSitter.getPetSitterId());
 		}
 
 		//새로운 정보로 갈아 끼움 hashTags
 		Iterator<PetSitterHashTagRequest> petSitterHashtags = hashTagsRequest.getPetSitterHashTagRequests().iterator();
-		List<PetSitterHashTag> newHashTagList = addPetSitterHashTagInfos(petSitterHashtags, petSitter);
+		List<HashTag> newHashTagList = addPetSitterHashTagInfos(petSitterHashtags, petSitter);
 
 
 		petSitterHashTagRepository.saveAll(newHashTagList);
@@ -175,9 +171,9 @@ public class PetSitterService {
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
 
-		List<PetSitterWithPetService> petSitterServiceList = petSitterServiceRepository.findAllByPetSitterInQuery(petSitter.getId());
+		List<PetSitterWithPetService> petSitterServiceList = petSitterServiceRepository.findAllByPetSitterInQuery(petSitter.getPetSitterId());
 		if(!petSitterServiceList.isEmpty()){
-			petSitterServiceRepository.deleteAllByPetSitterInQuery(petSitter.getId());
+			petSitterServiceRepository.deleteAllByPetSitterInQuery(petSitter.getPetSitterId());
 		}
 		Iterator<PetSitterServiceRequest> petSitterServices = withPetServicesRequest.getPetSitterServiceRequests().iterator();
 
@@ -194,9 +190,9 @@ public class PetSitterService {
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
-		List<PetSitterCriticalService> petSitterCriticalServiceList = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(petSitter.getId());
+		List<PetSitterCriticalService> petSitterCriticalServiceList = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(petSitter.getPetSitterId());
 		if(!petSitterCriticalServiceList.isEmpty()){
-			petSitterCriticalServiceRepository.deleteAllByPetSitterInQuery(petSitter.getId());
+			petSitterCriticalServiceRepository.deleteAllByPetSitterInQuery(petSitter.getPetSitterId());
 		}
 		Iterator<PetSitterCriticalServiceRequest> petSitterCriticalServices = criticalServicesRequest.getPetSitterCriticalServiceRequests().iterator();
 
@@ -225,9 +221,9 @@ public class PetSitterService {
 	}
 
 	// 위드펫 서비스 리스트 return
-	private List<WithPetService> getWithPetServiceList(){
-		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
-		return withPetServiceList;
+	private List<Service> getWithPetServiceList(){
+		List<Service> serviceList = withPetServiceRepository.findAll();
+		return serviceList;
 	}
 
 	// 필수 위드펫 서비스 리스트 return
@@ -239,14 +235,14 @@ public class PetSitterService {
 	// 펫시터 위드펫 서비스 리스트 return
 	private List<PetSitterWithPetService> getPetSitterWithPetServiceList(PetSitter petSitter){
 		List<PetSitterWithPetService> petSitterWithPetServices = petSitterServiceRepository.findAllByPetSitterInQuery(
-				petSitter.getId());
+				petSitter.getPetSitterId());
 		return petSitterWithPetServices;
 	}
 
 	//펫시터 필수 서비스 리스트 return
 	private List<PetSitterCriticalService> getPetSitterCriticalServiceList(PetSitter petSitter){
 		List<PetSitterCriticalService> petSitterCriticalServices = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(
-				petSitter.getId());
+				petSitter.getPetSitterId());
 		return petSitterCriticalServices;
 	}
 
@@ -263,12 +259,12 @@ public class PetSitterService {
 	}
 
 	// 펫시터 hashTag 정보 update
-	private List<PetSitterHashTag> addPetSitterHashTagInfos(Iterator<PetSitterHashTagRequest> petSitterHashTags, PetSitter petSitter){
+	private List<HashTag> addPetSitterHashTagInfos(Iterator<PetSitterHashTagRequest> petSitterHashTags, PetSitter petSitter){
 
-		List<PetSitterHashTag> hashTags = new ArrayList<>();
+		List<HashTag> hashTags = new ArrayList<>();
 		while(petSitterHashTags.hasNext()){
 			PetSitterHashTagRequest hashTagRequest = petSitterHashTags.next();
-			PetSitterHashTag petSitterHashTag = PetSitterHashTag.toEntity(petSitter, hashTagRequest);
+			HashTag petSitterHashTag = HashTag.toEntity(petSitter, hashTagRequest);
 			hashTags.add(petSitterHashTag);
 		}
 		return hashTags;
@@ -281,9 +277,10 @@ public class PetSitterService {
 
 		while(petSitterServices.hasNext()){
 			PetSitterServiceRequest serviceRequest = petSitterServices.next();
-			WithPetService withPetService = valid.withPetServiceValidation(
+			Service service = valid.withPetServiceValidation(
 					serviceRequest.getServiceId());
-			PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService,petSitter,serviceRequest.getPrice());
+			PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(
+					service,petSitter,serviceRequest.getPrice());
 			services.add(petSitterWithPetService);
 		}
 		return services;

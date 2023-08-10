@@ -100,7 +100,7 @@ public class ReviewTest {
 		Review review = Review.of(reservation1, 3.5, "리뷰작성 test입니다.");
 		reviewRepository.save(review);
 
-		PetSitter petsitter = petSitterRepository.findById(reservation1.getPetSitter().getId()).orElseThrow(()->{
+		PetSitter petsitter = petSitterRepository.findById(reservation1.getPetSitter().getPetSitterId()).orElseThrow(()->{
 			throw new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage());
 		});
 		petsitter.updateReview(3.5);

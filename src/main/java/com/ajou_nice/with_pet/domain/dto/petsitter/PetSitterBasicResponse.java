@@ -30,7 +30,7 @@ public class PetSitterBasicResponse {
 
 	public static PetSitterBasicResponse of(PetSitter petSitter){
 		return PetSitterBasicResponse.builder()
-				.petSitterId(petSitter.getId())
+				.petSitterId(petSitter.getPetSitterId())
 				.userName(petSitter.getPetSitterName())
 				.userId(petSitter.getUser().getId())
 				.userProfileImg(petSitter.getProfileImg())
@@ -41,7 +41,7 @@ public class PetSitterBasicResponse {
 
 	public static List<PetSitterBasicResponse> toList(List<PetSitter> petSitters){
 		return petSitters.stream().map(petSitter-> PetSitterBasicResponse.builder()
-				.petSitterId(petSitter.getId())
+				.petSitterId(petSitter.getPetSitterId())
 				.userName(petSitter.getPetSitterName())
 				.userId(petSitter.getUser().getId())
 				.userProfileImg(petSitter.getProfileImg())

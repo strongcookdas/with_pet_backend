@@ -54,7 +54,7 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     private BooleanExpression containPetsitter(PetSitter petSitter) {
-        return reservation.petSitter.id.eq(petSitter.getId());
+        return reservation.petSitter.id.eq(petSitter.getPetSitterId());
     }
 
     private BooleanExpression getMonthReservationCheckIn(LocalDate month) {

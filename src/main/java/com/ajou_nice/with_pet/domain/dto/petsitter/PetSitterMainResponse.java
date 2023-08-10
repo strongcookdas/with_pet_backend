@@ -2,7 +2,6 @@ package com.ajou_nice.with_pet.domain.dto.petsitter;
 
 
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import java.util.List;
@@ -32,15 +31,15 @@ public class PetSitterMainResponse {
 
 	public static PetSitterMainResponse of(PetSitter petSitter){
 		return PetSitterMainResponse.builder()
-				.petSitterId(petSitter.getId())
-				.petSitterRepresentativeHouse(petSitter.getPetSitterHouseList()
+				.petSitterId(petSitter.getPetSitterId())
+				.petSitterRepresentativeHouse(petSitter.getHouseList()
 						.stream().filter(house->house.getRepresentative().equals(true)).findAny().orElseThrow(()->{
 							throw new AppException(ErrorCode.PETSITTER_MAIN_HOUSE_NOT_FOUND,
 									ErrorCode.PETSITTER_MAIN_HOUSE_NOT_FOUND.getMessage());
 						})
-						.getHouse_img())
+						.getImage())
 				.userName(petSitter.getPetSitterName())
-				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
+				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getHashTagList()))
 				.review_count(petSitter.getReview_count())
 				.star_rate(petSitter.getStar_rate())
 				.build();

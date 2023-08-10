@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PetSitterCriticalServiceRepository extends
         JpaRepository<PetSitterCriticalService, Long> {
 
-    @Query("select s from PetSitterCriticalService s where s.petSitter.id=:petSitterId")
+    @Query("select s from PetSitterCriticalService s where s.petSitter.petSitterId=:petSitterId")
     List<PetSitterCriticalService> findAllByPetSitterInQuery(
             @Param("petSitterId") Long petSitterId);
 
     @Modifying
     @Transactional
-    @Query("delete from PetSitterCriticalService c where c.petSitter.id=:petSitterId")
+    @Query("delete from PetSitterCriticalService c where c.petSitter.petSitterId=:petSitterId")
     void deleteAllByPetSitterInQuery(@Param("petSitterId") Long petSitterId);
 
     Optional<PetSitterCriticalService> findByPetSitterAndCriticalService_ServiceName(

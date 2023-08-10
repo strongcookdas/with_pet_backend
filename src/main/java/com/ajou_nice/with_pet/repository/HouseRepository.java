@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface HouseRepository extends JpaRepository<House, Long> {
 
-	@Query("select h from House h where h.petSitter.id=:petSitterId")
+	@Query("select h from House h where h.petSitter.petSitterId=:petSitterId")
 	List<House> findAllByPetSitterInQuery(@Param("petSitterId") Long petSitterId);
 
 	@Modifying
 	@Transactional
-	@Query("delete from House h where h.petSitter.id=:petSitterId")
+	@Query("delete from House h where h.petSitter.petSitterId=:petSitterId")
 	void deleteAllByPetSitterInQuery(@Param("petSitterId") Long petSitterId);
 }

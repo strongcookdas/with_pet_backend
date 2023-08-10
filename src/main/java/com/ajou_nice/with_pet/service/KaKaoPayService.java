@@ -19,13 +19,9 @@ import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
-import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -36,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -76,7 +70,7 @@ public class KaKaoPayService {
 		// 카카오페이 요청 양식
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
-		parameters.add("partner_order_id", reservation.getPetSitter().getId().toString());
+		parameters.add("partner_order_id", reservation.getPetSitter().getPetSitterId().toString());
 		parameters.add("partner_user_id", findUser.getId().toString());
 		parameters.add("item_name", "펫시터 예약");
 		parameters.add("quantity", "1");
@@ -85,7 +79,7 @@ public class KaKaoPayService {
 		parameters.add("tax_free_amount", "0");
 		parameters.add("approval_url",
 				"http://ec2-13-125-242-183.ap-northeast-2.compute.amazonaws.com/petsitterdetail/"
-						+ reservation.getPetSitter().getId()
+						+ reservation.getPetSitter().getPetSitterId()
 						.toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
 		parameters.add("cancel_url",
 				"http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel"); // 취소 시 redirect url -> 서버의 주소
@@ -131,7 +125,7 @@ public class KaKaoPayService {
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
 		parameters.add("tid", tid);
-		parameters.add("partner_order_id", reservation.getPetSitter().getId().toString());
+		parameters.add("partner_order_id", reservation.getPetSitter().getPetSitterId().toString());
 		parameters.add("partner_user_id", reservation.getUser().getId().toString());
 		parameters.add("pg_token", pgToken);
 

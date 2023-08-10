@@ -9,13 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.LazyToOne;
 
 @Entity
 @AllArgsConstructor
@@ -23,17 +22,19 @@ import org.hibernate.annotations.LazyToOne;
 @Getter
 @Builder
 @ToString
+@Table(name = "house")
 public class House {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long houseId;
 
 	@ManyToOne
-	@JoinColumn(name = "petsitter_id", nullable = true)
+	@JoinColumn(name = "petSitterId", nullable = true)
 	private PetSitter petSitter;
 
 	@Lob
-	private String house_img;
+	private String image;
 
 	private Boolean representative;
 
@@ -46,7 +47,7 @@ public class House {
 		}
 		return House.builder()
 				.petSitter(petSitter)
-				.house_img(img)
+				.image(img)
 				.representative(petSitterHouseRequest.getRepresentative())
 				.build();
 	}

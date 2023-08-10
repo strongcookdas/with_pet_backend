@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHashTagRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -23,22 +21,23 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@Table(name = "petsitter_hashtag")
-public class PetSitterHashTag {
+@Table(name = "hashtag")
+public class HashTag {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "petsitter_id")
+	@JoinColumn(name = "petSitterId")
 	private PetSitter petSitter;
 
-	private String hashTagName;
+	private String name;
 
-	public static PetSitterHashTag toEntity(PetSitter petSitter, PetSitterHashTagRequest petSitterHashTagRequest){
-		return PetSitterHashTag.builder()
+	public static HashTag toEntity(PetSitter petSitter, PetSitterHashTagRequest petSitterHashTagRequest){
+		return HashTag.builder()
 				.petSitter(petSitter)
-				.hashTagName(petSitterHashTagRequest.getHashTagName())
+				.name(petSitterHashTagRequest.getHashTagName())
 				.build();
 	}
 

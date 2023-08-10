@@ -23,16 +23,16 @@ public class HouseInfoResponse {
 
 	public static HouseInfoResponse of(House house){
 		return HouseInfoResponse.builder()
-				.houseId(house.getId())
-				.houseImg(house.getHouse_img())
+				.houseId(house.getHouseId())
+				.houseImg(house.getImage())
 				.representative(house.getRepresentative())
 				.build();
 	}
 
 	public static List<HouseInfoResponse> toList(List<House> houseList){
 		return houseList.stream().map(house -> HouseInfoResponse.builder()
-				.houseId(house.getId())
-				.houseImg(house.getHouse_img())
+				.houseId(house.getHouseId())
+				.houseImg(house.getImage())
 				.representative(house.getRepresentative())
 				.build()).collect(Collectors.toList());
 	}
