@@ -30,7 +30,7 @@ public class PetSitterServiceResponse {
 	public static List<PetSitterServiceResponse> toList(List<PetSitterWithPetService> petSitterServiceList){
 		return petSitterServiceList.stream().map(petSitterService -> PetSitterServiceResponse.builder()
 				.petSitterServiceId(petSitterService.getId())
-				.serviceId(petSitterService.getService().getId())
+				.serviceId(petSitterService.getService().getServiceId())
 				.serviceName(petSitterService.getService().getName())
 				.serviceIntroduction(petSitterService.getService().getIntroduction())
 				.serviceImg(petSitterService.getService().getImage())

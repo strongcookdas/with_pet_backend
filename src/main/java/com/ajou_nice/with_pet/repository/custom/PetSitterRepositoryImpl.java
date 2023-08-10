@@ -55,11 +55,11 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
         if (dogSize == null || dogSize.isEmpty()) {
             return null;
         }
-        List<Long> petSitterIdList = queryFactory.select(petSitterCriticalService.petSitter.id)
+        List<Long> petSitterIdList = queryFactory.select(petSitterCriticalService.petSitter.petSitterId)
                 .from(petSitterCriticalService)
-                .where(petSitterCriticalService.criticalService.serviceName.eq(dogSize)).fetch();
+                .where(petSitterCriticalService.criticalService.name.eq(dogSize)).fetch();
         log.info("======================= 필수 서비스 필터 끝 ========================");
-        return petSitter.id.in(petSitterIdList);
+        return petSitter.petSitterId.in(petSitterIdList);
     }
 
     private BooleanExpression containService(QPetSitterWithPetService petSitterWithPetService,
@@ -69,12 +69,12 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
         if (service == null || service.isEmpty()) {
             return null;
         }
-        List<Long> petSitterIdList = queryFactory.select(petSitterWithPetService.petSitter.id)
+        List<Long> petSitterIdList = queryFactory.select(petSitterWithPetService.petSitter.petSitterId)
                 .from(petSitterWithPetService)
-                .where(petSitterWithPetService.withPetService.name.in(service)).fetch();
+                .where(petSitterWithPetService.service.name.in(service)).fetch();
         log.info("======================= 서비스 필터 끝 ========================");
 
-        return petSitter.id.in(petSitterIdList);
+        return petSitter.petSitterId.in(petSitterIdList);
     }
 
     private BooleanExpression containAddress(String address) {
@@ -82,7 +82,7 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
             return null;
         }
         log.info("======================= 주소 필터 시작 ========================");
-        List<Long> petSitterIdList = queryFactory.select(petSitter.id).from(petSitter)
+        List<Long> petSitterIdList = queryFactory.select(petSitter.petSitterId).from(petSitter)
                 .where(petSitter.petSitterStreetAdr.contains(address)).fetch();
         log.info("======================= 주소 필터 끝 ========================");
         return petSitter.petSitterStreetAdr.contains(address);
