@@ -82,6 +82,10 @@ public class SecurityConfig {
 
     };
 
+    private final String[] PETSITTER_POST_API = {
+            "/api/v2/pet-sitters/info"
+    };
+
     private static final String[] DOC_URLS = {
             "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**"
     };
@@ -119,6 +123,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, APPLICANT_PUT_API).hasRole("APPLICANT")
                 .antMatchers(USER_API).hasRole("USER")
                 .antMatchers(PETSITTER_API).hasRole("PETSITTER")
+                .antMatchers(HttpMethod.POST,PETSITTER_POST_API).hasRole("PETSITTER")
                 .antMatchers(HttpMethod.GET, ADMIN_GET_API).hasRole("ADMIN")
                 .antMatchers("/api/v1/admin/**", "/api/v1/category").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET).authenticated()

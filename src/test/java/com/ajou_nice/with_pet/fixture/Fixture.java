@@ -11,7 +11,11 @@ import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.dto.criticalservice.CriticalServiceRequest;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagRequest;
+import com.ajou_nice.with_pet.dto.hashtag.HashTagResponse;
 import com.ajou_nice.with_pet.dto.house.HouseRequest;
+import com.ajou_nice.with_pet.dto.house.HouseResponse;
+import com.ajou_nice.with_pet.dto.petsitter.PetSitterCriticalServiceResponse;
+import com.ajou_nice.with_pet.dto.petsitter.PetSitterServiceResponse;
 import com.ajou_nice.with_pet.dto.service.ServiceRequest;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
@@ -27,7 +31,8 @@ public class Fixture {
 
     @Getter
     @NoArgsConstructor
-    public static class Request{
+    public static class Request {
+
         //house
         private HouseRequest houseRequest1 = HouseRequest.builder()
                 .houseImg("houseImg1")
@@ -62,6 +67,73 @@ public class Fixture {
         private CriticalServiceRequest criticalServiceRequest2 = CriticalServiceRequest.builder()
                 .criticalServiceId(2L)
                 .price(40000)
+                .build();
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class Response {
+
+        private HouseResponse house1 = HouseResponse.builder()
+                .houseId(1L)
+                .houseImg("houseImg1")
+                .isRepresentative(true)
+                .build();
+
+        private HouseResponse house2 = HouseResponse.builder()
+                .houseId(2L)
+                .houseImg("houseImg2")
+                .isRepresentative(false)
+                .build();
+
+        private HashTagResponse hashTag1 = HashTagResponse.builder()
+                .hashTagId(1L)
+                .hashTagName("#친절")
+                .build();
+
+        private HashTagResponse hashTag2 = HashTagResponse.builder()
+                .hashTagId(2L)
+                .hashTagName("#배려")
+                .build();
+
+        private PetSitterCriticalServiceResponse petSitterCriticalService1 = PetSitterCriticalServiceResponse.builder()
+                .isPetSitterCriticalServiceResponse(true)
+                .petSitterCriticalServiceId(1L)
+                .criticalServiceId(1L)
+                .criticalServiceName("소형견")
+                .criticalServiceIntroduction("소형견 서비스입니다.")
+                .criticalServiceImg("image")
+                .criticalServicePrice(30000)
+                .build();
+
+        private PetSitterCriticalServiceResponse petSitterCriticalService2 = PetSitterCriticalServiceResponse.builder()
+                .isPetSitterCriticalServiceResponse(false)
+                .petSitterCriticalServiceId(null)
+                .criticalServiceId(2L)
+                .criticalServiceName("중형견")
+                .criticalServiceIntroduction("중형견 서비스입니다.")
+                .criticalServiceImg("image")
+                .criticalServicePrice(null)
+                .build();
+
+        private PetSitterServiceResponse petSitterService1 = PetSitterServiceResponse.builder()
+                .isPetSitterService(true)
+                .petSitterServiceId(1L)
+                .serviceId(1L)
+                .serviceName("산책")
+                .serviceIntroduction("산책 서비스입니다.")
+                .serviceImg("image")
+                .servicePrice(10000)
+                .build();
+
+        private PetSitterServiceResponse petSitterService2 = PetSitterServiceResponse.builder()
+                .isPetSitterService(false)
+                .petSitterServiceId(null)
+                .serviceId(2L)
+                .serviceName("미용")
+                .serviceIntroduction("미용 서비스입니다.")
+                .serviceImg("image")
+                .servicePrice(20000)
                 .build();
     }
 

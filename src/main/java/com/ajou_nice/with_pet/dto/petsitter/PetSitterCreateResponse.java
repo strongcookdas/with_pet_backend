@@ -1,7 +1,5 @@
 package com.ajou_nice.with_pet.dto.petsitter;
 
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterServiceResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterServiceResponse.PetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagResponse;
 import com.ajou_nice.with_pet.dto.house.HouseResponse;

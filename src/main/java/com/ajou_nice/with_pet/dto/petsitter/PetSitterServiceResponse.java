@@ -22,7 +22,7 @@ public class PetSitterServiceResponse {
     private String serviceName;
     private String serviceIntroduction;
     private String serviceImg;
-    private int servicePrice;
+    private Integer servicePrice;
 
     public static List<PetSitterServiceResponse> toList(List<PetSitterWithPetService> petSitterServiceList){
         return petSitterServiceList.stream().map(petSitterService -> PetSitterServiceResponse.builder()

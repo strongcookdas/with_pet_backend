@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.service.petsitter;
 
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterInfoRequest;
+import com.ajou_nice.with_pet.dto.petsitter.PetSitterCreateRequest;
+import com.ajou_nice.with_pet.dto.petsitter.PetSitterCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PetSitterCreateService {
 
-    public PetSitterModifyInfoResponse registerPetSitterInfo(PetSitterInfoRequest petSitterInfoRequest, String name) {
+    public PetSitterCreateResponse registerPetSitterInfo(PetSitterCreateRequest petSitterCreateRequest, String name) {
         return null;
     }
 }

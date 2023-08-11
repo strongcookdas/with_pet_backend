@@ -22,7 +22,7 @@ public class PetSitterCriticalServiceResponse {
     private String criticalServiceName;
     private String criticalServiceIntroduction;
     private String criticalServiceImg;
-    private int criticalServicePrice;
+    private Integer criticalServicePrice;
 
     public static List<PetSitterCriticalServiceResponse> toList(
             List<PetSitterCriticalService> petSitterCriticalServices) {
