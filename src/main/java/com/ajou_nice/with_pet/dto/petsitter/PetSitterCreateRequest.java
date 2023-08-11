@@ -1,9 +1,9 @@
 package com.ajou_nice.with_pet.dto.petsitter;
 
-import com.ajou_nice.with_pet.dto.criticalservice.CriticalServiceRequest;
+import com.ajou_nice.with_pet.dto.critical_service.CriticalServiceRequest;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagRequest;
 import com.ajou_nice.with_pet.dto.house.HouseRequest;
-import com.ajou_nice.with_pet.dto.service.ServiceRequest;
+import com.ajou_nice.with_pet.dto.withpet_service.ServiceRequest;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

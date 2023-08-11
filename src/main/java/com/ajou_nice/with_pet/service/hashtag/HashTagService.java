@@ -16,13 +16,11 @@ public class HashTagService {
 
     private final PetSitterHashTagRepository hashTagRepository;
 
-    public List<HashTagResponse> registerHashTagAll(PetSitter petSitter,
+    public List<HashTag> registerHashTagAll(PetSitter petSitter,
             List<HashTagRequest> hashTagRequests) {
         List<HashTag> hashTags = hashTagRequests.stream().map(h -> HashTag.of(petSitter, h))
                 .collect(
                         Collectors.toList());
-        List<HashTagResponse> hashTagResponses = hashTags.stream().map(HashTagResponse::of).collect(
-                Collectors.toList());
-        return hashTagResponses;
+        return hashTags;
     }
 }

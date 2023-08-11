@@ -1,6 +1,5 @@
 package com.ajou_nice.with_pet.dto.petsitter_withpet_service;
 
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import java.util.List;
@@ -40,27 +39,27 @@ public class PetSitterWithPetServiceCreateResponse {
     }
 
     public static PetSitterWithPetServiceCreateResponse of(
-            PetSitterWithPetServiceResponse petSitterWithPetServiceResponse) {
+            PetSitterWithPetService petSitterWithPetService) {
         return PetSitterWithPetServiceCreateResponse.builder()
                 .isPetSitterService(true)
-                .petSitterServiceId(petSitterWithPetServiceResponse.getPetSitterServiceId())
-                .serviceId(petSitterWithPetServiceResponse.getServiceId())
-                .serviceName(petSitterWithPetServiceResponse.getServiceName())
-                .serviceIntroduction(petSitterWithPetServiceResponse.getServiceIntroduction())
-                .serviceImg(petSitterWithPetServiceResponse.getServiceImg())
-                .servicePrice(petSitterWithPetServiceResponse.getServicePrice())
+                .petSitterServiceId(petSitterWithPetService.getId())
+                .serviceId(petSitterWithPetService.getWithPetService().getServiceId())
+                .serviceName(petSitterWithPetService.getWithPetService().getName())
+                .serviceIntroduction(petSitterWithPetService.getWithPetService().getIntroduction())
+                .serviceImg(petSitterWithPetService.getWithPetService().getImage())
+                .servicePrice(petSitterWithPetService.getPrice())
                 .build();
     }
 
     public static PetSitterWithPetServiceCreateResponse of(
-            WithPetServiceResponse withPetServiceResponse) {
+            WithPetService withPetService) {
         return PetSitterWithPetServiceCreateResponse.builder()
                 .isPetSitterService(false)
                 .petSitterServiceId(null)
-                .serviceId(withPetServiceResponse.getServiceId())
-                .serviceName(withPetServiceResponse.getServiceName())
-                .serviceIntroduction(withPetServiceResponse.getServiceIntroduction())
-                .serviceImg(withPetServiceResponse.getServiceImg())
+                .serviceId(withPetService.getServiceId())
+                .serviceName(withPetService.getName())
+                .serviceIntroduction(withPetService.getIntroduction())
+                .serviceImg(withPetService.getImage())
                 .servicePrice(null)
                 .build();
     }

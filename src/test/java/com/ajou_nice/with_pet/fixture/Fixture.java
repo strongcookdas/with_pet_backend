@@ -9,14 +9,14 @@ import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
-import com.ajou_nice.with_pet.dto.criticalservice.CriticalServiceRequest;
+import com.ajou_nice.with_pet.dto.critical_service.CriticalServiceRequest;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagRequest;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagResponse;
 import com.ajou_nice.with_pet.dto.house.HouseRequest;
 import com.ajou_nice.with_pet.dto.house.HouseResponse;
-import com.ajou_nice.with_pet.dto.petsitter.PetSitterCriticalServiceResponse;
+import com.ajou_nice.with_pet.dto.petsitter_critical_service.PetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.dto.petsitter_withpet_service.PetSitterWithPetServiceCreateResponse;
-import com.ajou_nice.with_pet.dto.service.ServiceRequest;
+import com.ajou_nice.with_pet.dto.withpet_service.ServiceRequest;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
@@ -97,7 +97,6 @@ public class Fixture {
                 .build();
 
         private PetSitterCriticalServiceResponse petSitterCriticalService1 = PetSitterCriticalServiceResponse.builder()
-                .isPetSitterCriticalServiceResponse(true)
                 .petSitterCriticalServiceId(1L)
                 .criticalServiceId(1L)
                 .criticalServiceName("소형견")
@@ -107,7 +106,6 @@ public class Fixture {
                 .build();
 
         private PetSitterCriticalServiceResponse petSitterCriticalService2 = PetSitterCriticalServiceResponse.builder()
-                .isPetSitterCriticalServiceResponse(false)
                 .petSitterCriticalServiceId(null)
                 .criticalServiceId(2L)
                 .criticalServiceName("중형견")

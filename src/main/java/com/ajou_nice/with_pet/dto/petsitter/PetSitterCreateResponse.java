@@ -3,6 +3,7 @@ package com.ajou_nice.with_pet.dto.petsitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagResponse;
 import com.ajou_nice.with_pet.dto.house.HouseResponse;
+import com.ajou_nice.with_pet.dto.petsitter_critical_service.PetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.dto.petsitter_withpet_service.PetSitterWithPetServiceCreateResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;

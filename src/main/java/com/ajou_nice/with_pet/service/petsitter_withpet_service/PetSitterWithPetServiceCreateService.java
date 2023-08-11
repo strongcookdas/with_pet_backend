@@ -1,12 +1,10 @@
 package com.ajou_nice.with_pet.service.petsitter_withpet_service;
 
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import com.ajou_nice.with_pet.dto.petsitter_withpet_service.PetSitterWithPetServiceCreateResponse;
-import com.ajou_nice.with_pet.dto.petsitter_withpet_service.PetSitterWithPetServiceResponse;
-import com.ajou_nice.with_pet.dto.service.ServiceRequest;
+import com.ajou_nice.with_pet.dto.withpet_service.ServiceRequest;
 import com.ajou_nice.with_pet.service.withpet_service.WithPetServiceService;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,29 +23,28 @@ public class PetSitterWithPetServiceCreateService {
     public List<PetSitterWithPetServiceCreateResponse> registerPetSitterWithPetService(
             PetSitter petSitter, List<ServiceRequest> serviceRequests) {
 
-        List<PetSitterWithPetServiceResponse> petSitterWithPetServiceResponses = new ArrayList<>();
+        List<PetSitterWithPetService> petSitterWithPetServices = new ArrayList<>();
 
         for (ServiceRequest serviceRequest : serviceRequests) {
             WithPetService withPetService = withPetServiceService.findWithPetService(
                     serviceRequest.getServiceId());
-            PetSitterWithPetServiceResponse petSitterWithPetServiceResponse = petSitterWithPetServiceService.resisterPetSitterWithPetService(
+            PetSitterWithPetService petSitterWithPetService = petSitterWithPetServiceService.resisterPetSitterWithPetService(
                     petSitter, withPetService, serviceRequest);
-            petSitterWithPetServiceResponses.add(petSitterWithPetServiceResponse);
+            petSitterWithPetServices.add(petSitterWithPetService);
         }
 
-        List<WithPetServiceResponse> withPetServiceResponses = withPetServiceService.getWithPetServices();
+        List<WithPetService> withPetServices = withPetServiceService.getWithPetServices();
         List<PetSitterWithPetServiceCreateResponse> petSitterWithPetServiceCreateResponses = new ArrayList<>();
-        for (WithPetServiceResponse withPetServiceResponse : withPetServiceResponses) {
-            for (PetSitterWithPetServiceResponse petSitterWithPetServiceResponse : petSitterWithPetServiceResponses) {
-                if (withPetServiceResponse.getServiceId()
-                        == petSitterWithPetServiceResponse.getServiceId()) {
+        for (WithPetService withPetService : withPetServices) {
+            for (PetSitterWithPetService petSitterWithPetService : petSitterWithPetServices) {
+                if (withPetService.getServiceId()
+                        == petSitterWithPetService.getWithPetService().getServiceId()) {
                     petSitterWithPetServiceCreateResponses.add(
-                            PetSitterWithPetServiceCreateResponse.of(
-                                    petSitterWithPetServiceResponse));
+                            PetSitterWithPetServiceCreateResponse.of(petSitterWithPetService));
                     break;
                 }
                 petSitterWithPetServiceCreateResponses.add(
-                        PetSitterWithPetServiceCreateResponse.of(withPetServiceResponse));
+                        PetSitterWithPetServiceCreateResponse.of(withPetService));
             }
         }
 

@@ -23,8 +23,7 @@ public class WithPetServiceService {
         });
     }
 
-    public List<WithPetServiceResponse> getWithPetServices() {
-        return withPetServiceRepository.findAll().stream().map(WithPetServiceResponse::of).collect(
-                Collectors.toList());
+    public List<WithPetService> getWithPetServices() {
+        return withPetServiceRepository.findAll();
     }
 }

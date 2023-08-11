@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
+import com.ajou_nice.with_pet.dto.critical_service.CriticalServiceRequest;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -41,6 +42,14 @@ public class PetSitterCriticalService {
 		return PetSitterCriticalService.builder()
 				.petSitter(petSitter)
 				.price(price)
+				.criticalService(criticalService)
+				.build();
+	}
+
+	public static PetSitterCriticalService of(PetSitter petSitter,CriticalService criticalService, CriticalServiceRequest criticalServiceRequest){
+		return PetSitterCriticalService.builder()
+				.petSitter(petSitter)
+				.price(criticalServiceRequest.getPrice())
 				.criticalService(criticalService)
 				.build();
 	}
