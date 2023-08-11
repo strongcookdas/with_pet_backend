@@ -1,17 +1,8 @@
 package com.ajou_nice.with_pet.dto.petsitter;
 
-import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.HouseInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterHashTagInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterServiceResponse.PetSitterCriticalServiceResponse;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
-import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
-import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
-import com.ajou_nice.with_pet.domain.entity.Service;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagResponse;
 import com.ajou_nice.with_pet.dto.house.HouseResponse;
 import java.util.List;
