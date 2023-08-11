@@ -15,7 +15,7 @@ import com.ajou_nice.with_pet.dto.hashtag.HashTagResponse;
 import com.ajou_nice.with_pet.dto.house.HouseRequest;
 import com.ajou_nice.with_pet.dto.house.HouseResponse;
 import com.ajou_nice.with_pet.dto.petsitter.PetSitterCriticalServiceResponse;
-import com.ajou_nice.with_pet.dto.petsitter.PetSitterServiceResponse;
+import com.ajou_nice.with_pet.dto.petsitter_withpet_service.PetSitterWithPetServiceCreateResponse;
 import com.ajou_nice.with_pet.dto.service.ServiceRequest;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
@@ -116,7 +116,7 @@ public class Fixture {
                 .criticalServicePrice(null)
                 .build();
 
-        private PetSitterServiceResponse petSitterService1 = PetSitterServiceResponse.builder()
+        private PetSitterWithPetServiceCreateResponse petSitterService1 = PetSitterWithPetServiceCreateResponse.builder()
                 .isPetSitterService(true)
                 .petSitterServiceId(1L)
                 .serviceId(1L)
@@ -126,7 +126,7 @@ public class Fixture {
                 .servicePrice(10000)
                 .build();
 
-        private PetSitterServiceResponse petSitterService2 = PetSitterServiceResponse.builder()
+        private PetSitterWithPetServiceCreateResponse petSitterService2 = PetSitterWithPetServiceCreateResponse.builder()
                 .isPetSitterService(false)
                 .petSitterServiceId(null)
                 .serviceId(2L)

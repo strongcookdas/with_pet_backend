@@ -10,7 +10,7 @@ import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.domain.entity.Service;
+import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
@@ -68,13 +68,13 @@ public class ValidateCollection {
 		return findUser;
 	}
 	// 위드펫 서비스 검증
-	public Service withPetServiceValidation(Long serviceId){
-		Service service = withPetServiceRepository.findById(serviceId)
+	public WithPetService withPetServiceValidation(Long serviceId){
+		WithPetService withPetService = withPetServiceRepository.findById(serviceId)
 				.orElseThrow(()->{
 					throw new AppException(ErrorCode.WITH_PET_SERVICE_NOT_FOUND, ErrorCode.WITH_PET_SERVICE_NOT_FOUND.getMessage());
 				});
 
-		return service;
+		return withPetService;
 	}
 
 	// 필수 서비스 검증 (소형견, 중형견, 대형견)

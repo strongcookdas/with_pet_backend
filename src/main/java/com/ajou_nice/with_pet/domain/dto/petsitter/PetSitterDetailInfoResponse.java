@@ -10,7 +10,7 @@ import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.Review;
-import com.ajou_nice.with_pet.domain.entity.Service;
+import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -84,7 +84,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 		private List<PetSitterServiceResponse> petSitterServices;
 		private List<WithPetServiceResponse> withPetServices;
 
-		public static PetSitterModifyInfoResponse of(PetSitter petSitter, List<CriticalService> criticalServiceList,  List<Service> serviceList,
+		public static PetSitterModifyInfoResponse of(PetSitter petSitter, List<CriticalService> criticalServiceList,  List<WithPetService> withPetServiceList,
 				List<PetSitterWithPetService> petSitterWithPetServices, List<PetSitterCriticalService> petSitterCriticalServices){
 			return PetSitterModifyInfoResponse.builder()
 					.petSitterHouses(HouseInfoResponse.toList(petSitter.getHouseList()))
@@ -95,7 +95,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 							PetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
 					.criticalServices(CriticalServiceResponse.toList(criticalServiceList))
 					.petSitterServices(petSitterWithPetServices == null ? null : PetSitterServiceResponse.toList(petSitterWithPetServices))
-					.withPetServices(WithPetServiceResponse.toList(serviceList))
+					.withPetServices(WithPetServiceResponse.toList(withPetServiceList))
 					.build();
 		}
 	}

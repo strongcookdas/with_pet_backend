@@ -23,7 +23,7 @@ import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
-import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
+import com.ajou_nice.with_pet.repository.PetSitterWithPetServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
@@ -45,7 +45,7 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
-    private final PetSitterServiceRepository serviceRepository;
+    private final PetSitterWithPetServiceRepository serviceRepository;
     private final ReservationPetSitterServiceRepository reservationServiceRepository;
 
     private final ReviewRepository reviewRepository;

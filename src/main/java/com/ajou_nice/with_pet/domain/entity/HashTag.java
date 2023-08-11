@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHashTagRequest;
+import com.ajou_nice.with_pet.dto.hashtag.HashTagRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -40,6 +41,13 @@ public class HashTag {
 		return HashTag.builder()
 				.petSitter(petSitter)
 				.name(petSitterHashTagRequest.getHashTagName())
+				.build();
+	}
+
+	public static HashTag of(PetSitter petSitter, HashTagRequest hashTagRequest){
+		return HashTag.builder()
+				.petSitter(petSitter)
+				.name(hashTagRequest.getHashTagName())
 				.build();
 	}
 

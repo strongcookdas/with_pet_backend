@@ -30,10 +30,10 @@ public class PetSitterServiceResponse {
 	public static List<PetSitterServiceResponse> toList(List<PetSitterWithPetService> petSitterServiceList){
 		return petSitterServiceList.stream().map(petSitterService -> PetSitterServiceResponse.builder()
 				.petSitterServiceId(petSitterService.getId())
-				.serviceId(petSitterService.getService().getServiceId())
-				.serviceName(petSitterService.getService().getName())
-				.serviceIntroduction(petSitterService.getService().getIntroduction())
-				.serviceImg(petSitterService.getService().getImage())
+				.serviceId(petSitterService.getWithPetService().getServiceId())
+				.serviceName(petSitterService.getWithPetService().getName())
+				.serviceIntroduction(petSitterService.getWithPetService().getIntroduction())
+				.serviceImg(petSitterService.getWithPetService().getImage())
 				.price(petSitterService.getPrice())
 				.build()).collect(Collectors.toList());
 	}

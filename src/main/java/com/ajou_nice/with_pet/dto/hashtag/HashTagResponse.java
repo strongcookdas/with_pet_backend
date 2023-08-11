@@ -15,12 +15,20 @@ import lombok.ToString;
 @Builder
 @ToString
 public class HashTagResponse {
+
     private Long hashTagId;
 
     private String hashTagName;
 
 
-    public static List<HashTagResponse> toList(List<HashTag> hashTags){
+    public static HashTagResponse of(HashTag hashTag) {
+        return HashTagResponse.builder()
+                .hashTagId(hashTag.getHashTagId())
+                .hashTagName(hashTag.getName())
+                .build();
+    }
+
+    public static List<HashTagResponse> toList(List<HashTag> hashTags) {
         return hashTags.stream().map(petSitterHashTag -> HashTagResponse.builder()
                 .hashTagId(petSitterHashTag.getHashTagId())
                 .hashTagName(petSitterHashTag.getName())

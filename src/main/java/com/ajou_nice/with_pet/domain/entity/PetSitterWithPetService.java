@@ -33,7 +33,7 @@ public class PetSitterWithPetService {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ServiceId")
-	private Service service;
+	private WithPetService withPetService;
 
 	private int price;
 
@@ -42,11 +42,19 @@ public class PetSitterWithPetService {
 	}
 
 
-	public static PetSitterWithPetService toEntity(Service service, PetSitter petSitter, int price){
+	public static PetSitterWithPetService toEntity(WithPetService withPetService, PetSitter petSitter, int price){
 		return PetSitterWithPetService.builder()
 				.petSitter(petSitter)
 				.price(price)
-				.service(service)
+				.withPetService(withPetService)
+				.build();
+	}
+
+	public static PetSitterWithPetService of(PetSitter petSitter,WithPetService withPetService, int price){
+		return PetSitterWithPetService.builder()
+				.petSitter(petSitter)
+				.price(price)
+				.withPetService(withPetService)
 				.build();
 	}
 }

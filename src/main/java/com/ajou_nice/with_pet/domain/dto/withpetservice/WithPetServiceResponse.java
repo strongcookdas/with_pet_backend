@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.withpetservice;
 
-import com.ajou_nice.with_pet.domain.entity.Service;
+import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -22,17 +22,17 @@ public class WithPetServiceResponse {
 	private String serviceIntroduction;
 
 
-	public static WithPetServiceResponse of(Service service){
+	public static WithPetServiceResponse of(WithPetService withPetService){
 		return WithPetServiceResponse.builder()
-				.serviceId(service.getServiceId())
-				.serviceName(service.getName())
-				.serviceImg(service.getImage())
-				.serviceIntroduction(service.getIntroduction())
+				.serviceId(withPetService.getServiceId())
+				.serviceName(withPetService.getName())
+				.serviceImg(withPetService.getImage())
+				.serviceIntroduction(withPetService.getIntroduction())
 				.build();
 	}
 
-	public static List<WithPetServiceResponse> toList(List<Service> serviceList){
-		return serviceList.stream().map(withPetService-> WithPetServiceResponse.builder()
+	public static List<WithPetServiceResponse> toList(List<WithPetService> withPetServiceList){
+		return withPetServiceList.stream().map(withPetService-> WithPetServiceResponse.builder()
 				.serviceId(withPetService.getServiceId())
 				.serviceName(withPetService.getName())
 				.serviceImg(withPetService.getImage())

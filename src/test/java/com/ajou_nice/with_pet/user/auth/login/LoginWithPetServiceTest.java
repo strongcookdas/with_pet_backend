@@ -22,7 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class LoginServiceTest {
+public class LoginWithPetServiceTest {
 
     UserAuthService userAuthService;
     UserRepository userRepository = mock(UserRepository.class);

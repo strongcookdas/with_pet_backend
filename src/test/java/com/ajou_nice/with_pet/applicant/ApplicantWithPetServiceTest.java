@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class ApplicantServiceTest {
+public class ApplicantWithPetServiceTest {
 
     ApplicantCreateService service;
     ValidateCollection validateCollection = mock(ValidateCollection.class);

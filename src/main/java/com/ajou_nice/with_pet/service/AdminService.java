@@ -7,7 +7,7 @@ import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest.
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
-import com.ajou_nice.with_pet.domain.entity.Service;
+import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
@@ -141,9 +141,9 @@ public class AdminService {
 	// == 관리자의 위드펫 서비스 리스트 조회 == //
 	public List<WithPetServiceResponse> showWithPetServices() {
 
-		List<Service> serviceList = withPetServiceRepository.findAll();
+		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
 
-		return WithPetServiceResponse.toList(serviceList);
+		return WithPetServiceResponse.toList(withPetServiceList);
 	}
 
 	// == 관리자의 필수 서비스 리스트 조회 == //
@@ -177,10 +177,10 @@ public class AdminService {
 	public WithPetServiceResponse addWithPetService(String userId,
 			WithPetServiceRequest withPetServiceRequest) {
 		valid.userValidation(userId);
-		Service service = Service.toEntity(withPetServiceRequest);
-		Service newService = withPetServiceRepository.save(service);
+		WithPetService withPetService = WithPetService.toEntity(withPetServiceRequest);
+		WithPetService newWithPetService = withPetServiceRepository.save(withPetService);
 
-		return WithPetServiceResponse.of(newService);
+		return WithPetServiceResponse.of(newWithPetService);
 	}
 
 	@Transactional
@@ -200,11 +200,11 @@ public class AdminService {
 	public WithPetServiceResponse updateWithPetService(String userId,
 			WithPetServiceModifyRequest withPetServiceModifyRequest) {
 		valid.userValidation(userId);
-		Service service = valid.withPetServiceValidation(
+		WithPetService withPetService = valid.withPetServiceValidation(
 				withPetServiceModifyRequest.getServiceId());
-		service.updateServiceInfo(withPetServiceModifyRequest);
+		withPetService.updateServiceInfo(withPetServiceModifyRequest);
 
-		return WithPetServiceResponse.of(service);
+		return WithPetServiceResponse.of(withPetService);
 	}
 
 	@Transactional
@@ -212,12 +212,12 @@ public class AdminService {
 	public List<WithPetServiceResponse> deleteWithPetService(String userId,
 			WithPetServiceModifyRequest withPetServiceModifyRequest) {
 		valid.userValidation(userId);
-		Service service = valid.withPetServiceValidation(
+		WithPetService withPetService = valid.withPetServiceValidation(
 				withPetServiceModifyRequest.getServiceId());
 
-		withPetServiceRepository.delete(service);
-		List<Service> serviceList = withPetServiceRepository.findAll();
+		withPetServiceRepository.delete(withPetService);
+		List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
 
-		return WithPetServiceResponse.toList(serviceList);
+		return WithPetServiceResponse.toList(withPetServiceList);
 	}
 }
