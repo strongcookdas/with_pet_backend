@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ajou_nice.with_pet.CommonApiTest;
-import com.ajou_nice.with_pet.controller.PetSitterController;
+import com.ajou_nice.with_pet.controller.petsitter.PetSitterController;
 import com.ajou_nice.with_pet.service.PetSitterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;

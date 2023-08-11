@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.controller.petsitter;
 
 
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse;
@@ -68,23 +68,6 @@ public class PetSitterController {
         return Response.success(modifyInfoResponse);
     }
 
-    // 펫시터 my Info 등록  //
-    @PostMapping("/api/v1/petsitter/register-myinfo")
-    @ApiOperation(value = "펫시터의 펫시터정보 등록")
-    public Response<PetSitterModifyInfoResponse> registerPetSitterInfo(
-            @ApiIgnore Authentication authentication,
-            @RequestBody @Valid PetSitterRequest.PetSitterInfoRequest petSitterInfoRequest) {
-        log.info("=============== petSitter register info request : {} ================",
-                petSitterInfoRequest);
-
-        PetSitterModifyInfoResponse modifyInfoResponse = petSitterService.registerPetSitterInfo(
-                petSitterInfoRequest,
-                authentication.getName());
-
-        log.info("=============== petSitter register info response : {} ================",
-                modifyInfoResponse);
-        return Response.success(modifyInfoResponse);
-    }
 
     // 펫시터 house 수정 //
     @PutMapping("/api/v1/petsitter/update-houses")

@@ -1,9 +1,10 @@
 package com.ajou_nice.with_pet.dto.petsitter;
 
+import com.ajou_nice.with_pet.dto.criticalservice.CriticalServiceRequest;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagRequest;
 import com.ajou_nice.with_pet.dto.house.HouseRequest;
+import com.ajou_nice.with_pet.dto.service.ServiceRequest;
 import java.util.List;
-import javax.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,8 +18,10 @@ import lombok.ToString;
 @ToString
 public class PetSitterCreateRequest {
 
-    private List<HouseRequest> houseList;
-    private List<HashTagRequest> hashTagRequestList;
-    private String introduction;
+    private List<HouseRequest> petSitterHouses;
+    private List<HashTagRequest> petSitterHashTags;
+    private String petSitterIntroduction;
+    private List<ServiceRequest> petSitterServices;
+    private List<CriticalServiceRequest> petSitterCriticalServices;
     
 }

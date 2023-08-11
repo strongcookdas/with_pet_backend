@@ -9,6 +9,10 @@ import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
+import com.ajou_nice.with_pet.dto.criticalservice.CriticalServiceRequest;
+import com.ajou_nice.with_pet.dto.hashtag.HashTagRequest;
+import com.ajou_nice.with_pet.dto.house.HouseRequest;
+import com.ajou_nice.with_pet.dto.service.ServiceRequest;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
@@ -20,6 +24,46 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class Fixture {
+
+    @Getter
+    @NoArgsConstructor
+    public static class Request{
+        //house
+        private HouseRequest houseRequest1 = HouseRequest.builder()
+                .houseImg("houseImg1")
+                .isRepresentative(true)
+                .build();
+        private HouseRequest houseRequest2 = HouseRequest.builder()
+                .houseImg("houseImg2")
+                .isRepresentative(false)
+                .build();
+
+        //hashTag
+        private HashTagRequest hashTagRequest1 = HashTagRequest.builder()
+                .hashTagName("#친절")
+                .build();
+        private HashTagRequest hashTagRequest2 = HashTagRequest.builder()
+                .hashTagName("#배려")
+                .build();
+        //service
+        private ServiceRequest serviceRequest1 = ServiceRequest.builder()
+                .serviceId(1L)
+                .price(10000)
+                .build();
+        private ServiceRequest serviceRequest2 = ServiceRequest.builder()
+                .serviceId(2L)
+                .price(20000)
+                .build();
+        //criticalService
+        private CriticalServiceRequest criticalServiceRequest1 = CriticalServiceRequest.builder()
+                .criticalServiceId(1L)
+                .price(30000)
+                .build();
+        private CriticalServiceRequest criticalServiceRequest2 = CriticalServiceRequest.builder()
+                .criticalServiceId(2L)
+                .price(40000)
+                .build();
+    }
 
     //주소
     private Address address = address = Address.simpleAddressGenerator("123456", "아주로", "팔달관");
