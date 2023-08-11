@@ -14,7 +14,7 @@ import com.ajou_nice.with_pet.dto.hashtag.HashTagRequest;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagResponse;
 import com.ajou_nice.with_pet.dto.house.HouseRequest;
 import com.ajou_nice.with_pet.dto.house.HouseResponse;
-import com.ajou_nice.with_pet.dto.petsitter_critical_service.PetSitterCriticalServiceResponse;
+import com.ajou_nice.with_pet.dto.petsitter_critical_service.PetSitterCriticalServiceCreateResponse;
 import com.ajou_nice.with_pet.dto.petsitter_withpet_service.PetSitterWithPetServiceCreateResponse;
 import com.ajou_nice.with_pet.dto.withpet_service.ServiceRequest;
 import com.ajou_nice.with_pet.enums.DogSize;
@@ -96,7 +96,8 @@ public class Fixture {
                 .hashTagName("#배려")
                 .build();
 
-        private PetSitterCriticalServiceResponse petSitterCriticalService1 = PetSitterCriticalServiceResponse.builder()
+        private PetSitterCriticalServiceCreateResponse petSitterCriticalServiceCreate1 = PetSitterCriticalServiceCreateResponse.builder()
+                .isPetSitterCriticalService(true)
                 .petSitterCriticalServiceId(1L)
                 .criticalServiceId(1L)
                 .criticalServiceName("소형견")
@@ -105,7 +106,8 @@ public class Fixture {
                 .criticalServicePrice(30000)
                 .build();
 
-        private PetSitterCriticalServiceResponse petSitterCriticalService2 = PetSitterCriticalServiceResponse.builder()
+        private PetSitterCriticalServiceCreateResponse petSitterCriticalServiceCreate2 = PetSitterCriticalServiceCreateResponse.builder()
+                .isPetSitterCriticalService(false)
                 .petSitterCriticalServiceId(null)
                 .criticalServiceId(2L)
                 .criticalServiceName("중형견")

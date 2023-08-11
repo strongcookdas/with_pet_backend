@@ -70,8 +70,8 @@ public class PetSitterCreateAPITest extends CommonApiTest {
                 .introduction(request.getPetSitterIntroduction())
                 .petSitterLicenseImg("iamge")
                 .petSitterCriticalServices(
-                        Arrays.asList(responseFixture.getPetSitterCriticalService1(),
-                                responseFixture.getPetSitterCriticalService2()))
+                        Arrays.asList(responseFixture.getPetSitterCriticalServiceCreate1(),
+                                responseFixture.getPetSitterCriticalServiceCreate2()))
                 .petSitterServices(Arrays.asList(responseFixture.getPetSitterService1(),
                         responseFixture.getPetSitterService2()))
                 .build();

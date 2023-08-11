@@ -3,7 +3,7 @@ package com.ajou_nice.with_pet.dto.petsitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.dto.hashtag.HashTagResponse;
 import com.ajou_nice.with_pet.dto.house.HouseResponse;
-import com.ajou_nice.with_pet.dto.petsitter_critical_service.PetSitterCriticalServiceResponse;
+import com.ajou_nice.with_pet.dto.petsitter_critical_service.PetSitterCriticalServiceCreateResponse;
 import com.ajou_nice.with_pet.dto.petsitter_withpet_service.PetSitterWithPetServiceCreateResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -24,13 +24,13 @@ public class PetSitterCreateResponse {
     private String introduction;
     private String petSitterLicenseImg;
 
-    private List<PetSitterCriticalServiceResponse> petSitterCriticalServices;
+    private List<PetSitterCriticalServiceCreateResponse> petSitterCriticalServices;
     private List<PetSitterWithPetServiceCreateResponse> petSitterServices;
 
     public static PetSitterCreateResponse of(PetSitter petSitter,
             List<HouseResponse> houseResponses,
             List<PetSitterWithPetServiceCreateResponse> petSitterWithPetServices,
-            List<PetSitterCriticalServiceResponse> petSitterCriticalServices) {
+            List<PetSitterCriticalServiceCreateResponse> petSitterCriticalServices) {
 
         return PetSitterCreateResponse.builder()
                 .petSitterHouses(houseResponses)
