@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.service;
+package com.ajou_nice.with_pet.service.petsitter;
 
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
@@ -31,6 +31,7 @@ import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
+import com.ajou_nice.with_pet.service.ValidateCollection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

@@ -1,8 +1,6 @@
 package com.ajou_nice.with_pet.dto.house;
 
 import com.ajou_nice.with_pet.domain.entity.House;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,13 +23,5 @@ public class HouseResponse {
                 .houseImg(house.getImage())
                 .isRepresentative(house.getRepresentative())
                 .build();
-    }
-
-    public static List<HouseResponse> toList(List<House> houseList){
-        return houseList.stream().map(house -> HouseResponse.builder()
-                .houseId(house.getHouseId())
-                .houseImg(house.getImage())
-                .isRepresentative(house.getRepresentative())
-                .build()).collect(Collectors.toList());
     }
 }
