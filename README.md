@@ -1,9 +1,11 @@
 ![위드펫](https://github.com/ajousw-withpet/with_pet_backend/assets/103014749/c479bd00-60b6-4e1e-8c8f-ea0bade9edd0)
+
 ### 프로젝트 소개
+
 > Test
 > ‘위드펫’은 반려인과 펫시터를 중개하는 플랫폼입니다.
-펫시터는 반려견의 사회화 온도(사람 혹은 다른 반려견과의 사회성을 나타내는 척도)와 반려인의 애정도(반려견에 대한 관심도)를 확인하고 수락 및 거부하며 서비스를 유동적으로 관리할 수 있습니다.
-> 
+> 펫시터는 반려견의 사회화 온도(사람 혹은 다른 반려견과의 사회성을 나타내는 척도)와 반려인의 애정도(반려견에 대한 관심도)를 확인하고 수락 및 거부하며 서비스를 유동적으로 관리할 수 있습니다.
+>
 
 ### About 위드펫
 
@@ -30,7 +32,8 @@
 - API 명세 : [https://withpet.site/swagger-ui/](https://withpet.site/swagger-ui/)
 
 ## 🛠️ skill
-<h3>Language</h3> 
+
+<h3>Language</h3>
 <div>
   <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> &nbsp;
   <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> &nbsp;
@@ -55,53 +58,64 @@
 ### 실행방법
 
 - application-aws.yml 파일 생성 후 아래 내용 기입
-    
-    ```yaml
-    spring:
-      mvc:
-        pathmatch:
-          matching-strategy: ant_path_matcher
-      datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        url: #데이터베이스 url
-        username: #데이터베이스 username
-        password: #데이터베이스 패스워드
-      jpa:
-        database: mysql
-        show-sql: true
-        hibernate:
-          ddl-auto: update
-        properties:
-          hibernate:
-            show_sql: true
-            format_sql: true
-    
-    ajou:
-      nice: #value
-    
-    jwt:
-      token:
-        secret: #value
-    
-    cloud:
-      aws:
-        credentials:
-          access-key: #aws access-key
-          secret-key: #aws secret-key
-        S3:
-          bucket: #S3 bucket
-        region:
-          static: #resion static
-        stack:
-          auto: false
-    logging:
-      level:
-        com:
-          amazonaws:
-            util:
-              EC2MetadataUtils: error
-    ```
-    
+
+```yaml
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: #jdbc:mysql://db url#
+    username: #username#
+    password: #DB패스워드#
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: #email#
+    password: #email패스워드#
+
+ajou:
+  nice: #value#
+
+jwt:
+  token:
+    secret: #value#
+
+cloud:
+  aws:
+    credentials:
+      access-key: #access-key value#
+      secret-key: #secret-key value#
+    S3:
+      bucket: #buket name#
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+
+SMS:
+  KEY: #coolsms key#
+  SECRET: #coolsms secret key#
+  PHONE: #coolsms phone#
+```
+
 - 실행 후 [http://localhost:8080/swagger-ui/#](http://localhost:8080/swagger-ui/#/user-controller/joinUsingPOST) 접속
 
 ### 패키지 구조
