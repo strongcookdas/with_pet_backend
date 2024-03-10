@@ -52,6 +52,7 @@ public class AdminController {
 	@GetMapping("/api/v1/admin/show-petsitters")
 	@ApiOperation(value = "관리자의 펫시터 리스트 조회")
 	public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
+		log.info(authentication.getName());
 		List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(
 				authentication.getName());
 		return Response.success(petSitterBasicResponses);
