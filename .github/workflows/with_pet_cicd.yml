@@ -20,7 +20,7 @@ jobs:
     # 지정한 저장소(현재 REPO)에서 코드를 워크플로우 환경으로 가져오도록 하는 github action
     - uses: actions/checkout@v3
     
-    # open jdk 17 버전 환경을 세팅
+    # open jdk 11 버전 환경을 세팅
     - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
@@ -28,12 +28,13 @@ jobs:
         distribution: "adopt"
     
     # Github secrets로부터 데이터를 받아서, 워크 플로우에 파일을 생성
-    - name: Make application-aws.yml
-      run: |
-        cd ./src/main/resources
-        touch ./application-aws.yml
-        echo "${{ secrets.APPLICATION }}" > ./application-aws.yml
-      shell: bash
+    # 주석처리 이부분은 보안적으로 문제가 있음
+#    - name: Make application-aws.yml
+#      run: |
+#        cd ./src/main/resources
+#        touch ./application-aws.yml
+#        echo "${{ secrets.APPLICATION }}" > ./application-aws.yml
+#      shell: bash
     
     # gradle을 통해 소스를 빌드.
     - name: Build with Gradle
@@ -61,7 +62,8 @@ jobs:
         key: ${{ secrets.KEY }}
         envs: GITHUB_SHA
         script: |
+          echo "${{ secrets.ENV_CONTENT }}" > test.env
           sudo docker rm -f ajou_nice
           sudo docker pull ${{ secrets.DOCKER_REPO }}/ajou_nice
-          sudo docker run -d -p 8080:8080 --name ajou_nice ${{ secrets.DOCKER_REPO }}/ajou_nice
+          sudo docker run -d -p 8080:8080 --name ajou_nice --env-file test.env ${{ secrets.DOCKER_REPO }}/ajou_nice
           sudo docker image prune -f
