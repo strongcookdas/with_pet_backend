@@ -23,4 +23,9 @@ public class HelloController {
         return Response.success(authentication.getName());
     }
 
+    @GetMapping("/test")
+    public Response test() {
+        return Response.success("ok");
+    }
+
 }
