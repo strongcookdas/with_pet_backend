@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(AuthController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class LoginControllerTest extends CommonApiTest {
+public class SignInControllerTest extends CommonApiTest {
 
     final String USER_LOGIN_POST_API = "/api/v1/users/login";
     UserSignInRequest userSignInRequest;
