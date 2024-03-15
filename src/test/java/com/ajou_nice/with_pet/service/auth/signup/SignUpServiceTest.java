@@ -14,6 +14,9 @@ import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.fixture.AddressDtoFixture;
+import com.ajou_nice.with_pet.fixture.UserDtoFixtures;
+import com.ajou_nice.with_pet.fixture.entity.UserFixture;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.service.user.AuthService;
@@ -36,27 +39,11 @@ public class SignUpServiceTest {
     User user;
 
     @BeforeEach
-    public void setUp(){
-        address = AddressDto.builder()
-                .zipcode("111111")
-                .streetAdr("월드컵로")
-                .detailAdr("팔달관")
-                .build();
-
-        userSignUpResponse = UserSignUpResponse.builder()
-                .userId(1L)
-                .userName("user1")
-                .build();
-
-        user = User.builder()
-                .id(1L)
-                .name("user1")
-                .email("email@email.com")
-                .password("password")
-                .role(UserRole.ROLE_USER)
-                .profileImg("image")
-                .phone("010-0000-0000")
-                .build();
+    public void setUp() {
+        address = AddressDtoFixture.createAddressDto("16499", "경기도 수원시 영통구 월드컵로 206 (원천동, 아주대학교)", "팔달관");
+        userSignUpResponse = UserDtoFixtures.createUserSignUpResponse(1L, "user");
+        user = UserFixture.createUser(1L, "user", "email@email.com", "password0302!", UserRole.ROLE_USER,
+                "https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png", "010-0000-0000");
         authService = new AuthService(userRepository, encoder, jwtTokenUtil, validateCollection);
     }
 
@@ -64,15 +51,7 @@ public class SignUpServiceTest {
     @DisplayName("회원가입 성공")
     void signUp_success() {
         //given
-        userSignUpRequest = UserSignUpRequest.builder()
-                .name("user1")
-                .email("email@email.com")
-                .password("password")
-                .passwordCheck("password")
-                .profileImg("image")
-                .phone("010-0000-0000")
-                .address(address)
-                .build();
+        userSignUpRequest = UserDtoFixtures.createUserSignUpRequest("user","email@email.com","password0302!", "password0302!", "https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png","010-0000-0000", address);
         //when
         when(userRepository.existsByEmail(userSignUpRequest.getEmail()))
                 .thenReturn(false);
@@ -80,47 +59,33 @@ public class SignUpServiceTest {
                 .thenReturn(user);
         //then
         UserSignUpResponse result = authService.signUp(userSignUpRequest);
-        assertEquals(result.getUserId(),user.getId());
-        assertEquals(result.getUserName(),user.getName());
+        assertEquals(result.getUserId(), user.getId());
+        assertEquals(result.getUserName(), user.getName());
     }
 
     @Test
-    @DisplayName("회원가입 실패1 : 아이디 중복")
-    void signUp_fail1() {
+    @DisplayName("회원가입 실패 : email 중복")
+    void signUp_fail_duplicated_email() {
         //given
-        userSignUpRequest = UserSignUpRequest.builder()
-                .name("user1")
-                .email("email@email.com")
-                .password("password")
-                .passwordCheck("password")
-                .profileImg("image")
-                .phone("010-0000-0000")
-                .address(address)
-                .build();
+        userSignUpRequest = UserDtoFixtures.createUserSignUpRequest("user","email@email.com","password0302!","password0302!","https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png","010-0000-0000", address);
         //when
         when(userRepository.existsByEmail(userSignUpRequest.getEmail()))
                 .thenReturn(true);
         //then
-        AppException exception = assertThrows(AppException.class,() -> authService.signUp(userSignUpRequest));
-        assertEquals(ErrorCode.DUPLICATED_EMAIL,exception.getErrorCode());
+        AppException exception = assertThrows(AppException.class, () -> authService.signUp(userSignUpRequest));
+        assertEquals(ErrorCode.DUPLICATED_EMAIL, exception.getErrorCode());
     }
 
     @Test
-    @DisplayName("회원가입 실패2 : 패스워드 불일치")
-    void signUp_fail2() {
+    @DisplayName("회원가입 실패 : 패스워드 불일치")
+    void signUp_fail_invalid_password() {
         //given
-        userSignUpRequest = UserSignUpRequest.builder()
-                .name("user1")
-                .email("email@email.com")
-                .password("password1")
-                .passwordCheck("password2")
-                .profileImg("image")
-                .phone("010-0000-0000")
-                .address(address)
-                .build();
+        userSignUpRequest = UserDtoFixtures.createUserSignUpRequest("user","email@email.com","password0302!","password0302","https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png","010-0000-0000", address);
         //when
+        when(userRepository.existsByEmail(userSignUpRequest.getEmail()))
+                .thenReturn(false);
         //then
-        AppException exception = assertThrows(AppException.class,() -> authService.signUp(userSignUpRequest));
-        assertEquals(ErrorCode.PASSWORD_COMPARE_FAIL,exception.getErrorCode());
+        AppException exception = assertThrows(AppException.class, () -> authService.signUp(userSignUpRequest));
+        assertEquals(ErrorCode.PASSWORD_COMPARE_FAIL, exception.getErrorCode());
     }
 }

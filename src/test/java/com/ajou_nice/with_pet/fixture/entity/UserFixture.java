@@ -5,7 +5,7 @@ import com.ajou_nice.with_pet.enums.UserRole;
 
 public class UserFixture {
     public static User createUser(Long id, String name, String email, String password, UserRole userRole,
-                                  String profileImg) {
+                                  String profileImg, String phone) {
         return User.builder()
                 .id(id)
                 .name(name)
@@ -13,6 +13,7 @@ public class UserFixture {
                 .password(password)
                 .role(userRole)
                 .profileImg(profileImg)
+                .phone(phone)
                 .build();
     }
 }

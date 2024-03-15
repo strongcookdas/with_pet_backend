@@ -8,13 +8,13 @@ import com.ajou_nice.with_pet.domain.dto.embedded.AddressDto;
 import com.ajou_nice.with_pet.enums.UserRole;
 
 public class UserDtoFixtures {
-    public static UserSignUpRequest createUserSignUpRequest(String name, String email, String password,
+    public static UserSignUpRequest createUserSignUpRequest(String name, String email, String password, String passwordCheck,
                                                             String profileImg, String phone, AddressDto address) {
         return UserSignUpRequest.builder()
                 .name(name)
                 .email(email)
                 .password(password)
-                .passwordCheck(password)
+                .passwordCheck(passwordCheck)
                 .profileImg(profileImg)
                 .phone(phone)
                 .address(address)
@@ -42,4 +42,5 @@ public class UserDtoFixtures {
                 .role(userRole.name())
                 .build();
     }
+
 }

@@ -39,7 +39,7 @@ public class SignInServiceTest {
     @BeforeEach
     void setUp() {
         user = UserFixture.createUser(1L, "user", "email@email.com", "password0302!", UserRole.ROLE_USER,
-                "https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png");
+                "https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png", "010-0000-0000");
         authService = new AuthService(userRepository, encoder, jwtTokenUtil, validateCollection);
     }
 
