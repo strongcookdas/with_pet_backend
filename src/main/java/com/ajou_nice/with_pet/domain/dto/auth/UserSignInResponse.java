@@ -6,16 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Builder
 @ToString
-public class UserLoginResponse {
+public class UserSignInResponse {
 
     private String userName;
     private String userProfile;
@@ -23,8 +21,8 @@ public class UserLoginResponse {
     @JsonIgnore
     private String token;
 
-    public static UserLoginResponse of(User user, String token) {
-        return UserLoginResponse.builder()
+    public static UserSignInResponse of(User user, String token) {
+        return UserSignInResponse.builder()
                 .userName(user.getName())
                 .userProfile(user.getProfileImg())
                 .role(user.getRole().name())

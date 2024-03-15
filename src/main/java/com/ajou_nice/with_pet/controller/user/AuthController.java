@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.controller.user;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
-import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignInRequest;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignInResponse;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
 import com.ajou_nice.with_pet.service.user.AuthService;
@@ -36,13 +36,13 @@ public class AuthController {
         return Response.success(userSignUpResponse);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/sign-in")
     @ApiOperation(value = "로그인")
-    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest,
-            HttpServletResponse response) {
-        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
-        cookieUtil.addCookie(response, "token", userLoginResponse.getToken(), "/");
-        return Response.success(userLoginResponse);
+    public Response<UserSignInResponse> signIn(@RequestBody UserSignInRequest userSignInRequest,
+                                               HttpServletResponse response) {
+        UserSignInResponse userSignInResponse = userService.login(userSignInRequest);
+        cookieUtil.addCookie(response, "token", userSignInResponse.getToken(), "/");
+        return Response.success(userSignInResponse);
     }
 
 //    @GetMapping("/logout")

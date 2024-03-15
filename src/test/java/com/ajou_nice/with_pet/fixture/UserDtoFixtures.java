@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.fixture;
 
-import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
-import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignInRequest;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignInResponse;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
 import com.ajou_nice.with_pet.domain.dto.embedded.AddressDto;
@@ -28,15 +28,15 @@ public class UserDtoFixtures {
                 .build();
     }
 
-    public static UserLoginRequest createUserLoginRequest(String email, String password) {
-        return UserLoginRequest.builder()
+    public static UserSignInRequest createUserLoginRequest(String email, String password) {
+        return UserSignInRequest.builder()
                 .email(email)
                 .password(password)
                 .build();
     }
 
-    public static UserLoginResponse createUserLoginResponse(String userName, String userProfile, UserRole userRole) {
-        return UserLoginResponse.builder()
+    public static UserSignInResponse createUserLoginResponse(String userName, String userProfile, UserRole userRole) {
+        return UserSignInResponse.builder()
                 .userProfile(userProfile)
                 .userName(userName)
                 .role(userRole.name())

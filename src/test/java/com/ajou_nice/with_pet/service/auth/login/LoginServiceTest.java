@@ -6,8 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
-import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignInRequest;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignInResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
@@ -32,8 +32,8 @@ public class LoginServiceTest {
     JwtTokenUtil jwtTokenUtil = mock(JwtTokenUtil.class);
     ValidateCollection validateCollection = mock(ValidateCollection.class);
 
-    UserLoginRequest userLoginRequest;
-    UserLoginResponse userLoginResponse;
+    UserSignInRequest userSignInRequest;
+    UserSignInResponse userSignInResponse;
     User user;
 
     @BeforeEach
@@ -47,29 +47,29 @@ public class LoginServiceTest {
     @DisplayName("로그인 성공")
     void login_success() {
         //given
-        userLoginRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0302!");
+        userSignInRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0302!");
         //when
         when(userRepository.findByEmail(any()))
                 .thenReturn(Optional.of(user));
-        when(encoder.matches(userLoginRequest.getPassword(), user.getPassword())).
+        when(encoder.matches(userSignInRequest.getPassword(), user.getPassword())).
                 thenReturn(true);
         //then
-        userLoginResponse = authService.login(userLoginRequest);
-        assertEquals(userLoginResponse.getUserName(), user.getName());
-        assertEquals(userLoginResponse.getUserProfile(), user.getProfileImg());
-        assertEquals(userLoginResponse.getRole(), user.getRole().name());
+        userSignInResponse = authService.login(userSignInRequest);
+        assertEquals(userSignInResponse.getUserName(), user.getName());
+        assertEquals(userSignInResponse.getUserProfile(), user.getProfileImg());
+        assertEquals(userSignInResponse.getRole(), user.getRole().name());
     }
 
     @Test
     @DisplayName("로그인 실패 : 이메일이 존재하지 않은 경우")
     void login_fail_email_not_found() {
         //given
-        userLoginRequest = UserDtoFixtures.createUserLoginRequest("invalid@email.con", "password0302!");
+        userSignInRequest = UserDtoFixtures.createUserLoginRequest("invalid@email.con", "password0302!");
         //when
-        when(validateCollection.userValidation(userLoginRequest.getEmail()))
+        when(validateCollection.userValidation(userSignInRequest.getEmail()))
                 .thenThrow(new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
         //then
-        AppException exception = assertThrows(AppException.class, () -> authService.login(userLoginRequest));
+        AppException exception = assertThrows(AppException.class, () -> authService.login(userSignInRequest));
         assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
     }
 
@@ -77,14 +77,14 @@ public class LoginServiceTest {
     @DisplayName("로그인 실패 : 패스워드가 다른 경우")
     void login_fail_invalid_password() {
         //given
-        userLoginRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0203!");
+        userSignInRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0203!");
         //when
         when(userRepository.findByEmail(any()))
                 .thenReturn(Optional.of(user));
-        when(encoder.matches(userLoginRequest.getPassword(), user.getPassword())).
+        when(encoder.matches(userSignInRequest.getPassword(), user.getPassword())).
                 thenReturn(false);
         //then
-        AppException exception = assertThrows(AppException.class, () -> authService.login(userLoginRequest));
+        AppException exception = assertThrows(AppException.class, () -> authService.login(userSignInRequest));
         assertEquals(ErrorCode.INVALID_PASSWORD, exception.getErrorCode());
     }
 }

@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.service.user;
 
-import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
-import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignInRequest;
+import com.ajou_nice.with_pet.domain.dto.auth.UserSignInResponse;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -21,7 +21,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final JwtTokenUtil jwtTokenUtil;
-    private final ValidateCollection valid;
+    private final ValidateCollection validateCollection;
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
 
@@ -42,13 +42,11 @@ public class AuthService {
         return UserSignUpResponse.of(saveUser);
     }
 
-    public UserLoginResponse login(UserLoginRequest userLoginRequest) {
+    public UserSignInResponse login(UserSignInRequest userSignInRequest) {
 
-        User findUser = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(()->{
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
+        User findUser = validateCollection.userValidation(userSignInRequest.getEmail());
 
-        if (!encoder.matches(userLoginRequest.getPassword(), findUser.getPassword())) {
+        if (!encoder.matches(userSignInRequest.getPassword(), findUser.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD,
                     ErrorCode.INVALID_PASSWORD.getMessage());
         }
@@ -56,7 +54,7 @@ public class AuthService {
         String accessToken = jwtTokenUtil.createToken(findUser.getEmail(),
                 findUser.getRole().name());
 
-        return UserLoginResponse.of(findUser,accessToken);
+        return UserSignInResponse.of(findUser, accessToken);
     }
 
 //    public void logout(HttpServletResponse response){
