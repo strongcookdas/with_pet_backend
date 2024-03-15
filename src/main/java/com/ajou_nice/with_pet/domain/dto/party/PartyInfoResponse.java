@@ -3,7 +3,6 @@ package com.ajou_nice.with_pet.domain.dto.party;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
-import com.ajou_nice.with_pet.domain.entity.UserParty;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,14 +31,14 @@ public class PartyInfoResponse {
         return PartyInfoResponse.builder()
                 .partyId(party.getPartyId())
                 .partyName(party.getName())
-                .leaderId(party.getUser().getId())
+                .leaderId(party.getUser().getEmail())
                 .leaderImg(party.getUser().getProfileImg())
                 .leaderName(party.getUser().getName())
                 .partyIsbn(party.getPartyIsbn())
                 .userPartyList(
                         party.getUserPartyList().stream()
-                                .filter(userParty -> userParty.getUser().getUserId()
-                                        != party.getUser().getUserId()).map(PartyMemberResponse::of)
+                                .filter(userParty -> userParty.getUser().getId()
+                                        != party.getUser().getId()).map(PartyMemberResponse::of)
                                 .collect(
                                         Collectors.toList()))
                 .dogInfoResponseList(new ArrayList<>())
@@ -50,7 +49,7 @@ public class PartyInfoResponse {
         return PartyInfoResponse.builder()
                 .partyId(dog.getParty().getPartyId())
                 .partyName(dog.getParty().getName())
-                .leaderId(dog.getParty().getUser().getId())
+                .leaderId(dog.getParty().getUser().getEmail())
                 .leaderImg(dog.getParty().getUser().getProfileImg())
                 .leaderName(dog.getParty().getUser().getName())
                 .partyIsbn(dog.getParty().getPartyIsbn())

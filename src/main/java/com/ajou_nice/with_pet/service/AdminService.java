@@ -76,7 +76,7 @@ public class AdminService {
         valid.userValidation(userId);
 
         //유저 불러오기
-        User findUser = userRepository.findByUserId(adminApplicantRequest.getUserId())
+        User findUser = userRepository.findById(adminApplicantRequest.getUserId())
                 .orElseThrow(() -> {
                     throw new AppException(ErrorCode.USER_NOT_FOUND,
                             ErrorCode.USER_NOT_FOUND.getMessage());
@@ -107,7 +107,7 @@ public class AdminService {
         valid.userValidation(userId);
 
         //유저 불러오기
-        User findUser = userRepository.findByUserId(adminApplicantRequest.getUserId())
+        User findUser = userRepository.findById(adminApplicantRequest.getUserId())
                 .orElseThrow(() -> {
                     throw new AppException(ErrorCode.USER_NOT_FOUND,
                             ErrorCode.USER_NOT_FOUND.getMessage());
@@ -133,7 +133,7 @@ public class AdminService {
         valid.userValidation(userId);
 
         //유저 불러오기
-        User findUser = userRepository.findByUserId(userId).orElseThrow(() -> {
+        User findUser = userRepository.findById(userId).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
 

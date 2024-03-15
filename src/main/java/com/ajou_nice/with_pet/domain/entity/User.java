@@ -20,7 +20,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +32,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Entity
 @Builder
 @Getter
-@Table(name = "users")
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
-
-    private String id;
+    private Long id;
     @NotNull
     private String name;
     @NotNull
@@ -169,7 +165,7 @@ public class User extends BaseEntity {
     public static User createTestEntity() {
 
         return User.builder()
-                .userId(1L)
+                .id(1L)
                 .name("홍길동")
                 .password("password")
                 .email("email@gmail.com")

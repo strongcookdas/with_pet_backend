@@ -34,7 +34,7 @@ public class ApplicantCreateResponse {
 
     public static ApplicantCreateResponse of(User user) {
         return ApplicantCreateResponse.builder()
-                .userId(user.getUserId())
+                .userId(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .profileImg(user.getProfileImg())

@@ -20,7 +20,7 @@ public class PartyMemberResponse {
 
     public static PartyMemberResponse of(UserParty userParty) {
         return PartyMemberResponse.builder()
-                .userId(userParty.getUser().getUserId())
+                .userId(userParty.getUser().getId())
                 .userName(userParty.getUser().getName())
                 .profileImg(userParty.getUser().getProfileImg())
                 .build();

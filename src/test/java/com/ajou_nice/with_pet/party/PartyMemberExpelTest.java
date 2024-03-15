@@ -74,7 +74,7 @@ public class PartyMemberExpelTest {
         initialize();
         String userId = boss.getId();
         Long partyId = party.getPartyId();
-        Long memberId = member.getUserId();
+        Long memberId = member.getId();
         //when
         String result = partyService.expelMember(userId, partyId, memberId);
         //then
@@ -89,7 +89,7 @@ public class PartyMemberExpelTest {
         initialize();
         String userId = member.getId();
         Long partyId = party.getPartyId();
-        Long memberId = member.getUserId();
+        Long memberId = member.getId();
         //when
         AppException exception = Assertions.assertThrows(AppException.class,
                 () -> partyService.expelMember(userId, partyId, memberId));
@@ -121,7 +121,7 @@ public class PartyMemberExpelTest {
         initialize();
         String userId = "";
         Long partyId = party.getPartyId();
-        Long memberId = member.getUserId();
+        Long memberId = member.getId();
         //when
         AppException exception = Assertions.assertThrows(AppException.class,
                 () -> partyService.expelMember(userId, partyId, memberId));
@@ -137,7 +137,7 @@ public class PartyMemberExpelTest {
         initialize();
         String userId = boss.getId();
         Long partyId = party.getPartyId();
-        Long memberId = notMember.getUserId();
+        Long memberId = notMember.getId();
         //when
         AppException exception = Assertions.assertThrows(AppException.class,
                 () -> partyService.expelMember(userId, partyId, memberId));
@@ -153,7 +153,7 @@ public class PartyMemberExpelTest {
         initialize();
         String userId = boss.getId();
         Long partyId = Long.MAX_VALUE;
-        Long memberId = notMember.getUserId();
+        Long memberId = notMember.getId();
         //when
         AppException exception = Assertions.assertThrows(AppException.class,
                 () -> partyService.expelMember(userId, partyId, memberId));

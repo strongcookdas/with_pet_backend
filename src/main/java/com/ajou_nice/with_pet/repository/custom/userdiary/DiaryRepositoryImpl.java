@@ -28,7 +28,7 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements
             LocalDate month, String petsitterCheck) {
 
         List<Diary> userDiaries = queryFactory.select(diary).from(diary, userParty)
-                .where(diary.dog.party.eq(userParty.party).and(userParty.user.userId.eq(userId)
+                .where(diary.dog.party.eq(userParty.party).and(userParty.user.id.eq(userId)
                                 .and(diary.createdAt.between(month.withDayOfMonth(1),
                                         month.withDayOfMonth(month.lengthOfMonth())))),
                         containsDog(dogId), containsCategory(categoryId),
@@ -42,7 +42,7 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements
     public List<Diary> findByDayDate(Long userId, Long dogId, Long categoryId,
             LocalDate day, String petsitterCheck) {
         List<Diary> userDiaries = queryFactory.select(diary).from(diary, userParty)
-                .where(diary.dog.party.eq(userParty.party).and(userParty.user.userId.eq(userId)
+                .where(diary.dog.party.eq(userParty.party).and(userParty.user.id.eq(userId)
                                 .and(diary.createdAt.eq(day))),
                         containsDog(dogId), containsCategory(categoryId),
                         containsPetsitter(petsitterCheck))

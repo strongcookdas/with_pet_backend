@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.service;
 
 
-import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.chat.ChatMainResponse;
 import com.ajou_nice.with_pet.domain.dto.chat.ChatMessageRequest;
 import com.ajou_nice.with_pet.domain.dto.chat.ChatMessageResponse;
@@ -11,15 +10,11 @@ import com.ajou_nice.with_pet.domain.entity.ChatMessage;
 import com.ajou_nice.with_pet.domain.entity.ChatRoom;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.enums.UserRole;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.ChatMessageRepository;
 import com.ajou_nice.with_pet.repository.ChatRoomRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +37,9 @@ public class ChatService {
 
 		User me = valid.userValidation(userId);
 
-		List<ChatRoom> myChatRooms = chatRoomRepository.findChatRoomByMyId(me.getUserId());
+		List<ChatRoom> myChatRooms = chatRoomRepository.findChatRoomByMyId(me.getId());
 		if(myChatRooms.isEmpty()){
-			myChatRooms = chatRoomRepository.findChatRoomByOtherId(me.getUserId());
+			myChatRooms = chatRoomRepository.findChatRoomByOtherId(me.getId());
 			return ChatMainResponse.forPetSitterList(myChatRooms);
 		}
 		else {
@@ -106,7 +101,7 @@ public class ChatService {
 		//채팅룸이 존재하는지 확인
 		ChatRoom findRoom = valid.chatRoomValidation(roomId);
 
-		ChatMessage chatMessage = ChatMessage.toEntity(chatMessageRequest,findRoom,findUser.getUserId());
+		ChatMessage chatMessage = ChatMessage.toEntity(chatMessageRequest,findRoom,findUser.getId());
 		chatMessageRepository.save(chatMessage);
 
 		Optional<PetSitter> existPetSitter = petSitterRepository.findByUser(findUser);

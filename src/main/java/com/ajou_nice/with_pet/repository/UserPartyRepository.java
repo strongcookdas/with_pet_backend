@@ -17,7 +17,7 @@ public interface UserPartyRepository extends JpaRepository<UserParty, Long> {
     @Query("select u.party.partyId from UserParty u where u.user.id=:userId")
     List<Long> findAllUserPartyIdByUserId(@Param("userId") String userId);
 
-    @Query("select u from UserParty u join fetch u.user where u.party.partyId =:partyId and u.user.userId <>:userId ")
+    @Query("select u from UserParty u join fetch u.user where u.party.partyId =:partyId and u.user.id <>:userId ")
     List<UserParty> findAllByPartyAndUser(@Param("partyId") Long partyId,
             @Param("userId") Long userId);
 

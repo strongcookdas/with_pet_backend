@@ -2,7 +2,6 @@ package com.ajou_nice.with_pet.domain.dto.petsitter;
 
 
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
-import com.ajou_nice.with_pet.domain.dto.embedded.AddressDto;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterServiceResponse.PetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.review.ReviewResponse;
 import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
@@ -54,7 +53,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 			List<PetSitterCriticalService> petSitterCriticalServices){
 		return PetSitterDetailInfoResponse.builder()
 				.petSitterId(petSitter.getId())
-				.petSitterUserId(petSitter.getUser().getUserId())
+				.petSitterUserId(petSitter.getUser().getId())
 				.petSitterName(petSitter.getUser().getName())
 				.petSitterProfileImg(petSitter.getUser().getProfileImg())
 				.petSitterAddress(petSitter.getUser().getAddress().getStreetAdr())

@@ -80,7 +80,7 @@ public class SignUpServiceTest {
                 .thenReturn(user);
         //then
         UserSignUpResponse result = userAuthService.signUp(userSignUpRequest);
-        assertEquals(result.getUserId(),user.getUserId());
+        assertEquals(result.getUserId(),user.getId());
         assertEquals(result.getUserName(),user.getName());
     }
 

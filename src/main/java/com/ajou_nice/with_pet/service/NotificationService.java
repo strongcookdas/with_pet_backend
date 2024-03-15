@@ -6,7 +6,6 @@ import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.repository.EmitterRepository;
 import com.ajou_nice.with_pet.repository.NotificationRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class NotificationService {
     public List<NotificationResponse> getNotification(String userId) {
         User user = valid.userValidation(userId);
         List<Notification> notifications = notificationRepository.findAllByReceiver(
-                user.getUserId());
+                user.getId());
         return notifications.stream().map(NotificationResponse::of).collect(Collectors.toList());
     }
 

@@ -12,15 +12,12 @@ import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.CategoryRepository;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.DiaryRepository;
 import com.ajou_nice.with_pet.repository.NotificationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -108,7 +105,7 @@ public class UserDiaryService {
         //유저 체크
         User user = valid.userValidation(userId);
 
-        List<Diary> userDiaries = userDiaryRepository.findByMonthDate(user.getUserId(),
+        List<Diary> userDiaries = userDiaryRepository.findByMonthDate(user.getId(),
                 dogId, categoryId, LocalDate.parse(month + "-01"), petsitterCheck);
         return userDiaries.stream().map(UserDiaryMonthResponse::of).collect(Collectors.toList());
     }
@@ -118,7 +115,7 @@ public class UserDiaryService {
         //유저체크
         User user = valid.userValidation(userId);
 
-        List<Diary> userDiaries = userDiaryRepository.findByDayDate(user.getUserId(), dogId,
+        List<Diary> userDiaries = userDiaryRepository.findByDayDate(user.getId(), dogId,
                 categoryId, LocalDate.parse(day), petsitterCheck);
         return userDiaries.stream().map(UserDiaryResponse::of).collect(Collectors.toList());
     }

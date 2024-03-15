@@ -31,9 +31,9 @@ public class ApplicantBasicInfoResponse {
 
 	public static ApplicantBasicInfoResponse of(User user){
 		return ApplicantBasicInfoResponse.builder()
-				.applicant_user_id(user.getUserId())
+				.applicant_user_id(user.getId())
 				.applicant_user_name(user.getName())
-				.applicant_user_auth_id(user.getId())
+				.applicant_user_auth_id(user.getEmail())
 				.applicant_user_profileImg(user.getProfileImg())
 				.applicant_user_phone(user.getPhone())
 				.applicant_status(user.getApplicantStatus())
@@ -43,9 +43,9 @@ public class ApplicantBasicInfoResponse {
 	public static List<ApplicantBasicInfoResponse> toList(List<User> users){
 		return users.stream().map(applicant-> ApplicantBasicInfoResponse.builder()
 				.applicant_user_name(applicant.getName())
-				.applicant_user_id(applicant.getUserId())
+				.applicant_user_id(applicant.getId())
 				.applicant_user_profileImg(applicant.getProfileImg())
-				.applicant_user_auth_id(applicant.getId())
+				.applicant_user_auth_id(applicant.getEmail())
 				.applicant_user_phone(applicant.getPhone())
 				.applicant_status(applicant.getApplicantStatus())
 				.build()).collect(Collectors.toList());

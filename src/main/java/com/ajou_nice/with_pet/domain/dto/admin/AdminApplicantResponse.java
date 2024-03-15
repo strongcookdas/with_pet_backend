@@ -23,7 +23,7 @@ public class AdminApplicantResponse {
 
 	public static AdminApplicantResponse of(User user){
 		return AdminApplicantResponse.builder()
-				.user_id(user.getUserId())
+				.user_id(user.getId())
 				.applicant_userName(user.getName())
 				.applicantStatus(user.getApplicantStatus())
 				.build();

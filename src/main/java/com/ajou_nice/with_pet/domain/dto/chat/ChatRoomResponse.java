@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.chat;
 
 
-import com.ajou_nice.with_pet.domain.entity.ChatMessage;
 import com.ajou_nice.with_pet.domain.entity.ChatRoom;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -27,8 +26,8 @@ public class ChatRoomResponse {
 	public static ChatRoomResponse of(ChatRoom chatRoom, List<ChatMessageResponse> chatMessages){
 		return ChatRoomResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())
-				.myId(chatRoom.getMe().getUserId())
-				.otherId(chatRoom.getOther().getUserId())
+				.myId(chatRoom.getMe().getId())
+				.otherId(chatRoom.getOther().getId())
 				.chatMessages(chatMessages)
 				.build();
 	}
@@ -36,8 +35,8 @@ public class ChatRoomResponse {
 	public static ChatRoomResponse ofPetSitter(ChatRoom chatRoom, List<ChatMessageResponse> chatMessages){
 		return ChatRoomResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())
-				.myId(chatRoom.getOther().getUserId())
-				.otherId(chatRoom.getMe().getUserId())
+				.myId(chatRoom.getOther().getId())
+				.otherId(chatRoom.getMe().getId())
 				.chatMessages(chatMessages)
 				.build();
 	}
@@ -45,8 +44,8 @@ public class ChatRoomResponse {
 	public static ChatRoomResponse of(ChatRoom chatRoom){
 		return ChatRoomResponse.builder()
 				.chatRoomId(chatRoom.getRoomId())
-				.myId(chatRoom.getMe().getUserId())
-				.otherId(chatRoom.getOther().getUserId())
+				.myId(chatRoom.getMe().getId())
+				.otherId(chatRoom.getOther().getId())
 				.build();
 	}
 }

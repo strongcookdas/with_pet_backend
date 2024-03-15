@@ -22,7 +22,7 @@ public class UserSignUpResponse {
 
     public static UserSignUpResponse of(User user) {
         return UserSignUpResponse.builder()
-                .userId(user.getUserId())
+                .userId(user.getId())
                 .userName(user.getName())
                 .build();
     }

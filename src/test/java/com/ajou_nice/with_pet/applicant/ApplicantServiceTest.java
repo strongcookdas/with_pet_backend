@@ -70,7 +70,7 @@ public class ApplicantServiceTest {
         when(validateCollection.userValidationByEmail(user.getEmail())).thenReturn(user);
         ApplicantCreateResponse result = service.registerApplicant(request, user.getEmail());
         //then
-        Assertions.assertEquals(user.getUserId(),result.getUserId());
+        Assertions.assertEquals(user.getId(),result.getUserId());
         Assertions.assertEquals(request.getMotivation(), result.getMotivation());
     }
 

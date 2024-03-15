@@ -25,7 +25,7 @@ public class MyInfoResponse {
     public static MyInfoResponse toMyInfoResponse(User user) {
         return MyInfoResponse.builder()
                 .userName(user.getName())
-                .userId(user.getId())
+                .userId(user.getEmail())
                 .profileImg(user.getProfileImg())
                 .userEmail(user.getEmail())
                 .phoneNum(user.getPhone())
