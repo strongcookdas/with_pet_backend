@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.user.auth.signup;
+package com.ajou_nice.with_pet.service.auth.signup;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +16,7 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
-import com.ajou_nice.with_pet.service.user.UserAuthService;
+import com.ajou_nice.with_pet.service.user.AuthService;
 import com.ajou_nice.with_pet.utils.JwtTokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class SignUpServiceTest {
-    UserAuthService userAuthService;
+    AuthService authService;
     UserRepository userRepository = mock(UserRepository.class);
     BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
     JwtTokenUtil jwtTokenUtil = mock(JwtTokenUtil.class);
@@ -49,7 +49,7 @@ public class SignUpServiceTest {
                 .build();
 
         user = User.builder()
-                .userId(1L)
+                .id(1L)
                 .name("user1")
                 .email("email@email.com")
                 .password("password")
@@ -57,7 +57,7 @@ public class SignUpServiceTest {
                 .profileImg("image")
                 .phone("010-0000-0000")
                 .build();
-        userAuthService = new UserAuthService(userRepository, encoder, jwtTokenUtil, validateCollection);
+        authService = new AuthService(userRepository, encoder, jwtTokenUtil, validateCollection);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class SignUpServiceTest {
         when(userRepository.save(any()))
                 .thenReturn(user);
         //then
-        UserSignUpResponse result = userAuthService.signUp(userSignUpRequest);
+        UserSignUpResponse result = authService.signUp(userSignUpRequest);
         assertEquals(result.getUserId(),user.getId());
         assertEquals(result.getUserName(),user.getName());
     }
@@ -101,7 +101,7 @@ public class SignUpServiceTest {
         when(userRepository.existsByEmail(userSignUpRequest.getEmail()))
                 .thenReturn(true);
         //then
-        AppException exception = assertThrows(AppException.class,() -> userAuthService.signUp(userSignUpRequest));
+        AppException exception = assertThrows(AppException.class,() -> authService.signUp(userSignUpRequest));
         assertEquals(ErrorCode.DUPLICATED_EMAIL,exception.getErrorCode());
     }
 
@@ -120,7 +120,7 @@ public class SignUpServiceTest {
                 .build();
         //when
         //then
-        AppException exception = assertThrows(AppException.class,() -> userAuthService.signUp(userSignUpRequest));
+        AppException exception = assertThrows(AppException.class,() -> authService.signUp(userSignUpRequest));
         assertEquals(ErrorCode.PASSWORD_COMPARE_FAIL,exception.getErrorCode());
     }
 }

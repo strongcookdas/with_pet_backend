@@ -157,7 +157,7 @@ public class ReservationListTest {
 		reservationRepository.save(reservation4);
 	   
 		//when ReservationDocsResponse에 매핑했을때
-		ReservationDocsResponse docsResponse = reservationService.getReservationDoc(user.getId());
+		ReservationDocsResponse docsResponse = reservationService.getReservationDoc(user.getEmail());
 
 		//then Dto에 생각한대로 잘 매핑되는지 출력
 		System.out.println(docsResponse);

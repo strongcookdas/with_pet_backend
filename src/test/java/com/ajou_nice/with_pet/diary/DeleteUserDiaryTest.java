@@ -91,7 +91,7 @@ public class DeleteUserDiaryTest {
         initialize();
         Diary userDiary = fixture.getUserDiary();
         userDiary = diaryRepository.save(userDiary);
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long userDiaryId = userDiary.getDiaryId();
         //when
         String result = userDiaryService.deleteUserDiary(userId, userDiaryId);
@@ -124,7 +124,7 @@ public class DeleteUserDiaryTest {
         initialize();
         Diary userDiary = fixture.getUserDiary();
         userDiary = diaryRepository.save(userDiary);
-        String userId = member.getId();
+        String userId = member.getEmail();
         Long userDiaryId = userDiary.getDiaryId();
         //when
         AppException appException = Assertions.assertThrows(AppException.class,
@@ -141,7 +141,7 @@ public class DeleteUserDiaryTest {
         initialize();
         Diary userDiary = fixture.getUserDiary();
         userDiary = diaryRepository.save(userDiary);
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long userDiaryId = Long.MAX_VALUE;
         //when
         AppException appException = Assertions.assertThrows(AppException.class,

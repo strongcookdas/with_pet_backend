@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.user.auth.login;
+package com.ajou_nice.with_pet.controller.auth;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -8,13 +8,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ajou_nice.with_pet.CommonApiTest;
-import com.ajou_nice.with_pet.controller.user.UserAuthController;
+import com.ajou_nice.with_pet.controller.user.AuthController;
 import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.service.user.UserAuthService;
+import com.ajou_nice.with_pet.fixture.UserDtoFixtures;
+import com.ajou_nice.with_pet.service.user.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,42 +28,42 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UserAuthController.class)
+@WebMvcTest(AuthController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 public class LoginControllerTest extends CommonApiTest {
 
+    final String USER_LOGIN_POST_API = "/api/v1/users/login";
+    UserLoginRequest userLoginRequest;
+    UserLoginRequest invalidUserLoginRequestByEmail;
+    UserLoginRequest invalidUserLoginRequestByPassword;
+    UserLoginResponse userLoginResponse;
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
-    UserAuthService userAuthService;
+    AuthService authService;
 
     @Autowired
     ObjectMapper objectMapper;
 
-    UserLoginRequest userLoginRequest;
-    UserLoginResponse userLoginResponse;
 
     @BeforeEach
     public void setup() {
-        userLoginResponse = UserLoginResponse.builder().userName("some1")
-                .userProfile("userProfile")
-                .role(UserRole.ROLE_USER.name())
-                .build();
-
-        userLoginRequest = UserLoginRequest.builder().email("email@email.com")
-                .password("password")
-                .build();
+        userLoginResponse = UserDtoFixtures.createUserLoginResponse("user",
+                "https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png", UserRole.ROLE_USER);
+        userLoginRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0302!");
+        invalidUserLoginRequestByEmail = UserDtoFixtures.createUserLoginRequest("email2@email.com", "invalidPassword0302!");
+        invalidUserLoginRequestByPassword = UserDtoFixtures.createUserLoginRequest("email@email.com", "invalidPassword0302!");
     }
 
     @Test
     @DisplayName("로그인 성공")
     @WithMockUser
     void login_success() throws Exception {
-        when(userAuthService.login(any()))
+        when(authService.login(any()))
                 .thenReturn(userLoginResponse);
 
-        mockMvc.perform(post("/api/v2/users/login")
+        mockMvc.perform(post(USER_LOGIN_POST_API)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(userLoginRequest)))
@@ -71,31 +72,31 @@ public class LoginControllerTest extends CommonApiTest {
     }
 
     @Test
-    @DisplayName("로그인 실패1 : 이메일이 존재하지 않은 경우")
+    @DisplayName("로그인 실패 : 이메일이 존재하지 않는 경우")
     @WithMockUser
-    void login_fail1() throws Exception {
-        when(userAuthService.login(any()))
+    void login_fail_email_not_found() throws Exception {
+        when(authService.login(any()))
                 .thenThrow(new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
 
-        mockMvc.perform(post("/api/v2/users/login")
+        mockMvc.perform(post(USER_LOGIN_POST_API)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(userLoginRequest)))
+                        .content(objectMapper.writeValueAsBytes(invalidUserLoginRequestByEmail)))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("로그인 실패2 : 패스워드가 다른 경우")
+    @DisplayName("로그인 실패 : 패스워드가 다른 경우")
     @WithMockUser
-    void login_fail2() throws Exception {
-        when(userAuthService.login(any()))
+    void login_fail_invalid_password() throws Exception {
+        when(authService.login(any()))
                 .thenThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
 
-        mockMvc.perform(post("/api/v2/users/login")
+        mockMvc.perform(post(USER_LOGIN_POST_API)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(userLoginRequest)))
+                        .content(objectMapper.writeValueAsBytes(invalidUserLoginRequestByPassword)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }

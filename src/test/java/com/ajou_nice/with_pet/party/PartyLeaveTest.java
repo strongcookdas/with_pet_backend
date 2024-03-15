@@ -72,7 +72,7 @@ public class PartyLeaveTest {
     void leaveParty_success1() {
         //given
         initialize();
-        String userId = member.getId();
+        String userId = member.getEmail();
         Long partyId = party.getPartyId();
         //when
         String result = partyService.leaveParty(userId, partyId);
@@ -86,7 +86,7 @@ public class PartyLeaveTest {
     void leaveParty_success2() {
         //given
         initialize();
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long partyId = party.getPartyId();
         //when
         String result = partyService.leaveParty(userId, partyId);
@@ -100,7 +100,7 @@ public class PartyLeaveTest {
     void leaveParty_fail1() {
         //given
         initialize();
-        String userId = fixture.getUser3().getId();
+        String userId = fixture.getUser3().getEmail();
         Long partyId = party.getPartyId();
         //when
         AppException exception = Assertions.assertThrows(AppException.class,
@@ -130,7 +130,7 @@ public class PartyLeaveTest {
     void leaveParty_fail3() {
         //given
         initialize();
-        String userId = member.getId();
+        String userId = member.getEmail();
         Long partyId = Long.MAX_VALUE;
         //when
         AppException exception = Assertions.assertThrows(AppException.class,

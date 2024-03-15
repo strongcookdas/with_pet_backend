@@ -45,7 +45,7 @@ public class PartyTest {
     void createParty() {
         //given
         initialize();
-        String userId = user.getId();
+        String userId = user.getEmail();
         PartyRequest partyRequest = new PartyRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
                 true,
                 LocalDate.of(2020, 10, 17), 5.0f, "123456789");
@@ -79,7 +79,7 @@ public class PartyTest {
         initialize();
         user.updatePartyCount(5);
         userRepository.saveAndFlush(user);
-        String userId = user.getId();
+        String userId = user.getEmail();
 
         PartyRequest partyRequest = new PartyRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
                 true,

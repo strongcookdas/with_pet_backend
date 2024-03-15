@@ -88,7 +88,7 @@ public class DogDeleteTest {
     void deleteDog_success() {
         //given
         initialize();
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long dogId = dog.getDogId();
         //when
         Boolean deleteParty = dogService.deleteDog(userId, dogId);
@@ -117,7 +117,7 @@ public class DogDeleteTest {
     void deleteDog_fail2() {
         //given
         initialize();
-        String userId = member.getId();
+        String userId = member.getEmail();
         Long dogId = dog.getDogId();
         //when
         AppException exception = Assertions.assertThrows(AppException.class,
@@ -132,7 +132,7 @@ public class DogDeleteTest {
     void deleteDog_fail3() {
         //given
         initialize();
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long dogId = dog.getDogId();
         //when
         AppException exception = Assertions.assertThrows(AppException.class,
@@ -147,7 +147,7 @@ public class DogDeleteTest {
     void deleteDog_fail4() {
         //given
         initialize();
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long dogId = dog.getDogId();
         Reservation reservation1 = fixture.getReservation1();
         reservation1 = reservationRepository.save(reservation1);

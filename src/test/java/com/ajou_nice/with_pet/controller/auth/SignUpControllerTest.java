@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.user.auth.signup;
+package com.ajou_nice.with_pet.controller.auth;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -7,11 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ajou_nice.with_pet.CommonApiTest;
-import com.ajou_nice.with_pet.controller.user.UserAuthController;
+import com.ajou_nice.with_pet.controller.user.AuthController;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
 import com.ajou_nice.with_pet.domain.dto.embedded.AddressDto;
-import com.ajou_nice.with_pet.service.user.UserAuthService;
+import com.ajou_nice.with_pet.service.user.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UserAuthController.class)
+@WebMvcTest(AuthController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 public class SignUpControllerTest extends CommonApiTest {
 
@@ -32,7 +32,7 @@ public class SignUpControllerTest extends CommonApiTest {
     MockMvc mockMvc;
 
     @MockBean
-    UserAuthService userAuthService;
+    AuthService authService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -69,7 +69,7 @@ public class SignUpControllerTest extends CommonApiTest {
     @DisplayName("회원가입")
     @WithMockUser
     void signUp_success() throws Exception {
-        when(userAuthService.signUp(userSignUpRequest))
+        when(authService.signUp(userSignUpRequest))
                 .thenReturn(userSignUpResponse);
 
         mockMvc.perform(post("/api/v2/users/signup")

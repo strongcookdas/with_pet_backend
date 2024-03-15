@@ -5,7 +5,7 @@ import com.ajou_nice.with_pet.domain.dto.auth.UserLoginRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserLoginResponse;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
-import com.ajou_nice.with_pet.service.user.UserAuthService;
+import com.ajou_nice.with_pet.service.user.AuthService;
 import com.ajou_nice.with_pet.utils.CookieUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,22 +13,19 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("api/v2/users")
+@RequestMapping("api/v1/users")
 @RequiredArgsConstructor
 @Api(tags = "UserAuth API")
 @Slf4j
-public class UserAuthController {
+public class AuthController {
 
-    private final UserAuthService userService;
+    private final AuthService userService;
     private final CookieUtil cookieUtil;
 
     @PostMapping("/signup")

@@ -72,7 +72,7 @@ public class PartyMemberExpelTest {
     void expelMember_success() {
         //given
         initialize();
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long partyId = party.getPartyId();
         Long memberId = member.getId();
         //when
@@ -87,7 +87,7 @@ public class PartyMemberExpelTest {
     void expelMember_fail1() {
         //given
         initialize();
-        String userId = member.getId();
+        String userId = member.getEmail();
         Long partyId = party.getPartyId();
         Long memberId = member.getId();
         //when
@@ -103,7 +103,7 @@ public class PartyMemberExpelTest {
     void expelMember_fail2() {
         //given
         initialize();
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long partyId = party.getPartyId();
         Long memberId = Long.MAX_VALUE;
         //when
@@ -135,7 +135,7 @@ public class PartyMemberExpelTest {
     void expelMember_fail4() {
         //given
         initialize();
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long partyId = party.getPartyId();
         Long memberId = notMember.getId();
         //when
@@ -151,7 +151,7 @@ public class PartyMemberExpelTest {
     void expelMember_fail5() {
         //given
         initialize();
-        String userId = boss.getId();
+        String userId = boss.getEmail();
         Long partyId = Long.MAX_VALUE;
         Long memberId = notMember.getId();
         //when

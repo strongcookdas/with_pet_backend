@@ -126,7 +126,7 @@ public class ReservationTest {
 		reservation.updateStatus(ReservationStatus.APPROVAL.toString());
 		reservationRepository.save(reservation);
 	    //when 사용자가 done을 눌렀을때 (reservationService test)
-		reservationService.doneReservation(user1.getId(), reservation.getReservationId());
+		reservationService.doneReservation(user1.getEmail(), reservation.getReservationId());
 	    //then 예약 상태가 done으로 잘 바뀌는지 test
 		Assertions.assertEquals(reservation.getReservationStatus(), ReservationStatus.DONE);
 	 }
@@ -142,7 +142,7 @@ public class ReservationTest {
 		 reservation.updateStatus(ReservationStatus.WAIT.toString());
 		 reservationRepository.save(reservation);
 	     //when 사용자가 결제전 예약을 취소했을때 (reservationService test)
-		 reservationService.cancelReservation(user1.getId(), reservation.getReservationId());
+		 reservationService.cancelReservation(user1.getEmail(), reservation.getReservationId());
 	   
 	     //then 예약상태가 Cancel로 잘 바뀌는지
 		 Assertions.assertEquals(reservation.getReservationStatus(), ReservationStatus.CANCEL);

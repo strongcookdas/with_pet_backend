@@ -126,7 +126,7 @@ public class ReviewTest {
 		ReviewRequest reviewRequest = ReviewRequest.of(reservation1.getReservationId(), "좋았습니다.", 3.5);
 	  
 	    //when
-		reservationService.postReview(user.getId(), reviewRequest);
+		reservationService.postReview(user.getEmail(), reviewRequest);
 	  
 	    //then
 		//Assertions.assertEquals(newPetSitter.getStar_rate(), 3.5);

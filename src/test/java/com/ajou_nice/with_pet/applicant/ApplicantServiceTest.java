@@ -47,7 +47,7 @@ public class ApplicantServiceTest {
     void registerApplicant() {
         //given
         user = User.builder()
-                .userId(1L)
+                .id(1L)
                 .name("user1")
                 .email("email@email.com")
                 .password("password")
@@ -79,7 +79,7 @@ public class ApplicantServiceTest {
     void registerApplicant_fail1() {
         //given
         user = User.builder()
-                .userId(1L)
+                .id(1L)
                 .name("user1")
                 .email("email@email.com")
                 .password("password")
@@ -112,7 +112,7 @@ public class ApplicantServiceTest {
     void registerApplicant_fail2() {
         //given
         user = User.builder()
-                .userId(1L)
+                .id(1L)
                 .name("user1")
                 .email("email@email.com")
                 .password("password")

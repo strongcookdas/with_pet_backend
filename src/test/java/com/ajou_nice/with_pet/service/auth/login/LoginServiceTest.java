@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.user.auth.login;
+package com.ajou_nice.with_pet.service.auth.login;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,9 +12,11 @@ import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.fixture.UserDtoFixtures;
+import com.ajou_nice.with_pet.fixture.entity.UserFixture;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
-import com.ajou_nice.with_pet.service.user.UserAuthService;
+import com.ajou_nice.with_pet.service.user.AuthService;
 import com.ajou_nice.with_pet.utils.JwtTokenUtil;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class LoginServiceTest {
 
-    UserAuthService userAuthService;
+    AuthService authService;
     UserRepository userRepository = mock(UserRepository.class);
     BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
     JwtTokenUtil jwtTokenUtil = mock(JwtTokenUtil.class);
@@ -36,68 +38,53 @@ public class LoginServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = User.builder()
-                .userId(1L)
-                .name("user1")
-                .email("email@email.com")
-                .password("password")
-                .role(UserRole.ROLE_USER)
-                .profileImg("userProfile")
-                .build();
-        userAuthService = new UserAuthService(userRepository, encoder, jwtTokenUtil, validateCollection);
+        user = UserFixture.createUser(1L, "user", "email@email.com", "password0302!", UserRole.ROLE_USER,
+                "https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png");
+        authService = new AuthService(userRepository, encoder, jwtTokenUtil, validateCollection);
     }
 
     @Test
     @DisplayName("로그인 성공")
     void login_success() {
         //given
-        userLoginRequest = UserLoginRequest.builder()
-                .email("email@email.com")
-                .password("password")
-                .build();
+        userLoginRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0302!");
         //when
         when(userRepository.findByEmail(any()))
                 .thenReturn(Optional.of(user));
         when(encoder.matches(userLoginRequest.getPassword(), user.getPassword())).
                 thenReturn(true);
         //then
-        userLoginResponse = userAuthService.login(userLoginRequest);
-        assertEquals(userLoginResponse.getUserName(),user.getName());
-        assertEquals(userLoginResponse.getUserProfile(),user.getProfileImg());
-        assertEquals(userLoginResponse.getRole(),user.getRole().name());
+        userLoginResponse = authService.login(userLoginRequest);
+        assertEquals(userLoginResponse.getUserName(), user.getName());
+        assertEquals(userLoginResponse.getUserProfile(), user.getProfileImg());
+        assertEquals(userLoginResponse.getRole(), user.getRole().name());
     }
 
     @Test
-    @DisplayName("로그인 실패1 : 유저가 존재하지 않은 경우")
-    void login_fail1() {
+    @DisplayName("로그인 실패 : 이메일이 존재하지 않은 경우")
+    void login_fail_email_not_found() {
         //given
-        userLoginRequest = UserLoginRequest.builder()
-                .email("email@email.com")
-                .password("password")
-                .build();
+        userLoginRequest = UserDtoFixtures.createUserLoginRequest("invalid@email.con", "password0302!");
         //when
         when(validateCollection.userValidation(userLoginRequest.getEmail()))
-                .thenThrow(new AppException(ErrorCode.USER_NOT_FOUND,ErrorCode.USER_NOT_FOUND.getMessage()));
+                .thenThrow(new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
         //then
-        AppException exception = assertThrows(AppException.class,() -> userAuthService.login(userLoginRequest));
-        assertEquals(ErrorCode.USER_NOT_FOUND,exception.getErrorCode());
+        AppException exception = assertThrows(AppException.class, () -> authService.login(userLoginRequest));
+        assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
     }
 
     @Test
-    @DisplayName("로그인 실패2 : 패스워드가 같지 않은 경우")
-    void login_fail2() {
+    @DisplayName("로그인 실패 : 패스워드가 다른 경우")
+    void login_fail_invalid_password() {
         //given
-        userLoginRequest = UserLoginRequest.builder()
-                .email("email@email.com")
-                .password("password")
-                .build();
+        userLoginRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0203!");
         //when
         when(userRepository.findByEmail(any()))
                 .thenReturn(Optional.of(user));
         when(encoder.matches(userLoginRequest.getPassword(), user.getPassword())).
                 thenReturn(false);
         //then
-        AppException exception = assertThrows(AppException.class,() -> userAuthService.login(userLoginRequest));
-        assertEquals(ErrorCode.INVALID_PASSWORD,exception.getErrorCode());
+        AppException exception = assertThrows(AppException.class, () -> authService.login(userLoginRequest));
+        assertEquals(ErrorCode.INVALID_PASSWORD, exception.getErrorCode());
     }
 }
