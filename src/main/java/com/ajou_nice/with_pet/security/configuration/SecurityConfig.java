@@ -36,7 +36,7 @@ public class SecurityConfig {
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail",
             "/chat/*",
-            "/api/v1/certification"
+            "/api/v2/sms-authentication"
     };
     private final String[] POST_PERMIT_URL = {
             "/api/v2/users/sign-up",
