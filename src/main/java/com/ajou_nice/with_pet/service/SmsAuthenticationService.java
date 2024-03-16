@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.service;
 
+import com.ajou_nice.with_pet.domain.dto.sms.SmsAuthenticationRequest;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.utils.CookieUtil;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +26,8 @@ public class SmsAuthenticationService {
     private final String COOL_SMS_DOMAIN = "https://api.coolsms.co.kr";
     private final String SMS_CONTENT = "[위드펫] 인증번호: ";
     private final Duration DURATION = Duration.ofMinutes(3);
+    private final String SMS_MESSAGE = "인증번호가 발송되었습니다.";
+    private final String SMS_VERIFY_MESSAGE = "인증되었습니다.";
     private final CookieUtil cookieUtil;
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -40,10 +42,19 @@ public class SmsAuthenticationService {
         return RandomStringUtils.randomNumeric(6);
     }
 
-    public void sendOne(String to, HttpServletRequest request, HttpServletResponse response) {
+    public String sendOne(String to, HttpServletRequest request, HttpServletResponse response) {
         checkSmsAuthenticationShipmentCount(request, response);
         String authenticationNumber = sendSmsAuthenticationNumber(to);
         saveSmsAuthenticationNumber(to, authenticationNumber);
+        return SMS_MESSAGE;
+    }
+
+    public String compareAuthenticationNumber(SmsAuthenticationRequest smsAuthenticationRequest) {
+        String authenticationNumber = getSmsAuthenticationNumber(smsAuthenticationRequest.getPhone());
+        if(!authenticationNumber.equals(smsAuthenticationRequest.getAuthenticationNumber())){
+            throw new AppException(ErrorCode.INCONSISTENCY_AUTHENTICATION_NUMBER, ErrorCode.INCONSISTENCY_AUTHENTICATION_NUMBER.getMessage());
+        }
+        return SMS_VERIFY_MESSAGE;
     }
 
     private void checkSmsAuthenticationShipmentCount(HttpServletRequest request, HttpServletResponse response) {
@@ -82,6 +93,4 @@ public class SmsAuthenticationService {
         }
         return (String) values.get(to);
     }
-
-
 }

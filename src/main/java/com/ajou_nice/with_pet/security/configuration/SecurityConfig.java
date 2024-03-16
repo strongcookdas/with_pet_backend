@@ -45,7 +45,8 @@ public class SecurityConfig {
             "/payment/ready",
             "https://kapi.kakao.com/v1/payment/ready",
             "/payment/refund",
-            "/chat/room"
+            "/chat/room",
+            "/api/v2/sms-authentication"
     };
 
     private final String[] ADMIN_GET_API = {

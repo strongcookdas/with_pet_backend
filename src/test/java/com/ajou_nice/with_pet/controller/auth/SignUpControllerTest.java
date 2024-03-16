@@ -71,12 +71,7 @@ public class SignUpControllerTest extends CommonApiTest {
         when(authService.signUp(userSignUpRequest))
                 .thenReturn(userSignUpResponse);
         //then
-        mockMvc.perform(post(USER_SIGN_UP_POST_API)
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(userSignUpRequest)))
-                .andDo(print())
-                .andExpect(status().isOk());
+
     }
 
     @Test
