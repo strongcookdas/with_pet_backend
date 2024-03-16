@@ -37,11 +37,6 @@ public class SMSService {
     }
 
     public String sendOne(String to, HttpServletRequest request, HttpServletResponse response) {
-
-        if(userRepository.existsByPhone(to)){
-            throw new AppException(ErrorCode.DUPLICATED_PHONE,ErrorCode.DUPLICATED_PHONE.getMessage());
-        }
-
         String sms = cookieUtil.getCookieValue(request, "sms");
         if (sms == null) {
             cookieUtil.addCookie(response, "sms", String.valueOf(1), "/");

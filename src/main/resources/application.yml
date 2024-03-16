@@ -21,6 +21,10 @@ spring:
     port: 465
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
+  redis:
+    host: ${REDIS_HOST}
+    password: ${REDIS_PASSWORD}
+    port: 6379
 
 ajou:
   nice: ${AJOU_NICE}

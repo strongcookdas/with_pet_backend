@@ -66,6 +66,8 @@ dependencies {
     implementation 'net.nurigo:sdk:4.3.0'
     //security test
     implementation 'org.springframework.security:spring-security-test:5.7.3'
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     // QFile 생성 및 가져오기
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
