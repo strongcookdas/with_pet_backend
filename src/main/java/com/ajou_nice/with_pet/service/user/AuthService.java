@@ -54,7 +54,7 @@ public class AuthService {
     }
 
     private void compareSignUpPasswordCheck(String password, String passwordCheck) {
-        if (password.equals(passwordCheck)) {
+        if (!password.equals(passwordCheck)) {
             throw new AppException(ErrorCode.PASSWORD_COMPARE_FAIL,
                     ErrorCode.PASSWORD_COMPARE_FAIL.getMessage());
         }
