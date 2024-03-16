@@ -39,8 +39,8 @@ public class SecurityConfig {
             "/api/v1/certification"
     };
     private final String[] POST_PERMIT_URL = {
-            "/api/v2/users/signup",
-            "/api/v2/users/login",
+            "/api/v2/users/sign-up",
+            "/api/v2/users/sign-in",
             "/api/v1/file/upload",
             "/payment/ready",
             "https://kapi.kakao.com/v1/payment/ready",
