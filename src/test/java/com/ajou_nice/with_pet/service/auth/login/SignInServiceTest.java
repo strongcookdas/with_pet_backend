@@ -47,29 +47,29 @@ public class SignInServiceTest {
     @DisplayName("로그인 성공")
     void login_success() {
         //given
-        userSignInRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0302!");
+        userSignInRequest = UserDtoFixtures.createUserSignInRequest("email@email.com", "password0302!");
         //when
-        when(userRepository.findByEmail(any()))
-                .thenReturn(Optional.of(user));
+        when(validateCollection.userValidationByEmail(userSignInRequest.getEmail()))
+                .thenReturn(user);
         when(encoder.matches(userSignInRequest.getPassword(), user.getPassword())).
                 thenReturn(true);
         //then
-        userSignInResponse = authService.login(userSignInRequest);
+        userSignInResponse = authService.SignIn(userSignInRequest);
         assertEquals(userSignInResponse.getUserName(), user.getName());
         assertEquals(userSignInResponse.getUserProfile(), user.getProfileImg());
-        assertEquals(userSignInResponse.getRole(), user.getRole().name());
+        assertEquals(userSignInResponse.getUserRole(), user.getRole().name());
     }
 
     @Test
     @DisplayName("로그인 실패 : 이메일이 존재하지 않은 경우")
     void login_fail_email_not_found() {
         //given
-        userSignInRequest = UserDtoFixtures.createUserLoginRequest("invalid@email.con", "password0302!");
+        userSignInRequest = UserDtoFixtures.createUserSignInRequest("invalid@email.con", "password0302!");
         //when
-        when(validateCollection.userValidation(userSignInRequest.getEmail()))
+        when(validateCollection.userValidationByEmail(userSignInRequest.getEmail()))
                 .thenThrow(new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
         //then
-        AppException exception = assertThrows(AppException.class, () -> authService.login(userSignInRequest));
+        AppException exception = assertThrows(AppException.class, () -> authService.SignIn(userSignInRequest));
         assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
     }
 
@@ -77,14 +77,14 @@ public class SignInServiceTest {
     @DisplayName("로그인 실패 : 패스워드가 다른 경우")
     void login_fail_invalid_password() {
         //given
-        userSignInRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0203!");
+        userSignInRequest = UserDtoFixtures.createUserSignInRequest("email@email.com", "password0203!");
         //when
-        when(userRepository.findByEmail(any()))
-                .thenReturn(Optional.of(user));
+        when(validateCollection.userValidationByEmail(userSignInRequest.getEmail()))
+                .thenReturn(user);
         when(encoder.matches(userSignInRequest.getPassword(), user.getPassword())).
                 thenReturn(false);
         //then
-        AppException exception = assertThrows(AppException.class, () -> authService.login(userSignInRequest));
+        AppException exception = assertThrows(AppException.class, () -> authService.SignIn(userSignInRequest));
         assertEquals(ErrorCode.INVALID_PASSWORD, exception.getErrorCode());
     }
 }

@@ -28,18 +28,18 @@ public class UserDtoFixtures {
                 .build();
     }
 
-    public static UserSignInRequest createUserLoginRequest(String email, String password) {
+    public static UserSignInRequest createUserSignInRequest(String email, String password) {
         return UserSignInRequest.builder()
                 .email(email)
                 .password(password)
                 .build();
     }
 
-    public static UserSignInResponse createUserLoginResponse(String userName, String userProfile, UserRole userRole) {
+    public static UserSignInResponse createUserSignInResponse(String userName, String userProfile, UserRole userRole) {
         return UserSignInResponse.builder()
                 .userProfile(userProfile)
                 .userName(userName)
-                .role(userRole.name())
+                .userRole(userRole.name())
                 .build();
     }
 

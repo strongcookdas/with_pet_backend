@@ -24,40 +24,46 @@ public class AuthService {
     private final ValidateCollection validateCollection;
 
     public UserSignUpResponse signUp(UserSignUpRequest userSignUpRequest) {
+        checkDuplicatedUserByEmail(userSignUpRequest.getEmail());
+        compareSignUpPasswordCheck(userSignUpRequest.getPassword(), userSignUpRequest.getPasswordCheck());
 
-        //아이디 중복확인
-        if (userRepository.existsByEmail(userSignUpRequest.getEmail())) {
-            throw new AppException(ErrorCode.DUPLICATED_EMAIL,
-                    ErrorCode.DUPLICATED_EMAIL.getMessage());
-        }
-
-        //비밀번호와 비밀번호 확인 비교
-        if (!userSignUpRequest.getPassword().equals(userSignUpRequest.getPasswordCheck())) {
-            throw new AppException(ErrorCode.PASSWORD_COMPARE_FAIL,
-                    ErrorCode.PASSWORD_COMPARE_FAIL.getMessage());
-        }
-
-        User user = User.toUserEntity(userSignUpRequest, encoder);
+        User user = User.of(userSignUpRequest, encoder);
         User saveUser = userRepository.save(user);
         return UserSignUpResponse.of(saveUser);
     }
 
-    public UserSignInResponse login(UserSignInRequest userSignInRequest) {
+    public UserSignInResponse SignIn(UserSignInRequest userSignInRequest) {
 
-        User findUser = validateCollection.userValidation(userSignInRequest.getEmail());
+        User user = validateCollection.userValidationByEmail(userSignInRequest.getEmail());
+        comparePassword(userSignInRequest.getPassword(), user.getPassword());
+        String accessToken = jwtTokenUtil.createToken(user.getEmail(),
+                user.getRole().name());
 
-        if (!encoder.matches(userSignInRequest.getPassword(), findUser.getPassword())) {
-            throw new AppException(ErrorCode.INVALID_PASSWORD,
-                    ErrorCode.INVALID_PASSWORD.getMessage());
-        }
-
-        String accessToken = jwtTokenUtil.createToken(findUser.getEmail(),
-                findUser.getRole().name());
-
-        return UserSignInResponse.of(findUser, accessToken);
+        return UserSignInResponse.of(user, accessToken);
     }
 
 //    public void logout(HttpServletResponse response){
 //        cookieUtil.initCookie(response,"token",null,"/");
 //    }
+
+    private void checkDuplicatedUserByEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new AppException(ErrorCode.DUPLICATED_EMAIL,
+                    ErrorCode.DUPLICATED_EMAIL.getMessage());
+        }
+    }
+
+    private void compareSignUpPasswordCheck(String password, String passwordCheck) {
+        if (password.equals(passwordCheck)) {
+            throw new AppException(ErrorCode.PASSWORD_COMPARE_FAIL,
+                    ErrorCode.PASSWORD_COMPARE_FAIL.getMessage());
+        }
+    }
+
+    private void comparePassword(String input, String password) {
+        if (!encoder.matches(input, password)) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD,
+                    ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+    }
 }

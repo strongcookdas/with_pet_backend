@@ -17,7 +17,7 @@ public class UserSignInResponse {
 
     private String userName;
     private String userProfile;
-    private String role;
+    private String userRole;
     @JsonIgnore
     private String token;
 
@@ -25,7 +25,7 @@ public class UserSignInResponse {
         return UserSignInResponse.builder()
                 .userName(user.getName())
                 .userProfile(user.getProfileImg())
-                .role(user.getRole().name())
+                .userRole(user.getRole().name())
                 .token(token)
                 .build();
     }

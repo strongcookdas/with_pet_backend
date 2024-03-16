@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @MockBean(JpaMetamodelMappingContext.class)
 public class SignInControllerTest extends CommonApiTest {
 
-    final String USER_LOGIN_POST_API = "/api/v1/users/login";
+    final String USER_LOGIN_POST_API = "/api/v2/users/sign-in";
     UserSignInRequest userSignInRequest;
     UserSignInRequest invalidUserSignInRequestByEmail;
     UserSignInRequest invalidUserSignInRequestByPassword;
@@ -50,12 +50,12 @@ public class SignInControllerTest extends CommonApiTest {
     @WithMockUser
     void login_success() throws Exception {
         //given
-        userSignInRequest = UserDtoFixtures.createUserLoginRequest("email@email.com", "password0302!");
-        userSignInResponse = UserDtoFixtures.createUserLoginResponse("user",
+        userSignInRequest = UserDtoFixtures.createUserSignInRequest("email@email.com", "password0302!");
+        userSignInResponse = UserDtoFixtures.createUserSignInResponse("user",
                 "https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png", UserRole.ROLE_USER);
 
         //when
-        when(authService.login(any()))
+        when(authService.SignIn(any()))
                 .thenReturn(userSignInResponse);
 
         //then
@@ -72,10 +72,10 @@ public class SignInControllerTest extends CommonApiTest {
     @WithMockUser
     void login_fail_email_not_found() throws Exception {
         //given
-        invalidUserSignInRequestByEmail = UserDtoFixtures.createUserLoginRequest("email2@email.com", "invalidPassword0302!");
+        invalidUserSignInRequestByEmail = UserDtoFixtures.createUserSignInRequest("email2@email.com", "invalidPassword0302!");
 
         //when
-        when(authService.login(any()))
+        when(authService.SignIn(any()))
                 .thenThrow(new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
 
         //then
@@ -92,10 +92,10 @@ public class SignInControllerTest extends CommonApiTest {
     @WithMockUser
     void login_fail_invalid_password() throws Exception {
         //given
-        invalidUserSignInRequestByPassword = UserDtoFixtures.createUserLoginRequest("email@email.com", "invalidPassword0302!");
+        invalidUserSignInRequestByPassword = UserDtoFixtures.createUserSignInRequest("email@email.com", "invalidPassword0302!");
 
         //when
-        when(authService.login(any()))
+        when(authService.SignIn(any()))
                 .thenThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
 
         //then

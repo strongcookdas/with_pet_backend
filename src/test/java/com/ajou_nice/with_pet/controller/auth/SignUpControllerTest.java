@@ -1,6 +1,5 @@
 package com.ajou_nice.with_pet.controller.auth;
 
-import static com.ajou_nice.with_pet.enums.ValidMessages.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,7 +11,6 @@ import com.ajou_nice.with_pet.controller.user.AuthController;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
 import com.ajou_nice.with_pet.domain.dto.embedded.AddressDto;
-import com.ajou_nice.with_pet.enums.ValidMessages;
 import com.ajou_nice.with_pet.fixture.AddressDtoFixture;
 import com.ajou_nice.with_pet.fixture.UserDtoFixtures;
 import com.ajou_nice.with_pet.service.user.AuthService;
@@ -39,7 +37,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @MockBean(JpaMetamodelMappingContext.class)
 public class SignUpControllerTest extends CommonApiTest {
 
-    final String USER_SIGN_UP_POST_API = "/api/v1/users/sign-up";
+    final String USER_SIGN_UP_POST_API = "/api/v2/users/sign-up";
     @Autowired
     MockMvc mockMvc;
 
@@ -99,7 +97,7 @@ public class SignUpControllerTest extends CommonApiTest {
         }
 
         Assertions.assertThat(messages)
-                .contains(INVALID_EMAIL.getMessage(), INVALID_NAME.getMessage(),
-                        INVALID_PASSWORD.getMessage(), INVALID_PHONE.getMessage());
+                .contains("올바른 이메일 형식을 입력하세요.", "올바른 이름을 입력하세요.",
+                        "영문, 특수문자, 숫자 포함 8자 이상의 패스워드를 입력하세요.", "올바른 형식의 전화번호를 입력하세요.");
     }
 }

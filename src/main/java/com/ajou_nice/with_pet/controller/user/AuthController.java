@@ -19,16 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("api/v2/users")
 @RequiredArgsConstructor
-@Api(tags = "UserAuth API")
+@Api(tags = "Auth API")
 @Slf4j
 public class AuthController {
 
     private final AuthService userService;
     private final CookieUtil cookieUtil;
 
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     @ApiOperation(value = "회원가입")
     public Response<UserSignUpResponse> signUp(
             @Valid @RequestBody UserSignUpRequest userSignUpRequest) {
@@ -40,7 +40,7 @@ public class AuthController {
     @ApiOperation(value = "로그인")
     public Response<UserSignInResponse> signIn(@RequestBody UserSignInRequest userSignInRequest,
                                                HttpServletResponse response) {
-        UserSignInResponse userSignInResponse = userService.login(userSignInRequest);
+        UserSignInResponse userSignInResponse = userService.SignIn(userSignInRequest);
         cookieUtil.addCookie(response, "token", userSignInResponse.getToken(), "/");
         return Response.success(userSignInResponse);
     }
