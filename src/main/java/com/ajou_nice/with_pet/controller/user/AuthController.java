@@ -13,10 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("api/v2/users")
@@ -45,11 +44,11 @@ public class AuthController {
         return Response.success(userSignInResponse);
     }
 
-//    @GetMapping("/logout")
-//    @ApiOperation(value = "로그아웃")
-//    public Response logout(@ApiIgnore Authentication authentication,
-//            HttpServletResponse httpServletResponse) {
-//        userService.logout(httpServletResponse);
-//        return Response.success("로그아웃되었습니다.");
-//    }
+    @GetMapping("/sign-out")
+    @ApiOperation(value = "로그아웃")
+    public Response<?> signOut(@ApiIgnore Authentication authentication,
+                            HttpServletResponse httpServletResponse) {
+        cookieUtil.initCookie(httpServletResponse,"token",null,"/");
+        return Response.success("로그아웃되었습니다.");
+    }
 }

@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -41,10 +43,6 @@ public class AuthService {
 
         return UserSignInResponse.of(user, accessToken);
     }
-
-//    public void logout(HttpServletResponse response){
-//        cookieUtil.initCookie(response,"token",null,"/");
-//    }
 
     private void checkDuplicatedUserByEmail(String email) {
         if (userRepository.existsByEmail(email)) {
