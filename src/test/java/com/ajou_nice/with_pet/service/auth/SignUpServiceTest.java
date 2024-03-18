@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.service.auth.signup;
+package com.ajou_nice.with_pet.service.auth;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

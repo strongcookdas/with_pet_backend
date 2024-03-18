@@ -1,9 +1,6 @@
 package com.ajou_nice.with_pet.service.user;
 
-import com.ajou_nice.with_pet.domain.dto.auth.UserSignInRequest;
-import com.ajou_nice.with_pet.domain.dto.auth.UserSignInResponse;
-import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
-import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpResponse;
+import com.ajou_nice.with_pet.domain.dto.auth.*;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
@@ -20,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final String CHECK_DUPLICATED_EMAIL_MESSAGE = "사용할 수 있는 이메일입니다.";
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final JwtTokenUtil jwtTokenUtil;
@@ -44,6 +42,11 @@ public class AuthService {
         return UserSignInResponse.of(user, accessToken);
     }
 
+    public String checkDuplicatedEmail(EmailRequest emailRequest) {
+        checkDuplicatedUserByEmail(emailRequest.getEmail());
+        return CHECK_DUPLICATED_EMAIL_MESSAGE;
+    }
+
     private void checkDuplicatedUserByEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new AppException(ErrorCode.DUPLICATED_EMAIL,
@@ -64,4 +67,5 @@ public class AuthService {
                     ErrorCode.INVALID_PASSWORD.getMessage());
         }
     }
+
 }

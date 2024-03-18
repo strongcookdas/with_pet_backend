@@ -36,7 +36,7 @@ public class SecurityConfig {
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-cancel",
             "http://ec2-13-209-73-128.ap-northeast-2.compute.amazonaws.com:8080/payment-fail",
             "/chat/*",
-            "/api/v2/sms-authentication"
+            "/api/v2/sms-authentication",
     };
     private final String[] POST_PERMIT_URL = {
             "/api/v2/users/sign-up",
@@ -46,7 +46,8 @@ public class SecurityConfig {
             "https://kapi.kakao.com/v1/payment/ready",
             "/payment/refund",
             "/chat/room",
-            "/api/v2/sms-authentication"
+            "/api/v2/sms-authentication",
+            "/api/v2/users/email-duplicates"
     };
 
     private final String[] ADMIN_GET_API = {
