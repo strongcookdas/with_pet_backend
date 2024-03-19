@@ -1,20 +1,11 @@
 package com.ajou_nice.with_pet.service;
 
 
-import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.UserRepository;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @PropertySource("classpath:application.yml")
@@ -58,7 +55,7 @@ public class AwsS3Service {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
 			}
 
-			String uploadUrl = "https://withpet.s3.ap-northeast-2.amazonaws.com/" + fileName;
+			String uploadUrl = "https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/" + fileName;
 			fileNameList.add(uploadUrl);
 
 		});
