@@ -2,28 +2,17 @@ package com.ajou_nice.with_pet.controller;
 
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantRequest;
-import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantResponse;
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
+
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;

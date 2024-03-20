@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
@@ -29,7 +29,7 @@ public class ApplicantServiceTest {
 
     User user;
     Address address;
-    ApplicantCreateRequest request;
+    PetsitterApplicationRequest request;
 
     @BeforeEach
     public void setUp() {
@@ -57,7 +57,7 @@ public class ApplicantServiceTest {
                 .applicantCount(0)
                 .address(address)
                 .build();
-        request = ApplicantCreateRequest.builder()
+        request = PetsitterApplicationRequest.builder()
                 .birth(LocalDate.now())
                 .isSmoking(false)
                 .gender(Gender.FEMALE)
@@ -68,7 +68,7 @@ public class ApplicantServiceTest {
                 .build();
         //when
         when(validateCollection.userValidationByEmail(user.getEmail())).thenReturn(user);
-        ApplicantCreateResponse result = service.registerApplicant(request, user.getEmail());
+        PetsitterApplicationResponse result = service.registerApplicant(request, user.getEmail());
         //then
         Assertions.assertEquals(user.getId(),result.getUserId());
         Assertions.assertEquals(request.getMotivation(), result.getMotivation());
@@ -90,7 +90,7 @@ public class ApplicantServiceTest {
                 .applicantStatus(ApplicantStatus.WAIT)
                 .address(address)
                 .build();
-        request = ApplicantCreateRequest.builder()
+        request = PetsitterApplicationRequest.builder()
                 .birth(LocalDate.now())
                 .isSmoking(false)
                 .gender(Gender.FEMALE)
@@ -122,7 +122,7 @@ public class ApplicantServiceTest {
                 .applicantCount(4)
                 .address(address)
                 .build();
-        request = ApplicantCreateRequest.builder()
+        request = PetsitterApplicationRequest.builder()
                 .birth(LocalDate.now())
                 .isSmoking(false)
                 .gender(Gender.FEMALE)

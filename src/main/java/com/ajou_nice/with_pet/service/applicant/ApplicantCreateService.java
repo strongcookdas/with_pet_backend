@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.service.applicant;
 
 
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
@@ -23,8 +23,8 @@ public class ApplicantCreateService {
      * 유저의 펫시터 지원자 등록
      **/
     @Transactional
-    public ApplicantCreateResponse registerApplicant(ApplicantCreateRequest applicantCreateRequest,
-            String email) {
+    public PetsitterApplicationResponse registerApplicant(PetsitterApplicationRequest petsitterApplicationRequest,
+                                                          String email) {
 
         User findUser = valid.userValidationByEmail(email);
 
@@ -37,9 +37,9 @@ public class ApplicantCreateService {
         findUser.updateApplicantStatus(ApplicantStatus.WAIT);
         findUser.updateUserRole(UserRole.ROLE_APPLICANT);
 
-        findUser.registerApplicantInfo(applicantCreateRequest);
+        findUser.registerApplicantInfo(petsitterApplicationRequest);
 
-        return ApplicantCreateResponse.of(findUser);
+        return PetsitterApplicationResponse.of(findUser);
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest.ApplicantModifyRequest;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest.ApplicantModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyRequest;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
@@ -97,14 +97,14 @@ public class User extends BaseEntity {
         this.applicantStatus = status;
     }
 
-    public void registerApplicantInfo(ApplicantCreateRequest applicantCreateRequest) {
-        this.licenseImg = applicantCreateRequest.getLicenseImg();
-        this.birth = applicantCreateRequest.getBirth();
-        this.isSmoking = applicantCreateRequest.getIsSmoking();
-        this.havingWithPet = applicantCreateRequest.getHavingWithPet();
-        this.gender = applicantCreateRequest.getGender();
-        this.animalCareer = applicantCreateRequest.getAnimalCareer();
-        this.motivation = applicantCreateRequest.getMotivation();
+    public void registerApplicantInfo(PetsitterApplicationRequest petsitterApplicationRequest) {
+        this.licenseImg = petsitterApplicationRequest.getLicenseImg();
+        this.birth = petsitterApplicationRequest.getBirth();
+        this.isSmoking = petsitterApplicationRequest.getIsSmoking();
+        this.havingWithPet = petsitterApplicationRequest.getHavingWithPet();
+        this.gender = petsitterApplicationRequest.getGender();
+        this.animalCareer = petsitterApplicationRequest.getAnimalCareer();
+        this.motivation = petsitterApplicationRequest.getMotivation();
     }
 
     public void updateApplicantInfo(ApplicantModifyRequest applicantModifyRequest) {

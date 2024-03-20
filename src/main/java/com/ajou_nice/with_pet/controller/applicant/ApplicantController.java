@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.controller.applicant;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest.ApplicantModifyRequest;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest.ApplicantModifyRequest;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.service.applicant.ApplicantService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,25 +26,25 @@ public class ApplicantController {
 
 	@GetMapping("/api/v1/users/show-applicateInfo")
 	@ApiOperation(value = "유저의 자신 지원정보 확인")
-	public Response<ApplicantCreateResponse> showApplicateInfo(@ApiIgnore Authentication authentication){
+	public Response<PetsitterApplicationResponse> showApplicateInfo(@ApiIgnore Authentication authentication){
 
-		ApplicantCreateResponse applicantCreateResponse = applicantService.showApplicateInfo(
+		PetsitterApplicationResponse petsitterApplicationResponse = applicantService.showApplicateInfo(
 				authentication.getName());
 		log.info("===================applicant register Response : {} ===================",
-				applicantCreateResponse);
-		return Response.success(applicantCreateResponse);
+				petsitterApplicationResponse);
+		return Response.success(petsitterApplicationResponse);
 	}
 
 	@PutMapping("/api/v1/users/update-applicateInfo")
 	@ApiOperation(value = "유저의 자신 지원정보 수정")
-	public Response<ApplicantCreateResponse> updateApplicateInfo(@ApiIgnore Authentication authentication,
-			@RequestBody @Valid ApplicantModifyRequest applicantModifyRequest){
+	public Response<PetsitterApplicationResponse> updateApplicateInfo(@ApiIgnore Authentication authentication,
+																	  @RequestBody @Valid ApplicantModifyRequest applicantModifyRequest){
 
 		log.info("===================modify applicate info : {} ==================", applicantModifyRequest);
 
-		ApplicantCreateResponse applicantCreateResponse = applicantService.modifyApplicateInfo(
+		PetsitterApplicationResponse petsitterApplicationResponse = applicantService.modifyApplicateInfo(
 				authentication.getName(), applicantModifyRequest);
 
-		return Response.success(applicantCreateResponse);
+		return Response.success(petsitterApplicationResponse);
 	}
 }

@@ -18,7 +18,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class ApplicantCreateRequest {
+public class PetsitterApplicationRequest {
 
     @NotNull(message = "올바른 형식의 생년월일을 입력해주세요.")
     private LocalDate birth;

@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.service.applicant;
 
 
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest.ApplicantModifyRequest;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest.ApplicantModifyRequest;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
@@ -21,7 +21,7 @@ public class ApplicantService {
 
     // == 유저의 지원 정보 상세 확인 == //
     //리팩토링 완
-    public ApplicantCreateResponse showApplicateInfo(String userId) {
+    public PetsitterApplicationResponse showApplicateInfo(String userId) {
         User findUser = valid.userValidation(userId);
         //지원자가 아닐 경우 오류 출력
         if (!findUser.getRole().equals(UserRole.ROLE_APPLICANT)) {
@@ -29,19 +29,19 @@ public class ApplicantService {
                     ErrorCode.APPLICANT_NOT_FOUND.getMessage());
         }
 
-        return ApplicantCreateResponse.of(findUser);
+        return PetsitterApplicationResponse.of(findUser);
     }
 
     // == 유저의 펫시터 지원서류 수정 == //
     //리팩토링 완
     @Transactional
-    public ApplicantCreateResponse modifyApplicateInfo(String userId,
-            ApplicantModifyRequest applicantModifyRequest) {
+    public PetsitterApplicationResponse modifyApplicateInfo(String userId,
+                                                            ApplicantModifyRequest applicantModifyRequest) {
         User findUser = valid.userValidation(userId);
 
         // 지원 정보 수정
         findUser.updateApplicantInfo(applicantModifyRequest);
 
-        return ApplicantCreateResponse.of(findUser);
+        return PetsitterApplicationResponse.of(findUser);
     }
 }

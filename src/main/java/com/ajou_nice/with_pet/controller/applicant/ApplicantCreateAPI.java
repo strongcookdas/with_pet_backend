@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.controller.applicant;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateRequest;
-import com.ajou_nice.with_pet.dto.applicant.ApplicantCreateResponse;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.service.applicant.ApplicantCreateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,13 +25,13 @@ public class ApplicantCreateAPI {
 
     @PostMapping("/api/v2/applicants")
     @ApiOperation(value = "유저의 펫시터 지원")
-    public Response<ApplicantCreateResponse> registerApplicant(@ApiIgnore Authentication authentication
-            ,@RequestBody @Valid ApplicantCreateRequest applicantCreateRequest){
+    public Response<PetsitterApplicationResponse> registerApplicant(@ApiIgnore Authentication authentication
+            , @RequestBody @Valid PetsitterApplicationRequest petsitterApplicationRequest){
 
-        ApplicantCreateResponse applicantCreateResponse = service.registerApplicant(
-                applicantCreateRequest,
+        PetsitterApplicationResponse petsitterApplicationResponse = service.registerApplicant(
+                petsitterApplicationRequest,
                 authentication.getName());
 
-        return Response.success(applicantCreateResponse);
+        return Response.success(petsitterApplicationResponse);
     }
 }

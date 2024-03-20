@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString(callSuper = true)
-public class ApplicantCreateResponse {
+public class PetsitterApplicationResponse {
 
     private Long userId;
     private String name;
@@ -32,8 +32,8 @@ public class ApplicantCreateResponse {
     private String licenseImg;
     private String streetAdr;
 
-    public static ApplicantCreateResponse of(User user) {
-        return ApplicantCreateResponse.builder()
+    public static PetsitterApplicationResponse of(User user) {
+        return PetsitterApplicationResponse.builder()
                 .userId(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
