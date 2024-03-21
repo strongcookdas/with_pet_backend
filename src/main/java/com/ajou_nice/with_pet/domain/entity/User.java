@@ -97,7 +97,7 @@ public class User extends BaseEntity {
         this.applicantStatus = status;
     }
 
-    public void registerApplicantInfo(PetsitterApplicationRequest petsitterApplicationRequest) {
+    public void updateApplicantInfo(PetsitterApplicationRequest petsitterApplicationRequest) {
         this.licenseImg = petsitterApplicationRequest.getLicenseImg();
         this.birth = petsitterApplicationRequest.getBirth();
         this.isSmoking = petsitterApplicationRequest.getIsSmoking();

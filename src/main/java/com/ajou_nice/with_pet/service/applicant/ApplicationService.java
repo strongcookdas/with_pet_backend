@@ -15,37 +15,32 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ApplicantCreateService {
+public class ApplicationService {
+    private final Integer APPLICATION_MAX_COUNT = 3;
+
     private final ValidateCollection valid;
 
-
-    /**
-     * 유저의 펫시터 지원자 등록
-     **/
     @Transactional
-    public PetsitterApplicationResponse registerApplicant(PetsitterApplicationRequest petsitterApplicationRequest,
-                                                          String email) {
+    public PetsitterApplicationResponse applyPetsitter(PetsitterApplicationRequest petsitterApplicationRequest,
+                                                       String email) {
 
-        User findUser = valid.userValidationByEmail(email);
+        User user = valid.userValidationByEmail(email);
 
-        //유저 지원 유효성 체크 (중복지원, 지원 제한 횟수)
-        applicantValidCheck(findUser);
+        validApplicantStatus(user);
+        validApplicationCount(user);
 
-        findUser.updateApplicantCount();
+        user.updateApplicantCount();
+        user.updateApplicantStatus(ApplicantStatus.WAIT);
+        user.updateUserRole(UserRole.ROLE_APPLICANT);
+        user.updateApplicantInfo(petsitterApplicationRequest);
 
-        //유저 지원 상태 wait으로 변경
-        findUser.updateApplicantStatus(ApplicantStatus.WAIT);
-        findUser.updateUserRole(UserRole.ROLE_APPLICANT);
-
-        findUser.registerApplicantInfo(petsitterApplicationRequest);
-
-        return PetsitterApplicationResponse.of(findUser);
+        return PetsitterApplicationResponse.of(user);
     }
 
     /**
      * 지원시 유저의 유효성 체크
      **/
-    private void applicantValidCheck(User user) {
+    private void validApplicantStatus(User user) {
 
         // 유저 펫시터 지원 중복 체크
         // 유저의 role이 지원자이고 , 지원상태가 WAIT일때는 중복 지원 금지
@@ -54,12 +49,12 @@ public class ApplicantCreateService {
             throw new AppException(ErrorCode.DUPLICATED_APPLICATION,
                     ErrorCode.DUPLICATED_APPLICATION.getMessage());
         }
+    }
 
-        //지원 횟수가 3번을 초과했다면 지원 x
-        if (user.getApplicantCount().equals(4)) {
+    private void validApplicationCount(User user) {
+        if (user.getApplicantCount().equals(APPLICATION_MAX_COUNT)) {
             throw new AppException(ErrorCode.TO_MANY_APPLICATE,
                     ErrorCode.TO_MANY_APPLICATE.getMessage());
         }
-
     }
 }

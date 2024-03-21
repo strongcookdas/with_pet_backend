@@ -45,4 +45,20 @@ public class UserFixture {
                 .applicantStatus(applicantStatus)
                 .build();
     }
+
+    public static User createUserWithApplicantStatus(Long id, String name, String email, String password, UserRole userRole,
+                                                     String profileImg, String phone, Integer applicationCount, ApplicantStatus applicantStatus, Address address) {
+        return User.builder()
+                .id(id)
+                .name(name)
+                .email(email)
+                .password(password)
+                .role(userRole)
+                .profileImg(profileImg)
+                .phone(phone)
+                .applicantCount(applicationCount)
+                .applicantStatus(applicantStatus)
+                .address(address)
+                .build();
+    }
 }
