@@ -31,7 +31,6 @@ public class ApplicantServiceTest {
     ValidateCollection validateCollection = mock(ValidateCollection.class);
 
     User user;
-    User applicant;
     Address address;
     PetsitterApplicationRequest petsitterApplicationRequest;
 
@@ -64,7 +63,7 @@ public class ApplicantServiceTest {
     @DisplayName("펫시터 지원 실패 : 지원자이고 지원 상태가 WAIT일 때")
     void registerApplicant_fail_applicant_status_WAIT() {
         //given
-        user = UserFixture.createUserWithApplicantStatus(1L,"user","email@email.com","password258!",UserRole.ROLE_USER,"https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png", "010-0000-0000",1,ApplicantStatus.WAIT,address);
+        user = UserFixture.createUserWithApplicantStatus(1L,"user","email@email.com","password258!",UserRole.ROLE_APPLICANT,"https://ajounciewithpet.s3.ap-northeast-2.amazonaws.com/default-user.png", "010-0000-0000",1,ApplicantStatus.WAIT,address);
         petsitterApplicationRequest = PetsitterApplicationDtoFixture.createPetsitterApplicationRequest(LocalDate.of(2001,1,1), false, Gender.FEMALE, true, "animalCareer", "motivation", "licenseImg");
         //when
         when(validateCollection.userValidationByEmail(user.getEmail())).thenReturn(user);

@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 
@@ -17,17 +18,17 @@ import java.time.LocalDate;
 @ToString
 public class PetsitterApplicationRequest {
 
-    @NotBlank(message = "올바른 형식의 생년월일을 입력해주세요.")
+    @NotNull(message = "올바른 형식의 생년월일을 입력해주세요.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
 
-    @NotBlank(message = "흡연여부 문항을 체크해주세요.")
+    @NotNull(message = "흡연여부 문항을 체크해주세요.")
     private Boolean isSmoking;
 
-    @NotBlank(message = "성별을 입력해주세요.")
+    @NotNull(message = "성별을 입력해주세요.")
     private Gender gender;
 
-    @NotBlank(message = "반려 경험 여부 문항을 체크해주세요.")
+    @NotNull(message = "반려 경험 여부 문항을 체크해주세요.")
     private Boolean havingWithPet;
 
     private String animalCareer;
