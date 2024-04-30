@@ -24,7 +24,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class AdminController {
 
 	private final AdminService adminService;
-
+//배포를 위한 주석 추가
 //	@PostMapping("/api/v1/admin/accept-petsitter")
 //	@ApiOperation(value = "관리자의 펫시터 지원자 수락")
 //	public Response<PetSitterBasicResponse> acceptApplicant(@ApiIgnore Authentication authentication, @RequestBody @Valid AdminApplicantRequest adminApplicantRequest){
