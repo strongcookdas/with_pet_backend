@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.admin.model;
+package com.ajou_nice.with_pet.admin.model.admin;
 
 
 

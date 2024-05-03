@@ -1,14 +1,14 @@
 package com.ajou_nice.with_pet.admin.controller;
 
 
-import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceResponse;
+import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.admin.service.AdminService;
+import com.ajou_nice.with_pet.domain.dto.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v2/admin")
-@Api(tags = "Administrator api")
+@RequestMapping("api/v2/admins")
+@Api(tags = "Administrator API")
 public class AdminController {
 
 	private final AdminService adminService;
@@ -120,19 +122,14 @@ public class AdminController {
 //		return Response.success(criticalServiceResponse);
 //	}
 
-//	@PostMapping("/api/v1/admin/add-service")
-//	@ApiOperation(value = "관리자의 위드펫 서비스 추가")
-//	public Response<WithPetServiceResponse> addWithPetService(@ApiIgnore Authentication authentication, @RequestBody @Valid
-//			WithPetServiceRequest withPetServiceRequest){
-//
-//		log.info("=============== request create withPetService info : {} ==================",withPetServiceRequest);
-//		WithPetServiceResponse withPetServiceResponse = adminService.addWithPetService(
-//				authentication.getName(), withPetServiceRequest);
-//
-//		log.info("=============== response create withPetService info : {} ==================",withPetServiceResponse);
-//
-//		return Response.success(withPetServiceResponse);
-//	}
+	@PostMapping("/service")
+	@ApiOperation(value = "관리자의 위드펫 서비스 추가")
+	public Response<WithPetServiceResponse> addWithPetService(@ApiIgnore Authentication authentication, @RequestBody @Valid
+	AddWithPetServiceRequest addWithPetServiceRequest){
+		WithPetServiceResponse withPetServiceResponse = adminService.addWithPetService(
+				authentication.getName(), addWithPetServiceRequest);
+		return Response.success(withPetServiceResponse);
+	}
 
 //	@PutMapping("/api/v1/admin/service")
 //	@ApiOperation(value = "관리자의 위드펫 서비스 수정")

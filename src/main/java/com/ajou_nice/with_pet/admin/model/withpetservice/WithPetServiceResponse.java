@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.withpetservice;
+package com.ajou_nice.with_pet.admin.model.withpetservice;
 
 import com.ajou_nice.with_pet.domain.entity.WithPetService;
 import java.util.List;

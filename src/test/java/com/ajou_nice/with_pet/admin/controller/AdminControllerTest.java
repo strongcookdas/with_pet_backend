@@ -7,8 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ajou_nice.with_pet.admin.controller.AdminController;
-import com.ajou_nice.with_pet.admin.model.AdminApplicantRequest;
+import com.ajou_nice.with_pet.admin.model.admin.AdminApplicantRequest;
 import com.ajou_nice.with_pet.admin.service.AdminService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

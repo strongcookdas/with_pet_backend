@@ -21,7 +21,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.ajou_nice.with_pet.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.ajou_nice.with_pet"))
                 .build()
                 .apiInfo(apiInfo())
                 .enable(true);
