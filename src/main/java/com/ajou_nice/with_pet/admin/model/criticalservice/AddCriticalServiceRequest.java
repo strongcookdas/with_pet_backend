@@ -1,8 +1,7 @@
-package com.ajou_nice.with_pet.domain.dto.criticalservice;
+package com.ajou_nice.with_pet.admin.model.criticalservice;
 
 
 import javax.persistence.Lob;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,13 +13,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-public class CriticalServiceRequest {
+public class AddCriticalServiceRequest {
 
 	@NotNull
 	private String serviceName;
 
 	@NotNull
-	@Lob
 	private String serviceImg;
 
 	@NotNull

@@ -48,7 +48,8 @@ public enum ErrorCode {
     DUPLICATED_PHONE(HttpStatus.CONFLICT, "이미 중복된 휴대폰입니다."),
     CAN_NOT_LEAVE_PARTY(HttpStatus.BAD_REQUEST, "그룹 내 유효한 예약 내역이 존재하기 때문에 그룹을 퇴장할 수 없습니다." ),
     CAN_NOT_EXPEL_PARTY(HttpStatus.BAD_REQUEST, "그룹 내 유효한 예약 내역이 존재하기 때문에 해당 그룹원을 강퇴 시킬 수 없습니다."),
-    INCONSISTENCY_AUTHENTICATION_NUMBER(HttpStatus.BAD_REQUEST,"인증번호가 일치하지 않습니다.");
+    INCONSISTENCY_AUTHENTICATION_NUMBER(HttpStatus.BAD_REQUEST,"인증번호가 일치하지 않습니다."),
+    UNAUTHORIZED_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 권한이 없습니다.");
 
     private HttpStatus status;
     private String message;

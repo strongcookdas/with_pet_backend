@@ -1,10 +1,10 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.admin.controller;
 
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest;
-import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
-import com.ajou_nice.with_pet.service.AdminService;
+import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceResponse;
+import com.ajou_nice.with_pet.admin.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -14,12 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api/v2/admin")
 @Api(tags = "Administrator api")
 public class AdminController {
 
@@ -99,17 +101,12 @@ public class AdminController {
 //		return Response.success(criticalServiceResponseList);
 //	}
 
-	@PostMapping("/api/v1/admin/add-criticalservice")
+	@PostMapping("/critical-service")
 	@ApiOperation(value = "관리자의 필수 서비스 추가")
 	public Response<CriticalServiceResponse> addCriticalService(@ApiIgnore Authentication authentication, @RequestBody @Valid
-			CriticalServiceRequest criticalServiceRequest){
-		log.info("=============== refuse petsitter info : {} ==================",criticalServiceRequest);
+	AddCriticalServiceRequest addCriticalServiceRequest){
 		CriticalServiceResponse criticalServiceResponse = adminService.addCriticalService(
-				authentication.getName(),criticalServiceRequest);
-
-
-		log.info("=============== refuse petsitter info : {} ==================",criticalServiceResponse);
-
+				authentication.getName(), addCriticalServiceRequest);
 		return Response.success(criticalServiceResponse);
 	}
 

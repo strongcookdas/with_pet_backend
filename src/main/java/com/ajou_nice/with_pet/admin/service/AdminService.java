@@ -1,10 +1,11 @@
-package com.ajou_nice.with_pet.service;
+package com.ajou_nice.with_pet.admin.service;
 
-import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantRequest;
-import com.ajou_nice.with_pet.domain.dto.admin.AdminApplicantResponse;
-import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest;
-import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceRequest.CriticalServiceModifyRequest;
-import com.ajou_nice.with_pet.domain.dto.criticalservice.CriticalServiceResponse;
+import com.ajou_nice.with_pet.admin.model.AdminApplicantRequest;
+import com.ajou_nice.with_pet.admin.model.AdminApplicantResponse;
+import com.ajou_nice.with_pet.admin.util.AdminValidation;
+import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest.CriticalServiceModifyRequest;
+import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
@@ -25,6 +26,8 @@ import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
+import com.ajou_nice.with_pet.service.NotificationService;
+import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.service.user.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,14 +46,15 @@ public class AdminService {
 
     private final CriticalServiceRepository criticalServiceRepository;
 
-    private final ValidateCollection valid;
+    private final ValidateCollection validateCollection;
     private final NotificationService notificationService;
+    private final AdminValidation adminValidation;
 
     // == 관리자의 펫시터 지원자 리스트 전체 확인 == //
     // 리팩토링 완 -> Authentication자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
     public List<ApplicantBasicInfoResponse> showApplicants(String email) {
 
-        valid.userValidationByEmail(email);
+        validateCollection.userValidationByEmail(email);
 
         List<User> petSitterApplicantList = userRepository.findApplicantAllInQuery(
                 UserRole.ROLE_APPLICANT, ApplicantStatus.WAIT);
@@ -61,7 +65,7 @@ public class AdminService {
     // == 관리자의 펫시터 리스트 전체 확인 == //
     public List<PetSitterBasicResponse> showPetSitters(String userId) {
 //		valid.userValidation(userId);
-        valid.userValidationByEmail(userId);
+        validateCollection.userValidationByEmail(userId);
         List<PetSitter> petSitters = petSitterRepository.findAll();
 
         return PetSitterBasicResponse.toList(petSitters);
@@ -73,7 +77,7 @@ public class AdminService {
     public PetSitterBasicResponse createPetsitter(String userId,
                                                   AdminApplicantRequest adminApplicantRequest) {
 
-        valid.userValidation(userId);
+        validateCollection.userValidation(userId);
 
         //유저 불러오기
         User findUser = userRepository.findById(adminApplicantRequest.getUserId())
@@ -104,7 +108,7 @@ public class AdminService {
     public AdminApplicantResponse refuseApplicant(String userId,
                                                   AdminApplicantRequest adminApplicantRequest) {
 
-        valid.userValidation(userId);
+        validateCollection.userValidation(userId);
 
         //유저 불러오기
         User findUser = userRepository.findById(adminApplicantRequest.getUserId())
@@ -130,7 +134,7 @@ public class AdminService {
     // 리팩토링 완
     public PetsitterApplicationResponse getApplicantInfo(String id, Long userId) {
 
-        valid.userValidation(userId);
+        validateCollection.userValidation(userId);
 
         //유저 불러오기
         User findUser = userRepository.findById(userId).orElseThrow(() -> {
@@ -150,25 +154,19 @@ public class AdminService {
 
     // == 관리자의 필수 서비스 리스트 조회 == //
     public List<CriticalServiceResponse> showCriticalServices(String userId) {
-        valid.userValidation(userId);
+        validateCollection.userValidation(userId);
         List<CriticalService> criticalServiceList = criticalServiceRepository.findAll();
 
         return CriticalServiceResponse.toList(criticalServiceList);
     }
 
     @Transactional
-    // == 관리자의 필수 서비스 등록 == //
     public CriticalServiceResponse addCriticalService(String userId,
-                                                      CriticalServiceRequest criticalServiceRequest) {
-        valid.userValidation(userId);
+                                                      AddCriticalServiceRequest addCriticalServiceRequest) {
+        adminValidation.adminValidation(userId);
+        adminValidation.existCriticalServiceValidation(addCriticalServiceRequest);
 
-        List<CriticalService> criticalServiceList = criticalServiceRepository.findCritiCalServiceByServiceName(
-                criticalServiceRequest.getServiceName());
-        if (!criticalServiceList.isEmpty()) {
-            throw new AppException(ErrorCode.DUPlICATED_SERVICE,
-                    ErrorCode.DUPlICATED_SERVICE.getMessage());
-        }
-        CriticalService criticalService = CriticalService.toEntity(criticalServiceRequest);
+        CriticalService criticalService = CriticalService.toEntity(addCriticalServiceRequest);
         CriticalService newCriticalService = criticalServiceRepository.save(criticalService);
 
         return CriticalServiceResponse.of(newCriticalService);
@@ -178,7 +176,7 @@ public class AdminService {
     // == 관리자의 위드펫에서 제공하는 서비스 등록 == //
     public WithPetServiceResponse addWithPetService(String userId,
                                                     WithPetServiceRequest withPetServiceRequest) {
-        valid.userValidation(userId);
+        validateCollection.userValidation(userId);
         WithPetService withPetService = WithPetService.toEntity(withPetServiceRequest);
         WithPetService newWithPetService = withPetServiceRepository.save(withPetService);
 
@@ -189,8 +187,8 @@ public class AdminService {
     // == 관리자의 필수 서비스 수정 == //
     public CriticalServiceResponse updateCriticalService(
             String userId, CriticalServiceModifyRequest criticalServiceModifyRequest) {
-        valid.userValidation(userId);
-        CriticalService criticalService = valid.criticalServiceValidation(
+        validateCollection.userValidation(userId);
+        CriticalService criticalService = validateCollection.criticalServiceValidation(
                 criticalServiceModifyRequest.getServiceId());
         criticalService.updateServiceInfo(criticalServiceModifyRequest);
 
@@ -201,8 +199,8 @@ public class AdminService {
     // == 관리자의 위드펫에서 제공하는 서비스 수정 == //
     public WithPetServiceResponse updateWithPetService(String userId,
                                                        WithPetServiceModifyRequest withPetServiceModifyRequest) {
-        valid.userValidation(userId);
-        WithPetService withPetService = valid.withPetServiceValidation(
+        validateCollection.userValidation(userId);
+        WithPetService withPetService = validateCollection.withPetServiceValidation(
                 withPetServiceModifyRequest.getServiceId());
         withPetService.updateServiceInfo(withPetServiceModifyRequest);
 
@@ -213,8 +211,8 @@ public class AdminService {
     // == 관리자의 위드펫에서 제공하는 서비스 삭제 == //
     public List<WithPetServiceResponse> deleteWithPetService(String userId,
                                                              WithPetServiceModifyRequest withPetServiceModifyRequest) {
-        valid.userValidation(userId);
-        WithPetService withPetService = valid.withPetServiceValidation(
+        validateCollection.userValidation(userId);
+        WithPetService withPetService = validateCollection.withPetServiceValidation(
                 withPetServiceModifyRequest.getServiceId());
 
         withPetServiceRepository.delete(withPetService);

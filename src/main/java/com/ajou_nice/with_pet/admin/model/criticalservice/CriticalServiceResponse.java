@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.criticalservice;
+package com.ajou_nice.with_pet.admin.model.criticalservice;
 
 
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
