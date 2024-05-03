@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v2/admin")
+@RequestMapping("api/v2/admins")
 @Api(tags = "Administrator API")
 public class AdminController {
 
