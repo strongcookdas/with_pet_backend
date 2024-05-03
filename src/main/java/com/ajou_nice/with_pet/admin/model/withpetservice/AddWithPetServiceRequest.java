@@ -2,7 +2,6 @@ package com.ajou_nice.with_pet.admin.model.withpetservice;
 
 
 import javax.persistence.Lob;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-public class WithPetServiceRequest {
+public class AddWithPetServiceRequest {
 
 	@NotNull
 	private String serviceName;

@@ -3,7 +3,7 @@ package com.ajou_nice.with_pet.admin.controller;
 
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceResponse;
-import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.admin.service.AdminService;
 import com.ajou_nice.with_pet.domain.dto.Response;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v2/admin")
-@Api(tags = "Administrator api")
+@Api(tags = "Administrator API")
 public class AdminController {
 
 	private final AdminService adminService;
@@ -125,9 +125,9 @@ public class AdminController {
 	@PostMapping("/service")
 	@ApiOperation(value = "관리자의 위드펫 서비스 추가")
 	public Response<WithPetServiceResponse> addWithPetService(@ApiIgnore Authentication authentication, @RequestBody @Valid
-	WithPetServiceRequest withPetServiceRequest){
+	AddWithPetServiceRequest addWithPetServiceRequest){
 		WithPetServiceResponse withPetServiceResponse = adminService.addWithPetService(
-				authentication.getName(), withPetServiceRequest);
+				authentication.getName(), addWithPetServiceRequest);
 		return Response.success(withPetServiceResponse);
 	}
 

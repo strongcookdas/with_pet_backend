@@ -17,7 +17,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/api/v2/applications")
 @RequiredArgsConstructor
-@Api(tags = "Applicant api")
+@Api(tags = "Applicant API")
 public class ApplicantController {
 
 	private final ApplicationService applicationService;

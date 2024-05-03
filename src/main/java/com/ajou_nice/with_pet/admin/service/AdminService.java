@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.admin.service;
 
-import com.ajou_nice.with_pet.admin.model.AdminApplicantRequest;
-import com.ajou_nice.with_pet.admin.model.AdminApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.admin.AdminApplicantRequest;
+import com.ajou_nice.with_pet.admin.model.admin.AdminApplicantResponse;
 import com.ajou_nice.with_pet.admin.util.AdminValidation;
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest.CriticalServiceModifyRequest;
@@ -9,8 +9,8 @@ import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceRespons
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
-import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceRequest;
-import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
+import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest.WithPetServiceModifyRequest;
 import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Notification;
@@ -161,9 +161,9 @@ public class AdminService {
     }
 
     @Transactional
-    public CriticalServiceResponse addCriticalService(String userId,
+    public CriticalServiceResponse addCriticalService(String email,
                                                       AddCriticalServiceRequest addCriticalServiceRequest) {
-        adminValidation.adminValidation(userId);
+        adminValidation.adminValidation(email);
         adminValidation.existCriticalServiceValidation(addCriticalServiceRequest);
 
         CriticalService criticalService = CriticalService.toEntity(addCriticalServiceRequest);
@@ -173,11 +173,10 @@ public class AdminService {
     }
 
     @Transactional
-    // == 관리자의 위드펫에서 제공하는 서비스 등록 == //
-    public WithPetServiceResponse addWithPetService(String userId,
-                                                    WithPetServiceRequest withPetServiceRequest) {
-        validateCollection.userValidation(userId);
-        WithPetService withPetService = WithPetService.toEntity(withPetServiceRequest);
+    public WithPetServiceResponse addWithPetService(String email,
+                                                    AddWithPetServiceRequest addWithPetServiceRequest) {
+        adminValidation.adminValidation(email);
+        WithPetService withPetService = WithPetService.toEntity(addWithPetServiceRequest);
         WithPetService newWithPetService = withPetServiceRepository.save(withPetService);
 
         return WithPetServiceResponse.of(newWithPetService);
