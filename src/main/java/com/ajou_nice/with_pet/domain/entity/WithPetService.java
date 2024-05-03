@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
+import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 //Service는 위드펫에서 기본적으로 제공하는 Service들을 말한다.

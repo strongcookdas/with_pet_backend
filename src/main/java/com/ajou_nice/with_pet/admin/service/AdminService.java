@@ -9,9 +9,9 @@ import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceRespons
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
+import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceRequest.WithPetServiceModifyRequest;
+import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;

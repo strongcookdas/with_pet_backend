@@ -4,7 +4,7 @@ package com.ajou_nice.with_pet.domain.dto.petsitter;
 import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterServiceResponse.PetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.review.ReviewResponse;
-import com.ajou_nice.with_pet.domain.dto.withpetservice.WithPetServiceResponse;
+import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
