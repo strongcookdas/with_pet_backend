@@ -3,7 +3,7 @@ package com.ajou_nice.with_pet.applicant.service;
 
 import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest;
 import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest.ApplicantModifyRequest;
-import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationResponse;
+import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
@@ -23,31 +23,31 @@ public class ApplicantService {
 
     // == 유저의 지원 정보 상세 확인 == //
     //리팩토링 완
-    public PetsitterApplicationResponse showApplicateInfo(String userId) {
-        User findUser = valid.userValidation(userId);
+    public PetSitterApplicationResponse showApplicateInfo(String userId) {
+        User findUser = valid.userValidationById(userId);
         //지원자가 아닐 경우 오류 출력
         if (!findUser.getRole().equals(UserRole.ROLE_APPLICANT)) {
             throw new AppException(ErrorCode.APPLICANT_NOT_FOUND,
                     ErrorCode.APPLICANT_NOT_FOUND.getMessage());
         }
 
-        return PetsitterApplicationResponse.of(findUser);
+        return PetSitterApplicationResponse.of(findUser);
     }
 
     // == 유저의 펫시터 지원서류 수정 == //
     //리팩토링 완
     @Transactional
-    public PetsitterApplicationResponse modifyApplicateInfo(String userId,
+    public PetSitterApplicationResponse modifyApplicateInfo(String userId,
                                                             ApplicantModifyRequest applicantModifyRequest) {
-        User findUser = valid.userValidation(userId);
+        User findUser = valid.userValidationById(userId);
 
         // 지원 정보 수정
         findUser.updateApplicantInfo(applicantModifyRequest);
 
-        return PetsitterApplicationResponse.of(findUser);
+        return PetSitterApplicationResponse.of(findUser);
     }
     @Transactional
-    public PetsitterApplicationResponse applyPetsitter(PetsitterApplicationRequest petsitterApplicationRequest,
+    public PetSitterApplicationResponse applyPetsitter(PetsitterApplicationRequest petsitterApplicationRequest,
                                                        String email) {
 
         User user = valid.userValidationByEmail(email);
@@ -60,7 +60,7 @@ public class ApplicantService {
         user.updateUserRole(UserRole.ROLE_APPLICANT);
         user.updateApplicantInfo(petsitterApplicationRequest);
 
-        return PetsitterApplicationResponse.of(user);
+        return PetSitterApplicationResponse.of(user);
     }
 
     /**

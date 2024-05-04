@@ -4,8 +4,6 @@ import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyResponse;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,7 @@ public class UserService {
 
     public MyInfoResponse getMyInfo(String userId) {
 
-        User findUser = valid.userValidation(userId);
+        User findUser = valid.userValidationById(userId);
 
         return MyInfoResponse.toMyInfoResponse(findUser);
     }
@@ -32,7 +30,7 @@ public class UserService {
     public MyInfoModifyResponse modifyMyInfo(String userId,
             MyInfoModifyRequest myInfoModifyRequest) {
 
-        User findUser = valid.userValidation(userId);
+        User findUser = valid.userValidationById(userId);
 
         findUser.updateUser(myInfoModifyRequest, encoder);
         return MyInfoModifyResponse.toMyInfoModifyResponse(findUser);

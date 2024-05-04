@@ -4,6 +4,7 @@ package com.ajou_nice.with_pet.admin.controller;
 import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.service.AdminService;
+import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
@@ -58,15 +59,15 @@ public class AdminController {
 		return Response.success(applicantList);
 	}
 
-//	@GetMapping("/api/v1/show-applicant/{userId}")
-//	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-//	public Response<ApplicantCreateResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId")Long userId){
-//
-//		ApplicantCreateResponse applicantCreateResponse = adminService.getApplicantInfo(
-//				authentication.getName(), userId);
-//
-//		return Response.success(applicantCreateResponse);
-//	}
+	@GetMapping("applicants/{userId}")
+	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")
+	public Response<PetSitterApplicationResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId")Long userId){
+
+		PetSitterApplicationResponse applicantCreateResponse = adminService.getApplicantDetailInfo(
+				authentication.getName(), userId);
+
+		return Response.success(applicantCreateResponse);
+	}
 
 //	@PostMapping("/api/v1/admin/refuse-applicant")
 //	@ApiOperation(value = "관리자의 펫시터 지원자 거절")

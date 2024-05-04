@@ -14,15 +14,11 @@ import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.CategoryRepository;
 import com.ajou_nice.with_pet.repository.DiaryRepository;
-import com.ajou_nice.with_pet.repository.DogRepository;
-import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +37,7 @@ public class PetSitterDiaryService {
 
     public PetSitterDiaryResponse writePetsitterDiary(String userId, DiaryRequest diaryRequest) {
 
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         PetSitter petSitter = valid.petSitterValidationByUser(user);
 
@@ -70,7 +66,7 @@ public class PetSitterDiaryService {
             DiaryModifyRequest diaryModifyRequest,
             Long diaryId) {
         //유저 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         //일지 체크
         Diary diary = valid.diaryValidation(diaryId);
         //카테고리 체크
@@ -87,7 +83,7 @@ public class PetSitterDiaryService {
 
     public PetSitterDiaryListResponse getPetSitterDiaries(String userId, Long dogId) {
         //유저 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         //펫시터 체크
         PetSitter petSitter = valid.petSitterValidationByUser(user);
         //반려견 체크
@@ -102,7 +98,7 @@ public class PetSitterDiaryService {
     }
 
     public String deletePetSitterDiary(String userId, Long diaryId) {
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> {
             throw new AppException(ErrorCode.DIARY_NOT_FOUND,

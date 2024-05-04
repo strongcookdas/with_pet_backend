@@ -7,6 +7,7 @@ import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest.WithPetSe
 import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantRequest;
 import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
 import com.ajou_nice.with_pet.admin.util.AdminValidation;
+import com.ajou_nice.with_pet.applicant.util.ApplicantValidation;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
@@ -15,7 +16,7 @@ import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationResponse;
+import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.UserRole;
@@ -47,6 +48,7 @@ public class AdminService {
     private final ValidateCollection validateCollection;
     private final NotificationService notificationService;
     private final AdminValidation adminValidation;
+    private final ApplicantValidation applicantValidation;
 
     public List<ApplicantBasicInfoResponse> showApplicants(String email) {
 
@@ -74,7 +76,7 @@ public class AdminService {
     public PetSitterBasicResponse createPetsitter(String userId,
                                                   AdminApplicantRequest adminApplicantRequest) {
 
-        validateCollection.userValidation(userId);
+        validateCollection.userValidationById(userId);
 
         //유저 불러오기
         User findUser = userRepository.findById(adminApplicantRequest.getUserId())
@@ -105,7 +107,7 @@ public class AdminService {
     public AdminApplicantResponse refuseApplicant(String userId,
                                                   AdminApplicantRequest adminApplicantRequest) {
 
-        validateCollection.userValidation(userId);
+        validateCollection.userValidationById(userId);
 
         //유저 불러오기
         User findUser = userRepository.findById(adminApplicantRequest.getUserId())
@@ -126,19 +128,10 @@ public class AdminService {
         return AdminApplicantResponse.of(findUser);
     }
 
-
-    // == 관리자의 펫시터 지원자 한명 상세정보 확인 == //
-    // 리팩토링 완
-    public PetsitterApplicationResponse getApplicantInfo(String id, Long userId) {
-
-        validateCollection.userValidation(userId);
-
-        //유저 불러오기
-        User findUser = userRepository.findById(userId).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
-
-        return PetsitterApplicationResponse.of(findUser);
+    public PetSitterApplicationResponse getApplicantDetailInfo(String email, Long userId) {
+        adminValidation.adminValidation(email);
+        User findUser =  applicantValidation.applicationValidationById(userId);
+        return PetSitterApplicationResponse.of(findUser);
     }
 
     @Transactional
@@ -167,7 +160,7 @@ public class AdminService {
     // == 관리자의 필수 서비스 수정 == //
     public CriticalServiceResponse updateCriticalService(
             String userId, CriticalServiceModifyRequest criticalServiceModifyRequest) {
-        validateCollection.userValidation(userId);
+        validateCollection.userValidationById(userId);
         CriticalService criticalService = validateCollection.criticalServiceValidation(
                 criticalServiceModifyRequest.getServiceId());
         criticalService.updateServiceInfo(criticalServiceModifyRequest);
@@ -179,7 +172,7 @@ public class AdminService {
     // == 관리자의 위드펫에서 제공하는 서비스 수정 == //
     public WithPetServiceResponse updateWithPetService(String userId,
                                                        WithPetServiceModifyRequest withPetServiceModifyRequest) {
-        validateCollection.userValidation(userId);
+        validateCollection.userValidationById(userId);
         WithPetService withPetService = validateCollection.withPetServiceValidation(
                 withPetServiceModifyRequest.getServiceId());
         withPetService.updateServiceInfo(withPetServiceModifyRequest);
@@ -191,7 +184,7 @@ public class AdminService {
     // == 관리자의 위드펫에서 제공하는 서비스 삭제 == //
     public List<WithPetServiceResponse> deleteWithPetService(String userId,
                                                              WithPetServiceModifyRequest withPetServiceModifyRequest) {
-        validateCollection.userValidation(userId);
+        validateCollection.userValidationById(userId);
         WithPetService withPetService = validateCollection.withPetServiceValidation(
                 withPetServiceModifyRequest.getServiceId());
 

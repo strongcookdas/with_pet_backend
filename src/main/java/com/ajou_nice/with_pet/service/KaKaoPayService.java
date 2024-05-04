@@ -19,13 +19,11 @@ import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
-import java.net.URI;
+
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -36,8 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -69,7 +65,7 @@ public class KaKaoPayService {
 	@Transactional
 	public PayReadyResponse payReady(String userId, Long reservationId) {
 
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		Reservation reservation = valid.reservationValidation(reservationId);
 
@@ -120,7 +116,7 @@ public class KaKaoPayService {
 	public PayApproveResponse approvePay(String userId, String pgToken, String tid) {
 
 		//사용자 인증 체크
-		valid.userValidation(userId);
+		valid.userValidationById(userId);
 
 		Reservation reservation = reservationRepository.findByTid(tid).orElseThrow(() -> {
 			throw new AppException(ErrorCode.RESERVATION_NOT_FOUND,
@@ -212,7 +208,7 @@ public class KaKaoPayService {
 	public RefundResponse refundPayment(String userId, Long reservationId) {
 
 		//사용자 인증
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		//예약 유효 인증
 		Reservation reservation = valid.reservationValidation(reservationId);

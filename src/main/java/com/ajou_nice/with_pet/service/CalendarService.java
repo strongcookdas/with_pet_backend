@@ -5,11 +5,8 @@ import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +22,7 @@ public class CalendarService {
 
     public PetSitterSideBarResponse getPetSitterSideBarInfo(String userId, String month) {
 
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         PetSitter petSitter = valid.petSitterValidationByUser(user);
 

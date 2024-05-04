@@ -44,7 +44,7 @@ public class ValidateCollection {
     private final DiaryRepository diaryRepository;
 
     // 유저 검증 by UserId(with token)
-    public User userValidation(String email) {
+    public User userValidationById(String email) {
         User findUser = userRepository.findByEmail(email).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
@@ -53,7 +53,7 @@ public class ValidateCollection {
     }
 
     // 유저 검증 by PK(id)
-    public User userValidation(Long id) {
+    public User userValidationById(Long id) {
         User findUser = userRepository.findById(id).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });

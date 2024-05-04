@@ -126,7 +126,7 @@ public class PetSitterService {
 	@Transactional
 	public void updateHouseInfo(PetSitterHousesRequest petSitterHousesRequest, String userId){
 
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -147,7 +147,7 @@ public class PetSitterService {
 	@Transactional
 	public void updateHashTagInfo(PetSitterHashTagsRequest hashTagsRequest, String userId){
 
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -167,7 +167,7 @@ public class PetSitterService {
 	// == 펫시터 WithPetService 정보 수정 == //
 	@Transactional
 	public void updatePetSitterService(PetSitterWithPetServicesRequest withPetServicesRequest, String userId){
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -187,7 +187,7 @@ public class PetSitterService {
 	// == 펫시터 CriticalPetService 정보 수정 == //
 	@Transactional
 	public void updateCriticalService(PetSitterCriticalServicesRequest criticalServicesRequest, String userId){
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -206,7 +206,7 @@ public class PetSitterService {
 	// == 펫시터 introduction 수정 == //
 	@Transactional
 	public void updatePetSitterIntro(PetSitterIntroRequest petSitterIntroRequest, String userId){
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 

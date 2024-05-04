@@ -53,7 +53,7 @@ public class SecurityConfig {
 
     private final String[] ADMIN_GET_API = {
             "/api/v2/admins/applicants",
-            "/api/v1/show-applicant/*",
+            "/api/v2/admins/applicants/*",
             "/api/v1/show-criticalservices"
     };
 

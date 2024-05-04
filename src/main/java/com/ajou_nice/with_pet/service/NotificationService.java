@@ -32,7 +32,7 @@ public class NotificationService {
 
     /* 알림 목록 조회 */
     public List<NotificationResponse> getNotification(String userId) {
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         List<Notification> notifications = notificationRepository.findAllByReceiver(
                 user.getId());
         return notifications.stream().map(NotificationResponse::of).collect(Collectors.toList());

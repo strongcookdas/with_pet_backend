@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.service.applicant;
 
 
 import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest;
-import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationResponse;
+import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
@@ -21,7 +21,7 @@ public class ApplicationService {
     private final ValidateCollection valid;
 
     @Transactional
-    public PetsitterApplicationResponse applyPetsitter(PetsitterApplicationRequest petsitterApplicationRequest,
+    public PetSitterApplicationResponse applyPetsitter(PetsitterApplicationRequest petsitterApplicationRequest,
                                                        String email) {
 
         User user = valid.userValidationByEmail(email);
@@ -34,7 +34,7 @@ public class ApplicationService {
         user.updateUserRole(UserRole.ROLE_APPLICANT);
         user.updateApplicantInfo(petsitterApplicationRequest);
 
-        return PetsitterApplicationResponse.of(user);
+        return PetSitterApplicationResponse.of(user);
     }
 
     /**
