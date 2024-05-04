@@ -1,11 +1,11 @@
 package com.ajou_nice.with_pet.controller.application;
 
 import com.ajou_nice.with_pet.CommonApiTest;
-import com.ajou_nice.with_pet.controller.applicant.ApplicantController;
+import com.ajou_nice.with_pet.applicant.controller.ApplicantController;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.Gender;
 import com.ajou_nice.with_pet.enums.UserRole;

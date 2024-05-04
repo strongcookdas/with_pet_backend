@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.petsitterapplicant;
+package com.ajou_nice.with_pet.applicant.model.dto;
 
 
 import com.ajou_nice.with_pet.domain.entity.User;

@@ -1,7 +1,8 @@
-package com.ajou_nice.with_pet.service.applicant;
+package com.ajou_nice.with_pet.applicant.service;
 
 
 import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest.ApplicantModifyRequest;
 import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
@@ -15,11 +16,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ApplicationService {
-    private final Integer APPLICATION_MAX_COUNT = 3;
+public class ApplicantService {
 
+    private final Integer APPLICATION_MAX_COUNT = 3;
     private final ValidateCollection valid;
 
+    // == 유저의 지원 정보 상세 확인 == //
+    //리팩토링 완
+    public PetsitterApplicationResponse showApplicateInfo(String userId) {
+        User findUser = valid.userValidation(userId);
+        //지원자가 아닐 경우 오류 출력
+        if (!findUser.getRole().equals(UserRole.ROLE_APPLICANT)) {
+            throw new AppException(ErrorCode.APPLICANT_NOT_FOUND,
+                    ErrorCode.APPLICANT_NOT_FOUND.getMessage());
+        }
+
+        return PetsitterApplicationResponse.of(findUser);
+    }
+
+    // == 유저의 펫시터 지원서류 수정 == //
+    //리팩토링 완
+    @Transactional
+    public PetsitterApplicationResponse modifyApplicateInfo(String userId,
+                                                            ApplicantModifyRequest applicantModifyRequest) {
+        User findUser = valid.userValidation(userId);
+
+        // 지원 정보 수정
+        findUser.updateApplicantInfo(applicantModifyRequest);
+
+        return PetsitterApplicationResponse.of(findUser);
+    }
     @Transactional
     public PetsitterApplicationResponse applyPetsitter(PetsitterApplicationRequest petsitterApplicationRequest,
                                                        String email) {

@@ -1,9 +1,9 @@
-package com.ajou_nice.with_pet.controller.applicant;
+package com.ajou_nice.with_pet.applicant.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
-import com.ajou_nice.with_pet.service.applicant.ApplicationService;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationResponse;
+import com.ajou_nice.with_pet.applicant.service.ApplicantService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
@@ -15,18 +15,18 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v2/applications")
+@RequestMapping("/api/v2/applicants")
 @RequiredArgsConstructor
 @Api(tags = "Applicant API")
 public class ApplicantController {
 
-	private final ApplicationService applicationService;
+	private final ApplicantService applicantService;
 
 	@PostMapping
 	@ApiOperation(value = "유저의 펫시터 지원")
 	public Response<PetsitterApplicationResponse> registerApplicant(@ApiIgnore Authentication authentication
 			, @RequestBody @Valid PetsitterApplicationRequest petsitterApplicationRequest){
-		PetsitterApplicationResponse petsitterApplicationResponse = applicationService.applyPetsitter(
+		PetsitterApplicationResponse petsitterApplicationResponse = applicantService.applyPetsitter(
 				petsitterApplicationRequest,
 				authentication.getName());
 		return Response.success(petsitterApplicationResponse);

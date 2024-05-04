@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.auth.UserSignUpRequest;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest.ApplicantModifyRequest;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest.ApplicantModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyRequest;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;

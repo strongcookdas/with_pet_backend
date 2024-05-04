@@ -11,11 +11,11 @@ import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
+import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.UserRole;
