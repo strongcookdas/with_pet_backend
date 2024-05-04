@@ -149,11 +149,9 @@ public class AdminService {
         return WithPetServiceResponse.toList(withPetServiceList);
     }
 
-    // == 관리자의 필수 서비스 리스트 조회 == //
-    public List<CriticalServiceResponse> showCriticalServices(String userId) {
-        validateCollection.userValidation(userId);
+    public List<CriticalServiceResponse> showCriticalServices(String email) {
+        adminValidation.adminValidation(email);
         List<CriticalService> criticalServiceList = criticalServiceRepository.findAll();
-
         return CriticalServiceResponse.toList(criticalServiceList);
     }
 
