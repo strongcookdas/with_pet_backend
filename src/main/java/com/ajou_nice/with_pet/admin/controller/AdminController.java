@@ -2,11 +2,12 @@ package com.ajou_nice.with_pet.admin.controller;
 
 
 import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
-import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import com.ajou_nice.with_pet.admin.service.AdminService;
+import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
+import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
+import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -48,15 +50,13 @@ public class AdminController {
 //		return Response.success(petSitterBasicResponses);
 //	}
 
-//	@GetMapping("/api/v1/show-applicants")
-//	@ApiOperation(value = "펫시터 지원자 리스트 전체 확인")
-//	public Response<List<ApplicantBasicInfoResponse>> showApplicants(@ApiIgnore Authentication authentication){
-//
-//		List<ApplicantBasicInfoResponse> applicantList = adminService.showApplicants(
-//				authentication.getName());
-//		log.info("===================applicant Info List Response : {} ==================", applicantList);
-//		return Response.success(applicantList);
-//	}
+	@GetMapping("/applicants")
+	@ApiOperation(value = "펫시터 지원자 리스트 전체 확인")
+	public Response<List<ApplicantBasicInfoResponse>> showApplicants(@ApiIgnore Authentication authentication){
+		List<ApplicantBasicInfoResponse> applicantList = adminService.showApplicants(
+				authentication.getName());
+		return Response.success(applicantList);
+	}
 
 //	@GetMapping("/api/v1/show-applicant/{userId}")
 //	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")

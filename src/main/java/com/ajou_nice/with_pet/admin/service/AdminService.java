@@ -1,32 +1,33 @@
 package com.ajou_nice.with_pet.admin.service;
 
-import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
 import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest.CriticalServiceModifyRequest;
-import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest.WithPetServiceModifyRequest;
-import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
+import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
 import com.ajou_nice.with_pet.admin.util.AdminValidation;
+import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
-import com.ajou_nice.with_pet.domain.entity.*;
+import com.ajou_nice.with_pet.domain.entity.Notification;
+import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
-import com.ajou_nice.with_pet.withpet_service.repository.WithPetServiceRepository;
 import com.ajou_nice.with_pet.service.NotificationService;
 import com.ajou_nice.with_pet.service.ValidateCollection;
-import com.ajou_nice.with_pet.service.user.UserService;
+import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
+import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
+import com.ajou_nice.with_pet.withpet_service.repository.WithPetServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,19 +42,16 @@ public class AdminService {
     private final PetSitterRepository petSitterRepository;
     private final WithPetServiceRepository withPetServiceRepository;
 
-    private final UserService userService;
-
     private final CriticalServiceRepository criticalServiceRepository;
 
     private final ValidateCollection validateCollection;
     private final NotificationService notificationService;
     private final AdminValidation adminValidation;
 
-    // == 관리자의 펫시터 지원자 리스트 전체 확인 == //
-    // 리팩토링 완 -> Authentication자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
     public List<ApplicantBasicInfoResponse> showApplicants(String email) {
 
-        validateCollection.userValidationByEmail(email);
+        adminValidation.adminValidation(email);
+        // user가 admin인지 확인하는 유효성 체크인데... 필요가 있는지 의문
 
         List<User> petSitterApplicantList = userRepository.findApplicantAllInQuery(
                 UserRole.ROLE_APPLICANT, ApplicantStatus.WAIT);
