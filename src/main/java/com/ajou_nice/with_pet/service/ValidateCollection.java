@@ -3,7 +3,7 @@ package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.ChatRoom;
-import com.ajou_nice.with_pet.domain.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
@@ -15,7 +15,7 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
 import com.ajou_nice.with_pet.repository.ChatRoomRepository;
-import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
+import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.DiaryRepository;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;

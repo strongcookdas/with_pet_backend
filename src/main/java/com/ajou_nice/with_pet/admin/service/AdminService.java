@@ -4,11 +4,12 @@ import com.ajou_nice.with_pet.admin.model.admin.AdminApplicantRequest;
 import com.ajou_nice.with_pet.admin.model.admin.AdminApplicantResponse;
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest.CriticalServiceModifyRequest;
-import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceResponse;
+import com.ajou_nice.with_pet.critical_service.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest.WithPetServiceModifyRequest;
 import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.admin.util.AdminValidation;
+import com.ajou_nice.with_pet.critical_service.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitterapplicant.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.*;
@@ -18,7 +19,7 @@ import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
+import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
@@ -144,15 +145,10 @@ public class AdminService {
     // == 관리자의 위드펫 서비스 리스트 조회 == //
     public List<WithPetServiceResponse> showWithPetServices() {
 
+
         List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
 
         return WithPetServiceResponse.toList(withPetServiceList);
-    }
-
-    public List<CriticalServiceResponse> showCriticalServices(String email) {
-        adminValidation.adminValidation(email);
-        List<CriticalService> criticalServiceList = criticalServiceRepository.findAll();
-        return CriticalServiceResponse.toList(criticalServiceList);
     }
 
     @Transactional

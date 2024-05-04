@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.admin.controller;
 
 
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.admin.model.criticalservice.CriticalServiceResponse;
+import com.ajou_nice.with_pet.critical_service.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.admin.service.AdminService;
@@ -82,23 +82,11 @@ public class AdminController {
 //		return Response.success(adminApplicantResponse);
 //	}
 
-//	@GetMapping("/api/v1/show-services")
-//	@ApiOperation(value = "위드펫 서비스 리스트 조회")
-//	public Response<List<WithPetServiceResponse>> showWithPetServices(){
-//		List<WithPetServiceResponse> withPetServiceList = adminService.showWithPetServices();
-//
-//		log.info("=============== withPet service list : {} ================", withPetServiceList);
-//
-//		return Response.success(withPetServiceList);
-//	}
-
-	@GetMapping("/critical-services")
-	@ApiOperation(value = "관리자의 필수 위드펫 서비스 리스트 조회")
-	public Response<List<CriticalServiceResponse>> showCriticalServices(@ApiIgnore Authentication authentication){
-		List<CriticalServiceResponse> criticalServiceResponseList = adminService.showCriticalServices(
-				authentication.getName());
-
-		return Response.success(criticalServiceResponseList);
+	@GetMapping("/services")
+	@ApiOperation(value = "위드펫 서비스 리스트 조회")
+	public Response<List<WithPetServiceResponse>> showWithPetServices(){
+		List<WithPetServiceResponse> withPetServiceList = adminService.showWithPetServices();
+		return Response.success(withPetServiceList);
 	}
 
 	@PostMapping("/critical-service")
