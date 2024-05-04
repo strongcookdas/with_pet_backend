@@ -1,13 +1,13 @@
 package com.ajou_nice.with_pet.admin.service;
 
-import com.ajou_nice.with_pet.admin.model.admin.AdminApplicantRequest;
-import com.ajou_nice.with_pet.admin.model.admin.AdminApplicantResponse;
-import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest.CriticalServiceModifyRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest.CriticalServiceModifyRequest;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
-import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
-import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest.WithPetServiceModifyRequest;
-import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
+import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest.WithPetServiceModifyRequest;
+import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import com.ajou_nice.with_pet.admin.util.AdminValidation;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
@@ -22,7 +22,8 @@ import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
+import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
+import com.ajou_nice.with_pet.withpet_service.repository.WithPetServiceRepository;
 import com.ajou_nice.with_pet.service.NotificationService;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.service.user.UserService;
@@ -140,15 +141,6 @@ public class AdminService {
         });
 
         return PetsitterApplicationResponse.of(findUser);
-    }
-
-    // == 관리자의 위드펫 서비스 리스트 조회 == //
-    public List<WithPetServiceResponse> showWithPetServices() {
-
-
-        List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
-
-        return WithPetServiceResponse.toList(withPetServiceList);
     }
 
     @Transactional

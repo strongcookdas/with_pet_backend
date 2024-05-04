@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.critical_service.model.entity;
 
-import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest.CriticalServiceModifyRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest.CriticalServiceModifyRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

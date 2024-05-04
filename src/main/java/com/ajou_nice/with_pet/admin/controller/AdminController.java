@@ -1,10 +1,10 @@
 package com.ajou_nice.with_pet.admin.controller;
 
 
-import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
-import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
-import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
+import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import com.ajou_nice.with_pet.admin.service.AdminService;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import io.swagger.annotations.Api;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -81,13 +80,6 @@ public class AdminController {
 //
 //		return Response.success(adminApplicantResponse);
 //	}
-
-	@GetMapping("/services")
-	@ApiOperation(value = "위드펫 서비스 리스트 조회")
-	public Response<List<WithPetServiceResponse>> showWithPetServices(){
-		List<WithPetServiceResponse> withPetServiceList = adminService.showWithPetServices();
-		return Response.success(withPetServiceList);
-	}
 
 	@PostMapping("/critical-service")
 	@ApiOperation(value = "관리자의 필수 서비스 추가")

@@ -1,8 +1,8 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.withpet_service.model.entity;
 
 
-import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
-import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest.WithPetServiceModifyRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest.WithPetServiceModifyRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
