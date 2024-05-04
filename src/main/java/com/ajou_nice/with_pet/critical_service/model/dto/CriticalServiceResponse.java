@@ -1,7 +1,7 @@
-package com.ajou_nice.with_pet.critical_service.dto;
+package com.ajou_nice.with_pet.critical_service.model.dto;
 
 
-import com.ajou_nice.with_pet.critical_service.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

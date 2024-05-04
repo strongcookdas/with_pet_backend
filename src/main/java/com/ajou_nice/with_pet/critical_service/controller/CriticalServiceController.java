@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.critical_service.controller;
 
 
-import com.ajou_nice.with_pet.critical_service.dto.CriticalServiceResponse;
+import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.critical_service.service.CriticalServiceService;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import io.swagger.annotations.Api;

@@ -1,11 +1,11 @@
 package com.ajou_nice.with_pet.domain.dto.petsitter;
 
 
-import com.ajou_nice.with_pet.critical_service.dto.CriticalServiceResponse;
+import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterServiceResponse.PetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.review.ReviewResponse;
 import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
-import com.ajou_nice.with_pet.critical_service.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;

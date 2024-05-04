@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.admin.controller;
 
 
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.critical_service.dto.CriticalServiceResponse;
+import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.admin.model.withpetservice.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.model.withpetservice.WithPetServiceResponse;
 import com.ajou_nice.with_pet.admin.service.AdminService;

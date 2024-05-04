@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.critical_service.entity;
+package com.ajou_nice.with_pet.critical_service.model.entity;
 
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest.CriticalServiceModifyRequest;

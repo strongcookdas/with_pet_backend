@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.reservations;
 
 
 import com.ajou_nice.with_pet.controller.ReservationController;
-import com.ajou_nice.with_pet.critical_service.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.Pay;

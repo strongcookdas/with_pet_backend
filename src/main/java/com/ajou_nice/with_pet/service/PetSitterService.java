@@ -13,7 +13,7 @@ import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterInf
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterIntroRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterWithPetServicesRequest;
-import com.ajou_nice.with_pet.critical_service.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.House;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;

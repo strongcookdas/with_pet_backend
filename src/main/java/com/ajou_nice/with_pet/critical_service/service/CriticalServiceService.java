@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.critical_service.service;
 
-import com.ajou_nice.with_pet.critical_service.dto.CriticalServiceResponse;
-import com.ajou_nice.with_pet.critical_service.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
