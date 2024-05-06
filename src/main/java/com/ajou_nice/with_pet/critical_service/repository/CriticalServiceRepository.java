@@ -1,8 +1,8 @@
-package com.ajou_nice.with_pet.repository;
+package com.ajou_nice.with_pet.critical_service.repository;
 
-import com.ajou_nice.with_pet.domain.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import java.util.List;
-import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

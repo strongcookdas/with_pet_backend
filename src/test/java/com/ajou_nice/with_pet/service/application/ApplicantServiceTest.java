@@ -2,8 +2,8 @@ package com.ajou_nice.with_pet.service.application;
 
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.Gender;
 import com.ajou_nice.with_pet.enums.UserRole;
@@ -48,7 +48,7 @@ public class ApplicantServiceTest {
         petsitterApplicationRequest = PetsitterApplicationDtoFixture.createPetsitterApplicationRequest(LocalDate.of(2001,1,1), false, Gender.FEMALE, true, "animalCareer", "motivation", "licenseImg");
         //when
         when(validateCollection.userValidationByEmail(user.getEmail())).thenReturn(user);
-        PetsitterApplicationResponse petsitterApplicationResponse = applicationService.applyPetsitter(petsitterApplicationRequest, user.getEmail());
+        PetSitterApplicationResponse petsitterApplicationResponse = applicationService.applyPetsitter(petsitterApplicationRequest, user.getEmail());
         //then
         Assertions.assertEquals(user.getId(),petsitterApplicationResponse.getUserId());
         Assertions.assertEquals(user.getName(),petsitterApplicationResponse.getName());

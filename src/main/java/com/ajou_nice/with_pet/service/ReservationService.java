@@ -22,15 +22,13 @@ import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
-import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -66,7 +64,7 @@ public class ReservationService {
     public ReservationCreateResponse createReservation(String userId,
             ReservationRequest reservationRequest) {
         int cost = 0;
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         Dog dog = valid.dogValidation(reservationRequest.getDogId());
 
         //반려견 예약 유효 체크
@@ -181,7 +179,7 @@ public class ReservationService {
         Reservation reservation = valid.reservationValidation(reservationId);
 
         //user가 펫시터인지 검증
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         //예약의 펫시터가 아니라면
         if (!reservation.getPetSitter().getUser().equals(user)) {
@@ -242,7 +240,7 @@ public class ReservationService {
                     ErrorCode.BAD_REQUEST_RESERVATION_STATSUS.getMessage());
         }
 
-        valid.userValidation(userId);
+        valid.userValidationById(userId);
 
         Reservation reservation = valid.reservationValidation(reservationId);
 
@@ -277,7 +275,7 @@ public class ReservationService {
 
 
     public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         PetSitter petSitter = valid.petSitterValidationByUser(user);
 
@@ -290,7 +288,7 @@ public class ReservationService {
 
     public PaymentResponseForPetSitter getPaymentView(String userId, Long reservationId) {
 
-        valid.userValidation(userId);
+        valid.userValidationById(userId);
 
         Reservation reservation = valid.reservationValidation(reservationId);
 
@@ -301,7 +299,7 @@ public class ReservationService {
     // 승인 전 예약 건에 대해서
     @Transactional
     public void cancelReservation(String userId, Long reservationId) {
-        valid.userValidation(userId);
+        valid.userValidationById(userId);
 
         Reservation reservation = valid.reservationValidation(reservationId);
 
@@ -311,7 +309,7 @@ public class ReservationService {
     // 반려인의 이용 완료
     @Transactional
     public void doneReservation(String userId, Long reservationId) {
-        valid.userValidation(userId);
+        valid.userValidationById(userId);
 
         Reservation reservation = valid.reservationValidation(reservationId);
         reservation.updateStatus(ReservationStatus.DONE.toString());
@@ -321,7 +319,7 @@ public class ReservationService {
     @Transactional
     public void postReview(String userId, ReviewRequest reviewRequest) {
 
-        valid.userValidation(userId);
+        valid.userValidationById(userId);
 
         Reservation reservation = valid.reservationValidation(reviewRequest.getReservationId());
 
@@ -339,7 +337,7 @@ public class ReservationService {
     //예약 내역 반려인 입장에서
     public ReservationDocsResponse getReservationDoc(String userId) {
 
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         Optional<List<Reservation>> myReservations = reservationRepository.findAllByUser(user);
 

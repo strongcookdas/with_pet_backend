@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.fixture;
 
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationRequest;
-import com.ajou_nice.with_pet.dto.applicant.PetsitterApplicationResponse;
+import com.ajou_nice.with_pet.applicant.model.dto.PetsitterApplicationRequest;
+import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.enums.Gender;
 
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ public class PetsitterApplicationDtoFixture {
                 .build();
     }
 
-    public static PetsitterApplicationResponse createPetsitterApplicationResponse(User user){
-        return PetsitterApplicationResponse.of(user);
+    public static PetSitterApplicationResponse createPetsitterApplicationResponse(User user){
+        return PetSitterApplicationResponse.of(user);
     }
 }

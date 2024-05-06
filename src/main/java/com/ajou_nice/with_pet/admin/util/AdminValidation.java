@@ -1,12 +1,12 @@
 package com.ajou_nice.with_pet.admin.util;
 
-import com.ajou_nice.with_pet.admin.model.criticalservice.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.domain.entity.CriticalService;
+import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
+import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

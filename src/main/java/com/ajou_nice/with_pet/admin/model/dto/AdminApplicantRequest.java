@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.admin.model.admin;
+package com.ajou_nice.with_pet.admin.model.dto;
 
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import lombok.AllArgsConstructor;

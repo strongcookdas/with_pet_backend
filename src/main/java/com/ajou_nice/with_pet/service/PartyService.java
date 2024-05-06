@@ -15,7 +15,7 @@ import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +43,7 @@ public class PartyService {
     @Transactional
     public PartyInfoResponse addMember(String userId, PartyMemberRequest partyMemberRequest) {
         //유저체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         //그룹체크
         Party party = partyRepository.findByPartyIsbn(partyMemberRequest.getPartyIsbn())
@@ -78,7 +77,7 @@ public class PartyService {
 
     public List<PartyInfoResponse> getPartyInfoList(String userId) {
 
-        valid.userValidation(userId);
+        valid.userValidationById(userId);
 
         List<Long> userPartyIdList = userPartyRepository.findAllUserPartyIdByUserId(userId);
         List<Party> partyList = partyRepository.findAllByUserPartyId(userPartyIdList);
@@ -103,7 +102,7 @@ public class PartyService {
     @Transactional
     public PartyInfoResponse createParty(String userId, PartyRequest partyRequest) {
         //유저체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         if (user.getPartyCount() >= partyCount) {
             throw new AppException(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP.getMessage());
@@ -145,7 +144,7 @@ public class PartyService {
     @Transactional
     public String leaveParty(String userId, Long partyId) {
 
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         Party party = valid.partyValidation(partyId);
 
@@ -187,9 +186,9 @@ public class PartyService {
     @Transactional
     public String expelMember(String userId, Long partyId, Long memberId) {
 
-        User leader = valid.userValidation(userId);
+        User leader = valid.userValidationById(userId);
 
-        User member = valid.userValidation(memberId);
+        User member = valid.userValidationById(memberId);
 
         Party party = valid.partyValidation(partyId);
 

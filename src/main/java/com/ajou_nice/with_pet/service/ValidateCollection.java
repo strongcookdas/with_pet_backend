@@ -3,26 +3,26 @@ package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.ChatRoom;
-import com.ajou_nice.with_pet.domain.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.domain.entity.WithPetService;
+import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
 import com.ajou_nice.with_pet.repository.ChatRoomRepository;
-import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
+import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.DiaryRepository;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
+import com.ajou_nice.with_pet.withpet_service.repository.WithPetServiceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class ValidateCollection {
     private final DiaryRepository diaryRepository;
 
     // 유저 검증 by UserId(with token)
-    public User userValidation(String email) {
+    public User userValidationById(String email) {
         User findUser = userRepository.findByEmail(email).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });
@@ -53,7 +53,7 @@ public class ValidateCollection {
     }
 
     // 유저 검증 by PK(id)
-    public User userValidation(Long id) {
+    public User userValidationById(Long id) {
         User findUser = userRepository.findById(id).orElseThrow(() -> {
             throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         });

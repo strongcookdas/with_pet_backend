@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.admin.model.withpetservice;
+package com.ajou_nice.with_pet.withpet_service.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.WithPetService;
+import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

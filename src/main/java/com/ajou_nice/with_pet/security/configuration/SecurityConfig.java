@@ -28,7 +28,8 @@ public class SecurityConfig {
     private final String[] GET_PERMIT_URL = {
             "/api/v1/petsitter/*",
             "/api/v1/show-petsitter",
-            "/api/v1/show-services",
+            "/api/v2/services",
+            "/api/v2/critical-services",
             "/api/v1/reservation",
             "/api/v1/category",
             "/api/v1/dogs/reservation-dogs",
@@ -51,8 +52,8 @@ public class SecurityConfig {
     };
 
     private final String[] ADMIN_GET_API = {
-            "/api/v1/show-applicants",
-            "/api/v1/show-applicant/*",
+            "/api/v2/admins/applicants",
+            "/api/v2/admins/applicants/*",
             "/api/v1/show-criticalservices"
     };
 
@@ -106,6 +107,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/v1/petsitter/show-myinfo").hasRole("PETSITTER")
                 .antMatchers("/api/v1/review/create-review").hasRole("USER")
+                .antMatchers("/api/v2/admins/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/api/v1/petsitter-diaries/*").hasRole("USER")
                 .antMatchers("/api/v1/reservation/user/show-reservations").hasRole("USER")
                 .antMatchers("/api/v1/reservation/show-payment/{reservationId}").hasRole("PETSITTER")

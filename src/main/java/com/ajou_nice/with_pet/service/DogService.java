@@ -18,15 +18,12 @@ import com.ajou_nice.with_pet.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
-import java.time.LocalDate;
-import java.time.Period;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +47,7 @@ public class DogService {
             String userId) {
 
         // 유저 존재 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         // 파티 존재 체크
         Party party = valid.partyValidation(partyId);
 
@@ -79,7 +76,7 @@ public class DogService {
 
     public DogInfoResponse getDogInfo(Long dogId, String userId) {
         //유저 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         //반려견 체크
         Dog dog = valid.dogValidation(dogId);
@@ -95,7 +92,7 @@ public class DogService {
     public DogInfoResponse modifyDogInfo(Long dogId, DogInfoRequest dogInfoRequest, String userId) {
 
         //유저 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         //반려견 체크
         Dog dog = valid.dogValidation(dogId);
         //그룹 체크
@@ -130,7 +127,7 @@ public class DogService {
 
     public List<DogSimpleInfoResponse> getDogSimpleInfos(String userId) {
 
-        valid.userValidation(userId);
+        valid.userValidationById(userId);
         List<Dog> dogs = dogRepository.findAllByUserParty(userId);
         return dogs.stream().map(DogSimpleInfoResponse::of).collect(Collectors.toList());
     }
@@ -139,7 +136,7 @@ public class DogService {
     public DogInfoResponse modifyDogSocialization(String userId, Long dogId,
             DogSocializationRequest dogSocializationRequest) {
         //유저 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         //반려견 체크
         Dog dog = valid.dogValidation(dogId);
         //그룹 체크
@@ -185,7 +182,7 @@ public class DogService {
     @Transactional
     public Boolean deleteDog(String userId, Long dogId) {
         Boolean deleteParty = false;
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         Dog dog = valid.dogValidation(dogId);
 

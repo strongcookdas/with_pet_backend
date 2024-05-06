@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.admin.model.admin;
+package com.ajou_nice.with_pet.admin.model.dto;
 
 
 
@@ -17,14 +17,14 @@ import lombok.ToString;
 @ToString
 public class AdminApplicantResponse {
 
-	private Long user_id;
-	private String applicant_userName;
+	private Long applicantId;
+	private String applicantName;
 	private ApplicantStatus applicantStatus;
 
 	public static AdminApplicantResponse of(User user){
 		return AdminApplicantResponse.builder()
-				.user_id(user.getId())
-				.applicant_userName(user.getName())
+				.applicantId(user.getId())
+				.applicantName(user.getName())
 				.applicantStatus(user.getApplicantStatus())
 				.build();
 	}

@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.dto.applicant;
+package com.ajou_nice.with_pet.applicant.model.dto;
 
 
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString(callSuper = true)
-public class PetsitterApplicationResponse {
+public class PetSitterApplicationResponse {
 
     private Long userId;
     private String name;
@@ -32,8 +32,8 @@ public class PetsitterApplicationResponse {
     private String licenseImg;
     private String streetAdr;
 
-    public static PetsitterApplicationResponse of(User user) {
-        return PetsitterApplicationResponse.builder()
+    public static PetSitterApplicationResponse of(User user) {
+        return PetSitterApplicationResponse.builder()
                 .userId(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())

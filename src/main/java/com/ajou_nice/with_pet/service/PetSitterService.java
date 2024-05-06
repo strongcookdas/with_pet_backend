@@ -13,7 +13,7 @@ import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterInf
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterIntroRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterServiceRequest;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterWithPetServicesRequest;
-import com.ajou_nice.with_pet.domain.entity.CriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.House;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.PetSitterCriticalService;
@@ -21,19 +21,16 @@ import com.ajou_nice.with_pet.domain.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.domain.entity.WithPetService;
+import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
 import com.ajou_nice.with_pet.enums.DogSize;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.CriticalServiceRepository;
+import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.HouseRepository;
 import com.ajou_nice.with_pet.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.repository.WithPetServiceRepository;
+import com.ajou_nice.with_pet.withpet_service.repository.WithPetServiceRepository;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -129,7 +126,7 @@ public class PetSitterService {
 	@Transactional
 	public void updateHouseInfo(PetSitterHousesRequest petSitterHousesRequest, String userId){
 
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -150,7 +147,7 @@ public class PetSitterService {
 	@Transactional
 	public void updateHashTagInfo(PetSitterHashTagsRequest hashTagsRequest, String userId){
 
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -170,7 +167,7 @@ public class PetSitterService {
 	// == 펫시터 WithPetService 정보 수정 == //
 	@Transactional
 	public void updatePetSitterService(PetSitterWithPetServicesRequest withPetServicesRequest, String userId){
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -190,7 +187,7 @@ public class PetSitterService {
 	// == 펫시터 CriticalPetService 정보 수정 == //
 	@Transactional
 	public void updateCriticalService(PetSitterCriticalServicesRequest criticalServicesRequest, String userId){
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 
@@ -209,7 +206,7 @@ public class PetSitterService {
 	// == 펫시터 introduction 수정 == //
 	@Transactional
 	public void updatePetSitterIntro(PetSitterIntroRequest petSitterIntroRequest, String userId){
-		User findUser = valid.userValidation(userId);
+		User findUser = valid.userValidationById(userId);
 
 		PetSitter petSitter = valid.petSitterValidationByUser(findUser);
 

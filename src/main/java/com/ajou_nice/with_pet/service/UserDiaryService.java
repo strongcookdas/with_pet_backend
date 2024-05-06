@@ -43,7 +43,7 @@ public class UserDiaryService {
     @Transactional
     public UserDiaryResponse writeUserDiary(String userId, DiaryRequest diaryRequest) {
         //유저 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         //반려견 체크
         Dog dog = valid.dogValidation(diaryRequest.getDogId());
         //반려견 그룹 유저 존재 체크
@@ -78,7 +78,7 @@ public class UserDiaryService {
     public UserDiaryResponse updateUserDiary(String userId, DiaryRequest diaryRequest,
             Long diaryId) {
         //유저 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
         //일지 체크
         Diary diary = userDiaryRepository.findById(diaryId).orElseThrow(() -> {
             throw new AppException(ErrorCode.DIARY_NOT_FOUND,
@@ -103,7 +103,7 @@ public class UserDiaryService {
             String month, String petsitterCheck) {
 
         //유저 체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         List<Diary> userDiaries = userDiaryRepository.findByMonthDate(user.getId(),
                 dogId, categoryId, LocalDate.parse(month + "-01"), petsitterCheck);
@@ -113,7 +113,7 @@ public class UserDiaryService {
     public List<UserDiaryResponse> getUserDayDiary(String userId, Long dogId, Long categoryId,
             String day, String petsitterCheck) {
         //유저체크
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         List<Diary> userDiaries = userDiaryRepository.findByDayDate(user.getId(), dogId,
                 categoryId, LocalDate.parse(day), petsitterCheck);
@@ -123,7 +123,7 @@ public class UserDiaryService {
     @Transactional
     public String deleteUserDiary(String userId, Long diaryId) {
 
-        User user = valid.userValidation(userId);
+        User user = valid.userValidationById(userId);
 
         Diary diary = userDiaryRepository.findById(diaryId).orElseThrow(() -> {
             throw new AppException(ErrorCode.DIARY_NOT_FOUND,

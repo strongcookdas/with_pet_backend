@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.admin.model.withpetservice;
+package com.ajou_nice.with_pet.admin.model.dto;
 
 
 import javax.persistence.Lob;
@@ -13,26 +13,24 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-public class AddWithPetServiceRequest {
+public class AddCriticalServiceRequest {
 
 	@NotNull
 	private String serviceName;
+
 	@NotNull
-	@Lob
 	private String serviceImg;
+
 	@NotNull
 	private String serviceIntro;
 
 	@Data
-	public static class WithPetServiceModifyRequest{
+	public static class CriticalServiceModifyRequest{
 		@NotNull
 		private Long serviceId;
-
 		private String serviceName;
-
 		@Lob
 		private String serviceImg;
-
 		private String serviceIntroduction;
 	}
 }
