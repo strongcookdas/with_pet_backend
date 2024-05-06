@@ -42,11 +42,11 @@ public class AdminService {
     private final UserRepository userRepository;
     private final PetSitterRepository petSitterRepository;
     private final WithPetServiceRepository withPetServiceRepository;
-
     private final CriticalServiceRepository criticalServiceRepository;
 
-    private final ValidateCollection validateCollection;
     private final NotificationService notificationService;
+
+    private final ValidateCollection validateCollection;
     private final AdminValidation adminValidation;
     private final ApplicantValidation applicantValidation;
 
@@ -70,34 +70,28 @@ public class AdminService {
         return PetSitterBasicResponse.toList(petSitters);
     }
 
-    // == 관리자의 펫시터 지원자 수락 == //
-    // 리팩토링 완 -> Authentication 자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
     @Transactional
-    public PetSitterBasicResponse createPetsitter(String userId,
-                                                  AdminApplicantRequest adminApplicantRequest) {
+    public PetSitterBasicResponse acceptApplicant(String email, Long applicantId) {
 
-        validateCollection.userValidationById(userId);
+        adminValidation.adminValidation(email);
+        
+        User applicant = applicantValidation.applicationValidationById(applicantId);
 
-        //유저 불러오기
-        User findUser = userRepository.findById(adminApplicantRequest.getUserId())
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.USER_NOT_FOUND,
-                            ErrorCode.USER_NOT_FOUND.getMessage());
-                });
-        //펫시터 지원자 상태 변경 + userRole 변경
-        findUser.updateApplicantStatus(ApplicantStatus.APPROVE);
-        findUser.updateUserRole(UserRole.ROLE_PETSITTER);
+        applicant.updateApplicantRoleAndStatus(UserRole.ROLE_PETSITTER, ApplicantStatus.APPROVE);
 
-        PetSitter petSitter = PetSitter.toEntity(findUser);
+        applicantValidation.validApplicantAccept(applicant);
+        PetSitter petSitter = PetSitter.toEntity(applicant);
         PetSitter newPetSitter = petSitterRepository.save(petSitter);
 
+        /* 메일 알림 메서드 리팩토링 필요
         Notification notification = notificationService.sendEmail(String.format(
                         "%s님의 위드펫 지원이 승인되었습니다.\n아래의 URL에 접속하여 펫시터 정보를 기입 후 저장을 하면 메인 페이지에 %s님의 펫시터 정보가 게시됩니다.",
                         findUser.getName(), findUser.getName()),
                 "/petsitterShowInfo",
                 NotificationType.펫시터_승인, findUser);
         notificationService.saveNotification(notification);
-
+        */
+        
         return PetSitterBasicResponse.of(newPetSitter);
     }
 

@@ -8,6 +8,7 @@ import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
+import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,50 +27,17 @@ import java.util.List;
 @RequestMapping("api/v2/admins")
 @Api(tags = "Administrator API")
 public class AdminController {
+    private final AdminService adminService;
+    @PatchMapping("/accept-applicants/{userId}")
+    @ApiOperation(value = "관리자의 펫시터 지원자 수락")
+    public Response<PetSitterBasicResponse> acceptApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
 
-	private final AdminService adminService;
-//배포를 위한 주석 추가
-//	@PostMapping("/api/v1/admin/accept-petsitter")
-//	@ApiOperation(value = "관리자의 펫시터 지원자 수락")
-//	public Response<PetSitterBasicResponse> acceptApplicant(@ApiIgnore Authentication authentication, @RequestBody @Valid AdminApplicantRequest adminApplicantRequest){
-//
-//		log.info("=============== accept petsitter info : {} ==================",
-//				adminApplicantRequest);
-//		PetSitterBasicResponse adminAcceptApplicantResponse = adminService.createPetsitter(
-//				authentication.getName(), adminApplicantRequest);
-//
-//		log.info("=============== accepted petsitter info : {} =================", adminAcceptApplicantResponse);
-//		return Response.success(adminAcceptApplicantResponse);
-//	}
+        PetSitterBasicResponse adminAcceptApplicantResponse = adminService.acceptApplicant(authentication.getName(), userId);
 
-//	@GetMapping("/api/v1/admin/show-petsitters")
-//	@ApiOperation(value = "관리자의 펫시터 리스트 조회")
-//	public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
-//		log.info(authentication.getName());
-//		List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(
-//				authentication.getName());
-//		return Response.success(petSitterBasicResponses);
-//	}
+        return Response.success(adminAcceptApplicantResponse);
+    }
 
-	@GetMapping("/applicants")
-	@ApiOperation(value = "펫시터 지원자 리스트 전체 확인")
-	public Response<List<ApplicantBasicInfoResponse>> showApplicants(@ApiIgnore Authentication authentication){
-		List<ApplicantBasicInfoResponse> applicantList = adminService.showApplicants(
-				authentication.getName());
-		return Response.success(applicantList);
-	}
-
-	@GetMapping("applicants/{userId}")
-	@ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-	public Response<PetSitterApplicationResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId")Long userId){
-
-		PetSitterApplicationResponse applicantCreateResponse = adminService.getApplicantDetailInfo(
-				authentication.getName(), userId);
-
-		return Response.success(applicantCreateResponse);
-	}
-
-//	@PostMapping("/api/v1/admin/refuse-applicant")
+    //	@PostMapping("/api/v1/admin/refuse-applicant")
 //	@ApiOperation(value = "관리자의 펫시터 지원자 거절")
 //	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication, @RequestBody @Valid AdminApplicantRequest adminApplicantRequest){
 //		log.info("=============== refuse petsitter info : {} ==================",adminApplicantRequest);
@@ -82,14 +50,41 @@ public class AdminController {
 //		return Response.success(adminApplicantResponse);
 //	}
 
-	@PostMapping("/critical-service")
-	@ApiOperation(value = "관리자의 필수 서비스 추가")
-	public Response<CriticalServiceResponse> addCriticalService(@ApiIgnore Authentication authentication, @RequestBody @Valid
-	AddCriticalServiceRequest addCriticalServiceRequest){
-		CriticalServiceResponse criticalServiceResponse = adminService.addCriticalService(
-				authentication.getName(), addCriticalServiceRequest);
-		return Response.success(criticalServiceResponse);
-	}
+//	@GetMapping("/api/v1/admin/show-petsitters")
+//	@ApiOperation(value = "관리자의 펫시터 리스트 조회")
+//	public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
+//		log.info(authentication.getName());
+//		List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(
+//				authentication.getName());
+//		return Response.success(petSitterBasicResponses);
+//	}
+
+    @GetMapping("/applicants")
+    @ApiOperation(value = "펫시터 지원자 리스트 전체 확인")
+    public Response<List<ApplicantBasicInfoResponse>> showApplicants(@ApiIgnore Authentication authentication) {
+        List<ApplicantBasicInfoResponse> applicantList = adminService.showApplicants(
+                authentication.getName());
+        return Response.success(applicantList);
+    }
+
+    @GetMapping("applicants/{userId}")
+    @ApiOperation(value = "펫시터 지원자 정보 상세 확인")
+    public Response<PetSitterApplicationResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
+
+        PetSitterApplicationResponse applicantCreateResponse = adminService.getApplicantDetailInfo(
+                authentication.getName(), userId);
+
+        return Response.success(applicantCreateResponse);
+    }
+
+    @PostMapping("/critical-service")
+    @ApiOperation(value = "관리자의 필수 서비스 추가")
+    public Response<CriticalServiceResponse> addCriticalService(@ApiIgnore Authentication authentication, @RequestBody @Valid
+    AddCriticalServiceRequest addCriticalServiceRequest) {
+        CriticalServiceResponse criticalServiceResponse = adminService.addCriticalService(
+                authentication.getName(), addCriticalServiceRequest);
+        return Response.success(criticalServiceResponse);
+    }
 
 //	@PutMapping("/api/v1/admin/criticalservice")
 //	@ApiOperation(value = "관리자의 필수 서비스 수정")
@@ -101,14 +96,14 @@ public class AdminController {
 //		return Response.success(criticalServiceResponse);
 //	}
 
-	@PostMapping("/service")
-	@ApiOperation(value = "관리자의 위드펫 서비스 추가")
-	public Response<WithPetServiceResponse> addWithPetService(@ApiIgnore Authentication authentication, @RequestBody @Valid
-	AddWithPetServiceRequest addWithPetServiceRequest){
-		WithPetServiceResponse withPetServiceResponse = adminService.addWithPetService(
-				authentication.getName(), addWithPetServiceRequest);
-		return Response.success(withPetServiceResponse);
-	}
+    @PostMapping("/service")
+    @ApiOperation(value = "관리자의 위드펫 서비스 추가")
+    public Response<WithPetServiceResponse> addWithPetService(@ApiIgnore Authentication authentication, @RequestBody @Valid
+    AddWithPetServiceRequest addWithPetServiceRequest) {
+        WithPetServiceResponse withPetServiceResponse = adminService.addWithPetService(
+                authentication.getName(), addWithPetServiceRequest);
+        return Response.success(withPetServiceResponse);
+    }
 
 //	@PutMapping("/api/v1/admin/service")
 //	@ApiOperation(value = "관리자의 위드펫 서비스 수정")

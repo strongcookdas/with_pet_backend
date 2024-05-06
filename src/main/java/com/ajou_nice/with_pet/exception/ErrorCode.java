@@ -50,7 +50,8 @@ public enum ErrorCode {
     CAN_NOT_EXPEL_PARTY(HttpStatus.BAD_REQUEST, "그룹 내 유효한 예약 내역이 존재하기 때문에 해당 그룹원을 강퇴 시킬 수 없습니다."),
     INCONSISTENCY_AUTHENTICATION_NUMBER(HttpStatus.BAD_REQUEST,"인증번호가 일치하지 않습니다."),
     UNAUTHORIZED_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 권한이 없습니다."),
-    NOT_FOUND_APPLICANT(HttpStatus.NOT_FOUND, "해당 지원자를 찾을 수 없습니다.");
+    NOT_FOUND_APPLICANT(HttpStatus.NOT_FOUND, "해당 지원자를 찾을 수 없습니다."),
+    ALREADY_ACCEPT_APPLICANT(HttpStatus.CONFLICT, "해당 지원자는 이미 승인된 상태입니다.");
 
     private HttpStatus status;
     private String message;

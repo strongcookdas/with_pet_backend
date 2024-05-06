@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.applicant.util;
 
 import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.UserRepository;
@@ -24,5 +25,11 @@ public class ApplicantValidation {
             throw new AppException(ErrorCode.NOT_FOUND_APPLICANT, ErrorCode.NOT_FOUND_APPLICANT.getMessage());
         }
         return user;
+    }
+
+    public void validApplicantAccept(User user){
+        if(user.getApplicantStatus().equals(ApplicantStatus.APPROVE)){
+            throw new AppException(ErrorCode.ALREADY_ACCEPT_APPLICANT, ErrorCode.ALREADY_ACCEPT_APPLICANT.getMessage());
+        }
     }
 }

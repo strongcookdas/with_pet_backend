@@ -8,6 +8,7 @@ import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.Gender;
 import com.ajou_nice.with_pet.enums.UserRole;
+
 import java.time.LocalDate;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -21,6 +22,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -97,6 +99,11 @@ public class User extends BaseEntity {
         this.applicantStatus = status;
     }
 
+    public void updateApplicantRoleAndStatus(UserRole role, ApplicantStatus status) {
+        this.updateUserRole(role);
+        this.updateApplicantStatus(status);
+    }
+
     public void updateApplicantInfo(PetsitterApplicationRequest petsitterApplicationRequest) {
         this.licenseImg = petsitterApplicationRequest.getLicenseImg();
         this.birth = petsitterApplicationRequest.getBirth();
@@ -113,8 +120,8 @@ public class User extends BaseEntity {
     }
 
     public static User simpleUserForTest(String userName, String userId, String password,
-            String email, UserRole userRole, String phone,
-            Address address) {
+                                         String email, UserRole userRole, String phone,
+                                         Address address) {
         return User.builder()
                 .name(userName)
                 .password(password)
@@ -126,8 +133,8 @@ public class User extends BaseEntity {
     }
 
     public static User simpleUserForTest(String userName, String userId, String password,
-            String email, UserRole userRole, String phone,
-            Address address, Integer partyCount) {
+                                         String email, UserRole userRole, String phone,
+                                         Address address, Integer partyCount) {
         return User.builder()
                 .name(userName)
                 .password(password)
