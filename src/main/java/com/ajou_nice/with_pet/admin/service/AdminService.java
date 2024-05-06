@@ -77,9 +77,9 @@ public class AdminService {
         
         User applicant = applicantValidation.applicationValidationById(applicantId);
 
+        applicantValidation.validApplicantAccept(applicant);
         applicant.updateApplicantRoleAndStatus(UserRole.ROLE_PETSITTER, ApplicantStatus.APPROVE);
 
-        applicantValidation.validApplicantAccept(applicant);
         PetSitter petSitter = PetSitter.toEntity(applicant);
         PetSitter newPetSitter = petSitterRepository.save(petSitter);
 

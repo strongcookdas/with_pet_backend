@@ -37,7 +37,7 @@ public class AdminController {
         return Response.success(adminAcceptApplicantResponse);
     }
 
-    //	@PostMapping("/api/v1/admin/refuse-applicant")
+//    @PostMapping("/api/v1/admin/refuse-applicant")
 //	@ApiOperation(value = "관리자의 펫시터 지원자 거절")
 //	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication, @RequestBody @Valid AdminApplicantRequest adminApplicantRequest){
 //		log.info("=============== refuse petsitter info : {} ==================",adminApplicantRequest);
