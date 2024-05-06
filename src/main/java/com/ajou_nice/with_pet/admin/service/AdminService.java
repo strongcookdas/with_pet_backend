@@ -98,26 +98,20 @@ public class AdminService {
     // == 관리자의 펫시터 지원자 거절 == //
     // 리팩토링 완 -> Authentication 자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
     @Transactional
-    public AdminApplicantResponse refuseApplicant(String userId,
-                                                  AdminApplicantRequest adminApplicantRequest) {
+    public AdminApplicantResponse refuseApplicant(String email,Long applicantId) {
 
-        validateCollection.userValidationById(userId);
+        adminValidation.adminValidation(email);
 
-        //유저 불러오기
-        User findUser = userRepository.findById(adminApplicantRequest.getUserId())
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.USER_NOT_FOUND,
-                            ErrorCode.USER_NOT_FOUND.getMessage());
-                });
+        User findUser = applicantValidation.applicationValidationById(applicantId);
 
-        //펫시터 지원자 상태 변경 + userRole 변경
-        findUser.updateApplicantStatus(ApplicantStatus.REFUSE);
-        findUser.updateUserRole(UserRole.ROLE_USER);
+        findUser.updateApplicantRoleAndStatus(UserRole.ROLE_USER, ApplicantStatus.REFUSE);
 
+        /*
         Notification notification = notificationService.sendEmail(String.format(
                 "유감스럽지만 %s님의 위드펫 지원이 거절되었습니다.",
                 findUser.getName()), "/", NotificationType.펫시터_거절, findUser);
         notificationService.saveNotification(notification);
+        */
 
         return AdminApplicantResponse.of(findUser);
     }

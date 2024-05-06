@@ -3,6 +3,8 @@ package com.ajou_nice.with_pet.admin.controller;
 
 import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantRequest;
+import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
 import com.ajou_nice.with_pet.admin.service.AdminService;
 import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
@@ -37,18 +39,14 @@ public class AdminController {
         return Response.success(adminAcceptApplicantResponse);
     }
 
-//    @PostMapping("/api/v1/admin/refuse-applicant")
-//	@ApiOperation(value = "관리자의 펫시터 지원자 거절")
-//	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication, @RequestBody @Valid AdminApplicantRequest adminApplicantRequest){
-//		log.info("=============== refuse petsitter info : {} ==================",adminApplicantRequest);
-//
-//		AdminApplicantResponse adminApplicantResponse = adminService.refuseApplicant(
-//				authentication.getName(), adminApplicantRequest);
-//
-//		log.info("=============== refused petsitter info : {} =================", adminApplicantResponse);
-//
-//		return Response.success(adminApplicantResponse);
-//	}
+    @PatchMapping("/refuse-applicant/{userId}")
+	@ApiOperation(value = "관리자의 펫시터 지원자 거절")
+	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication,  @PathVariable("userId") Long userId){
+
+		AdminApplicantResponse adminApplicantResponse = adminService.refuseApplicant(authentication.getName(), userId);
+
+		return Response.success(adminApplicantResponse);
+	}
 
 //	@GetMapping("/api/v1/admin/show-petsitters")
 //	@ApiOperation(value = "관리자의 펫시터 리스트 조회")
