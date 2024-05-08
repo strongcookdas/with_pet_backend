@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+
+import com.ajou_nice.with_pet.admin.model.dto.UpdateCriticalServiceRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,10 +37,10 @@ public class CriticalService {
 	@Lob
 	private String serviceImg;
 
-	public void updateServiceInfo(CriticalServiceModifyRequest criticalServiceModifyRequest){
-		this.serviceName = criticalServiceModifyRequest.getServiceName();
-		this.serviceImg = criticalServiceModifyRequest.getServiceImg();
-		this.introduction = criticalServiceModifyRequest.getServiceIntroduction();
+	public void updateServiceInfo(UpdateCriticalServiceRequest updateCriticalServiceRequest){
+		this.serviceName = updateCriticalServiceRequest.getServiceName();
+		this.serviceImg = updateCriticalServiceRequest.getServiceImg();
+		this.introduction = updateCriticalServiceRequest.getServiceIntroduction();
 	}
 	public static CriticalService forSimpleTest(String introduction, String serviceName, String serviceImg){
 		return CriticalService.builder()

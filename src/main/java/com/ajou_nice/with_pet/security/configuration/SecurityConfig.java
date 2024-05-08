@@ -51,6 +51,7 @@ public class SecurityConfig {
             "/api/v2/users/email-duplicates"
     };
 
+    //필요한지 의문 -> 나중에 삭제 가능한지 체크
     private final String[] ADMIN_GET_API = {
             "/api/v2/admins/applicants",
             "/api/v2/admins/applicants/*",

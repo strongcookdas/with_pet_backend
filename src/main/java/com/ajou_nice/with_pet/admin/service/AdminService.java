@@ -1,11 +1,8 @@
 package com.ajou_nice.with_pet.admin.service;
 
-import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.*;
 import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest.CriticalServiceModifyRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest.WithPetServiceModifyRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
 import com.ajou_nice.with_pet.admin.util.AdminValidation;
 import com.ajou_nice.with_pet.applicant.util.ApplicantValidation;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
@@ -74,7 +71,7 @@ public class AdminService {
     public PetSitterBasicResponse acceptApplicant(String email, Long applicantId) {
 
         adminValidation.adminValidation(email);
-        
+
         User applicant = applicantValidation.applicationValidationById(applicantId);
 
         applicantValidation.validApplicantAccept(applicant);
@@ -91,14 +88,14 @@ public class AdminService {
                 NotificationType.펫시터_승인, findUser);
         notificationService.saveNotification(notification);
         */
-        
+
         return PetSitterBasicResponse.of(newPetSitter);
     }
 
     // == 관리자의 펫시터 지원자 거절 == //
     // 리팩토링 완 -> Authentication 자체가 없어도 되는지도 확인 필요 (나중에 권한 설정한 다음에)
     @Transactional
-    public AdminApplicantResponse refuseApplicant(String email,Long applicantId) {
+    public AdminApplicantResponse refuseApplicant(String email, Long applicantId) {
 
         adminValidation.adminValidation(email);
 
@@ -118,7 +115,7 @@ public class AdminService {
 
     public PetSitterApplicationResponse getApplicantDetailInfo(String email, Long userId) {
         adminValidation.adminValidation(email);
-        User findUser =  applicantValidation.applicationValidationById(userId);
+        User findUser = applicantValidation.applicationValidationById(userId);
         return PetSitterApplicationResponse.of(findUser);
     }
 
@@ -145,15 +142,11 @@ public class AdminService {
     }
 
     @Transactional
-    // == 관리자의 필수 서비스 수정 == //
-    public CriticalServiceResponse updateCriticalService(
-            String userId, CriticalServiceModifyRequest criticalServiceModifyRequest) {
-        validateCollection.userValidationById(userId);
-        CriticalService criticalService = validateCollection.criticalServiceValidation(
-                criticalServiceModifyRequest.getServiceId());
-        criticalService.updateServiceInfo(criticalServiceModifyRequest);
-
-        return CriticalServiceResponse.of(criticalService);
+    public UpdateCriticalServiceResponse updateCriticalService(String email, Long serviceId, UpdateCriticalServiceRequest updateCriticalServiceRequest) {
+        adminValidation.adminValidation(email);
+        CriticalService criticalService = criticalServiceValidation(serviceId);
+        criticalService.updateServiceInfo(updateCriticalServiceRequest);
+        return UpdateCriticalServiceResponse.of(criticalService);
     }
 
     @Transactional
@@ -180,5 +173,15 @@ public class AdminService {
         List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
 
         return WithPetServiceResponse.toList(withPetServiceList);
+    }
+
+    private CriticalService criticalServiceValidation(Long serviceId) {
+        CriticalService criticalService = criticalServiceRepository.findById(serviceId)
+                .orElseThrow(() -> {
+                    throw new AppException(ErrorCode.CRITICAL_SERVICE_NOT_FOUND,
+                            ErrorCode.CRITICAL_SERVICE_NOT_FOUND.getMessage());
+                });
+
+        return criticalService;
     }
 }

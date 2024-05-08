@@ -1,10 +1,7 @@
 package com.ajou_nice.with_pet.admin.controller;
 
 
-import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.*;
 import com.ajou_nice.with_pet.admin.service.AdminService;
 import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
@@ -84,15 +81,13 @@ public class AdminController {
         return Response.success(criticalServiceResponse);
     }
 
-//	@PutMapping("/api/v1/admin/criticalservice")
-//	@ApiOperation(value = "관리자의 필수 서비스 수정")
-//	public Response<CriticalServiceResponse> updateCriticalService(@ApiIgnore Authentication authentication, @RequestBody @Valid
-//	CriticalServiceRequest.CriticalServiceModifyRequest criticalServiceModifyRequest){
-//		CriticalServiceResponse criticalServiceResponse = adminService.updateCriticalService(
-//				authentication.getName(), criticalServiceModifyRequest);
-//
-//		return Response.success(criticalServiceResponse);
-//	}
+    @PutMapping("/critical-service/{serviceId}")
+    @ApiOperation(value = "관리자의 필수 서비스 수정")
+    public Response<UpdateCriticalServiceResponse> updateCriticalService(@ApiIgnore Authentication authentication,@PathVariable("serviceId") Long serviceId, @RequestBody @Valid UpdateCriticalServiceRequest updateCriticalServiceRequest){
+        UpdateCriticalServiceResponse updateCriticalServiceResponse = adminService.updateCriticalService(authentication.getName(), serviceId, updateCriticalServiceRequest);
+
+        return Response.success(updateCriticalServiceResponse);
+    }
 
     @PostMapping("/service")
     @ApiOperation(value = "관리자의 위드펫 서비스 추가")
