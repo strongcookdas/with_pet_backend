@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WithPetServiceRepository extends JpaRepository<WithPetService, Long> {
 
-	Optional <WithPetService> findByName(String name);
+	Optional <WithPetService> findByServiceName(String name);
 }

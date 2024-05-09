@@ -2,7 +2,6 @@ package com.ajou_nice.with_pet.domain.dto.petsitter;
 
 
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import java.util.List;
@@ -41,8 +40,8 @@ public class PetSitterMainResponse {
 						.getHouse_img())
 				.userName(petSitter.getPetSitterName())
 				.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
-				.review_count(petSitter.getReview_count())
-				.star_rate(petSitter.getStar_rate())
+				.review_count(petSitter.getReviewCount())
+				.star_rate(petSitter.getStartRate())
 				.build();
 	}
 }
