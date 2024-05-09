@@ -107,19 +107,14 @@ public class AdminController {
 
 		return Response.success(withPetServiceResponse);
 	}
-//
-//	@PostMapping  ("/api/v1/admin/service")
-//	@ApiOperation(value = "관리자의 위드펫 서비스 삭제")
-//	public Response<List<WithPetServiceResponse>> deleteWithPetService(@ApiIgnore Authentication authentication,@RequestBody @Valid
-//			WithPetServiceModifyRequest withPetServiceModifyRequest){
-//
-//		log.info("=============== request delete withPetService info : {} ==================",withPetServiceModifyRequest);
-//
-//		List<WithPetServiceResponse> withPetServiceResponses = adminService.deleteWithPetService(
-//				authentication.getName(), withPetServiceModifyRequest);
-//
-//		log.info("=============== response deleted withPetService List : {} ==================",withPetServiceResponses);
-//
-//		return Response.success(withPetServiceResponses);
-//	}
+
+    // 펫시터가 등록한 위드펫 서비스가 있을 경우 삭제 못 하도록 설정해야할 듯 (나중)
+	@DeleteMapping  ("/service/{serviceId}")
+	@ApiOperation(value = "관리자의 위드펫 서비스 삭제")
+	public Response<List<WithPetServiceResponse>> deleteWithPetService(@ApiIgnore Authentication authentication, @PathVariable("serviceId") Long serviceId){
+
+		List<WithPetServiceResponse> withPetServiceResponses = adminService.deleteWithPetService(authentication.getName(), serviceId);
+
+		return Response.success(withPetServiceResponses);
+	}
 }

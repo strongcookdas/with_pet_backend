@@ -158,12 +158,9 @@ public class AdminService {
     }
 
     @Transactional
-    // == 관리자의 위드펫에서 제공하는 서비스 삭제 == //
-    public List<WithPetServiceResponse> deleteWithPetService(String userId,
-                                                             WithPetServiceModifyRequest withPetServiceModifyRequest) {
-        validateCollection.userValidationById(userId);
-        WithPetService withPetService = validateCollection.withPetServiceValidation(
-                withPetServiceModifyRequest.getServiceId());
+    public List<WithPetServiceResponse> deleteWithPetService(String email, Long serviceId) {
+        adminValidation.adminValidation(email);
+        WithPetService withPetService = withPetServiceValidation(serviceId);
 
         withPetServiceRepository.delete(withPetService);
         List<WithPetService> withPetServiceList = withPetServiceRepository.findAll();
