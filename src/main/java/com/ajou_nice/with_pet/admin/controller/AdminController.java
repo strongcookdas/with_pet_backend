@@ -45,17 +45,15 @@ public class AdminController {
 		return Response.success(adminApplicantResponse);
 	}
 
-//	@GetMapping("/api/v1/admin/show-petsitters")
-//	@ApiOperation(value = "관리자의 펫시터 리스트 조회")
-//	public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
-//		log.info(authentication.getName());
-//		List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(
-//				authentication.getName());
-//		return Response.success(petSitterBasicResponses);
-//	}
+	@GetMapping("/pet-sitters")
+	@ApiOperation(value = "관리자의 펫시터 리스트 조회")
+	public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
+		List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(authentication.getName());
+		return Response.success(petSitterBasicResponses);
+	}
 
     @GetMapping("/applicants")
-    @ApiOperation(value = "펫시터 지원자 리스트 전체 확인")
+    @ApiOperation(value = "펫시터 지원자 리스트 조회")
     public Response<List<ApplicantBasicInfoResponse>> showApplicants(@ApiIgnore Authentication authentication) {
         List<ApplicantBasicInfoResponse> applicantList = adminService.showApplicants(
                 authentication.getName());

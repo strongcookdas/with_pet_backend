@@ -59,11 +59,9 @@ public class AdminService {
     }
 
     // == 관리자의 펫시터 리스트 전체 확인 == //
-    public List<PetSitterBasicResponse> showPetSitters(String userId) {
-//		valid.userValidation(userId);
-        validateCollection.userValidationByEmail(userId);
+    public List<PetSitterBasicResponse> showPetSitters(String email) {
+        adminValidation.adminValidation(email);
         List<PetSitter> petSitters = petSitterRepository.findAll();
-
         return PetSitterBasicResponse.toList(petSitters);
     }
 

@@ -77,14 +77,14 @@ public class PetSitter extends BaseEntity {
 
 	private Boolean valid;
 
-	private int review_count;
-	private Double star_rate;
+	private int reviewCount;
+	private Double startRate;
 
-	private int report_count;
+	private int reportCount;
 
 	public void updateReview(double new_rate){
-		star_rate = ((star_rate*review_count) + new_rate)/(review_count+1);
-		review_count++;
+		startRate = ((startRate * reviewCount) + new_rate)/(reviewCount +1);
+		reviewCount++;
 	}
 
 	public void changeAvailableDogSize(DogSize availableDogSize){
@@ -109,7 +109,9 @@ public class PetSitter extends BaseEntity {
 				.petSitterStreetAdr(streetAdr)
 				.petSitterDetailAdr(detailAdr)
 				.user(user)
-				.review_count(0).report_count(0).star_rate(0.0).build();
+				.reviewCount(0)
+				.startRate(0.0)
+				.build();
 	}
 
 	public static PetSitter toEntity(User user){
@@ -124,9 +126,9 @@ public class PetSitter extends BaseEntity {
 				.petSitterDetailAdr(user.getAddress().getDetailAdr())
 				.user(user)
 				.valid(false)
-				.review_count(0)
-				.star_rate(0.0)
-				.report_count(0)
+				.reviewCount(0)
+				.startRate(0.0)
+				.reportCount(0)
 				.build();
 	}
 

@@ -106,8 +106,8 @@ public class ReviewTest {
 		petsitter.updateReview(3.5);
 
 	    //then (펫시터에게 review 별점이 적용되었는지 확인 test)
-		Assertions.assertEquals(petsitter.getReview_count(), 1);
-		Assertions.assertEquals(petsitter.getStar_rate(), 3.5);
+		Assertions.assertEquals(petsitter.getReviewCount(), 1);
+		Assertions.assertEquals(petsitter.getStartRate(), 3.5);
 	}
 
 	@DisplayName("반려인의 후기 작성 service test")

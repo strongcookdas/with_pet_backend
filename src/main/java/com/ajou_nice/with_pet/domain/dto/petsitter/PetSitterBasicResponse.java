@@ -16,37 +16,37 @@ import lombok.ToString;
 @ToString
 public class PetSitterBasicResponse {
 
-	private Long petSitterId;
+	private Long petsitterId;
 
-	private String userName;
+	private String petsitterName;
 
-	private String userId;
-	private String userProfileImg;
+	private String petsitterEmail;
+	private String petsitterImg;
 
-	private String userPhone;
+	private String petsitterPhone;
 
-	private int report_count;
+	private int reportCount;
 
 
 	public static PetSitterBasicResponse of(PetSitter petSitter){
 		return PetSitterBasicResponse.builder()
-				.petSitterId(petSitter.getId())
-				.userName(petSitter.getPetSitterName())
-				.userId(petSitter.getUser().getEmail())
-				.userProfileImg(petSitter.getProfileImg())
-				.userPhone(petSitter.getPetSitterPhone())
-				.report_count(petSitter.getReport_count())
+				.petsitterId(petSitter.getId())
+				.petsitterName(petSitter.getPetSitterName())
+				.petsitterEmail(petSitter.getUser().getEmail())
+				.petsitterImg(petSitter.getProfileImg())
+				.petsitterPhone(petSitter.getPetSitterPhone())
+				.reportCount(petSitter.getReportCount())
 				.build();
 	}
 
 	public static List<PetSitterBasicResponse> toList(List<PetSitter> petSitters){
 		return petSitters.stream().map(petSitter-> PetSitterBasicResponse.builder()
-				.petSitterId(petSitter.getId())
-				.userName(petSitter.getPetSitterName())
-				.userId(petSitter.getUser().getEmail())
-				.userProfileImg(petSitter.getProfileImg())
-				.userPhone(petSitter.getPetSitterPhone())
-				.report_count(petSitter.getReport_count())
+				.petsitterId(petSitter.getId())
+				.petsitterName(petSitter.getPetSitterName())
+				.petsitterEmail(petSitter.getUser().getEmail())
+				.petsitterImg(petSitter.getProfileImg())
+				.petsitterPhone(petSitter.getPetSitterPhone())
+				.reportCount(petSitter.getReportCount())
 				.build()).collect(Collectors.toList());
 	}
 }
