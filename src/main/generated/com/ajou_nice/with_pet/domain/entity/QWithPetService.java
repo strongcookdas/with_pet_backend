@@ -23,9 +23,9 @@ public class QWithPetService extends EntityPathBase<WithPetService> {
 
     public final StringPath introduction = createString("introduction");
 
-    public final StringPath name = createString("name");
+    public final StringPath name = createString("serviceName");
 
-    public final StringPath service_Img = createString("service_Img");
+    public final StringPath service_Img = createString("serviceImg");
 
     public QWithPetService(String variable) {
         super(WithPetService.class, forVariable(variable));

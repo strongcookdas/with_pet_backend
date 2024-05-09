@@ -25,8 +25,8 @@ public class WithPetServiceResponse {
 	public static WithPetServiceResponse of(WithPetService withPetService){
 		return WithPetServiceResponse.builder()
 				.serviceId(withPetService.getId())
-				.serviceName(withPetService.getName())
-				.serviceImg(withPetService.getService_Img())
+				.serviceName(withPetService.getServiceName())
+				.serviceImg(withPetService.getServiceImg())
 				.serviceIntroduction(withPetService.getIntroduction())
 				.build();
 	}
@@ -34,8 +34,8 @@ public class WithPetServiceResponse {
 	public static List<WithPetServiceResponse> toList(List<WithPetService> withPetServiceList){
 		return withPetServiceList.stream().map(withPetService-> WithPetServiceResponse.builder()
 				.serviceId(withPetService.getId())
-				.serviceName(withPetService.getName())
-				.serviceImg(withPetService.getService_Img())
+				.serviceName(withPetService.getServiceName())
+				.serviceImg(withPetService.getServiceImg())
 				.serviceIntroduction(withPetService.getIntroduction())
 				.build()).collect(Collectors.toList());
 	}

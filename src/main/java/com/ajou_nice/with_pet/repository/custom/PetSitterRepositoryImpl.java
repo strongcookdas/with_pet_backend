@@ -71,7 +71,7 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
         }
         List<Long> petSitterIdList = queryFactory.select(petSitterWithPetService.petSitter.id)
                 .from(petSitterWithPetService)
-                .where(petSitterWithPetService.withPetService.name.in(service)).fetch();
+                .where(petSitterWithPetService.withPetService.serviceImg.in(service)).fetch();
         log.info("======================= 서비스 필터 끝 ========================");
 
         return petSitter.id.in(petSitterIdList);

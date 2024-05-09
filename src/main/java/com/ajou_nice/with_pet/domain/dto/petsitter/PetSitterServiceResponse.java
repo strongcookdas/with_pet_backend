@@ -31,9 +31,9 @@ public class PetSitterServiceResponse {
 		return petSitterServiceList.stream().map(petSitterService -> PetSitterServiceResponse.builder()
 				.petSitterServiceId(petSitterService.getId())
 				.serviceId(petSitterService.getWithPetService().getId())
-				.serviceName(petSitterService.getWithPetService().getName())
+				.serviceName(petSitterService.getWithPetService().getServiceName())
 				.serviceIntroduction(petSitterService.getWithPetService().getIntroduction())
-				.serviceImg(petSitterService.getWithPetService().getService_Img())
+				.serviceImg(petSitterService.getWithPetService().getServiceImg())
 				.price(petSitterService.getPrice())
 				.build()).collect(Collectors.toList());
 	}

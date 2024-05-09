@@ -98,20 +98,15 @@ public class AdminController {
         return Response.success(withPetServiceResponse);
     }
 
-//	@PutMapping("/api/v1/admin/service")
-//	@ApiOperation(value = "관리자의 위드펫 서비스 수정")
-//	public Response<WithPetServiceResponse> updateWithPetService(@ApiIgnore Authentication authentication,@RequestBody @Valid
-//			WithPetServiceModifyRequest withPetServiceModifyRequest){
-//
-//		log.info("=============== request update withPetService info : {} ==================",withPetServiceModifyRequest);
-//
-//		WithPetServiceResponse withPetServiceResponse = adminService.updateWithPetService(
-//				authentication.getName(), withPetServiceModifyRequest);
-//
-//		log.info("=============== response update withPetService info : {} ==================",withPetServiceResponse);
-//
-//		return Response.success(withPetServiceResponse);
-//	}
+	@PutMapping("/service/{serviceId}")
+	@ApiOperation(value = "관리자의 위드펫 서비스 수정")
+	public Response<WithPetServiceResponse> updateWithPetService(@ApiIgnore Authentication authentication, @PathVariable("serviceId") Long serviceId, @RequestBody @Valid UpdateWithPetServiceRequest updateWithPetServiceRequest){
+
+		WithPetServiceResponse withPetServiceResponse = adminService.updateWithPetService(
+				authentication.getName(),serviceId,updateWithPetServiceRequest);
+
+		return Response.success(withPetServiceResponse);
+	}
 //
 //	@PostMapping  ("/api/v1/admin/service")
 //	@ApiOperation(value = "관리자의 위드펫 서비스 삭제")

@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+
+import com.ajou_nice.with_pet.admin.model.dto.UpdateWithPetServiceRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,17 +32,17 @@ public class WithPetService {
 	@Column(name = "service_id")
 	private Long id;
 
-	private String name;
+	private String serviceName;
 
 	@Lob
-	private String service_Img;
+	private String serviceImg;
 
 	private String introduction;
 
-	public void updateServiceInfo(WithPetServiceModifyRequest withPetServiceModifyRequest){
-		this.name = withPetServiceModifyRequest.getServiceName();
-		this.service_Img = withPetServiceModifyRequest.getServiceImg();
-		this.introduction = withPetServiceModifyRequest.getServiceIntroduction();
+	public void updateServiceInfo(UpdateWithPetServiceRequest withPetServiceRequest){
+		this.serviceName = withPetServiceRequest.getServiceName();
+		this.serviceImg = withPetServiceRequest.getServiceImg();
+		this.introduction = withPetServiceRequest.getServiceIntroduction();
 	}
 
 	public static WithPetService toEntity(AddWithPetServiceRequest addWithPetServiceRequest){
@@ -51,8 +53,8 @@ public class WithPetService {
 
 		}
 		return WithPetService.builder()
-				.name(addWithPetServiceRequest.getServiceName())
-				.service_Img(img)
+				.serviceName(addWithPetServiceRequest.getServiceName())
+				.serviceImg(img)
 				.introduction(addWithPetServiceRequest.getServiceIntro())
 				.build();
 	}

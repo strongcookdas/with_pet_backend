@@ -41,7 +41,7 @@ public class AdminService {
     private final WithPetServiceRepository withPetServiceRepository;
     private final CriticalServiceRepository criticalServiceRepository;
 
-    private final NotificationService notificationService;
+//    private final NotificationService notificationService;
 
     private final ValidateCollection validateCollection;
     private final AdminValidation adminValidation;
@@ -150,14 +150,10 @@ public class AdminService {
     }
 
     @Transactional
-    // == 관리자의 위드펫에서 제공하는 서비스 수정 == //
-    public WithPetServiceResponse updateWithPetService(String userId,
-                                                       WithPetServiceModifyRequest withPetServiceModifyRequest) {
-        validateCollection.userValidationById(userId);
-        WithPetService withPetService = validateCollection.withPetServiceValidation(
-                withPetServiceModifyRequest.getServiceId());
-        withPetService.updateServiceInfo(withPetServiceModifyRequest);
-
+    public WithPetServiceResponse updateWithPetService(String email,Long serviceId, UpdateWithPetServiceRequest updateWithPetServiceRequest) {
+        adminValidation.adminValidation(email);
+        WithPetService withPetService = withPetServiceValidation(serviceId);
+        withPetService.updateServiceInfo(updateWithPetServiceRequest);
         return WithPetServiceResponse.of(withPetService);
     }
 
@@ -183,5 +179,15 @@ public class AdminService {
                 });
 
         return criticalService;
+    }
+
+    private WithPetService withPetServiceValidation(Long serviceId) {
+        WithPetService withPetService = withPetServiceRepository.findById(serviceId)
+                .orElseThrow(() -> {
+                    throw new AppException(ErrorCode.WITH_PET_SERVICE_NOT_FOUND,
+                            ErrorCode.WITH_PET_SERVICE_NOT_FOUND.getMessage());
+                });
+
+        return withPetService;
     }
 }

@@ -37,7 +37,7 @@ public class ReservationPetSitterService {
         return ReservationPetSitterService.builder()
                 .reservation(reservation)
                 .price(withPetService.getPrice())
-                .serviceName(withPetService.getWithPetService().getName())
+                .serviceName(withPetService.getWithPetService().getServiceName())
                 .build();
     }
 }
