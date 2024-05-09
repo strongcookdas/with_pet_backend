@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.admin.controller;
 
 
 import com.ajou_nice.with_pet.admin.model.dto.*;
+import com.ajou_nice.with_pet.admin.service.AdminApplicantService;
 import com.ajou_nice.with_pet.admin.service.AdminService;
 import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
@@ -27,11 +28,13 @@ import java.util.List;
 @Api(tags = "Administrator API")
 public class AdminController {
     private final AdminService adminService;
+    private final AdminApplicantService adminApplicantService;
+
     @PatchMapping("/accept-applicants/{userId}")
     @ApiOperation(value = "관리자의 펫시터 지원자 수락")
     public Response<PetSitterBasicResponse> acceptApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
 
-        PetSitterBasicResponse adminAcceptApplicantResponse = adminService.acceptApplicant(authentication.getName(), userId);
+        PetSitterBasicResponse adminAcceptApplicantResponse = adminApplicantService.acceptApplicant(authentication.getName(), userId);
 
         return Response.success(adminAcceptApplicantResponse);
     }
@@ -40,22 +43,15 @@ public class AdminController {
 	@ApiOperation(value = "관리자의 펫시터 지원자 거절")
 	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication,  @PathVariable("userId") Long userId){
 
-		AdminApplicantResponse adminApplicantResponse = adminService.refuseApplicant(authentication.getName(), userId);
+		AdminApplicantResponse adminApplicantResponse = adminApplicantService.refuseApplicant(authentication.getName(), userId);
 
 		return Response.success(adminApplicantResponse);
-	}
-
-	@GetMapping("/pet-sitters")
-	@ApiOperation(value = "관리자의 펫시터 리스트 조회")
-	public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
-		List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(authentication.getName());
-		return Response.success(petSitterBasicResponses);
 	}
 
     @GetMapping("/applicants")
     @ApiOperation(value = "펫시터 지원자 리스트 조회")
     public Response<List<ApplicantBasicInfoResponse>> showApplicants(@ApiIgnore Authentication authentication) {
-        List<ApplicantBasicInfoResponse> applicantList = adminService.showApplicants(
+        List<ApplicantBasicInfoResponse> applicantList = adminApplicantService.showApplicants(
                 authentication.getName());
         return Response.success(applicantList);
     }
@@ -64,10 +60,17 @@ public class AdminController {
     @ApiOperation(value = "펫시터 지원자 정보 상세 확인")
     public Response<PetSitterApplicationResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
 
-        PetSitterApplicationResponse applicantCreateResponse = adminService.getApplicantDetailInfo(
+        PetSitterApplicationResponse applicantCreateResponse = adminApplicantService.getApplicantDetailInfo(
                 authentication.getName(), userId);
 
         return Response.success(applicantCreateResponse);
+    }
+
+    @GetMapping("/pet-sitters")
+    @ApiOperation(value = "관리자의 펫시터 리스트 조회")
+    public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
+        List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(authentication.getName());
+        return Response.success(petSitterBasicResponses);
     }
 
     @PostMapping("/critical-service")
