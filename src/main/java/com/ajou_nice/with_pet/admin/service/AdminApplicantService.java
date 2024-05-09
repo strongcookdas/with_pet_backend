@@ -3,7 +3,6 @@ package com.ajou_nice.with_pet.admin.service;
 import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
 import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
-import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.domain.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -25,7 +24,6 @@ import java.util.Objects;
 public class AdminApplicantService {
     private final UserRepository userRepository;
     private final PetSitterRepository petSitterRepository;
-    private final CriticalServiceRepository criticalServiceRepository;
 
 //    private final NotificationService notificationService;
 
