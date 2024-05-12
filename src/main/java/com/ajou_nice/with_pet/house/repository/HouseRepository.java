@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.petsitter.repository;
+package com.ajou_nice.with_pet.house.repository;
 
-import com.ajou_nice.with_pet.petsitter.model.entity.House;
+import com.ajou_nice.with_pet.house.model.entity.House;
 
 import java.util.List;
 

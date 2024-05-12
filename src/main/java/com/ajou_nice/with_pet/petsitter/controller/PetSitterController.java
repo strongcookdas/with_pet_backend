@@ -1,21 +1,13 @@
 package com.ajou_nice.with_pet.petsitter.controller;
 
 
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterCriticalServicesRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHashTagsRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHousesRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterIntroRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterWithPetServicesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.*;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.*;
 import com.ajou_nice.with_pet.petsitter.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,19 +15,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "PetSitter api")
+@RequestMapping("api/v2/pet-sitters")
+@Api(tags = "PetSitter API")
 public class PetSitterController {
 
     private final PetSitterService petSitterService;
@@ -68,22 +58,12 @@ public class PetSitterController {
         return Response.success(modifyInfoResponse);
     }
 
-    // 펫시터 my Info 등록  //
-    @PostMapping("/api/v1/petsitter/register-myinfo")
-    @ApiOperation(value = "펫시터의 펫시터정보 등록")
-    public Response<PetSitterModifyInfoResponse> registerPetSitterInfo(
-            @ApiIgnore Authentication authentication,
-            @RequestBody @Valid PetSitterRequest.PetSitterInfoRequest petSitterInfoRequest) {
-        log.info("=============== petSitter register info request : {} ================",
-                petSitterInfoRequest);
+    @PostMapping("/my-info")
+    @ApiOperation(value = "펫시터의 정보 등록")
+    public Response<PetSitterRegisterInfoResponse> registerPetSitterInfo(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterRegisterInfoRequest petSitterRegisterInfoRequest) {
+        PetSitterRegisterInfoResponse registerInfoResponse = petSitterService.registerPetSitterInfo(authentication.getName(), petSitterRegisterInfoRequest);
 
-        PetSitterModifyInfoResponse modifyInfoResponse = petSitterService.registerPetSitterInfo(
-                petSitterInfoRequest,
-                authentication.getName());
-
-        log.info("=============== petSitter register info response : {} ================",
-                modifyInfoResponse);
-        return Response.success(modifyInfoResponse);
+        return Response.success(registerInfoResponse);
     }
 
     // 펫시터 house 수정 //
@@ -137,7 +117,7 @@ public class PetSitterController {
     @PutMapping("/api/v1/petsitter/update-intro")
     @ApiOperation(value = "펫시터 introduction 정보 수정")
     public Response modifyIntro(@RequestBody PetSitterIntroRequest petSitterIntroRequest,
-            @ApiIgnore Authentication authentication) {
+                                @ApiIgnore Authentication authentication) {
 
         petSitterService.updatePetSitterIntro(petSitterIntroRequest, authentication.getName());
 
@@ -152,7 +132,7 @@ public class PetSitterController {
             @RequestParam(required = false) String dogSize,
             @RequestParam(required = false) List<String> service,
             @RequestParam(required = false) String address) {
-        log.info("=================== 필터링 {},{},{} ======================",dogSize,service,address);
+        log.info("=================== 필터링 {},{},{} ======================", dogSize, service, address);
         Page<PetSitterMainResponse> petSitterMainResponses = petSitterService.getPetSitters(
                 pageable, dogSize, service, address);
         return Response.success(petSitterMainResponses);

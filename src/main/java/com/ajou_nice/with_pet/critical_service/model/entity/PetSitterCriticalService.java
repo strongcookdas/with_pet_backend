@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.petsitter.model.entity;
+package com.ajou_nice.with_pet.critical_service.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

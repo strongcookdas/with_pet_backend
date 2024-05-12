@@ -1,7 +1,7 @@
-package com.ajou_nice.with_pet.petsitter.model.dto;
+package com.ajou_nice.with_pet.hashtag.model.dto;
 
 
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterHashTag;
+import com.ajou_nice.with_pet.hashtag.model.entity.PetSitterHashTag;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

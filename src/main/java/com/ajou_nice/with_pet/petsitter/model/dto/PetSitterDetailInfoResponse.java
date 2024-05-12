@@ -2,13 +2,15 @@ package com.ajou_nice.with_pet.petsitter.model.dto;
 
 
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
+import com.ajou_nice.with_pet.hashtag.model.dto.PetSitterHashTagInfoResponse;
+import com.ajou_nice.with_pet.house.model.dto.HouseInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterServiceResponse.PetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.review.ReviewResponse;
 import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterCriticalService;
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterWithPetService;
+import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
 import java.util.List;

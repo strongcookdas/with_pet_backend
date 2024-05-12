@@ -16,22 +16,6 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Getter
-	@ToString
-	public static class PetSitterInfoRequest{
-
-		private List<PetSitterHouseRequest> petSitterHouseRequests;
-		private List<PetSitterHashTagRequest> petSitterHashTagRequests;
-
-		@Lob
-		private String introduction;
-		private List<PetSitterServiceRequest> petSitterServiceRequests;
-		private List<PetSitterCriticalServiceRequest> petSitterCriticalServiceRequests;
-
-	}
-
-	@AllArgsConstructor
-	@NoArgsConstructor
-	@Getter
 	public static class PetSitterIntroRequest{
 		@Lob
 		private String introduction;
@@ -80,7 +64,7 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@NoArgsConstructor
 	@Getter
 	@ToString
-	public static class PetSitterHashTagRequest{
+	public static class PetSitterHashTagRequest{ // 사용하지 않으면 삭제 예정
 
 		private Long petSitterhashTagId;
 		private String hashTagName;
@@ -91,7 +75,7 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@NoArgsConstructor
 	@Getter
 	@ToString
-	public static class PetSitterServiceRequest{
+	public static class PetSitterServiceRequest{//사용하지 않으면 삭제 예정
 		private Long serviceId;
 		private String serviceName;
 		private int price;
@@ -101,7 +85,7 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@NoArgsConstructor
 	@Getter
 	@ToString
-	public static class PetSitterCriticalServiceRequest{
+	public static class PetSitterCriticalServiceRequest{//사용하지 않으면 삭제 예정
 		private Long serviceId;
 		private int price;
 		private String serviceName;

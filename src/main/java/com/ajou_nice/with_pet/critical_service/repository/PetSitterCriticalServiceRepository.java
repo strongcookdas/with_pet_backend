@@ -1,7 +1,7 @@
-package com.ajou_nice.with_pet.petsitter.repository;
+package com.ajou_nice.with_pet.critical_service.repository;
 
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

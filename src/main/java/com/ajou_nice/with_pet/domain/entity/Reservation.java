@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

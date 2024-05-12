@@ -19,6 +19,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.ajou_nice.with_pet.hashtag.model.entity.PetSitterHashTag;
+import com.ajou_nice.with_pet.house.model.entity.House;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

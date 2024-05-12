@@ -1,9 +1,9 @@
 package com.ajou_nice.with_pet.petsitter.repository.custom;
 
+import com.ajou_nice.with_pet.critical_service.model.entity.QPetSitterCriticalService;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.model.entity.QPetSitter;
-import com.ajou_nice.with_pet.petsitter.model.entity.QPetSitterCriticalService;
-import com.ajou_nice.with_pet.petsitter.model.entity.QPetSitterWithPetService;
+import com.ajou_nice.with_pet.withpet_service.model.entity.QPetSitterWithPetService;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.petsitter.repository;
+package com.ajou_nice.with_pet.hashtag.repository;
 
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterHashTag;
+import com.ajou_nice.with_pet.hashtag.model.entity.PetSitterHashTag;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;

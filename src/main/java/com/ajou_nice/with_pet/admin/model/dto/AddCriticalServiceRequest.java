@@ -23,14 +23,4 @@ public class AddCriticalServiceRequest {
 
 	@NotNull
 	private String serviceIntro;
-
-	@Data
-	public static class CriticalServiceModifyRequest{
-		@NotNull
-		private Long serviceId;
-		private String serviceName;
-		@Lob
-		private String serviceImg;
-		private String serviceIntroduction;
-	}
 }

@@ -7,7 +7,7 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
@@ -15,7 +15,7 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
-import com.ajou_nice.with_pet.petsitter.repository.PetSitterCriticalServiceRepository;
+import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 

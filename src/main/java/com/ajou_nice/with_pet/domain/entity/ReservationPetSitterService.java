@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterWithPetService;
+import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

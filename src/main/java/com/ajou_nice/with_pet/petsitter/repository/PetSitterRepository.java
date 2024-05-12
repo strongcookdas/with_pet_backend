@@ -11,4 +11,5 @@ public interface PetSitterRepository extends JpaRepository<PetSitter, Long> ,
 
 	//쿼리 dsl 사용 필요
 	Optional<PetSitter> findByUser(User user);
+	Optional<PetSitter> findByUserEmail(String email);
 }
