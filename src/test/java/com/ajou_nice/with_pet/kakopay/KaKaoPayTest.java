@@ -3,12 +3,12 @@ package com.ajou_nice.with_pet.kakopay;
 
 import com.ajou_nice.with_pet.controller.KaKaoPayController;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.UserRole;
-import com.ajou_nice.with_pet.repository.PetSitterRepository;
+import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.KaKaoPayService;

@@ -1,6 +1,8 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.petsitter.model.entity;
 
 
+import com.ajou_nice.with_pet.domain.entity.BaseEntity;
+import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.util.List;
 import javax.persistence.Column;

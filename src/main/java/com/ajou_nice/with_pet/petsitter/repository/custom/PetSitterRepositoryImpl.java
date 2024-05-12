@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.repository.custom;
+package com.ajou_nice.with_pet.petsitter.repository.custom;
 
 import static com.ajou_nice.with_pet.domain.entity.QPetSitter.petSitter;
 
@@ -6,7 +6,7 @@ import com.ajou_nice.with_pet.domain.entity.QPetSitter;
 import com.ajou_nice.with_pet.domain.entity.QPetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.QPetSitterWithPetService;
 
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;

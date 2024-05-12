@@ -13,6 +13,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.petsitter.model.entity;
 
 
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHouseRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHouseRequest;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,13 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.LazyToOne;
 
 @Entity
 @AllArgsConstructor

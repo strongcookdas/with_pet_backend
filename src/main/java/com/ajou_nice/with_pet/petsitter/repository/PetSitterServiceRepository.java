@@ -1,10 +1,9 @@
-package com.ajou_nice.with_pet.repository;
+package com.ajou_nice.with_pet.petsitter.repository;
 
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.PetSitterWithPetService;
-import com.ajou_nice.with_pet.service.PetSitterService;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitterWithPetService;
+
 import java.util.List;
-import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

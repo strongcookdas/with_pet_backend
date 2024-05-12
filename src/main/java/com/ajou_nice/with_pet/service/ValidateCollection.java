@@ -7,7 +7,7 @@ import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.ajou_nice.with_pet.domain.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Party;
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
@@ -19,7 +19,7 @@ import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceReposit
 import com.ajou_nice.with_pet.repository.DiaryRepository;
 import com.ajou_nice.with_pet.repository.DogRepository;
 import com.ajou_nice.with_pet.repository.PartyRepository;
-import com.ajou_nice.with_pet.repository.PetSitterRepository;
+import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.withpet_service.repository.WithPetServiceRepository;

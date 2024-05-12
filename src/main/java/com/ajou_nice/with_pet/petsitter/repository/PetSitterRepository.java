@@ -1,12 +1,10 @@
-package com.ajou_nice.with_pet.repository;
+package com.ajou_nice.with_pet.petsitter.repository;
 
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.repository.custom.PetSitterRespositoryCustom;
+import com.ajou_nice.with_pet.petsitter.repository.custom.PetSitterRespositoryCustom;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface PetSitterRepository extends JpaRepository<PetSitter, Long> ,
 		PetSitterRespositoryCustom {

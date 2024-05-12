@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.petsitter;
+package com.ajou_nice.with_pet.petsitter.model.dto;
 
 
 import java.util.List;

@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

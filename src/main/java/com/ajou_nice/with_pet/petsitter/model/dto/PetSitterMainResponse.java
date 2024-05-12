@@ -1,10 +1,11 @@
-package com.ajou_nice.with_pet.domain.dto.petsitter;
+package com.ajou_nice.with_pet.petsitter.model.dto;
 
 
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

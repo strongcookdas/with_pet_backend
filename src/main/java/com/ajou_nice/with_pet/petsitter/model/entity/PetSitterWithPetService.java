@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.petsitter.model.entity;
 
 
 import javax.persistence.Entity;

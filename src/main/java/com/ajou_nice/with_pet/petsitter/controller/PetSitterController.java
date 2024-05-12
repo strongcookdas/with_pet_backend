@@ -1,17 +1,17 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.petsitter.controller;
 
 
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterMainResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterCriticalServicesRequest;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHashTagsRequest;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterHousesRequest;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterIntroRequest;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterWithPetServicesRequest;
-import com.ajou_nice.with_pet.service.PetSitterService;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterCriticalServicesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHashTagsRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHousesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterIntroRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterWithPetServicesRequest;
+import com.ajou_nice.with_pet.petsitter.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;

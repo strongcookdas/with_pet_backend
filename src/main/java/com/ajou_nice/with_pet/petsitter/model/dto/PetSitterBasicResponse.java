@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.petsitter;
+package com.ajou_nice.with_pet.petsitter.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

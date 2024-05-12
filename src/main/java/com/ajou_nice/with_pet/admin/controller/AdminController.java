@@ -8,7 +8,7 @@ import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterBasicResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
