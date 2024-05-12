@@ -21,7 +21,7 @@ import java.util.List;
 public class PetSitterRegisterInfoResponse {
     private List<HouseInfoResponse> petSitterHouses;
     private List<PetSitterHashTagInfoResponse> petSitterHashTags;
-    private String introduction;
+    private String petSitterIntroduction;
     private String petSitterLicenseImg;
 
     private List<PetSitterServiceResponse.PetSitterCriticalServiceResponse> petSitterCriticalServices;
@@ -34,7 +34,7 @@ public class PetSitterRegisterInfoResponse {
         return PetSitterRegisterInfoResponse.builder()
                 .petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
                 .petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
-                .introduction(petSitter.getIntroduction())
+                .petSitterIntroduction(petSitter.getIntroduction())
                 .petSitterLicenseImg(petSitter.getUser().getLicenseImg())
                 .petSitterCriticalServices(petSitterCriticalServices == null? null :
                         PetSitterServiceResponse.PetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
