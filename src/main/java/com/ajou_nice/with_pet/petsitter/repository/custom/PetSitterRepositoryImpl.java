@@ -1,21 +1,21 @@
 package com.ajou_nice.with_pet.petsitter.repository.custom;
 
-import static com.ajou_nice.with_pet.domain.entity.QPetSitter.petSitter;
-
-import com.ajou_nice.with_pet.domain.entity.QPetSitter;
-import com.ajou_nice.with_pet.domain.entity.QPetSitterCriticalService;
-import com.ajou_nice.with_pet.domain.entity.QPetSitterWithPetService;
-
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.model.entity.QPetSitter;
+import com.ajou_nice.with_pet.petsitter.model.entity.QPetSitterCriticalService;
+import com.ajou_nice.with_pet.petsitter.model.entity.QPetSitterWithPetService;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+
+import java.util.List;
+
+import static com.ajou_nice.with_pet.petsitter.model.entity.QPetSitter.petSitter;
 
 @Slf4j
 public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implements
@@ -49,8 +49,8 @@ public class PetSitterRepositoryImpl extends QuerydslRepositorySupport implement
     }
 
     private BooleanExpression containsDogSize(QPetSitterCriticalService petSitterCriticalService,
-            QPetSitter petSitter,
-            String dogSize) {
+                                              QPetSitter petSitter,
+                                              String dogSize) {
         log.info("======================= 필수 서비스 필터 시작 ========================");
         if (dogSize == null || dogSize.isEmpty()) {
             return null;
