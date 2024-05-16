@@ -14,12 +14,13 @@ import com.ajou_nice.with_pet.hashtag.model.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.hashtag.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.house.model.entity.House;
 import com.ajou_nice.with_pet.house.repository.HouseRepository;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.*;
 import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.house.PetSitterUpdateHousesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.*;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
@@ -100,24 +101,16 @@ public class PetSitterService {
         return PetSitterRegisterInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, services, criticalServices);
     }
 
-    // == 펫시터 houses 정보 수정 == //
     @Transactional
-    public void updateHouseInfo(PetSitterHousesRequest petSitterHousesRequest, String userId) {
-
-        User findUser = valid.userValidationById(userId);
-
-        PetSitter petSitter = valid.petSitterValidationByUser(findUser);
-
-        //원래 있던 정보 전체 삭제
+    public void updatePetSitterHouses(String email, PetSitterUpdateHousesRequest petSitterUpdateHousesRequest) {
+        PetSitter petSitter = petSitterValidationByEmail(email);
         List<House> petSitterHouseList = houseRepository.findAllByPetSitterInQuery(petSitter.getId());
 
         if (!petSitterHouseList.isEmpty()) {
             houseRepository.deleteAllByPetSitterInQuery(petSitter.getId());
         }
-        //새로운 정보로 갈아 끼움 houses
-        Iterator<PetSitterHouseRequest> petSitterHouses = petSitterHousesRequest.getPetSitterHousesRequests().iterator();
-        List<House> newHouseList = addPetSitterHouseInfos(petSitterHouses, petSitter);
 
+        List<House> newHouseList = House.updateHouses(petSitter, petSitterUpdateHousesRequest.getPetSitterHousesRequests());
         houseRepository.saveAll(newHouseList);
     }
 
@@ -253,18 +246,6 @@ public class PetSitterService {
         List<PetSitterCriticalService> petSitterCriticalServices = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(
                 petSitter.getId());
         return petSitterCriticalServices;
-    }
-
-    // 펫시터 집 정보 update
-    private List<House> addPetSitterHouseInfos(Iterator<PetSitterHouseRequest> petSitterHouses, PetSitter petSitter) {
-
-        List<House> houses = new ArrayList<>();
-        while (petSitterHouses.hasNext()) {
-            PetSitterHouseRequest houseRequest = petSitterHouses.next();
-            House house = House.toEntity(petSitter, houseRequest);
-            houses.add(house);
-        }
-        return houses;
     }
 
     // 펫시터 hashTag 정보 update
