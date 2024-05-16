@@ -1,7 +1,5 @@
 package com.ajou_nice.with_pet.domain.dto.reservation;
 
-import com.ajou_nice.with_pet.domain.dto.petsitter.PetSitterRequest.PetSitterCriticalServiceRequest;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;

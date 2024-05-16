@@ -14,8 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
+import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -66,7 +68,7 @@ public class Reservation extends BaseEntity {
 
 
     public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
-            PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
+                                 PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
         return Reservation.builder()
                 .user(user)
                 .dog(dog)

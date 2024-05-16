@@ -1,21 +1,10 @@
 package com.ajou_nice.with_pet.critical_service.model.entity;
 
 import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest.CriticalServiceModifyRequest;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-
 import com.ajou_nice.with_pet.admin.model.dto.UpdateCriticalServiceRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor

@@ -39,3 +39,6 @@ out/
 ### yml ###
 application-aws.yml
 application.yml
+
+### Qclass ###
+/src/main/generated/

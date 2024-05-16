@@ -1,27 +1,13 @@
 package com.ajou_nice.with_pet.service;
 
 
-import com.ajou_nice.with_pet.domain.entity.Category;
-import com.ajou_nice.with_pet.domain.entity.ChatRoom;
-import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
-import com.ajou_nice.with_pet.domain.entity.Diary;
-import com.ajou_nice.with_pet.domain.entity.Dog;
-import com.ajou_nice.with_pet.domain.entity.Party;
-import com.ajou_nice.with_pet.domain.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
-import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
+import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
+import com.ajou_nice.with_pet.domain.entity.*;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.CategoryRepository;
-import com.ajou_nice.with_pet.repository.ChatRoomRepository;
-import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
-import com.ajou_nice.with_pet.repository.DiaryRepository;
-import com.ajou_nice.with_pet.repository.DogRepository;
-import com.ajou_nice.with_pet.repository.PartyRepository;
-import com.ajou_nice.with_pet.repository.PetSitterRepository;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
-import com.ajou_nice.with_pet.repository.UserRepository;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
+import com.ajou_nice.with_pet.repository.*;
 import com.ajou_nice.with_pet.withpet_service.repository.WithPetServiceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,28 +53,6 @@ public class ValidateCollection {
         });
 
         return findUser;
-    }
-
-    // 위드펫 서비스 검증
-    public WithPetService withPetServiceValidation(Long serviceId) {
-        WithPetService withPetService = withPetServiceRepository.findById(serviceId)
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.WITH_PET_SERVICE_NOT_FOUND,
-                            ErrorCode.WITH_PET_SERVICE_NOT_FOUND.getMessage());
-                });
-
-        return withPetService;
-    }
-
-    // 필수 서비스 검증 (소형견, 중형견, 대형견)
-    public CriticalService criticalServiceValidation(Long serviceId) {
-        CriticalService criticalService = criticalServiceRepository.findById(serviceId)
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.CRITICAL_SERVICE_NOT_FOUND,
-                            ErrorCode.CRITICAL_SERVICE_NOT_FOUND.getMessage());
-                });
-
-        return criticalService;
     }
 
     // 펫시터 유효검증 by User
