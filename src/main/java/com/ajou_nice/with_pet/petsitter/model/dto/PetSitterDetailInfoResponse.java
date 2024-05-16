@@ -74,7 +74,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 	@Getter
 	@Builder
 	@ToString
-	public static class PetSitterModifyInfoResponse {
+	public static class PetSitterMyInfoResponse {
 
 		private List<HouseInfoResponse> petSitterHouses;
 		private List<PetSitterHashTagInfoResponse> petSitterHashTags;
@@ -86,9 +86,9 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 		private List<PetSitterServiceResponse> petSitterServices;
 		private List<WithPetServiceResponse> withPetServices;
 
-		public static PetSitterModifyInfoResponse of(PetSitter petSitter, List<CriticalService> criticalServiceList,  List<WithPetService> withPetServiceList,
-				List<PetSitterWithPetService> petSitterWithPetServices, List<PetSitterCriticalService> petSitterCriticalServices){
-			return PetSitterModifyInfoResponse.builder()
+		public static PetSitterMyInfoResponse of(PetSitter petSitter, List<CriticalService> criticalServiceList, List<WithPetService> withPetServiceList,
+												 List<PetSitterWithPetService> petSitterWithPetServices, List<PetSitterCriticalService> petSitterCriticalServices){
+			return PetSitterMyInfoResponse.builder()
 					.petSitterHouses(HouseInfoResponse.toList(petSitter.getPetSitterHouseList()))
 					.petSitterHashTags(PetSitterHashTagInfoResponse.toList(petSitter.getPetSitterHashTagList()))
 					.introduction(petSitter.getIntroduction())

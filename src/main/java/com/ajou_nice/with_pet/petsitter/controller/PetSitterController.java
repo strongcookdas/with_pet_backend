@@ -3,8 +3,10 @@ package com.ajou_nice.with_pet.petsitter.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.petsitter.model.dto.*;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.*;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
 import com.ajou_nice.with_pet.petsitter.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,18 +46,11 @@ public class PetSitterController {
         return Response.success(petSitterDetailInfoResponse);
     }
 
-    // 펫시터 현재 자신 정보 조회 //
-    @GetMapping("/api/v1/petsitter/show-myinfo")
+    @GetMapping("/my-info")
     @ApiOperation(value = "펫시터의 자신 정보 조회")
-    public Response<PetSitterModifyInfoResponse> showPetSitterSelfInfo(
-            @ApiIgnore Authentication authentication) {
-
-        PetSitterModifyInfoResponse modifyInfoResponse = petSitterService.showMyInfo(
-                authentication.getName());
-
-        log.info("=============== petsitter's info : {} ================", modifyInfoResponse);
-
-        return Response.success(modifyInfoResponse);
+    public Response<PetSitterMyInfoResponse> getPetSitterSelfInfo(@ApiIgnore Authentication authentication) {
+        PetSitterMyInfoResponse myInfoResponse = petSitterService.getMyInfo(authentication.getName());
+        return Response.success(myInfoResponse);
     }
 
     @PostMapping("/my-info")

@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.petsitter.model.dto;
+package com.ajou_nice.with_pet.petsitter.model.dto.register_info;
 
 import com.ajou_nice.with_pet.critical_service.model.dto.PetSitterAddCriticalServiceRequest;
 import com.ajou_nice.with_pet.hashtag.model.dto.PetSitterAddHashTagRequest;

@@ -15,10 +15,10 @@ import com.ajou_nice.with_pet.hashtag.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.house.model.entity.House;
 import com.ajou_nice.with_pet.house.repository.HouseRepository;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRegisterInfoRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRegisterInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.*;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
@@ -68,19 +68,15 @@ public class PetSitterService {
         return PetSitterDetailInfoResponse.of(findPetSitter, reviews, petSitterWithPetServices, petSitterCriticalServices);
     }
 
-    // == 펫시터의 자신 정보 조회 == //
-    public PetSitterModifyInfoResponse showMyInfo(String email) {
-
-        User findUser = valid.userValidationByEmail(email);
-
-        PetSitter petSitter = valid.petSitterValidationByUser(findUser);
+    public PetSitterMyInfoResponse getMyInfo(String email) {
+        PetSitter petSitter = petSitterValidationByEmail(email);
 
         List<WithPetService> withPetServiceList = getWithPetServiceList();
         List<CriticalService> criticalServiceList = getCriticalServiceList();
         List<PetSitterWithPetService> petSitterWithPetServices = getPetSitterWithPetServiceList(petSitter);
         List<PetSitterCriticalService> petSitterCriticalServices = getPetSitterCriticalServiceList(petSitter);
 
-        return PetSitterModifyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, petSitterWithPetServices, petSitterCriticalServices);
+        return PetSitterMyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, petSitterWithPetServices, petSitterCriticalServices);
     }
 
     // == 펫시터 my Info 등록 == //
