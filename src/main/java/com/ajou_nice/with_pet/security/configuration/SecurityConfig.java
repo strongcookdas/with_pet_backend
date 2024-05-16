@@ -26,7 +26,7 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private final String[] GET_PERMIT_URL = {
-            "/api/v1/petsitter/*",
+            "/api/v2/pet-sitters/{petSitterId:\\d+}",
             "/api/v1/show-petsitter",
             "/api/v2/services",
             "/api/v2/critical-services",
@@ -106,7 +106,10 @@ public class SecurityConfig {
         //URL 관리
         http
                 .authorizeRequests()
-                .antMatchers("/api/v1/petsitter/show-myinfo").hasRole("PETSITTER")
+                .antMatchers(HttpMethod.GET,GET_PERMIT_URL).permitAll()
+                .antMatchers(POST_PERMIT_URL).permitAll()
+                .antMatchers(DOC_URLS).permitAll()
+                .antMatchers("/api/v2/pet-sitters/**").hasRole("PETSITTER")
                 .antMatchers("/api/v1/review/create-review").hasRole("USER")
                 .antMatchers("/api/v2/admins/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/api/v1/petsitter-diaries/*").hasRole("USER")
@@ -115,9 +118,6 @@ public class SecurityConfig {
                 .antMatchers("/ws/chat").permitAll()
                 .antMatchers("/payment/test/*").permitAll()
                 .antMatchers("/payment-cancel", "/payment-fail").permitAll()
-                .antMatchers(HttpMethod.GET,GET_PERMIT_URL).permitAll()
-                .antMatchers(POST_PERMIT_URL).permitAll()
-                .antMatchers(DOC_URLS).permitAll()
                 .antMatchers(HttpMethod.POST, USER_POST_API).hasRole("USER")
                 .antMatchers(HttpMethod.GET, PETSITTER_APPLICANT_GET_API)
                 .access("hasRole('PETSITTER') or hasRole('APPLICANT')")

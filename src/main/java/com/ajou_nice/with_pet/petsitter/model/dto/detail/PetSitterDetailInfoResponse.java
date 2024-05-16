@@ -1,9 +1,10 @@
-package com.ajou_nice.with_pet.petsitter.model.dto;
+package com.ajou_nice.with_pet.petsitter.model.dto.detail;
 
 
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.hashtag.model.dto.PetSitterHashTagInfoResponse;
 import com.ajou_nice.with_pet.house.model.dto.HouseInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterServiceResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterServiceResponse.PetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.review.ReviewResponse;
 import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
@@ -25,31 +26,19 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
-
+public class PetSitterDetailInfoResponse {
 	private Long petSitterId;
-
 	private Long petSitterUserId;
-
 	private String petSitterName;
-
 	private String petSitterProfileImg;
-
 	private String petSitterAddress;
-
 	private List<PetSitterHashTagInfoResponse> petSitterHashTags;
-
 	private List<HouseInfoResponse> petSitterHouses;
-
 	private List<PetSitterServiceResponse> petSitterServices;
-
 	private List<PetSitterCriticalServiceResponse> petSitterCriticalServices;
-
 	private String introduction;
-
 	private String petSitterLicenseImg;
-
-	private List<ReviewResponse> reviewResponses;
+	private List<ReviewResponse> reviews;
 
 	public static PetSitterDetailInfoResponse of(PetSitter petSitter, List<Review> reviews, List<PetSitterWithPetService> petSitterWithPetServices,
 			List<PetSitterCriticalService> petSitterCriticalServices){
@@ -66,7 +55,7 @@ public class PetSitterDetailInfoResponse { //펫시터 상세정보 response
 						PetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
 				.introduction(petSitter.getIntroduction())
 				.petSitterLicenseImg(petSitter.getUser().getLicenseImg())
-				.reviewResponses(reviews == null ? null : ReviewResponse.toList(reviews))
+				.reviews(reviews == null ? null : ReviewResponse.toList(reviews))
 				.build();
 	}
 	@AllArgsConstructor
