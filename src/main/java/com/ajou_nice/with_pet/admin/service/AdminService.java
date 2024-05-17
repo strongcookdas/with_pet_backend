@@ -1,6 +1,11 @@
 package com.ajou_nice.with_pet.admin.service;
 
-import com.ajou_nice.with_pet.admin.model.dto.*;
+import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.get_petsitter.AdminGetPetSitterBasicResponse;
+import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceResponse;
+import com.ajou_nice.with_pet.admin.model.dto.update_service.UpdateWithPetServiceRequest;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
@@ -32,10 +37,10 @@ public class AdminService {
 
 //    private final NotificationService notificationService;
 
-    public List<PetSitterBasicResponse> showPetSitters(String email) {
+    public List<AdminGetPetSitterBasicResponse> getPetSitterBasicInfos(String email) {
         adminValidation(email);
         List<PetSitter> petSitters = petSitterRepository.findAll();
-        return PetSitterBasicResponse.toList(petSitters);
+        return AdminGetPetSitterBasicResponse.toList(petSitters);
     }
 
     @Transactional

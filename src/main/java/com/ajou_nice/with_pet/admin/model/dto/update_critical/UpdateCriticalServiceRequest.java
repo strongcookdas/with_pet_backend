@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.critical_service.model.dto;
+package com.ajou_nice.with_pet.admin.model.dto.update_critical;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Getter
 @ToString
-public class PetSitterAddCriticalServiceRequest {
+public class UpdateCriticalServiceRequest {
     @NotNull
-    private Long serviceId;
+    private String serviceName;
     @NotNull
-    private int price;
+    private String serviceImg;
+    @NotNull
+    private String serviceIntroduction;
 }

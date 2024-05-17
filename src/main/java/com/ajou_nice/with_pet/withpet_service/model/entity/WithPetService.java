@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.withpet_service.model.entity;
 
 
-import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest;
-import com.ajou_nice.with_pet.admin.model.dto.AddWithPetServiceRequest.WithPetServiceModifyRequest;
+import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddWithPetServiceRequest;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import com.ajou_nice.with_pet.admin.model.dto.UpdateWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.update_service.UpdateWithPetServiceRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

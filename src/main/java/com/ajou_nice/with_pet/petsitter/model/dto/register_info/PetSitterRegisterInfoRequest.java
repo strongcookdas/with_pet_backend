@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.petsitter.model.dto.register_info;
 
-import com.ajou_nice.with_pet.critical_service.model.dto.PetSitterAddCriticalServiceRequest;
-import com.ajou_nice.with_pet.hashtag.model.dto.PetSitterAddHashTagRequest;
+import com.ajou_nice.with_pet.critical_service.model.dto.add.PetSitterAddCriticalServiceRequest;
+import com.ajou_nice.with_pet.hashtag.model.dto.add.PetSitterAddHashTagRequest;
 import com.ajou_nice.with_pet.house.model.dto.PetSitterAddHouseRequest;
 import com.ajou_nice.with_pet.withpet_service.model.dto.PetSitterAddServiceRequest;
 import lombok.AllArgsConstructor;

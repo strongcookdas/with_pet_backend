@@ -1,14 +1,20 @@
 package com.ajou_nice.with_pet.admin.controller;
 
 
-import com.ajou_nice.with_pet.admin.model.dto.*;
+import com.ajou_nice.with_pet.admin.model.dto.accept_applicant.AdminAcceptApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.get_applicant.AdminGetApplicantBasicResponse;
+import com.ajou_nice.with_pet.admin.model.dto.get_applicant.AdminGetApplicantDetailResponse;
+import com.ajou_nice.with_pet.admin.model.dto.get_petsitter.AdminGetPetSitterBasicResponse;
+import com.ajou_nice.with_pet.admin.model.dto.refuse_applicant.AdminRefuseApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceResponse;
+import com.ajou_nice.with_pet.admin.model.dto.update_service.UpdateWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.service.AdminApplicantService;
 import com.ajou_nice.with_pet.admin.service.AdminService;
-import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,44 +38,43 @@ public class AdminController {
 
     @PatchMapping("/accept-applicants/{userId}")
     @ApiOperation(value = "관리자의 펫시터 지원자 수락")
-    public Response<PetSitterBasicResponse> acceptApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
+    public Response<AdminAcceptApplicantResponse> acceptApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
 
-        PetSitterBasicResponse adminAcceptApplicantResponse = adminApplicantService.acceptApplicant(authentication.getName(), userId);
+        AdminAcceptApplicantResponse adminAcceptApplicantResponse = adminApplicantService.acceptApplicant(authentication.getName(), userId);
 
         return Response.success(adminAcceptApplicantResponse);
     }
 
     @PatchMapping("/refuse-applicant/{userId}")
 	@ApiOperation(value = "관리자의 펫시터 지원자 거절")
-	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication,  @PathVariable("userId") Long userId){
+	public Response<AdminRefuseApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId){
 
-		AdminApplicantResponse adminApplicantResponse = adminApplicantService.refuseApplicant(authentication.getName(), userId);
+		AdminRefuseApplicantResponse adminRefuseApplicantResponse = adminApplicantService.refuseApplicant(authentication.getName(), userId);
 
-		return Response.success(adminApplicantResponse);
+		return Response.success(adminRefuseApplicantResponse);
 	}
 
     @GetMapping("/applicants")
     @ApiOperation(value = "펫시터 지원자 리스트 조회")
-    public Response<List<ApplicantBasicInfoResponse>> showApplicants(@ApiIgnore Authentication authentication) {
-        List<ApplicantBasicInfoResponse> applicantList = adminApplicantService.showApplicants(
+    public Response<List<AdminGetApplicantBasicResponse>> getApplicants(@ApiIgnore Authentication authentication) {
+        List<AdminGetApplicantBasicResponse> applicantList = adminApplicantService.getApplicants(
                 authentication.getName());
         return Response.success(applicantList);
     }
 
     @GetMapping("applicants/{userId}")
     @ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-    public Response<PetSitterApplicationResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
+    public Response<AdminGetApplicantDetailResponse> getApplicantDetailInfo(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
 
-        PetSitterApplicationResponse applicantCreateResponse = adminApplicantService.getApplicantDetailInfo(
-                authentication.getName(), userId);
+        AdminGetApplicantDetailResponse applicantDetailResponse = adminApplicantService.getApplicantDetailInfo(authentication.getName(), userId);
 
-        return Response.success(applicantCreateResponse);
+        return Response.success(applicantDetailResponse);
     }
 
     @GetMapping("/pet-sitters")
     @ApiOperation(value = "관리자의 펫시터 리스트 조회")
-    public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
-        List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(authentication.getName());
+    public Response<List<AdminGetPetSitterBasicResponse>> getPetSitterBasicInfos(@ApiIgnore Authentication authentication){
+        List<AdminGetPetSitterBasicResponse> petSitterBasicResponses = adminService.getPetSitterBasicInfos(authentication.getName());
         return Response.success(petSitterBasicResponses);
     }
 
@@ -84,7 +89,7 @@ public class AdminController {
 
     @PutMapping("/critical-service/{serviceId}")
     @ApiOperation(value = "관리자의 필수 서비스 수정")
-    public Response<UpdateCriticalServiceResponse> updateCriticalService(@ApiIgnore Authentication authentication,@PathVariable("serviceId") Long serviceId, @RequestBody @Valid UpdateCriticalServiceRequest updateCriticalServiceRequest){
+    public Response<UpdateCriticalServiceResponse> updateCriticalService(@ApiIgnore Authentication authentication, @PathVariable("serviceId") Long serviceId, @RequestBody @Valid UpdateCriticalServiceRequest updateCriticalServiceRequest){
         UpdateCriticalServiceResponse updateCriticalServiceResponse = adminService.updateCriticalService(authentication.getName(), serviceId, updateCriticalServiceRequest);
 
         return Response.success(updateCriticalServiceResponse);

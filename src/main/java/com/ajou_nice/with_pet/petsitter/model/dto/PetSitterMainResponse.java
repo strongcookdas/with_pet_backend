@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.petsitter.model.dto;
 
 
-import com.ajou_nice.with_pet.hashtag.model.dto.PetSitterHashTagInfoResponse;
+import com.ajou_nice.with_pet.hashtag.model.dto.get.PetSitterHashTagInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;

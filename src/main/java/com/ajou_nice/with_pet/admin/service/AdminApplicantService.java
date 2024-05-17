@@ -1,15 +1,16 @@
 package com.ajou_nice.with_pet.admin.service;
 
-import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
-import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
+import com.ajou_nice.with_pet.admin.model.dto.accept_applicant.AdminAcceptApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.get_applicant.AdminGetApplicantBasicResponse;
+import com.ajou_nice.with_pet.admin.model.dto.get_applicant.AdminGetApplicantDetailResponse;
+import com.ajou_nice.with_pet.admin.model.dto.refuse_applicant.AdminRefuseApplicantResponse;
 import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterBasicResponse;
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
 import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,18 +28,18 @@ public class AdminApplicantService {
 
 //    private final NotificationService notificationService;
 
-    public List<ApplicantBasicInfoResponse> showApplicants(String email) {
+    public List<AdminGetApplicantBasicResponse> getApplicants(String email) {
 
         adminValidation(email);
 
         List<User> petSitterApplicantList = userRepository.findApplicantAllInQuery(
                 UserRole.ROLE_APPLICANT, ApplicantStatus.WAIT);
 
-        return ApplicantBasicInfoResponse.toList(petSitterApplicantList);
+        return AdminGetApplicantBasicResponse.toList(petSitterApplicantList);
     }
 
     @Transactional
-    public PetSitterBasicResponse acceptApplicant(String email, Long applicantId) {
+    public AdminAcceptApplicantResponse acceptApplicant(String email, Long applicantId) {
         adminValidation(email);
         User applicant = applicationValidationById(applicantId);
 
@@ -57,11 +58,11 @@ public class AdminApplicantService {
         notificationService.saveNotification(notification);
         */
 
-        return PetSitterBasicResponse.of(newPetSitter);
+        return AdminAcceptApplicantResponse.of(newPetSitter);
     }
 
     @Transactional
-    public AdminApplicantResponse refuseApplicant(String email, Long applicantId) {
+    public AdminRefuseApplicantResponse refuseApplicant(String email, Long applicantId) {
         adminValidation(email);
 
         User findUser = applicationValidationById(applicantId);
@@ -75,13 +76,13 @@ public class AdminApplicantService {
         notificationService.saveNotification(notification);
         */
 
-        return AdminApplicantResponse.of(findUser);
+        return AdminRefuseApplicantResponse.of(findUser);
     }
 
-    public PetSitterApplicationResponse getApplicantDetailInfo(String email, Long userId) {
+    public AdminGetApplicantDetailResponse getApplicantDetailInfo(String email, Long userId) {
         adminValidation(email);
         User findUser = applicationValidationById(userId);
-        return PetSitterApplicationResponse.of(findUser);
+        return AdminGetApplicantDetailResponse.of(findUser);
     }
 
     private void adminValidation(String email) {

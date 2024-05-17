@@ -1,9 +1,9 @@
-package com.ajou_nice.with_pet.petsitter.model.dto.my_info;
+package com.ajou_nice.with_pet.petsitter.model.dto.get_my_info;
 
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
-import com.ajou_nice.with_pet.hashtag.model.dto.PetSitterHashTagInfoResponse;
+import com.ajou_nice.with_pet.hashtag.model.dto.get.PetSitterHashTagInfoResponse;
 import com.ajou_nice.with_pet.house.model.dto.HouseInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterServiceResponse;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
