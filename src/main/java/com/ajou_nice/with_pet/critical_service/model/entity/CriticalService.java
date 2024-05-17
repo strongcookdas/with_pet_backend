@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.critical_service.model.entity;
 
-import com.ajou_nice.with_pet.admin.model.dto.AddCriticalServiceRequest;
-import com.ajou_nice.with_pet.admin.model.dto.UpdateCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceRequest;
 import lombok.*;
 
 import javax.persistence.*;

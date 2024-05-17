@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.admin.model.dto;
+package com.ajou_nice.with_pet.admin.model.dto.update_service;
 
 import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
 import lombok.*;

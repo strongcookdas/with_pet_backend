@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.admin.model.dto;
+package com.ajou_nice.with_pet.admin.model.dto.update_service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

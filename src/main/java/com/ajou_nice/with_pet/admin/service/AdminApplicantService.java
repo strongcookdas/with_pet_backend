@@ -1,9 +1,9 @@
 package com.ajou_nice.with_pet.admin.service;
 
-import com.ajou_nice.with_pet.admin.model.dto.AdminApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.refuse_applicant.AdminApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.accept_applicant.AdminAcceptApplicantResponse;
 import com.ajou_nice.with_pet.applicant.model.dto.ApplicantBasicInfoResponse;
 import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ApplicantStatus;
@@ -38,7 +38,7 @@ public class AdminApplicantService {
     }
 
     @Transactional
-    public PetSitterBasicResponse acceptApplicant(String email, Long applicantId) {
+    public AdminAcceptApplicantResponse acceptApplicant(String email, Long applicantId) {
         adminValidation(email);
         User applicant = applicationValidationById(applicantId);
 
@@ -57,7 +57,7 @@ public class AdminApplicantService {
         notificationService.saveNotification(notification);
         */
 
-        return PetSitterBasicResponse.of(newPetSitter);
+        return AdminAcceptApplicantResponse.of(newPetSitter);
     }
 
     @Transactional

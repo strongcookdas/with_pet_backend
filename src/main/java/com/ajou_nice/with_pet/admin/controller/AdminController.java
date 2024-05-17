@@ -1,7 +1,13 @@
 package com.ajou_nice.with_pet.admin.controller;
 
 
-import com.ajou_nice.with_pet.admin.model.dto.*;
+import com.ajou_nice.with_pet.admin.model.dto.accept_applicant.AdminAcceptApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddWithPetServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.refuse_applicant.AdminApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceRequest;
+import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceResponse;
+import com.ajou_nice.with_pet.admin.model.dto.update_service.UpdateWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.service.AdminApplicantService;
 import com.ajou_nice.with_pet.admin.service.AdminService;
 import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
@@ -32,16 +38,16 @@ public class AdminController {
 
     @PatchMapping("/accept-applicants/{userId}")
     @ApiOperation(value = "관리자의 펫시터 지원자 수락")
-    public Response<PetSitterBasicResponse> acceptApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
+    public Response<AdminAcceptApplicantResponse> acceptApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
 
-        PetSitterBasicResponse adminAcceptApplicantResponse = adminApplicantService.acceptApplicant(authentication.getName(), userId);
+        AdminAcceptApplicantResponse adminAcceptApplicantResponse = adminApplicantService.acceptApplicant(authentication.getName(), userId);
 
         return Response.success(adminAcceptApplicantResponse);
     }
 
     @PatchMapping("/refuse-applicant/{userId}")
 	@ApiOperation(value = "관리자의 펫시터 지원자 거절")
-	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication,  @PathVariable("userId") Long userId){
+	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId){
 
 		AdminApplicantResponse adminApplicantResponse = adminApplicantService.refuseApplicant(authentication.getName(), userId);
 
@@ -84,7 +90,7 @@ public class AdminController {
 
     @PutMapping("/critical-service/{serviceId}")
     @ApiOperation(value = "관리자의 필수 서비스 수정")
-    public Response<UpdateCriticalServiceResponse> updateCriticalService(@ApiIgnore Authentication authentication,@PathVariable("serviceId") Long serviceId, @RequestBody @Valid UpdateCriticalServiceRequest updateCriticalServiceRequest){
+    public Response<UpdateCriticalServiceResponse> updateCriticalService(@ApiIgnore Authentication authentication, @PathVariable("serviceId") Long serviceId, @RequestBody @Valid UpdateCriticalServiceRequest updateCriticalServiceRequest){
         UpdateCriticalServiceResponse updateCriticalServiceResponse = adminService.updateCriticalService(authentication.getName(), serviceId, updateCriticalServiceRequest);
 
         return Response.success(updateCriticalServiceResponse);
