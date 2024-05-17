@@ -7,7 +7,6 @@ import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalSer
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.domain.entity.Review;
-import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
@@ -16,7 +15,6 @@ import com.ajou_nice.with_pet.hashtag.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.house.model.entity.House;
 import com.ajou_nice.with_pet.house.repository.HouseRepository;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterIntroRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
@@ -24,6 +22,7 @@ import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegiste
 import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_hash_tag.PetSitterHashTagsRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_house.PetSitterUpdateHousesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_intro.PetSitterUpdateIntroRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_service.PetSitterUpdateWithPetServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
@@ -157,12 +156,10 @@ public class PetSitterService {
     }
 
     @Transactional
-    public void updatePetSitterIntro(PetSitterIntroRequest petSitterIntroRequest, String userId) {
-        User findUser = valid.userValidationById(userId);
+    public void updateIntro(String email, PetSitterUpdateIntroRequest petSitterUpdateIntroRequest) {
+        PetSitter petSitter = petSitterValidationByEmail(email);
 
-        PetSitter petSitter = valid.petSitterValidationByUser(findUser);
-
-        petSitter.updateIntroduction(petSitterIntroRequest.getIntroduction());
+        petSitter.updateIntroduction(petSitterUpdateIntroRequest.getPetSitterIntroduction());
     }
 
     // == 메인페이지 펫시터들 정보 조회 == //

@@ -16,21 +16,6 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Getter
-	public static class PetSitterIntroRequest{
-		@Lob
-		private String introduction;
-	}
-
-	@AllArgsConstructor
-	@NoArgsConstructor
-	@Getter
-	public static class PetSitterCriticalServicesRequest{
-		private List<PetSitterCriticalServiceRequest> petSitterCriticalServiceRequests;
-	}
-
-	@AllArgsConstructor
-	@NoArgsConstructor
-	@Getter
 	@ToString
 	public static class PetSitterHouseRequest{
 

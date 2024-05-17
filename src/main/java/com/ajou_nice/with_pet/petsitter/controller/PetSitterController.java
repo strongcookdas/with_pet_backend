@@ -4,14 +4,14 @@ package com.ajou_nice.with_pet.petsitter.controller;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterIntroRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.update_house.PetSitterUpdateHousesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_hash_tag.PetSitterHashTagsRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_house.PetSitterUpdateHousesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_intro.PetSitterUpdateIntroRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_service.PetSitterUpdateWithPetServicesRequest;
 import com.ajou_nice.with_pet.petsitter.service.PetSitterService;
 import io.swagger.annotations.Api;
@@ -88,15 +88,12 @@ public class PetSitterController {
         return Response.success(PetSitterResponseMessages.CRITICAL_SERVICE_UPDATE.getMessage());
     }
 
-    // 펫시터 introduction 정보 수정 //
-    @PutMapping("/api/v1/petsitter/update-intro")
+    @PutMapping("/intro")
     @ApiOperation(value = "펫시터 introduction 정보 수정")
-    public Response modifyIntro(@RequestBody PetSitterIntroRequest petSitterIntroRequest,
-                                @ApiIgnore Authentication authentication) {
+    public Response updateIntro(@ApiIgnore Authentication authentication, @RequestBody PetSitterUpdateIntroRequest petSitterIntroRequest) {
+        petSitterService.updateIntro(authentication.getName(), petSitterIntroRequest);
 
-        petSitterService.updatePetSitterIntro(petSitterIntroRequest, authentication.getName());
-
-        return Response.success("수정이 완료되었습니다.");
+        return Response.success(PetSitterResponseMessages.INTRO_UPDATE.getMessage());
     }
 
     // 메인페이지 펫시터 조회 //
