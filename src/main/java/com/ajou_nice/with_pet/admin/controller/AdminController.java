@@ -6,6 +6,7 @@ import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddCriticalServiceReq
 import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.get_applicant.AdminGetApplicantBasicResponse;
 import com.ajou_nice.with_pet.admin.model.dto.get_applicant.AdminGetApplicantDetailResponse;
+import com.ajou_nice.with_pet.admin.model.dto.get_petsitter.AdminGetPetSitterBasicResponse;
 import com.ajou_nice.with_pet.admin.model.dto.refuse_applicant.AdminRefuseApplicantResponse;
 import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceResponse;
@@ -14,7 +15,6 @@ import com.ajou_nice.with_pet.admin.service.AdminApplicantService;
 import com.ajou_nice.with_pet.admin.service.AdminService;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterBasicResponse;
 import com.ajou_nice.with_pet.withpet_service.model.dto.WithPetServiceResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -73,8 +73,8 @@ public class AdminController {
 
     @GetMapping("/pet-sitters")
     @ApiOperation(value = "관리자의 펫시터 리스트 조회")
-    public Response<List<PetSitterBasicResponse>> showPetSitters(@ApiIgnore Authentication authentication){
-        List<PetSitterBasicResponse> petSitterBasicResponses = adminService.showPetSitters(authentication.getName());
+    public Response<List<AdminGetPetSitterBasicResponse>> getPetSitterBasicInfos(@ApiIgnore Authentication authentication){
+        List<AdminGetPetSitterBasicResponse> petSitterBasicResponses = adminService.getPetSitterBasicInfos(authentication.getName());
         return Response.success(petSitterBasicResponses);
     }
 
