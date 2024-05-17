@@ -5,13 +5,13 @@ import com.ajou_nice.with_pet.admin.model.dto.accept_applicant.AdminAcceptApplic
 import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.add_critical.AddWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.get_applicant.AdminGetApplicantBasicResponse;
-import com.ajou_nice.with_pet.admin.model.dto.refuse_applicant.AdminApplicantResponse;
+import com.ajou_nice.with_pet.admin.model.dto.get_applicant.AdminGetApplicantDetailResponse;
+import com.ajou_nice.with_pet.admin.model.dto.refuse_applicant.AdminRefuseApplicantResponse;
 import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceRequest;
 import com.ajou_nice.with_pet.admin.model.dto.update_critical.UpdateCriticalServiceResponse;
 import com.ajou_nice.with_pet.admin.model.dto.update_service.UpdateWithPetServiceRequest;
 import com.ajou_nice.with_pet.admin.service.AdminApplicantService;
 import com.ajou_nice.with_pet.admin.service.AdminService;
-import com.ajou_nice.with_pet.applicant.model.dto.PetSitterApplicationResponse;
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterBasicResponse;
@@ -47,11 +47,11 @@ public class AdminController {
 
     @PatchMapping("/refuse-applicant/{userId}")
 	@ApiOperation(value = "관리자의 펫시터 지원자 거절")
-	public Response<AdminApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId){
+	public Response<AdminRefuseApplicantResponse> refuseApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId){
 
-		AdminApplicantResponse adminApplicantResponse = adminApplicantService.refuseApplicant(authentication.getName(), userId);
+		AdminRefuseApplicantResponse adminRefuseApplicantResponse = adminApplicantService.refuseApplicant(authentication.getName(), userId);
 
-		return Response.success(adminApplicantResponse);
+		return Response.success(adminRefuseApplicantResponse);
 	}
 
     @GetMapping("/applicants")
@@ -64,12 +64,11 @@ public class AdminController {
 
     @GetMapping("applicants/{userId}")
     @ApiOperation(value = "펫시터 지원자 정보 상세 확인")
-    public Response<PetSitterApplicationResponse> getApplicant(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
+    public Response<AdminGetApplicantDetailResponse> getApplicantDetailInfo(@ApiIgnore Authentication authentication, @PathVariable("userId") Long userId) {
 
-        PetSitterApplicationResponse applicantCreateResponse = adminApplicantService.getApplicantDetailInfo(
-                authentication.getName(), userId);
+        AdminGetApplicantDetailResponse applicantDetailResponse = adminApplicantService.getApplicantDetailInfo(authentication.getName(), userId);
 
-        return Response.success(applicantCreateResponse);
+        return Response.success(applicantDetailResponse);
     }
 
     @GetMapping("/pet-sitters")

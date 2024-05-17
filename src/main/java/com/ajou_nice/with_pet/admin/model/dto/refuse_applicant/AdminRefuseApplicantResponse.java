@@ -15,14 +15,14 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class AdminApplicantResponse {
+public class AdminRefuseApplicantResponse {
 
 	private Long applicantId;
 	private String applicantName;
 	private ApplicantStatus applicantStatus;
 
-	public static AdminApplicantResponse of(User user){
-		return AdminApplicantResponse.builder()
+	public static AdminRefuseApplicantResponse of(User user){
+		return AdminRefuseApplicantResponse.builder()
 				.applicantId(user.getId())
 				.applicantName(user.getName())
 				.applicantStatus(user.getApplicantStatus())
