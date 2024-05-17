@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.house.model.entity;
 
 
 import com.ajou_nice.with_pet.house.model.dto.PetSitterAddHouseRequest;
+import com.ajou_nice.with_pet.house.model.dto.update.PetSitterUpdateHouseRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHouseRequest;
 
 import javax.persistence.Entity;
@@ -65,5 +66,11 @@ public class House {
                 .build()).collect(Collectors.toList());
     }
 
-
+    public static List<House> updateHouses(PetSitter petSitter, List<PetSitterUpdateHouseRequest> petSitterUpdateHouseRequests) {
+        return petSitterUpdateHouseRequests.stream().map(house -> House.builder()
+                .house_img(house.getHouseImg())
+                .representative(house.getRepresentative())
+                .petSitter(petSitter)
+                .build()).collect(Collectors.toList());
+    }
 }

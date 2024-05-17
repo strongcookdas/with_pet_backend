@@ -23,12 +23,6 @@ public class PetSitterRequest {	//펫시터가 보내는 요청 DTO
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Getter
-	public static class PetSitterHousesRequest{
-		private List<PetSitterHouseRequest> petSitterHousesRequests;
-	}
-	@AllArgsConstructor
-	@NoArgsConstructor
-	@Getter
 	public static class PetSitterHashTagsRequest{
 		private List<PetSitterHashTagRequest> petSitterHashTagRequests;
 	}

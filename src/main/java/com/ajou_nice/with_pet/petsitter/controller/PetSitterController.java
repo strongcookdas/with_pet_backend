@@ -2,9 +2,17 @@ package com.ajou_nice.with_pet.petsitter.controller;
 
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.petsitter.model.dto.*;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterDetailInfoResponse.PetSitterModifyInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.*;
+import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterCriticalServicesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHashTagsRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterIntroRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterWithPetServicesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.house.PetSitterUpdateHousesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
 import com.ajou_nice.with_pet.petsitter.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,32 +38,18 @@ public class PetSitterController {
 
     private final PetSitterService petSitterService;
 
-    // 펫시터에서 필요한 api //
-
-    // 펫시터 상세정보 조회 api //
-    @GetMapping("api/v1/petsitter/{petsitterId}")
+    @GetMapping("/{petSitterId}")
     @ApiOperation(value = "사용자의 펫시터 상세 정보 조회")
-    public Response<PetSitterDetailInfoResponse> showPetSitterInfo(
-            @PathVariable("petsitterId") Long petSitterId) {
-
-        PetSitterDetailInfoResponse petSitterDetailInfoResponse = petSitterService.showPetSitterDetailInfo(
-                petSitterId);
-
+    public Response<PetSitterDetailInfoResponse> getPetSitterInfo(@PathVariable("petSitterId") Long petSitterId) {
+        PetSitterDetailInfoResponse petSitterDetailInfoResponse = petSitterService.getPetSitterDetailInfo(petSitterId);
         return Response.success(petSitterDetailInfoResponse);
     }
 
-    // 펫시터 현재 자신 정보 조회 //
-    @GetMapping("/api/v1/petsitter/show-myinfo")
+    @GetMapping("/my-info")
     @ApiOperation(value = "펫시터의 자신 정보 조회")
-    public Response<PetSitterModifyInfoResponse> showPetSitterSelfInfo(
-            @ApiIgnore Authentication authentication) {
-
-        PetSitterModifyInfoResponse modifyInfoResponse = petSitterService.showMyInfo(
-                authentication.getName());
-
-        log.info("=============== petsitter's info : {} ================", modifyInfoResponse);
-
-        return Response.success(modifyInfoResponse);
+    public Response<PetSitterMyInfoResponse> getPetSitterSelfInfo(@ApiIgnore Authentication authentication) {
+        PetSitterMyInfoResponse myInfoResponse = petSitterService.getMyInfo(authentication.getName());
+        return Response.success(myInfoResponse);
     }
 
     @PostMapping("/my-info")
@@ -66,16 +60,11 @@ public class PetSitterController {
         return Response.success(registerInfoResponse);
     }
 
-    // 펫시터 house 수정 //
-    @PutMapping("/api/v1/petsitter/update-houses")
+    @PutMapping("/houses")
     @ApiOperation(value = "펫시터 펫시터집 사진 수정")
-    public Response modifyPetSitterHouses(
-            @RequestBody @Valid PetSitterHousesRequest petSitterHousesRequest,
-            @ApiIgnore Authentication authentication) {
-
-        petSitterService.updateHouseInfo(petSitterHousesRequest, authentication.getName());
-
-        return Response.success("수정이 완료되었습니다.");
+    public Response updatePetSitterHouses(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateHousesRequest petSitterHousesRequest) {
+        petSitterService.updatePetSitterHouses(authentication.getName(), petSitterHousesRequest);
+        return Response.success(PetSitterResponseMessages.HOUSE_UPDATE.getMessage());
     }
 
     // 펫시터 HashTag 수정 //
