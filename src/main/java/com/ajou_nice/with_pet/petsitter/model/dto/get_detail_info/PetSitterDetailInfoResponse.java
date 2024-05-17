@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.petsitter.model.dto.detail;
+package com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info;
 
 
 import com.ajou_nice.with_pet.critical_service.model.dto.CriticalServiceResponse;

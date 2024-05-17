@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum PetSitterResponseMessages {
     HOUSE_UPDATE("수정이 완료되었습니다."),
-    HASHTAG_UPDATE("수정이 완료되었습니다.");
+    HASHTAG_UPDATE("수정이 완료되었습니다."),
+    WITH_PET_SERVICE_UPDATE("수정이 완료되었습니다.");
     private String message;
 }

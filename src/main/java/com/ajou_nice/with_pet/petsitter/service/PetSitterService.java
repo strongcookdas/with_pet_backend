@@ -16,17 +16,19 @@ import com.ajou_nice.with_pet.house.model.entity.House;
 import com.ajou_nice.with_pet.house.repository.HouseRepository;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.*;
-import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.house.PetSitterUpdateHousesRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_house.PetSitterUpdateHousesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_hash_tag.PetSitterHashTagsRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_service.PetSitterUpdateWithPetServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.withpet_service.model.dto.PetSitterAddServiceRequest;
+import com.ajou_nice.with_pet.withpet_service.model.dto.update.PetSitterUpdateWithPetServiceRequest;
 import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
 import com.ajou_nice.with_pet.withpet_service.repository.PetSitterServiceRepository;
@@ -76,7 +78,6 @@ public class PetSitterService {
         return PetSitterMyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, petSitterWithPetServices, petSitterCriticalServices);
     }
 
-    // == 펫시터 my Info 등록 == //
     @Transactional
     public PetSitterRegisterInfoResponse registerPetSitterInfo(String email, PetSitterRegisterInfoRequest petSitterRegisterInfoRequest) {
 
@@ -128,24 +129,17 @@ public class PetSitterService {
         petSitterHashTagRepository.saveAll(newHashTagList);
     }
 
-    // == 펫시터 WithPetService 정보 수정 == //
     @Transactional
-    public void updatePetSitterService(PetSitterWithPetServicesRequest withPetServicesRequest, String userId) {
-        User findUser = valid.userValidationById(userId);
-
-        PetSitter petSitter = valid.petSitterValidationByUser(findUser);
-
+    public void updatePetSitterServices(String email, PetSitterUpdateWithPetServicesRequest withPetServicesRequest) {
+        PetSitter petSitter = petSitterValidationByEmail(email);
 
         List<PetSitterWithPetService> petSitterServiceList = petSitterServiceRepository.findAllByPetSitterInQuery(petSitter.getId());
         if (!petSitterServiceList.isEmpty()) {
             petSitterServiceRepository.deleteAllByPetSitterInQuery(petSitter.getId());
         }
-        Iterator<PetSitterServiceRequest> petSitterServices = withPetServicesRequest.getPetSitterServiceRequests().iterator();
 
-        //새로운 정보로 갈아 끼움 petSitterservices
-//        List<PetSitterWithPetService> newPetSitterServices = addPetSitterWithPetServiceInfos(petSitterServices, petSitter);
-
-//        petSitterServiceRepository.saveAll(newPetSitterServices);
+        List<PetSitterWithPetService> newPetSitterServices = updatePetSitterWithPetServiceInfos(petSitter, withPetServicesRequest.getPetSitterServiceRequests());
+        petSitterServiceRepository.saveAll(newPetSitterServices);
     }
 
     // == 펫시터 CriticalPetService 정보 수정 == //
@@ -241,18 +235,6 @@ public class PetSitterService {
         return petSitterCriticalServices;
     }
 
-    // 펫시터 hashTag 정보 update
-    private List<PetSitterHashTag> addPetSitterHashTagInfos(Iterator<PetSitterHashTagRequest> petSitterHashTags, PetSitter petSitter) {
-
-        List<PetSitterHashTag> hashTags = new ArrayList<>();
-        while (petSitterHashTags.hasNext()) {
-            PetSitterHashTagRequest hashTagRequest = petSitterHashTags.next();
-            PetSitterHashTag petSitterHashTag = PetSitterHashTag.toEntity(petSitter, hashTagRequest);
-            hashTags.add(petSitterHashTag);
-        }
-        return hashTags;
-    }
-
     // 펫시터 위드펫 서비스 정보 update
     private List<PetSitterWithPetService> addPetSitterWithPetServiceInfos(PetSitter petSitter, List<PetSitterAddServiceRequest> serviceRequests) {
 
@@ -261,6 +243,18 @@ public class PetSitterService {
         for (PetSitterAddServiceRequest request : serviceRequests) {
             WithPetService withPetService = withPetServiceValidation(request.getServiceId());
             PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService, petSitter, request.getPrice());
+            services.add(petSitterWithPetService);
+        }
+        return services;
+    }
+
+    private List<PetSitterWithPetService> updatePetSitterWithPetServiceInfos(PetSitter petSitter, List<PetSitterUpdateWithPetServiceRequest> withPetServiceRequests) {
+
+        List<PetSitterWithPetService> services = new ArrayList<>();
+
+        for (PetSitterUpdateWithPetServiceRequest request : withPetServiceRequests) {
+            WithPetService withPetService = withPetServiceValidation(request.getServiceId());
+            PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService, petSitter, request.getServicePrice());
             services.add(petSitterWithPetService);
         }
         return services;

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.withpet_service.model.dto.PetSitterAddServiceRequest;
+import com.ajou_nice.with_pet.withpet_service.model.dto.update.PetSitterUpdateWithPetServiceRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,11 +43,6 @@ public class PetSitterWithPetService {
 	private WithPetService withPetService;
 
 	private int price;
-
-	public void changeServicePrice(int price){
-		this.price = price;
-	}
-
 
 	public static PetSitterWithPetService toEntity(WithPetService withPetService, PetSitter petSitter, int price){
 		return PetSitterWithPetService.builder()

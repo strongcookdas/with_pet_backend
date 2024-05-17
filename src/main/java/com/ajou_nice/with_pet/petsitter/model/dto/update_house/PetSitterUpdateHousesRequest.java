@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.petsitter.model.dto.house;
+package com.ajou_nice.with_pet.petsitter.model.dto.update_house;
 
 import com.ajou_nice.with_pet.house.model.dto.update.PetSitterUpdateHouseRequest;
 import lombok.AllArgsConstructor;
