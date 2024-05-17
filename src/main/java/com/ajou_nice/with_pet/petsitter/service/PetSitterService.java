@@ -21,6 +21,7 @@ import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResp
 import com.ajou_nice.with_pet.petsitter.model.dto.house.PetSitterUpdateHousesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_hash_tag.PetSitterHashTagsRequest;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
@@ -104,8 +105,8 @@ public class PetSitterService {
     @Transactional
     public void updatePetSitterHouses(String email, PetSitterUpdateHousesRequest petSitterUpdateHousesRequest) {
         PetSitter petSitter = petSitterValidationByEmail(email);
-        List<House> petSitterHouseList = houseRepository.findAllByPetSitterInQuery(petSitter.getId());
 
+        List<House> petSitterHouseList = houseRepository.findAllByPetSitterInQuery(petSitter.getId());
         if (!petSitterHouseList.isEmpty()) {
             houseRepository.deleteAllByPetSitterInQuery(petSitter.getId());
         }
@@ -114,24 +115,16 @@ public class PetSitterService {
         houseRepository.saveAll(newHouseList);
     }
 
-    // == 펫시터 HashTags 정보 수정 == //
     @Transactional
-    public void updateHashTagInfo(PetSitterHashTagsRequest hashTagsRequest, String userId) {
-
-        User findUser = valid.userValidationById(userId);
-
-        PetSitter petSitter = valid.petSitterValidationByUser(findUser);
+    public void updateHashTags(String email, PetSitterHashTagsRequest hashTagsRequest) {
+        PetSitter petSitter = petSitterValidationByEmail(email);
 
         List<PetSitterHashTag> petSitterHashTagList = petSitterHashTagRepository.findAllByPetSitterInQuery(petSitter.getId());
         if (!petSitterHashTagList.isEmpty()) {
             petSitterHashTagRepository.deleteAllByPetSitterInQuery(petSitter.getId());
         }
 
-        //새로운 정보로 갈아 끼움 hashTags
-        Iterator<PetSitterHashTagRequest> petSitterHashtags = hashTagsRequest.getPetSitterHashTagRequests().iterator();
-        List<PetSitterHashTag> newHashTagList = addPetSitterHashTagInfos(petSitterHashtags, petSitter);
-
-
+        List<PetSitterHashTag> newHashTagList = PetSitterHashTag.updateHashTags(petSitter, hashTagsRequest.getPetSitterHashTagRequests());
         petSitterHashTagRepository.saveAll(newHashTagList);
     }
 

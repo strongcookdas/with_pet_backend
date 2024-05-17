@@ -5,7 +5,6 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterCriticalServicesRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHashTagsRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterIntroRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterWithPetServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResponse;
@@ -13,6 +12,7 @@ import com.ajou_nice.with_pet.petsitter.model.dto.detail.PetSitterDetailInfoResp
 import com.ajou_nice.with_pet.petsitter.model.dto.house.PetSitterUpdateHousesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_hash_tag.PetSitterHashTagsRequest;
 import com.ajou_nice.with_pet.petsitter.service.PetSitterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,16 +67,11 @@ public class PetSitterController {
         return Response.success(PetSitterResponseMessages.HOUSE_UPDATE.getMessage());
     }
 
-    // 펫시터 HashTag 수정 //
-    @PutMapping("/api/v1/petsitter/update-hashtags")
+    @PutMapping("/hashtags")
     @ApiOperation(value = "펫시터 해시태그 수정")
-    public Response modifyPetSitterHashTags(
-            @RequestBody @Valid PetSitterHashTagsRequest petSitterHashTagsRequest,
-            @ApiIgnore Authentication authentication) {
-
-        petSitterService.updateHashTagInfo(petSitterHashTagsRequest, authentication.getName());
-
-        return Response.success("수정이 완료되었습니다.");
+    public Response updatePetSitterHashTags(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterHashTagsRequest petSitterHashTagsRequest) {
+        petSitterService.updateHashTags(authentication.getName(), petSitterHashTagsRequest);
+        return Response.success(PetSitterResponseMessages.HASHTAG_UPDATE.getMessage());
     }
 
     //펫시터 withPetService 정보 수정 //

@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.hashtag.model.entity;
 
-import com.ajou_nice.with_pet.hashtag.model.dto.PetSitterAddHashTagRequest;
-import com.ajou_nice.with_pet.house.model.dto.PetSitterAddHouseRequest;
+import com.ajou_nice.with_pet.hashtag.model.dto.add.PetSitterAddHashTagRequest;
+import com.ajou_nice.with_pet.hashtag.model.dto.update.PetSitterUpdateHashTagRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHashTagRequest;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import lombok.*;
@@ -37,6 +37,13 @@ public class PetSitterHashTag {
     }
 
     public static List<PetSitterHashTag> toList(PetSitter petSitter, List<PetSitterAddHashTagRequest> hashTags) {
+        return hashTags.stream().map(hashTag -> PetSitterHashTag.builder()
+                        .hashTagName(hashTag.getHashTagName())
+                        .petSitter(petSitter).build())
+                .collect(Collectors.toList());
+    }
+
+    public static List<PetSitterHashTag> updateHashTags(PetSitter petSitter, List<PetSitterUpdateHashTagRequest> hashTags) {
         return hashTags.stream().map(hashTag -> PetSitterHashTag.builder()
                         .hashTagName(hashTag.getHashTagName())
                         .petSitter(petSitter).build())

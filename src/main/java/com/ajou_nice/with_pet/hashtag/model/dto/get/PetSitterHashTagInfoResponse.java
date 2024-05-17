@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.hashtag.model.dto;
+package com.ajou_nice.with_pet.hashtag.model.dto.get;
 
 
 import com.ajou_nice.with_pet.hashtag.model.entity.PetSitterHashTag;
