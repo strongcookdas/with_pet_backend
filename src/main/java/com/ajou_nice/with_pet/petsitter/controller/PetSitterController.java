@@ -4,10 +4,10 @@ package com.ajou_nice.with_pet.petsitter.controller;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterCriticalServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterIntroRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_house.PetSitterUpdateHousesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
@@ -76,20 +76,16 @@ public class PetSitterController {
 
     @PutMapping("/services")
     @ApiOperation(value = "펫시터 위드펫 서비스 수정")
-    public Response modifyPetSitterService(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateWithPetServicesRequest withPetServicesRequest) {
+    public Response updatePetSitterServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateWithPetServicesRequest withPetServicesRequest) {
         petSitterService.updatePetSitterServices(authentication.getName(), withPetServicesRequest);
         return Response.success(PetSitterResponseMessages.WITH_PET_SERVICE_UPDATE.getMessage());
     }
 
-    // 펫시터 critical withpetService 정보 수정 //
-    @PutMapping("/api/v1/petsitter/update-criticalservice")
+    @PutMapping("/critical-service")
     @ApiOperation(value = "펫시터 필수 위드펫 서비스 수정")
-    public Response modifyCriticalService(
-            @RequestBody @Valid PetSitterCriticalServicesRequest criticalServicesRequest,
-            @ApiIgnore Authentication authentication) {
-
-        petSitterService.updateCriticalService(criticalServicesRequest, authentication.getName());
-        return Response.success("수정이 완료되었습니다.");
+    public Response updateCriticalServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateCriticalServicesRequest criticalServicesRequest) {
+        petSitterService.updateCriticalServices(authentication.getName(), criticalServicesRequest);
+        return Response.success(PetSitterResponseMessages.CRITICAL_SERVICE_UPDATE.getMessage());
     }
 
     // 펫시터 introduction 정보 수정 //

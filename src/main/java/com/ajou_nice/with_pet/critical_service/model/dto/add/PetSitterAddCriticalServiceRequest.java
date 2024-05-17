@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.critical_service.model.dto;
+package com.ajou_nice.with_pet.critical_service.model.dto.add;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
