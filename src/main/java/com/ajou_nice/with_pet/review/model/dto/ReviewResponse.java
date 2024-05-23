@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.review;
+package com.ajou_nice.with_pet.review.model.dto;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import java.time.LocalDateTime;
 import java.util.List;

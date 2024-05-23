@@ -3,9 +3,8 @@ package com.ajou_nice.with_pet.petsitter.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse.PetSitterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_main.PetSitterGetMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
@@ -41,9 +40,9 @@ public class PetSitterController {
 
     @GetMapping("/{petSitterId}")
     @ApiOperation(value = "사용자의 펫시터 상세 정보 조회")
-    public Response<PetSitterDetailInfoResponse> getPetSitterInfo(@PathVariable("petSitterId") Long petSitterId) {
-        PetSitterDetailInfoResponse petSitterDetailInfoResponse = petSitterService.getPetSitterDetailInfo(petSitterId);
-        return Response.success(petSitterDetailInfoResponse);
+    public Response<PetSitterGetDetailInfoResponse> getPetSitterDetailInfo(@PathVariable("petSitterId") Long petSitterId) {
+        PetSitterGetDetailInfoResponse petSitterGetDetailInfoResponse = petSitterService.getPetSitterDetailInfo(petSitterId);
+        return Response.success(petSitterGetDetailInfoResponse);
     }
 
     @GetMapping("/my-info")

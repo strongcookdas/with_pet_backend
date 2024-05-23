@@ -48,9 +48,7 @@ public class PetSitterServiceResponse {
 		private Long serviceId;
 		private String serviceName;
 		private String serviceIntroduction;
-
 		private String serviceImg;
-
 		private int price;
 
 		public static List<PetSitterCriticalServiceResponse> toList(List<PetSitterCriticalService> petSitterCriticalServices){

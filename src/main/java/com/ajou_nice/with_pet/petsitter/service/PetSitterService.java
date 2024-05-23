@@ -14,9 +14,8 @@ import com.ajou_nice.with_pet.hashtag.model.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.hashtag.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.house.model.entity.House;
 import com.ajou_nice.with_pet.house.repository.HouseRepository;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse.PetSitterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_main.PetSitterGetMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
@@ -28,7 +27,6 @@ import com.ajou_nice.with_pet.petsitter.model.dto.update_service.PetSitterUpdate
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
-import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.withpet_service.model.dto.PetSitterAddServiceRequest;
 import com.ajou_nice.with_pet.withpet_service.model.dto.update.PetSitterUpdateWithPetServiceRequest;
 import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
@@ -57,14 +55,14 @@ public class PetSitterService {
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final ReviewRepository reviewRepository;
 
-    public PetSitterDetailInfoResponse getPetSitterDetailInfo(Long petSitterId) {
+    public PetSitterGetDetailInfoResponse getPetSitterDetailInfo(Long petSitterId) {
         PetSitter findPetSitter = petSitterValidationById(petSitterId);
 
         List<Review> reviews = reviewRepository.findAllByPetSitter(findPetSitter);
         List<PetSitterWithPetService> petSitterWithPetServices = petSitterServiceRepository.findAllByPetSitterInQuery(findPetSitter.getId());
         List<PetSitterCriticalService> petSitterCriticalServices = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(findPetSitter.getId());
 
-        return PetSitterDetailInfoResponse.of(findPetSitter, reviews, petSitterWithPetServices, petSitterCriticalServices);
+        return PetSitterGetDetailInfoResponse.of(findPetSitter, reviews, petSitterWithPetServices, petSitterCriticalServices);
     }
 
     public PetSitterMyInfoResponse getMyInfo(String email) {
