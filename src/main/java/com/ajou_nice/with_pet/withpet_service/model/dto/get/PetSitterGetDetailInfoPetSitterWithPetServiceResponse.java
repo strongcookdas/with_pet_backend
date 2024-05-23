@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Getter
 @Builder
 @ToString
-public class PetSitterGetDetailInfoWithPetServiceResponse {
+public class PetSitterGetDetailInfoPetSitterWithPetServiceResponse {
     private Long petSitterWithPetServiceId;
     private Long withPetServiceId;
     private String withPetServiceName;
@@ -18,8 +18,8 @@ public class PetSitterGetDetailInfoWithPetServiceResponse {
     private String withPetServiceImg;
     private int petSitterWithPetServicePrice;
 
-    public static List<PetSitterGetDetailInfoWithPetServiceResponse> toList(List<PetSitterWithPetService> petSitterServiceList){
-        return petSitterServiceList.stream().map(petSitterService -> PetSitterGetDetailInfoWithPetServiceResponse.builder()
+    public static List<PetSitterGetDetailInfoPetSitterWithPetServiceResponse> toList(List<PetSitterWithPetService> petSitterServiceList){
+        return petSitterServiceList.stream().map(petSitterService -> PetSitterGetDetailInfoPetSitterWithPetServiceResponse.builder()
                 .petSitterWithPetServiceId(petSitterService.getId())
                 .withPetServiceId(petSitterService.getWithPetService().getId())
                 .withPetServiceName(petSitterService.getWithPetService().getServiceName())

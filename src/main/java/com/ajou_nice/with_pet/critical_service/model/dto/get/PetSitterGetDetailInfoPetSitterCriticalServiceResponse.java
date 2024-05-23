@@ -1,7 +1,6 @@
 package com.ajou_nice.with_pet.critical_service.model.dto.get;
 
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
-import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
 import lombok.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 @Getter
 @Builder
 @ToString
-public class PetSitterGetDetailInfoCriticalServiceResponse {
+public class PetSitterGetDetailInfoPetSitterCriticalServiceResponse {
     private Long petSitterCriticalServiceId;
     private Long criticalServiceId;
     private String criticalServiceName;
@@ -19,8 +18,8 @@ public class PetSitterGetDetailInfoCriticalServiceResponse {
     private String criticalServiceImg;
     private int petSitterCriticalServicePrice;
 
-    public static List<PetSitterGetDetailInfoCriticalServiceResponse> toList(List<PetSitterCriticalService> petSitterServiceList){
-        return petSitterServiceList.stream().map(petSitterCriticalService -> PetSitterGetDetailInfoCriticalServiceResponse.builder()
+    public static List<PetSitterGetDetailInfoPetSitterCriticalServiceResponse> toList(List<PetSitterCriticalService> petSitterServiceList){
+        return petSitterServiceList.stream().map(petSitterCriticalService -> PetSitterGetDetailInfoPetSitterCriticalServiceResponse.builder()
                 .petSitterCriticalServiceId(petSitterCriticalService.getId())
                 .criticalServiceId(petSitterCriticalService.getCriticalService().getId())
                 .criticalServiceName(petSitterCriticalService.getCriticalService().getServiceName())

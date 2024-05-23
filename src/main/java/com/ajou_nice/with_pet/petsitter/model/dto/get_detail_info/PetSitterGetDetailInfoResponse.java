@@ -1,14 +1,14 @@
 package com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info;
 
 
-import com.ajou_nice.with_pet.critical_service.model.dto.get.PetSitterGetDetailInfoCriticalServiceResponse;
+import com.ajou_nice.with_pet.critical_service.model.dto.get.PetSitterGetDetailInfoPetSitterCriticalServiceResponse;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.hashtag.model.dto.get.PetSitterGetDetailInfoHashTagResponse;
 import com.ajou_nice.with_pet.house.model.dto.get.PetSitterGetDetailInfoHouseResponse;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.review.model.dto.get.PetSitterGetDetailInfoReviewResponse;
-import com.ajou_nice.with_pet.withpet_service.model.dto.get.PetSitterGetDetailInfoWithPetServiceResponse;
+import com.ajou_nice.with_pet.withpet_service.model.dto.get.PetSitterGetDetailInfoPetSitterWithPetServiceResponse;
 import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
 import lombok.*;
 
@@ -27,8 +27,8 @@ public class PetSitterGetDetailInfoResponse {
 	private String petSitterAddress;
 	private List<PetSitterGetDetailInfoHashTagResponse> petSitterHashTags;
 	private List<PetSitterGetDetailInfoHouseResponse> petSitterHouses;
-	private List<PetSitterGetDetailInfoWithPetServiceResponse> petSitterWithPetServices;
-	private List<PetSitterGetDetailInfoCriticalServiceResponse> petSitterCriticalServices;
+	private List<PetSitterGetDetailInfoPetSitterWithPetServiceResponse> petSitterWithPetServices;
+	private List<PetSitterGetDetailInfoPetSitterCriticalServiceResponse> petSitterCriticalServices;
 	private String petSitterIntroduction;
 	private String petSitterLicenseImg;
 	private List<PetSitterGetDetailInfoReviewResponse> petSitterReviews;
@@ -43,9 +43,9 @@ public class PetSitterGetDetailInfoResponse {
 				.petSitterAddress(petSitter.getUser().getAddress().getStreetAdr())
 				.petSitterHashTags(PetSitterGetDetailInfoHashTagResponse.toList(petSitter.getPetSitterHashTagList()))
 				.petSitterHouses(PetSitterGetDetailInfoHouseResponse.toList(petSitter.getPetSitterHouseList()))
-				.petSitterWithPetServices(petSitterWithPetServices == null? null : PetSitterGetDetailInfoWithPetServiceResponse.toList(petSitterWithPetServices))
+				.petSitterWithPetServices(petSitterWithPetServices == null? null : PetSitterGetDetailInfoPetSitterWithPetServiceResponse.toList(petSitterWithPetServices))
 				.petSitterCriticalServices(petSitterCriticalServices == null? null :
-						PetSitterGetDetailInfoCriticalServiceResponse.toList(petSitterCriticalServices))
+						PetSitterGetDetailInfoPetSitterCriticalServiceResponse.toList(petSitterCriticalServices))
 				.petSitterIntroduction(petSitter.getIntroduction())
 				.petSitterLicenseImg(petSitter.getUser().getLicenseImg())
 				.petSitterReviews(reviews == null ? null : PetSitterGetDetailInfoReviewResponse.toList(reviews))
