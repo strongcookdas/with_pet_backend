@@ -4,8 +4,8 @@ package com.ajou_nice.with_pet.petsitter.controller;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse.PetSitterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_main.PetSitterGetMainResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_my_info.PetSitterGetMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
@@ -47,8 +47,8 @@ public class PetSitterController {
 
     @GetMapping("/my-info")
     @ApiOperation(value = "펫시터의 자신 정보 조회")
-    public Response<PetSitterMyInfoResponse> getPetSitterSelfInfo(@ApiIgnore Authentication authentication) {
-        PetSitterMyInfoResponse myInfoResponse = petSitterService.getMyInfo(authentication.getName());
+    public Response<PetSitterGetMyInfoResponse> getMyInfo(@ApiIgnore Authentication authentication) {
+        PetSitterGetMyInfoResponse myInfoResponse = petSitterService.getMyInfo(authentication.getName());
         return Response.success(myInfoResponse);
     }
 
