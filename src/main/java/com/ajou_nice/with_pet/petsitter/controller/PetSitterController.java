@@ -89,9 +89,8 @@ public class PetSitterController {
 
     @PutMapping("/intro")
     @ApiOperation(value = "펫시터 introduction 정보 수정")
-    public Response updateIntro(@ApiIgnore Authentication authentication, @RequestBody PetSitterUpdateIntroRequest petSitterIntroRequest) {
+    public Response<Void> updateIntro(@ApiIgnore Authentication authentication, @RequestBody PetSitterUpdateIntroRequest petSitterIntroRequest) {
         petSitterService.updateIntro(authentication.getName(), petSitterIntroRequest);
-
         return Response.success(PetSitterResponseMessages.INTRO_UPDATE.getMessage());
     }
 
@@ -102,8 +101,7 @@ public class PetSitterController {
             @RequestParam(required = false) String dogSize,
             @RequestParam(required = false) List<String> service,
             @RequestParam(required = false) String address) {
-        Page<PetSitterGetMainResponse> petSitterGetMainResponse = petSitterService.getPetSitters(
-                pageable, dogSize, service, address);
+        Page<PetSitterGetMainResponse> petSitterGetMainResponse = petSitterService.getPetSitters(pageable, dogSize, service, address);
         return Response.success(petSitterGetMainResponse);
     }
 }
