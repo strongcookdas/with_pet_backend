@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.petsitter.service;
 
-import com.ajou_nice.with_pet.critical_service.model.dto.add.PetSitterAddCriticalServiceRequest;
+import com.ajou_nice.with_pet.critical_service.model.dto.add.PetSitterRegisterMyInfoCriticalServiceRequest;
 import com.ajou_nice.with_pet.critical_service.model.dto.update.PetSitterUpdateCriticalServiceRequest;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
@@ -14,12 +14,11 @@ import com.ajou_nice.with_pet.hashtag.model.entity.PetSitterHashTag;
 import com.ajou_nice.with_pet.hashtag.repository.PetSitterHashTagRepository;
 import com.ajou_nice.with_pet.house.model.entity.House;
 import com.ajou_nice.with_pet.house.repository.HouseRepository;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_main.PetSitterGetMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_my_info.PetSitterGetMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterMyInfoRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_hash_tag.PetSitterHashTagsRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_house.PetSitterUpdateHousesRequest;
@@ -28,8 +27,7 @@ import com.ajou_nice.with_pet.petsitter.model.dto.update_service.PetSitterUpdate
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
-import com.ajou_nice.with_pet.service.ValidateCollection;
-import com.ajou_nice.with_pet.withpet_service.model.dto.PetSitterAddServiceRequest;
+import com.ajou_nice.with_pet.withpet_service.model.dto.add.PetSitterRegisterMyInfoWithPetServiceRequest;
 import com.ajou_nice.with_pet.withpet_service.model.dto.update.PetSitterUpdateWithPetServiceRequest;
 import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.withpet_service.model.entity.WithPetService;
@@ -57,17 +55,17 @@ public class PetSitterService {
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final ReviewRepository reviewRepository;
 
-    public PetSitterDetailInfoResponse getPetSitterDetailInfo(Long petSitterId) {
+    public PetSitterGetDetailInfoResponse getPetSitterDetailInfo(Long petSitterId) {
         PetSitter findPetSitter = petSitterValidationById(petSitterId);
 
         List<Review> reviews = reviewRepository.findAllByPetSitter(findPetSitter);
         List<PetSitterWithPetService> petSitterWithPetServices = petSitterServiceRepository.findAllByPetSitterInQuery(findPetSitter.getId());
         List<PetSitterCriticalService> petSitterCriticalServices = petSitterCriticalServiceRepository.findAllByPetSitterInQuery(findPetSitter.getId());
 
-        return PetSitterDetailInfoResponse.of(findPetSitter, reviews, petSitterWithPetServices, petSitterCriticalServices);
+        return PetSitterGetDetailInfoResponse.of(findPetSitter, reviews, petSitterWithPetServices, petSitterCriticalServices);
     }
 
-    public PetSitterMyInfoResponse getMyInfo(String email) {
+    public PetSitterGetMyInfoResponse getPetSitterMyInfo(String email) {
         PetSitter petSitter = petSitterValidationByEmail(email);
 
         List<WithPetService> withPetServiceList = getWithPetServiceList();
@@ -75,24 +73,24 @@ public class PetSitterService {
         List<PetSitterWithPetService> petSitterWithPetServices = getPetSitterWithPetServiceList(petSitter);
         List<PetSitterCriticalService> petSitterCriticalServices = getPetSitterCriticalServiceList(petSitter);
 
-        return PetSitterMyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, petSitterWithPetServices, petSitterCriticalServices);
+        return PetSitterGetMyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, petSitterWithPetServices, petSitterCriticalServices);
     }
 
     @Transactional
-    public PetSitterRegisterInfoResponse registerPetSitterInfo(String email, PetSitterRegisterInfoRequest petSitterRegisterInfoRequest) {
+    public PetSitterRegisterMyInfoResponse registerPetSitterMyInfo(String email, PetSitterRegisterMyInfoRequest petSitterRegisterMyInfoRequest) {
 
         PetSitter petSitter = petSitterValidationByEmail(email);
 
-        List<House> houses = House.toList(petSitter, petSitterRegisterInfoRequest.getPetSitterHouseRequests());
-        List<PetSitterHashTag> hashTags = PetSitterHashTag.toList(petSitter, petSitterRegisterInfoRequest.getPetSitterHashTagRequests());
-        List<PetSitterWithPetService> services = addPetSitterWithPetServiceInfos(petSitter, petSitterRegisterInfoRequest.getPetSitterServiceRequests());
-        List<PetSitterCriticalService> criticalServices = addPetSitterCriticalServiceInfos(petSitter, petSitterRegisterInfoRequest.getPetSitterCriticalServiceRequests());
+        List<House> houses = House.toList(petSitter, petSitterRegisterMyInfoRequest.getPetSitterHouses());
+        List<PetSitterHashTag> hashTags = PetSitterHashTag.toList(petSitter, petSitterRegisterMyInfoRequest.getPetSitterHashTags());
+        List<PetSitterWithPetService> services = addPetSitterWithPetServiceInfos(petSitter, petSitterRegisterMyInfoRequest.getPetSitterWithPetServices());
+        List<PetSitterCriticalService> criticalServices = addPetSitterCriticalServiceInfos(petSitter, petSitterRegisterMyInfoRequest.getPetSitterCriticalServices());
 
         houseRepository.saveAll(houses);
         petSitterHashTagRepository.saveAll(hashTags);
         petSitterServiceRepository.saveAll(services);
         petSitterCriticalServiceRepository.saveAll(criticalServices);
-        petSitter.updateIntroduction(petSitterRegisterInfoRequest.getPetSitterIntroduction());
+        petSitter.updateIntroduction(petSitterRegisterMyInfoRequest.getPetSitterIntroduction());
 
         // 펫시터 정보를 입력한 다음 validation이 true로 바뀌어서 Main page에 조회가 된다.
         petSitter.changeValidation(true);
@@ -100,7 +98,7 @@ public class PetSitterService {
         List<WithPetService> withPetServiceList = getWithPetServiceList();
         List<CriticalService> criticalServiceList = getCriticalServiceList();
 
-        return PetSitterRegisterInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, services, criticalServices);
+        return PetSitterRegisterMyInfoResponse.of(petSitter, criticalServiceList, withPetServiceList, services, criticalServices);
     }
 
     @Transactional
@@ -117,7 +115,7 @@ public class PetSitterService {
     }
 
     @Transactional
-    public void updateHashTags(String email, PetSitterHashTagsRequest hashTagsRequest) {
+    public void updatePetSitterHashTags(String email, PetSitterHashTagsRequest hashTagsRequest) {
         PetSitter petSitter = petSitterValidationByEmail(email);
 
         List<PetSitterHashTag> petSitterHashTagList = petSitterHashTagRepository.findAllByPetSitterInQuery(petSitter.getId());
@@ -224,13 +222,13 @@ public class PetSitterService {
     }
 
     // 펫시터 위드펫 서비스 정보 update
-    private List<PetSitterWithPetService> addPetSitterWithPetServiceInfos(PetSitter petSitter, List<PetSitterAddServiceRequest> serviceRequests) {
+    private List<PetSitterWithPetService> addPetSitterWithPetServiceInfos(PetSitter petSitter, List<PetSitterRegisterMyInfoWithPetServiceRequest> serviceRequests) {
 
         List<PetSitterWithPetService> services = new ArrayList<>();
 
-        for (PetSitterAddServiceRequest request : serviceRequests) {
-            WithPetService withPetService = withPetServiceValidation(request.getServiceId());
-            PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService, petSitter, request.getPrice());
+        for (PetSitterRegisterMyInfoWithPetServiceRequest request : serviceRequests) {
+            WithPetService withPetService = withPetServiceValidation(request.getWithPetServiceId());
+            PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService, petSitter, request.getPetSitterWithPetServicePrice());
             services.add(petSitterWithPetService);
         }
         return services;
@@ -241,28 +239,28 @@ public class PetSitterService {
         List<PetSitterWithPetService> services = new ArrayList<>();
 
         for (PetSitterUpdateWithPetServiceRequest request : withPetServiceRequests) {
-            WithPetService withPetService = withPetServiceValidation(request.getServiceId());
-            PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService, petSitter, request.getServicePrice());
+            WithPetService withPetService = withPetServiceValidation(request.getWithPetServiceId());
+            PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService, petSitter, request.getPetSitterWithPetServicePrice());
             services.add(petSitterWithPetService);
         }
         return services;
     }
 
-    private List<PetSitterCriticalService> addPetSitterCriticalServiceInfos(PetSitter petSitter, List<PetSitterAddCriticalServiceRequest> criticalServiceRequests) {
+    private List<PetSitterCriticalService> addPetSitterCriticalServiceInfos(PetSitter petSitter, List<PetSitterRegisterMyInfoCriticalServiceRequest> criticalServiceRequests) {
         List<PetSitterCriticalService> criticalServices = new ArrayList<>();
 
-        for (PetSitterAddCriticalServiceRequest request : criticalServiceRequests) {
-            CriticalService criticalService = criticalServiceValidation(request.getServiceId());
+        for (PetSitterRegisterMyInfoCriticalServiceRequest request : criticalServiceRequests) {
+            CriticalService criticalService = criticalServiceValidation(request.getCriticalServiceId());
 
-            if (request.getServiceId() == 1) { // 해당 코드의 역할이 파악x
+            if (request.getCriticalServiceId() == 1) { // 해당 코드의 역할이 파악x
                 petSitter.changeAvailableDogSize(DogSize.소형견);
-            } else if (request.getServiceId() == 2) {
+            } else if (request.getCriticalServiceId() == 2) {
                 petSitter.changeAvailableDogSize(DogSize.중형견);
             } else {
                 petSitter.changeAvailableDogSize(DogSize.대형견);
             }
 
-            PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter, request.getPrice());
+            PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter, request.getPetSitterCriticalServicePrice());
             criticalServices.add(petSitterCriticalService);
         }
         return criticalServices;
@@ -282,7 +280,7 @@ public class PetSitterService {
                 petSitter.changeAvailableDogSize(DogSize.대형견);
             }
 
-            PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter, request.getCriticalServicePrice());
+            PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter, request.getPetSitterCriticalServicePrice());
             criticalServices.add(petSitterCriticalService);
         }
         return criticalServices;

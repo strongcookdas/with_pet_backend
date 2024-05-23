@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.review;
+package com.ajou_nice.with_pet.review.model.dto;
 
 import javax.persistence.Lob;
 import lombok.AllArgsConstructor;

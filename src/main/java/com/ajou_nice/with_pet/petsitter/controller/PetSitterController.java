@@ -3,12 +3,11 @@ package com.ajou_nice.with_pet.petsitter.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages;
-import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_main.PetSitterGetMainResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_my_info.PetSitterGetMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterMyInfoRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_hash_tag.PetSitterHashTagsRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_house.PetSitterUpdateHousesRequest;
@@ -41,59 +40,57 @@ public class PetSitterController {
 
     @GetMapping("/{petSitterId}")
     @ApiOperation(value = "사용자의 펫시터 상세 정보 조회")
-    public Response<PetSitterDetailInfoResponse> getPetSitterInfo(@PathVariable("petSitterId") Long petSitterId) {
-        PetSitterDetailInfoResponse petSitterDetailInfoResponse = petSitterService.getPetSitterDetailInfo(petSitterId);
-        return Response.success(petSitterDetailInfoResponse);
+    public Response<PetSitterGetDetailInfoResponse> getPetSitterDetailInfo(@PathVariable("petSitterId") Long petSitterId) {
+        PetSitterGetDetailInfoResponse petSitterGetDetailInfoResponse = petSitterService.getPetSitterDetailInfo(petSitterId);
+        return Response.success(petSitterGetDetailInfoResponse);
     }
 
     @GetMapping("/my-info")
     @ApiOperation(value = "펫시터의 자신 정보 조회")
-    public Response<PetSitterMyInfoResponse> getPetSitterSelfInfo(@ApiIgnore Authentication authentication) {
-        PetSitterMyInfoResponse myInfoResponse = petSitterService.getMyInfo(authentication.getName());
+    public Response<PetSitterGetMyInfoResponse> getMyInfo(@ApiIgnore Authentication authentication) {
+        PetSitterGetMyInfoResponse myInfoResponse = petSitterService.getPetSitterMyInfo(authentication.getName());
         return Response.success(myInfoResponse);
     }
 
     @PostMapping("/my-info")
     @ApiOperation(value = "펫시터의 정보 등록")
-    public Response<PetSitterRegisterInfoResponse> registerPetSitterInfo(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterRegisterInfoRequest petSitterRegisterInfoRequest) {
-        PetSitterRegisterInfoResponse registerInfoResponse = petSitterService.registerPetSitterInfo(authentication.getName(), petSitterRegisterInfoRequest);
-
+    public Response<PetSitterRegisterMyInfoResponse> registerPetSitterMyInfo(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterRegisterMyInfoRequest petSitterRegisterMyInfoRequest) {
+        PetSitterRegisterMyInfoResponse registerInfoResponse = petSitterService.registerPetSitterMyInfo(authentication.getName(), petSitterRegisterMyInfoRequest);
         return Response.success(registerInfoResponse);
     }
 
     @PutMapping("/houses")
     @ApiOperation(value = "펫시터 펫시터집 사진 수정")
-    public Response updatePetSitterHouses(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateHousesRequest petSitterHousesRequest) {
+    public Response<Void> updatePetSitterHouses(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateHousesRequest petSitterHousesRequest) {
         petSitterService.updatePetSitterHouses(authentication.getName(), petSitterHousesRequest);
         return Response.success(PetSitterResponseMessages.HOUSE_UPDATE.getMessage());
     }
 
     @PutMapping("/hashtags")
     @ApiOperation(value = "펫시터 해시태그 수정")
-    public Response updatePetSitterHashTags(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterHashTagsRequest petSitterHashTagsRequest) {
-        petSitterService.updateHashTags(authentication.getName(), petSitterHashTagsRequest);
+    public Response<Void> updatePetSitterHashTags(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterHashTagsRequest petSitterHashTagsRequest) {
+        petSitterService.updatePetSitterHashTags(authentication.getName(), petSitterHashTagsRequest);
         return Response.success(PetSitterResponseMessages.HASHTAG_UPDATE.getMessage());
     }
 
     @PutMapping("/services")
     @ApiOperation(value = "펫시터 위드펫 서비스 수정")
-    public Response updatePetSitterServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateWithPetServicesRequest withPetServicesRequest) {
+    public Response<Void> updatePetSitterServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateWithPetServicesRequest withPetServicesRequest) {
         petSitterService.updatePetSitterServices(authentication.getName(), withPetServicesRequest);
         return Response.success(PetSitterResponseMessages.WITH_PET_SERVICE_UPDATE.getMessage());
     }
 
     @PutMapping("/critical-service")
     @ApiOperation(value = "펫시터 필수 위드펫 서비스 수정")
-    public Response updateCriticalServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateCriticalServicesRequest criticalServicesRequest) {
+    public Response<Void> updateCriticalServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateCriticalServicesRequest criticalServicesRequest) {
         petSitterService.updateCriticalServices(authentication.getName(), criticalServicesRequest);
         return Response.success(PetSitterResponseMessages.CRITICAL_SERVICE_UPDATE.getMessage());
     }
 
     @PutMapping("/intro")
     @ApiOperation(value = "펫시터 introduction 정보 수정")
-    public Response updateIntro(@ApiIgnore Authentication authentication, @RequestBody PetSitterUpdateIntroRequest petSitterIntroRequest) {
+    public Response<Void> updateIntro(@ApiIgnore Authentication authentication, @RequestBody PetSitterUpdateIntroRequest petSitterIntroRequest) {
         petSitterService.updateIntro(authentication.getName(), petSitterIntroRequest);
-
         return Response.success(PetSitterResponseMessages.INTRO_UPDATE.getMessage());
     }
 
@@ -104,8 +101,7 @@ public class PetSitterController {
             @RequestParam(required = false) String dogSize,
             @RequestParam(required = false) List<String> service,
             @RequestParam(required = false) String address) {
-        Page<PetSitterGetMainResponse> petSitterGetMainResponse = petSitterService.getPetSitters(
-                pageable, dogSize, service, address);
+        Page<PetSitterGetMainResponse> petSitterGetMainResponse = petSitterService.getPetSitters(pageable, dogSize, service, address);
         return Response.success(petSitterGetMainResponse);
     }
 }

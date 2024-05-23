@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 @ToString
-public class PetSitterAddHashTagRequest {
+public class PetSitterRegisterMyInfoHashTagRequest {
     @NotBlank
-    private String hashTagName;
+    private String petSitterHashTagName;
 }

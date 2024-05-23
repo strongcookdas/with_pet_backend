@@ -10,5 +10,5 @@ import lombok.ToString;
 @Getter
 @ToString
 public class PetSitterUpdateHashTagRequest {
-    private String hashTagName;
+    private String petSitterHashTagName;
 }

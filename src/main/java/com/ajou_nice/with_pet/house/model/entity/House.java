@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.house.model.entity;
 
 
-import com.ajou_nice.with_pet.house.model.dto.PetSitterAddHouseRequest;
+import com.ajou_nice.with_pet.house.model.dto.add.PetSitterRegisterMyInfoHouseRequest;
 import com.ajou_nice.with_pet.house.model.dto.update.PetSitterUpdateHouseRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHouseRequest;
 
@@ -58,18 +58,18 @@ public class House {
                 .build();
     }
 
-    public static List<House> toList(PetSitter petSitter, List<PetSitterAddHouseRequest> houseRequests) {
+    public static List<House> toList(PetSitter petSitter, List<PetSitterRegisterMyInfoHouseRequest> houseRequests) {
         return houseRequests.stream().map(house -> House.builder()
-                .house_img(house.getHouseImg())
-                .representative(house.getRepresentative())
+                .house_img(house.getPetSitterHouseImg())
+                .representative(house.getPetSitterHouseRepresentative())
                 .petSitter(petSitter)
                 .build()).collect(Collectors.toList());
     }
 
     public static List<House> updateHouses(PetSitter petSitter, List<PetSitterUpdateHouseRequest> petSitterUpdateHouseRequests) {
         return petSitterUpdateHouseRequests.stream().map(house -> House.builder()
-                .house_img(house.getHouseImg())
-                .representative(house.getRepresentative())
+                .house_img(house.getPetSitterHouseImg())
+                .representative(house.getPetSitterHouseRepresentative())
                 .petSitter(petSitter)
                 .build()).collect(Collectors.toList());
     }
