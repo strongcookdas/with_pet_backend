@@ -45,7 +45,7 @@ public class PetSitterHashTag {
 
     public static List<PetSitterHashTag> updateHashTags(PetSitter petSitter, List<PetSitterUpdateHashTagRequest> hashTags) {
         return hashTags.stream().map(hashTag -> PetSitterHashTag.builder()
-                        .hashTagName(hashTag.getHashTagName())
+                        .hashTagName(hashTag.getPetSitterHashTagName())
                         .petSitter(petSitter).build())
                 .collect(Collectors.toList());
     }

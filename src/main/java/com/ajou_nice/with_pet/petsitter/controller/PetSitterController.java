@@ -68,8 +68,8 @@ public class PetSitterController {
 
     @PutMapping("/hashtags")
     @ApiOperation(value = "펫시터 해시태그 수정")
-    public Response updatePetSitterHashTags(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterHashTagsRequest petSitterHashTagsRequest) {
-        petSitterService.updateHashTags(authentication.getName(), petSitterHashTagsRequest);
+    public Response<Void> updatePetSitterHashTags(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterHashTagsRequest petSitterHashTagsRequest) {
+        petSitterService.updatePetSitterHashTags(authentication.getName(), petSitterHashTagsRequest);
         return Response.success(PetSitterResponseMessages.HASHTAG_UPDATE.getMessage());
     }
 

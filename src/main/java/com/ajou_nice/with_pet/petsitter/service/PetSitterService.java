@@ -115,7 +115,7 @@ public class PetSitterService {
     }
 
     @Transactional
-    public void updateHashTags(String email, PetSitterHashTagsRequest hashTagsRequest) {
+    public void updatePetSitterHashTags(String email, PetSitterHashTagsRequest hashTagsRequest) {
         PetSitter petSitter = petSitterValidationByEmail(email);
 
         List<PetSitterHashTag> petSitterHashTagList = petSitterHashTagRepository.findAllByPetSitterInQuery(petSitter.getId());
