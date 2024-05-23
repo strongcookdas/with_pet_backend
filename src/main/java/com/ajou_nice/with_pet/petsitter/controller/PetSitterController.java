@@ -75,7 +75,7 @@ public class PetSitterController {
 
     @PutMapping("/services")
     @ApiOperation(value = "펫시터 위드펫 서비스 수정")
-    public Response updatePetSitterServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateWithPetServicesRequest withPetServicesRequest) {
+    public Response<Void> updatePetSitterServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateWithPetServicesRequest withPetServicesRequest) {
         petSitterService.updatePetSitterServices(authentication.getName(), withPetServicesRequest);
         return Response.success(PetSitterResponseMessages.WITH_PET_SERVICE_UPDATE.getMessage());
     }

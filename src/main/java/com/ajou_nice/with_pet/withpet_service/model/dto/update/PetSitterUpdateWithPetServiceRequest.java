@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class PetSitterUpdateWithPetServiceRequest {
-    private Long serviceId;
-    private int servicePrice;
+    private Long withPetServiceId;
+    private int petSitterWithPetServicePrice;
 }

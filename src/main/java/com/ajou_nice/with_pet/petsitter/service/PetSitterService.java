@@ -239,8 +239,8 @@ public class PetSitterService {
         List<PetSitterWithPetService> services = new ArrayList<>();
 
         for (PetSitterUpdateWithPetServiceRequest request : withPetServiceRequests) {
-            WithPetService withPetService = withPetServiceValidation(request.getServiceId());
-            PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService, petSitter, request.getServicePrice());
+            WithPetService withPetService = withPetServiceValidation(request.getWithPetServiceId());
+            PetSitterWithPetService petSitterWithPetService = PetSitterWithPetService.toEntity(withPetService, petSitter, request.getPetSitterWithPetServicePrice());
             services.add(petSitterWithPetService);
         }
         return services;
