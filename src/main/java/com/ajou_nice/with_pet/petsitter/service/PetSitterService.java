@@ -17,6 +17,7 @@ import com.ajou_nice.with_pet.house.repository.HouseRepository;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_main.PetSitterGetMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
@@ -55,7 +56,6 @@ public class PetSitterService {
     private final CriticalServiceRepository criticalServiceRepository;
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final ReviewRepository reviewRepository;
-    private final ValidateCollection valid;
 
     public PetSitterDetailInfoResponse getPetSitterDetailInfo(Long petSitterId) {
         PetSitter findPetSitter = petSitterValidationById(petSitterId);
@@ -162,12 +162,9 @@ public class PetSitterService {
         petSitter.updateIntroduction(petSitterUpdateIntroRequest.getPetSitterIntroduction());
     }
 
-    // == 메인페이지 펫시터들 정보 조회 == //
-    // 리팩토링 무조건 무조건 필요 .. 쿼리가 너무 많이 나간다.
-    // userName을 불러오기 위해서 user테이블에서 조회하는 쿼리가 생기는데 이를 해결해야 한다..
-    public Page getPetSitters(Pageable pageable, String dogSize, List<String> service, String address) {
+    public Page<PetSitterGetMainResponse> getPetSitters(Pageable pageable, String dogSize, List<String> service, String address) {
         Page<PetSitter> petSitters = petSitterRepository.searchPage(pageable, dogSize, service, address);
-        return petSitters.map(PetSitterMainResponse::of);
+        return petSitters.map(PetSitterGetMainResponse::of);
     }
 
     private PetSitter petSitterValidationByEmail(String email) {

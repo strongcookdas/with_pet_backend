@@ -6,6 +6,7 @@ import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterDetailInfoResponse.PetSitterMyInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.get_main.PetSitterGetMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
@@ -96,17 +97,15 @@ public class PetSitterController {
         return Response.success(PetSitterResponseMessages.INTRO_UPDATE.getMessage());
     }
 
-    // 메인페이지 펫시터 조회 //
-    @GetMapping("/api/v1/show-petsitter")
+    @GetMapping
     @ApiOperation(value = "메인페이지 펫시터들 조회")
-    public Response<Page<PetSitterMainResponse>> showPetSitters(
+    public Response<Page<PetSitterGetMainResponse>> getPetSitters(
             @PageableDefault(size = 10, sort = "createdAt", direction = Direction.ASC) Pageable pageable,
             @RequestParam(required = false) String dogSize,
             @RequestParam(required = false) List<String> service,
             @RequestParam(required = false) String address) {
-        log.info("=================== 필터링 {},{},{} ======================", dogSize, service, address);
-        Page<PetSitterMainResponse> petSitterMainResponses = petSitterService.getPetSitters(
+        Page<PetSitterGetMainResponse> petSitterGetMainResponse = petSitterService.getPetSitters(
                 pageable, dogSize, service, address);
-        return Response.success(petSitterMainResponses);
+        return Response.success(petSitterGetMainResponse);
     }
 }
