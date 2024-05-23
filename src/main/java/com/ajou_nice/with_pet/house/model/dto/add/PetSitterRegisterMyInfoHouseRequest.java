@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.house.model.dto;
+package com.ajou_nice.with_pet.house.model.dto.add;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 @ToString
-public class PetSitterAddHouseRequest {
+public class PetSitterRegisterMyInfoHouseRequest {
     @NotBlank
-    private String houseImg;
+    private String petSitterHouseImg;
     @NotBlank
-    private Boolean representative;
+    private Boolean petSitterHouseRepresentative;
 }

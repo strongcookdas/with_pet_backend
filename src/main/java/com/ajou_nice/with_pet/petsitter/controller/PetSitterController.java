@@ -6,8 +6,8 @@ import com.ajou_nice.with_pet.petsitter.model.constant.PetSitterResponseMessages
 import com.ajou_nice.with_pet.petsitter.model.dto.get_detail_info.PetSitterGetDetailInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_main.PetSitterGetMainResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.get_my_info.PetSitterGetMyInfoResponse;
-import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoRequest;
-import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterInfoResponse;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterMyInfoRequest;
+import com.ajou_nice.with_pet.petsitter.model.dto.register_info.PetSitterRegisterMyInfoResponse;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_critical.PetSitterUpdateCriticalServicesRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_hash_tag.PetSitterHashTagsRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.update_house.PetSitterUpdateHousesRequest;
@@ -48,14 +48,14 @@ public class PetSitterController {
     @GetMapping("/my-info")
     @ApiOperation(value = "펫시터의 자신 정보 조회")
     public Response<PetSitterGetMyInfoResponse> getMyInfo(@ApiIgnore Authentication authentication) {
-        PetSitterGetMyInfoResponse myInfoResponse = petSitterService.getMyInfo(authentication.getName());
+        PetSitterGetMyInfoResponse myInfoResponse = petSitterService.getPetSitterMyInfo(authentication.getName());
         return Response.success(myInfoResponse);
     }
 
     @PostMapping("/my-info")
     @ApiOperation(value = "펫시터의 정보 등록")
-    public Response<PetSitterRegisterInfoResponse> registerPetSitterInfo(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterRegisterInfoRequest petSitterRegisterInfoRequest) {
-        PetSitterRegisterInfoResponse registerInfoResponse = petSitterService.registerPetSitterInfo(authentication.getName(), petSitterRegisterInfoRequest);
+    public Response<PetSitterRegisterMyInfoResponse> registerPetSitterMyInfo(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterRegisterMyInfoRequest petSitterRegisterMyInfoRequest) {
+        PetSitterRegisterMyInfoResponse registerInfoResponse = petSitterService.registerPetSitterMyInfo(authentication.getName(), petSitterRegisterMyInfoRequest);
 
         return Response.success(registerInfoResponse);
     }

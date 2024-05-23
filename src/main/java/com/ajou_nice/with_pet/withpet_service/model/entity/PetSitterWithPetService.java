@@ -11,16 +11,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.withpet_service.model.dto.PetSitterAddServiceRequest;
-import com.ajou_nice.with_pet.withpet_service.model.dto.update.PetSitterUpdateWithPetServiceRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @AllArgsConstructor

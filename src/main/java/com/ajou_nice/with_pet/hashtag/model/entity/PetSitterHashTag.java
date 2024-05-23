@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.hashtag.model.entity;
 
-import com.ajou_nice.with_pet.hashtag.model.dto.add.PetSitterAddHashTagRequest;
+import com.ajou_nice.with_pet.hashtag.model.dto.add.PetSitterRegisterMyInfoHashTagRequest;
 import com.ajou_nice.with_pet.hashtag.model.dto.update.PetSitterUpdateHashTagRequest;
 import com.ajou_nice.with_pet.petsitter.model.dto.PetSitterRequest.PetSitterHashTagRequest;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
@@ -36,9 +36,9 @@ public class PetSitterHashTag {
                 .build();
     }
 
-    public static List<PetSitterHashTag> toList(PetSitter petSitter, List<PetSitterAddHashTagRequest> hashTags) {
+    public static List<PetSitterHashTag> toList(PetSitter petSitter, List<PetSitterRegisterMyInfoHashTagRequest> hashTags) {
         return hashTags.stream().map(hashTag -> PetSitterHashTag.builder()
-                        .hashTagName(hashTag.getHashTagName())
+                        .hashTagName(hashTag.getPetSitterHashTagName())
                         .petSitter(petSitter).build())
                 .collect(Collectors.toList());
     }

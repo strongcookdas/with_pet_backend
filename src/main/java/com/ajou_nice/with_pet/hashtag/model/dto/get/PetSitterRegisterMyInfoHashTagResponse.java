@@ -17,17 +17,15 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class PetSitterHashTagInfoResponse {
+public class PetSitterRegisterMyInfoHashTagResponse {
 
     private Long petSitterHashTagId;
+    private String petSitterHashTagName;
 
-    private String hashTagName;
-
-
-    public static List<PetSitterHashTagInfoResponse> toList(List<PetSitterHashTag> petSitterHashTags) {
-        return petSitterHashTags.stream().map(petSitterHashTag -> PetSitterHashTagInfoResponse.builder()
+    public static List<PetSitterRegisterMyInfoHashTagResponse> toList(List<PetSitterHashTag> petSitterHashTags) {
+        return petSitterHashTags.stream().map(petSitterHashTag -> PetSitterRegisterMyInfoHashTagResponse.builder()
                 .petSitterHashTagId(petSitterHashTag.getId())
-                .hashTagName(petSitterHashTag.getHashTagName())
+                .petSitterHashTagName(petSitterHashTag.getHashTagName())
                 .build()).collect(Collectors.toList());
     }
 }
