@@ -68,8 +68,8 @@ public class House {
 
     public static List<House> updateHouses(PetSitter petSitter, List<PetSitterUpdateHouseRequest> petSitterUpdateHouseRequests) {
         return petSitterUpdateHouseRequests.stream().map(house -> House.builder()
-                .house_img(house.getHouseImg())
-                .representative(house.getRepresentative())
+                .house_img(house.getPetSitterHouseImg())
+                .representative(house.getPetSitterHouseRepresentative())
                 .petSitter(petSitter)
                 .build()).collect(Collectors.toList());
     }

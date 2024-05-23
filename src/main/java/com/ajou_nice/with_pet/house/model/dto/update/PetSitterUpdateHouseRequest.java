@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class PetSitterUpdateHouseRequest {
     @NotBlank
-    private String houseImg;
+    private String petSitterHouseImg;
     @NotNull
-    private Boolean representative;
+    private Boolean petSitterHouseRepresentative;
 }

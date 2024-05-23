@@ -56,13 +56,12 @@ public class PetSitterController {
     @ApiOperation(value = "펫시터의 정보 등록")
     public Response<PetSitterRegisterMyInfoResponse> registerPetSitterMyInfo(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterRegisterMyInfoRequest petSitterRegisterMyInfoRequest) {
         PetSitterRegisterMyInfoResponse registerInfoResponse = petSitterService.registerPetSitterMyInfo(authentication.getName(), petSitterRegisterMyInfoRequest);
-
         return Response.success(registerInfoResponse);
     }
 
     @PutMapping("/houses")
     @ApiOperation(value = "펫시터 펫시터집 사진 수정")
-    public Response updatePetSitterHouses(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateHousesRequest petSitterHousesRequest) {
+    public Response<Void> updatePetSitterHouses(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateHousesRequest petSitterHousesRequest) {
         petSitterService.updatePetSitterHouses(authentication.getName(), petSitterHousesRequest);
         return Response.success(PetSitterResponseMessages.HOUSE_UPDATE.getMessage());
     }

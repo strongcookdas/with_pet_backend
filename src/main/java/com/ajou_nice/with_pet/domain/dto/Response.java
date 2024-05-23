@@ -31,10 +31,5 @@ public class Response<T> {
         return new Response("SUCCESS", message);
     }
 
-    public static Response<String> successToMessage(String message) {
-        return new Response("SUCCESS", message);
-    }
-
-
 }
 
