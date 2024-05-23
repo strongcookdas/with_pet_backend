@@ -82,7 +82,7 @@ public class PetSitterController {
 
     @PutMapping("/critical-service")
     @ApiOperation(value = "펫시터 필수 위드펫 서비스 수정")
-    public Response updateCriticalServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateCriticalServicesRequest criticalServicesRequest) {
+    public Response<Void> updateCriticalServices(@ApiIgnore Authentication authentication, @RequestBody @Valid PetSitterUpdateCriticalServicesRequest criticalServicesRequest) {
         petSitterService.updateCriticalServices(authentication.getName(), criticalServicesRequest);
         return Response.success(PetSitterResponseMessages.CRITICAL_SERVICE_UPDATE.getMessage());
     }

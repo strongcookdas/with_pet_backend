@@ -280,7 +280,7 @@ public class PetSitterService {
                 petSitter.changeAvailableDogSize(DogSize.대형견);
             }
 
-            PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter, request.getCriticalServicePrice());
+            PetSitterCriticalService petSitterCriticalService = PetSitterCriticalService.toEntity(criticalService, petSitter, request.getPetSitterCriticalServicePrice());
             criticalServices.add(petSitterCriticalService);
         }
         return criticalServices;

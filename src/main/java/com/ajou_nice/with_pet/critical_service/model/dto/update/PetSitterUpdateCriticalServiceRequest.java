@@ -11,5 +11,5 @@ import lombok.ToString;
 @ToString
 public class PetSitterUpdateCriticalServiceRequest {
     private Long criticalServiceId;
-    private int criticalServicePrice;
+    private int petSitterCriticalServicePrice;
 }
