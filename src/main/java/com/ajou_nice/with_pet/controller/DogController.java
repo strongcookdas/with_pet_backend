@@ -5,7 +5,6 @@ import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
 import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
-import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
 import com.ajou_nice.with_pet.service.DogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

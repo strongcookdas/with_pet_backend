@@ -105,7 +105,7 @@ public class PetSitterDiaryService {
                     ErrorCode.USER_NOT_FOUND.getMessage());
         });
 
-        if (!diary.getDog().getParty().getUser().getId().equals(user.getId())) {
+        if (!diary.getDog().getParty().getPartyLeader().getId().equals(user.getId())) {
             throw new AppException(ErrorCode.INVALID_PERMISSION,
                     ErrorCode.INVALID_TOKEN.getMessage());
         }

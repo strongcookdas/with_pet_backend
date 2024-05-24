@@ -106,13 +106,14 @@ public class SecurityConfig {
         //URL 관리
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET,GET_PERMIT_URL).permitAll()
+                .antMatchers(HttpMethod.GET, GET_PERMIT_URL).permitAll()
                 .antMatchers(POST_PERMIT_URL).permitAll()
                 .antMatchers(DOC_URLS).permitAll()
                 .antMatchers("/api/v2/pet-sitters/**").hasRole("PETSITTER")
+                .antMatchers("/api/v2/parties/**").hasRole("USER")
                 .antMatchers("/api/v1/review/create-review").hasRole("USER")
                 .antMatchers("/api/v2/admins/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE,"/api/v1/petsitter-diaries/*").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, "/api/v1/petsitter-diaries/*").hasRole("USER")
                 .antMatchers("/api/v1/reservation/user/show-reservations").hasRole("USER")
                 .antMatchers("/api/v1/reservation/show-payment/{reservationId}").hasRole("PETSITTER")
                 .antMatchers("/ws/chat").permitAll()

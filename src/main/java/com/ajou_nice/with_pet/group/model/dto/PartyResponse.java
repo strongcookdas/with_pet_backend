@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.party;
+package com.ajou_nice.with_pet.group.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Party;
+import com.ajou_nice.with_pet.group.model.entity.Party;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class PartyResponse {
     public static PartyResponse of(Party party) {
         return PartyResponse.builder()
                 .partyId(party.getPartyId())
-                .leader(party.getName())
+                .leader(party.getPartyName())
                 .partyIsbn(party.getPartyIsbn())
                 .build();
     }

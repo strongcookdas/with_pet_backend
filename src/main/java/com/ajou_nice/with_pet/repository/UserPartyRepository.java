@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.repository;
 
-import com.ajou_nice.with_pet.domain.entity.Party;
+import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import java.util.List;

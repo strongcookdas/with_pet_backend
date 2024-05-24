@@ -1,10 +1,11 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.group.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.party.PartyMemberRequest;
-import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
-import com.ajou_nice.with_pet.service.PartyService;
+import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
+import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
+import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
+import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
+import com.ajou_nice.with_pet.group.service.PartyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -22,7 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/groups")
+@RequestMapping("api/v2/parties")
 @Slf4j
 @Api(tags = "Party API")
 public class PartyController {
@@ -46,10 +47,9 @@ public class PartyController {
 
     @PostMapping
     @ApiOperation("그룹 생성")
-    public Response<PartyInfoResponse> createParty(@ApiIgnore Authentication authentication,
-            @RequestBody PartyRequest partyRequest) {
-
-        return Response.success(partyService.createParty(authentication.getName(), partyRequest));
+    public Response<PartyAddResponse> createParty(@ApiIgnore Authentication authentication, @RequestBody PartyAddRequest partyAddRequest) {
+        PartyAddResponse partyAddResponse = partyService.createParty(authentication.getName(), partyAddRequest);
+        return Response.success(partyAddResponse);
     }
 
     @DeleteMapping("/{partyId}")

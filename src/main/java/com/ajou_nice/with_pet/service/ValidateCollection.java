@@ -5,6 +5,8 @@ import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceReposit
 import com.ajou_nice.with_pet.domain.entity.*;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.group.model.entity.Party;
+import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.*;
