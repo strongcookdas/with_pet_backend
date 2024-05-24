@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.dog;
+package com.ajou_nice.with_pet.dog.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

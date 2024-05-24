@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.group.model.dto.add;
 
-import com.ajou_nice.with_pet.domain.dto.dog.PartyAddDogResponse;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.dto.add.PartyAddDogResponse;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.dto.PartyMemberResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

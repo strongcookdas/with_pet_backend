@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.dog;
+package com.ajou_nice.with_pet.dog.model.dto;
 
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.time.LocalDate;

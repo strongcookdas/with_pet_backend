@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.diary;
 
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
 import com.ajou_nice.with_pet.domain.entity.Category;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
@@ -10,7 +10,7 @@ import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.fixture.Fixture;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
 import com.ajou_nice.with_pet.repository.DiaryRepository;
-import com.ajou_nice.with_pet.repository.DogRepository;
+import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;

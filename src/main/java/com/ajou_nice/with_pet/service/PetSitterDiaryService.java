@@ -6,7 +6,7 @@ import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryListResponse;
 import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Diary;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;

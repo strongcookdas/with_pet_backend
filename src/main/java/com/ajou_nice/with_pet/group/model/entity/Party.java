@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.ajou_nice.with_pet.domain.entity.BaseEntity;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import lombok.AllArgsConstructor;

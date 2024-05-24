@@ -1,11 +1,11 @@
-package com.ajou_nice.with_pet.service;
+package com.ajou_nice.with_pet.dog.service;
 
-import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
-import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.dto.DogInfoRequest;
+import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogListInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogSimpleInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -13,7 +13,7 @@ import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.DogRepository;
+import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
@@ -22,6 +22,8 @@ import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

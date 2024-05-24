@@ -1,11 +1,11 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.dog.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
-import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.dog.DogListInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
-import com.ajou_nice.with_pet.service.DogService;
+import com.ajou_nice.with_pet.dog.model.dto.DogInfoRequest;
+import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogListInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
+import com.ajou_nice.with_pet.dog.service.DogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;

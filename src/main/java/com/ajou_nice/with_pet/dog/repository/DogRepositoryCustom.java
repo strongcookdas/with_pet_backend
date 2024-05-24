@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.repository.custom;
+package com.ajou_nice.with_pet.dog.repository;
 
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import java.util.List;
 
 public interface DogRepositoryCustom {

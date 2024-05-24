@@ -1,8 +1,8 @@
-package com.ajou_nice.with_pet.repository;
+package com.ajou_nice.with_pet.dog.repository;
 
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
-import com.ajou_nice.with_pet.repository.custom.DogRepositoryCustom;
+
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

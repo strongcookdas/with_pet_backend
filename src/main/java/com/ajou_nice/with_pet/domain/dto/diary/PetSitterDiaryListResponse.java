@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.domain.dto.diary;
 
 import com.ajou_nice.with_pet.domain.entity.Diary;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

@@ -4,7 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayCancelResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;

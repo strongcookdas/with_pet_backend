@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.domain.dto.calendar;
 
 import com.ajou_nice.with_pet.domain.dto.category.CategoryResponse;
-import com.ajou_nice.with_pet.domain.dto.dog.DogSimpleInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogSimpleInfoResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

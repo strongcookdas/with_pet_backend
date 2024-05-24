@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
 import java.time.LocalDate;
