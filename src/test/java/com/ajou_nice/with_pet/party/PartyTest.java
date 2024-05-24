@@ -1,12 +1,13 @@
 package com.ajou_nice.with_pet.party;
 
 import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
-import com.ajou_nice.with_pet.group.model.dto.PartyRequest;
+import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.fixture.Fixture;
+import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.group.service.PartyService;
 import java.time.LocalDate;
@@ -46,11 +47,11 @@ public class PartyTest {
         //given
         initialize();
         String userId = user.getEmail();
-        PartyRequest partyRequest = new PartyRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
+        PartyAddRequest partyAddRequest = new PartyAddRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
                 true,
                 LocalDate.of(2020, 10, 17), 5.0f, "123456789");
         //when
-        PartyInfoResponse result = partyService.createParty(userId, partyRequest);
+        PartyAddResponse result = partyService.createParty(userId, partyAddRequest);
         //then
 
         Assertions.assertEquals("party1", result.getPartyName());
@@ -62,12 +63,12 @@ public class PartyTest {
     void createParty_fail_1() {
         //given
         String userId = "";
-        PartyRequest partyRequest = new PartyRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
+        PartyAddRequest partyAddRequest = new PartyAddRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
                 true,
                 LocalDate.of(2020, 10, 17), 5.0f, "123456789");
         //when then
         Assertions.assertThrows(AppException.class, () -> {
-            partyService.createParty(userId, partyRequest);
+            partyService.createParty(userId, partyAddRequest);
         });
     }
 
@@ -81,12 +82,12 @@ public class PartyTest {
         userRepository.saveAndFlush(user);
         String userId = user.getEmail();
 
-        PartyRequest partyRequest = new PartyRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
+        PartyAddRequest partyAddRequest = new PartyAddRequest("party1", "dog_img", "흰둥이", "말티즈", "male",
                 true,
                 LocalDate.of(2020, 10, 17), 5.0f, "123456789");
         //when
         AppException exception = Assertions.assertThrows(AppException.class, () -> {
-            partyService.createParty(userId, partyRequest);
+            partyService.createParty(userId, partyAddRequest);
         });
         //then
         Assertions.assertEquals(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP);

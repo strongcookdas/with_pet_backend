@@ -2,8 +2,9 @@ package com.ajou_nice.with_pet.group.service;
 
 import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
 import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
-import com.ajou_nice.with_pet.group.model.dto.PartyRequest;
+import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,8 @@ public class PartyService {
 
     private final Integer partyCount = 5;
     private final Integer partyMemberCount = 5;
+
+    private final UserRepository userRepository;
     private final PartyRepository partyRepository;
     private final UserPartyRepository userPartyRepository;
     private final DogRepository dogRepository;
@@ -43,16 +47,11 @@ public class PartyService {
     private final ValidateCollection valid;
 
     @Transactional
-    public PartyInfoResponse addMember(String userId, PartyMemberRequest partyMemberRequest) {
-        //유저체크
-        User user = valid.userValidationById(userId);
+    public PartyInfoResponse addMember(String email, PartyMemberRequest partyMemberRequest) {
+        User user = userValidationByEmail(email);
 
         //그룹체크
-        Party party = partyRepository.findByPartyIsbn(partyMemberRequest.getPartyIsbn())
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.GROUP_NOT_FOUND,
-                            ErrorCode.GROUP_NOT_FOUND.getMessage());
-                });
+        Party party = partyValidationByIsbn(partyMemberRequest.getPartyIsbn());
 
         //그룹에 멤버 추가 체크
         if (userPartyRepository.existsUserPartyByUserAndParty(user, party)) {
@@ -102,41 +101,15 @@ public class PartyService {
     }
 
     @Transactional
-    public PartyInfoResponse createParty(String userId, PartyRequest partyRequest) {
-        //유저체크
-        User user = valid.userValidationById(userId);
+    public PartyAddResponse createParty(String email, PartyAddRequest partyAddRequest) {
+        // 파티 생성할 때 반려견을 등록해야 함
+        User user = userValidationByEmail(email);
 
-        if (user.getPartyCount() >= partyCount) {
-            throw new AppException(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP.getMessage());
-        }
+        Party party = userPartyCountCheckAndGenerationParty(user, partyAddRequest);
 
-        //파티 생성
-        Party party = Party.of(user, partyRequest.getPartyName());
-        party = partyRepository.save(party);
+        Dog dog = registerPartyDog(party, partyAddRequest);
 
-        //파티 코드 생성
-        party.updatePartyIsbn(createInvitationCode(party));
-
-        //유저 파티 매핑
-        UserParty userParty = UserParty.of(user, party);
-        userPartyRepository.save(userParty);
-
-        //반려견 등록
-        DogSize myDogSize;
-        if (partyRequest.getDog_weight() > 18) {
-            myDogSize = DogSize.대형견;
-        } else if (partyRequest.getDog_weight() > 10) {
-            myDogSize = DogSize.중형견;
-        } else {
-            myDogSize = DogSize.소형견;
-        }
-
-        Dog dog = Dog.of(partyRequest, party, myDogSize);
-        dog = dogRepository.save(dog);
-
-        user.updatePartyCount(user.getPartyCount() + 1);
-
-        return PartyInfoResponse.of(dog);
+        return PartyAddResponse.of(dog);
     }
 
     private String createInvitationCode(Party party) {
@@ -158,8 +131,8 @@ public class PartyService {
         reservationStatuses.add(ReservationStatus.USE);
         reservationStatuses.add(ReservationStatus.WAIT);
 
-        if(reservationRepository.existsByUserAndDogInAndReservationStatusIn(user,dogs,reservationStatuses)){
-            throw new AppException(ErrorCode.CAN_NOT_LEAVE_PARTY,ErrorCode.CAN_NOT_LEAVE_PARTY.getMessage());
+        if (reservationRepository.existsByUserAndDogInAndReservationStatusIn(user, dogs, reservationStatuses)) {
+            throw new AppException(ErrorCode.CAN_NOT_LEAVE_PARTY, ErrorCode.CAN_NOT_LEAVE_PARTY.getMessage());
         }
 
         Optional<UserParty> deleteUserParty = userPartyRepository.findByUserAndParty(user, party);
@@ -202,8 +175,8 @@ public class PartyService {
         reservationStatuses.add(ReservationStatus.USE);
         reservationStatuses.add(ReservationStatus.WAIT);
 
-        if(reservationRepository.existsByUserAndDogInAndReservationStatusIn(member,dogs,reservationStatuses)){
-            throw new AppException(ErrorCode.CAN_NOT_EXPEL_PARTY,ErrorCode.CAN_NOT_EXPEL_PARTY.getMessage());
+        if (reservationRepository.existsByUserAndDogInAndReservationStatusIn(member, dogs, reservationStatuses)) {
+            throw new AppException(ErrorCode.CAN_NOT_EXPEL_PARTY, ErrorCode.CAN_NOT_EXPEL_PARTY.getMessage());
         }
 
         if (!leader.getId().equals(party.getPartyLeader().getId())) {
@@ -221,5 +194,55 @@ public class PartyService {
         party.updateMemberCount(party.getMemberCount() - 1);
 
         return member.getName() + "님이 그룹에서 방출되었습니다.";
+    }
+
+    private User userValidationByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+        return user;
+    }
+
+    private Party partyValidationByIsbn(String isbn) {
+        Party party = partyRepository.findByPartyIsbn(isbn)
+                .orElseThrow(() -> {
+                    throw new AppException(ErrorCode.GROUP_NOT_FOUND,
+                            ErrorCode.GROUP_NOT_FOUND.getMessage());
+                });
+        return party;
+    }
+
+    private Party userPartyCountCheckAndGenerationParty(User partyLeader, PartyAddRequest partyAddRequest) {
+
+        if (partyLeader.getPartyCount() >= partyCount) {
+            throw new AppException(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP.getMessage());
+        }
+
+        Party party = Party.of(partyLeader, partyAddRequest.getPartyName());
+        party = partyRepository.save(party);
+
+        UserParty userParty = UserParty.of(partyLeader, party);
+        userPartyRepository.save(userParty);
+        partyLeader.updatePartyCount(partyLeader.getPartyCount() + 1);
+
+        return party;
+    }
+
+    private Dog registerPartyDog(Party party, PartyAddRequest partyAddRequest) {
+
+        DogSize myDogSize;
+
+        if (partyAddRequest.getPartyDogWeight() > 18) {
+            myDogSize = DogSize.대형견;
+        } else if (partyAddRequest.getPartyDogWeight() > 10) {
+            myDogSize = DogSize.중형견;
+        } else {
+            myDogSize = DogSize.소형견;
+        }
+
+        Dog dog = Dog.of(partyAddRequest, party, myDogSize);
+        dog = dogRepository.save(dog);
+
+        return dog;
     }
 }

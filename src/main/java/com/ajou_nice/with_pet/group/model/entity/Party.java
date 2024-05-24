@@ -1,5 +1,7 @@
 package com.ajou_nice.with_pet.group.model.entity;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -19,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -35,7 +38,7 @@ public class Party extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partyId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User partyLeader;
     private String partyName;
     private String partyIsbn;
@@ -57,9 +60,12 @@ public class Party extends BaseEntity {
     }
 
     public static Party of(User user, String partyName) {
+        String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String isbn = RandomStringUtils.randomAlphabetic(6) + formatedNow;
         return Party.builder()
                 .partyLeader(user)
                 .partyName(partyName)
+                .partyIsbn(isbn)
                 .memberCount(1)
                 .dogCount(1)
                 .build();

@@ -1,8 +1,8 @@
-package com.ajou_nice.with_pet.group.model.dto;
+package com.ajou_nice.with_pet.group.model.dto.add;
 
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,23 +14,23 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class PartyRequest {
+public class PartyAddRequest {
 
     @NotBlank
     private String partyName;
-    private String dog_img;
+    private String partyDogImg;
     @NotBlank
-    private String dog_name;
+    private String partyDogName;
     @NotBlank
-    private String dog_breed;
+    private String partyDogBreed;
     @NotBlank
-    private String dog_gender;
+    private String partyDogGender;
     @NotBlank
-    private Boolean neutralization;
+    private Boolean partyDogNeutralization;
     @NotBlank
-    private LocalDate dog_birth;
+    private LocalDate partyDogBirth;
     @NotBlank
-    private Float dog_weight;
+    private Float partyDogWeight;
     @NotBlank
-    private String dog_isbn;
+    private String partyDogIsbn;
 }
