@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.domain.entity;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoRequest;
-import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
+import com.ajou_nice.with_pet.group.model.dto.PartyRequest;
 import com.ajou_nice.with_pet.enums.DogSize;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +17,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+
+import com.ajou_nice.with_pet.group.model.entity.Party;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

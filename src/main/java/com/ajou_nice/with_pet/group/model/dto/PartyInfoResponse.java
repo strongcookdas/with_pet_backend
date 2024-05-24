@@ -1,8 +1,8 @@
-package com.ajou_nice.with_pet.domain.dto.party;
+package com.ajou_nice.with_pet.group.model.dto;
 
 import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
 import com.ajou_nice.with_pet.domain.entity.Dog;
-import com.ajou_nice.with_pet.domain.entity.Party;
+import com.ajou_nice.with_pet.group.model.entity.Party;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,15 +30,15 @@ public class PartyInfoResponse {
     public static PartyInfoResponse of(Party party) {
         return PartyInfoResponse.builder()
                 .partyId(party.getPartyId())
-                .partyName(party.getName())
-                .leaderId(party.getUser().getEmail())
-                .leaderImg(party.getUser().getProfileImg())
-                .leaderName(party.getUser().getName())
+                .partyName(party.getPartyName())
+                .leaderId(party.getPartyLeader().getEmail())
+                .leaderImg(party.getPartyLeader().getProfileImg())
+                .leaderName(party.getPartyLeader().getName())
                 .partyIsbn(party.getPartyIsbn())
                 .userPartyList(
                         party.getUserPartyList().stream()
                                 .filter(userParty -> userParty.getUser().getId()
-                                        != party.getUser().getId()).map(PartyMemberResponse::of)
+                                        != party.getPartyLeader().getId()).map(PartyMemberResponse::of)
                                 .collect(
                                         Collectors.toList()))
                 .dogInfoResponseList(new ArrayList<>())
@@ -48,10 +48,10 @@ public class PartyInfoResponse {
     public static PartyInfoResponse of(Dog dog) {
         return PartyInfoResponse.builder()
                 .partyId(dog.getParty().getPartyId())
-                .partyName(dog.getParty().getName())
-                .leaderId(dog.getParty().getUser().getEmail())
-                .leaderImg(dog.getParty().getUser().getProfileImg())
-                .leaderName(dog.getParty().getUser().getName())
+                .partyName(dog.getParty().getPartyName())
+                .leaderId(dog.getParty().getPartyLeader().getEmail())
+                .leaderImg(dog.getParty().getPartyLeader().getProfileImg())
+                .leaderName(dog.getParty().getPartyLeader().getName())
                 .partyIsbn(dog.getParty().getPartyIsbn())
                 .userPartyList(new ArrayList<>())
                 .dogInfoResponseList(Arrays.asList(DogInfoResponse.of(dog)))

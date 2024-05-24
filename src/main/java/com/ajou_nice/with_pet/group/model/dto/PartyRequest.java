@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.party;
+package com.ajou_nice.with_pet.group.model.dto;
 
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;

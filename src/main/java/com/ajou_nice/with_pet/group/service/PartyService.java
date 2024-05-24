@@ -1,10 +1,10 @@
-package com.ajou_nice.with_pet.service;
+package com.ajou_nice.with_pet.group.service;
 
-import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.party.PartyMemberRequest;
-import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
+import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
+import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
+import com.ajou_nice.with_pet.group.model.dto.PartyRequest;
 import com.ajou_nice.with_pet.domain.entity.Dog;
-import com.ajou_nice.with_pet.domain.entity.Party;
+import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.DogSize;
@@ -12,7 +12,7 @@ import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.DogRepository;
-import com.ajou_nice.with_pet.repository.PartyRepository;
+import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 
@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -173,7 +175,7 @@ public class PartyService {
         user.updatePartyCount(user.getPartyCount() - 1);
         party.updateMemberCount(party.getMemberCount() - 1);
 
-        if (party.getUser().getId().equals(user.getId())
+        if (party.getPartyLeader().getId().equals(user.getId())
                 && !nextLeader.isEmpty()) {
             party.updatePartyLeader(
                     userPartyRepository.findFirstByUserNotAndParty(user, party).get().getUser());
@@ -204,7 +206,7 @@ public class PartyService {
             throw new AppException(ErrorCode.CAN_NOT_EXPEL_PARTY,ErrorCode.CAN_NOT_EXPEL_PARTY.getMessage());
         }
 
-        if (!leader.getId().equals(party.getUser().getId())) {
+        if (!leader.getId().equals(party.getPartyLeader().getId())) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "멤버를 방출시킬 권한이 없습니다.");
         }
 

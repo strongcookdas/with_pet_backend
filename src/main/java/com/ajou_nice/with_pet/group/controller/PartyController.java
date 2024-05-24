@@ -1,10 +1,10 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.group.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.party.PartyMemberRequest;
-import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
-import com.ajou_nice.with_pet.service.PartyService;
+import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
+import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
+import com.ajou_nice.with_pet.group.model.dto.PartyRequest;
+import com.ajou_nice.with_pet.group.service.PartyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;

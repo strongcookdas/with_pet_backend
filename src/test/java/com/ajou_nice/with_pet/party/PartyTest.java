@@ -1,14 +1,14 @@
 package com.ajou_nice.with_pet.party;
 
-import com.ajou_nice.with_pet.domain.dto.party.PartyInfoResponse;
-import com.ajou_nice.with_pet.domain.dto.party.PartyRequest;
+import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
+import com.ajou_nice.with_pet.group.model.dto.PartyRequest;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.fixture.Fixture;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.service.PartyService;
+import com.ajou_nice.with_pet.group.service.PartyService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
