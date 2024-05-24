@@ -1,5 +1,7 @@
 package com.ajou_nice.with_pet.dog.controller;
 
+import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
+import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.dog.model.dto.DogInfoRequest;
 import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
@@ -23,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("api/v1/dogs")
+@RequestMapping("api/v2/dogs")
 @RequiredArgsConstructor
 @Api(tags = "Dog API")
 @Slf4j
@@ -31,13 +33,11 @@ public class DogController {
 
     private final DogService dogService;
 
-    @PostMapping("/register-dog/{partyId}")
+    @PostMapping("/{partyId}")
     @ApiOperation(value = "반려견 등록")
-    public Response<DogInfoResponse> registerDog(@ApiIgnore Authentication authentication,
-            @PathVariable Long partyId,
-            @RequestBody DogInfoRequest dogInfoRequest) {
-        return Response.success(dogService.registerDog(dogInfoRequest, partyId,
-                authentication.getName()));
+    public Response<DogRegisterResponse> registerDog(@ApiIgnore Authentication authentication, @PathVariable Long partyId, @RequestBody DogRegisterRequest dogRegisterRequest) {
+        DogRegisterResponse dogRegisterResponse = dogService.registerDog(authentication.getName(), partyId, dogRegisterRequest);
+        return Response.success(dogRegisterResponse);
     }
 
     @GetMapping("/{dogId}")

@@ -1,33 +1,31 @@
 package com.ajou_nice.with_pet.dog.service;
 
-import com.ajou_nice.with_pet.dog.model.dto.DogInfoRequest;
-import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
-import com.ajou_nice.with_pet.dog.model.dto.DogListInfoResponse;
-import com.ajou_nice.with_pet.dog.model.dto.DogSimpleInfoResponse;
-import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
-import com.ajou_nice.with_pet.dog.model.entity.Dog;
-import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
+import com.ajou_nice.with_pet.dog.model.dto.*;
+import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
+import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
+import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.dog.repository.DogRepository;
+import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
-import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class DogService {
 
     private final Integer dogCount = 3;
+
+    private final UserRepository userRepository;
     private final DogRepository dogRepository;
     private final UserPartyRepository userPartyRepository;
     private final ReservationRepository reservationRepository;
@@ -45,35 +45,12 @@ public class DogService {
 
 
     @Transactional
-    public DogInfoResponse registerDog(DogInfoRequest dogInfoRequest, Long partyId,
-            String userId) {
+    public DogRegisterResponse registerDog(String email, Long partyId, DogRegisterRequest dogRegisterRequest) {
+        User user = userValidationByEmail(email);
+        Party party = partyValidationById(partyId);
 
-        // 유저 존재 체크
-        User user = valid.userValidationById(userId);
-        // 파티 존재 체크
-        Party party = valid.partyValidation(partyId);
-
-        if (!userPartyRepository.existsUserPartyByUserAndParty(user, party)) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 그룹에 반려견을 추가할 권한이 없습니다.");
-        }
-
-        if (party.getDogCount() >= dogCount) {
-            throw new AppException(ErrorCode.TOO_MANY_DOG, ErrorCode.TOO_MANY_DOG.getMessage());
-        }
-        //반려견 사이즈 체크
-        DogSize myDogSize;
-        if (dogInfoRequest.getDog_weight() > 18) {
-            myDogSize = DogSize.대형견;
-        } else if (dogInfoRequest.getDog_weight() > 10) {
-            myDogSize = DogSize.중형견;
-        } else {
-            myDogSize = DogSize.소형견;
-        }
-        // 반려견 추가
-        Dog dog = dogRepository.save(Dog.of(dogInfoRequest, party, myDogSize));
-        party.updateDogCount(party.getDogCount() + 1);
-
-        return DogInfoResponse.of(dog);
+        Dog dog = authorizationCheckAndRegisterDog(user, party, dogRegisterRequest);
+        return DogRegisterResponse.of(dog);
     }
 
     public DogInfoResponse getDogInfo(Long dogId, String userId) {
@@ -136,7 +113,7 @@ public class DogService {
 
     @Transactional
     public DogInfoResponse modifyDogSocialization(String userId, Long dogId,
-            DogSocializationRequest dogSocializationRequest) {
+                                                  DogSocializationRequest dogSocializationRequest) {
         //유저 체크
         User user = valid.userValidationById(userId);
         //반려견 체크
@@ -215,5 +192,45 @@ public class DogService {
         }
 
         return deleteParty;
+    }
+
+    private User userValidationByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> {
+            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        });
+    }
+
+    private Party partyValidationById(Long partyId) {
+        return partyRepository.findById(partyId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND, ErrorCode.GROUP_NOT_FOUND.getMessage());
+        });
+    }
+
+    private DogSize getDogSize(Float weight){
+        DogSize dogSize;
+        if (weight > 18) {
+            dogSize = DogSize.대형견;
+        } else if (weight > 10) {
+            dogSize = DogSize.중형견;
+        } else {
+            dogSize = DogSize.소형견;
+        }
+        return dogSize;
+    }
+
+    private Dog authorizationCheckAndRegisterDog(User user, Party party, DogRegisterRequest dogRegisterRequest){
+        if (!userPartyRepository.existsUserPartyByUserAndParty(user, party)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 그룹에 반려견을 추가할 권한이 없습니다.");
+        }
+
+        if (party.getDogCount() >= dogCount) {
+            throw new AppException(ErrorCode.TOO_MANY_DOG, ErrorCode.TOO_MANY_DOG.getMessage());
+        }
+
+        DogSize myDogSize = getDogSize(dogRegisterRequest.getDogWeight());
+        Dog dog = dogRepository.save(Dog.of(dogRegisterRequest, party, myDogSize));
+        party.updateDogCount(party.getDogCount() + 1);
+
+        return dog;
     }
 }
