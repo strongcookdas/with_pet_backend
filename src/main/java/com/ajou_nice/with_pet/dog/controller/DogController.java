@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.dog.controller;
 
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
+import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfoResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfosResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.dog.model.dto.DogInfoRequest;
@@ -45,11 +46,8 @@ public class DogController {
 
     @GetMapping("/{dogId}")
     @ApiOperation(value = "반려견 상세정보 조회")
-    public Response<DogInfoResponse> getDogInfo(@ApiIgnore Authentication authentication,
-                                                @PathVariable Long dogId) {
-        DogInfoResponse dogInfoResponse = dogService.getDogInfo(dogId, authentication.getName());
-        log.info("---------------------dog DogInfo Response : {}--------------------------",
-                dogInfoResponse);
+    public Response<DogGetInfoResponse> getDogInfo(@ApiIgnore Authentication authentication, @PathVariable Long dogId) {
+        DogGetInfoResponse dogInfoResponse = dogService.getDogInfo(authentication.getName(), dogId);
         return Response.success(dogInfoResponse);
     }
 

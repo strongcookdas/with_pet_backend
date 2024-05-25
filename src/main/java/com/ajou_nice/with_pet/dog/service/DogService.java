@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServi
 import com.ajou_nice.with_pet.dog.model.dto.*;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
+import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfoResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfosResponse;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.dog.repository.DogRepository;
@@ -54,18 +55,11 @@ public class DogService {
         return DogRegisterResponse.of(dog);
     }
 
-    public DogInfoResponse getDogInfo(Long dogId, String userId) {
-        //유저 체크
-        User user = valid.userValidationById(userId);
-
-        //반려견 체크
-        Dog dog = valid.dogValidation(dogId);
-        //그룹 체크
-        if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
-            throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
-        }
-
-        return DogInfoResponse.of(dog);
+    public DogGetInfoResponse getDogInfo(String email, Long dogId) {
+        User user = userValidationByEmail(email);
+        Dog dog = dogValidationById(dogId);
+        checkPartyAuthorization(user, dog);
+        return DogGetInfoResponse.of(dog);
     }
 
     @Transactional
@@ -94,8 +88,8 @@ public class DogService {
         return DogInfoResponse.of(dog);
     }
 
-    public List<DogGetInfosResponse> getDogInfos(String userId) {
-        List<Long> userPartyList = userPartyRepository.findAllUserPartyIdByUserId(userId);
+    public List<DogGetInfosResponse> getDogInfos(String email) {
+        List<Long> userPartyList = userPartyRepository.findAllUserPartyIdByUserId(email);
         List<Dog> dogs = dogRepository.findAllUserDogs(userPartyList);
         return dogs.stream().map(DogGetInfosResponse::of).collect(Collectors.toList());
     }
@@ -202,6 +196,12 @@ public class DogService {
         });
     }
 
+    public Dog dogValidationById(Long dogId) {
+        return dogRepository.findById(dogId).orElseThrow(() -> {
+            throw new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage());
+        });
+    }
+
     private DogSize getDogSize(Float weight) {
         DogSize dogSize;
         if (weight > 18) {
@@ -228,5 +228,11 @@ public class DogService {
         party.updateDogCount(party.getDogCount() + 1);
 
         return dog;
+    }
+
+    private void checkPartyAuthorization(User user, Dog dog){
+        if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
+        }
     }
 }
