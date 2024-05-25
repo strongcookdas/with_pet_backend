@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServi
 import com.ajou_nice.with_pet.dog.model.dto.*;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
+import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfosResponse;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -93,15 +94,10 @@ public class DogService {
         return DogInfoResponse.of(dog);
     }
 
-    //여기가 제일 문제다....
-    public List<DogInfoResponse> getDogInfos(String userId) {
+    public List<DogGetInfosResponse> getDogInfos(String userId) {
         List<Long> userPartyList = userPartyRepository.findAllUserPartyIdByUserId(userId);
-        log.info(
-                "==================================== findAllUserDogs Start ==============================================");
         List<Dog> dogs = dogRepository.findAllUserDogs(userPartyList);
-        log.info(
-                "==================================== findAllUserDogs End ==============================================");
-        return dogs.stream().map(DogInfoResponse::of).collect(Collectors.toList());
+        return dogs.stream().map(DogGetInfosResponse::of).collect(Collectors.toList());
     }
 
     public List<DogSimpleInfoResponse> getDogSimpleInfos(String userId) {
@@ -206,7 +202,7 @@ public class DogService {
         });
     }
 
-    private DogSize getDogSize(Float weight){
+    private DogSize getDogSize(Float weight) {
         DogSize dogSize;
         if (weight > 18) {
             dogSize = DogSize.대형견;
@@ -218,7 +214,7 @@ public class DogService {
         return dogSize;
     }
 
-    private Dog authorizationCheckAndRegisterDog(User user, Party party, DogRegisterRequest dogRegisterRequest){
+    private Dog authorizationCheckAndRegisterDog(User user, Party party, DogRegisterRequest dogRegisterRequest) {
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, party)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 그룹에 반려견을 추가할 권한이 없습니다.");
         }

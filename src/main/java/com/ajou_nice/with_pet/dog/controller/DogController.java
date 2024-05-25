@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.dog.controller;
 
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
+import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfosResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.dog.model.dto.DogInfoRequest;
 import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
@@ -10,7 +11,9 @@ import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.dog.service.DogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -43,7 +46,7 @@ public class DogController {
     @GetMapping("/{dogId}")
     @ApiOperation(value = "반려견 상세정보 조회")
     public Response<DogInfoResponse> getDogInfo(@ApiIgnore Authentication authentication,
-            @PathVariable Long dogId) {
+                                                @PathVariable Long dogId) {
         DogInfoResponse dogInfoResponse = dogService.getDogInfo(dogId, authentication.getName());
         log.info("---------------------dog DogInfo Response : {}--------------------------",
                 dogInfoResponse);
@@ -53,8 +56,8 @@ public class DogController {
     @PutMapping("/{dogId}")
     @ApiOperation(value = "반려견 상세정보 수정")
     public Response<DogInfoResponse> modifyDogInfo(@ApiIgnore Authentication authentication,
-            @PathVariable Long dogId,
-            @RequestBody DogInfoRequest dogInfoRequest) {
+                                                   @PathVariable Long dogId,
+                                                   @RequestBody DogInfoRequest dogInfoRequest) {
         log.info("---------------------dog Modify Request : {}--------------------------",
                 dogInfoRequest);
         DogInfoResponse dogInfoResponse = dogService.modifyDogInfo(dogId, dogInfoRequest,
@@ -66,13 +69,8 @@ public class DogController {
 
     @GetMapping
     @ApiOperation(value = "반려견 상세정보 목록")
-    public Response<List<DogInfoResponse>> getDogInfos(@ApiIgnore Authentication authentication) {
-
-        log.info(
-                "================================= 반려견 상세정보 목록 시작 =================================");
-        List<DogInfoResponse> dogInfoResponses = dogService.getDogInfos(authentication.getName());
-        log.info(
-                "================================= 반려견 상세정보 목록 끝 =================================");
+    public Response<List<DogGetInfosResponse>> getDogInfos(@ApiIgnore Authentication authentication) {
+        List<DogGetInfosResponse> dogInfoResponses = dogService.getDogInfos(authentication.getName());
         return Response.success(dogInfoResponses);
     }
 
@@ -109,7 +107,7 @@ public class DogController {
 
     @DeleteMapping("/{dogId}")
     @ApiOperation(value = "반려견 삭제")
-    public Response<Boolean> deleteDog(@ApiIgnore Authentication authentication, @PathVariable Long dogId){
-        return Response.success(dogService.deleteDog(authentication.getName(),dogId));
+    public Response<Boolean> deleteDog(@ApiIgnore Authentication authentication, @PathVariable Long dogId) {
+        return Response.success(dogService.deleteDog(authentication.getName(), dogId));
     }
 }
