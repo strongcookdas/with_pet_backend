@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.dog;
 
+import com.ajou_nice.with_pet.dog.model.dto.delete.DogDeleteResponse;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
@@ -90,9 +91,9 @@ public class DogDeleteTest {
         String userId = boss.getEmail();
         Long dogId = dog.getDogId();
         //when
-        Boolean deleteParty = dogService.deleteDog(userId, dogId);
+        DogDeleteResponse deleteParty = dogService.deleteDog(userId, dogId);
         //then
-        Assertions.assertEquals(true, deleteParty);
+        Assertions.assertEquals(true, deleteParty.getIsDeletedParty());
     }
 
     @Test

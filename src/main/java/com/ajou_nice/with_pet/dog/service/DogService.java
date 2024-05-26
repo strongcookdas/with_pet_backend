@@ -2,9 +2,13 @@ package com.ajou_nice.with_pet.dog.service;
 
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
-import com.ajou_nice.with_pet.dog.model.dto.*;
+import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogListInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogSimpleInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
+import com.ajou_nice.with_pet.dog.model.dto.delete.DogDeleteResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfoResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfosResponse;
 import com.ajou_nice.with_pet.dog.model.dto.update.DogUpdateInfoRequest;
@@ -28,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,6 +84,16 @@ public class DogService {
         return dogs.stream().map(DogGetInfosResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional
+    public DogDeleteResponse deleteDog(String email, Long dogId) {
+        User user = userValidationByEmail(email);
+        Dog dog = dogValidationById(dogId);
+        Party party = dog.getParty();
+
+        return DogDeleteResponse.of(deleteDog(user, dog, party));
+    }
+
+    // 캘린더 API에서 사용하는 Dog service (이동 예정)
     public List<DogSimpleInfoResponse> getDogSimpleInfos(String userId) {
 
         valid.userValidationById(userId);
@@ -131,42 +146,6 @@ public class DogService {
             dogInfoResponses.add(DogListInfoResponse.of(dog, check));
         }
         return dogInfoResponses;
-    }
-
-    @Transactional
-    public Boolean deleteDog(String userId, Long dogId) {
-        Boolean deleteParty = false;
-        User user = valid.userValidationById(userId);
-
-        Dog dog = valid.dogValidation(dogId);
-
-        Party party = dog.getParty();
-
-        if (!user.getId().equals(dog.getParty().getPartyLeader().getId())) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION,
-                    ErrorCode.INVALID_PERMISSION.getMessage());
-        }
-
-        List<ReservationStatus> reservationStatuses = new ArrayList<>();
-        reservationStatuses.add(ReservationStatus.APPROVAL);
-        reservationStatuses.add(ReservationStatus.PAYED);
-        reservationStatuses.add(ReservationStatus.USE);
-        reservationStatuses.add(ReservationStatus.WAIT);
-
-        if (reservationRepository.existsByDogAndReservationStatusIn(dog, reservationStatuses)) {
-            throw new AppException(ErrorCode.CAN_NOT_DELETE_DOG,
-                    ErrorCode.CAN_NOT_DELETE_DOG.getMessage());
-        }
-
-        dogRepository.delete(dog);
-        party.updateDogCount(party.getDogCount() - 1);
-
-        if (party.getDogCount() == 0) {
-            deleteParty = true;
-            partyRepository.delete(party);
-        }
-
-        return deleteParty;
     }
 
     private User userValidationByEmail(String email) {
@@ -224,5 +203,34 @@ public class DogService {
     private void updateDog(Dog dog, DogUpdateInfoRequest dogUpdateInfoRequest) {
         DogSize myDogSize = getDogSize(dogUpdateInfoRequest.getDogWeight());
         dog.update(dogUpdateInfoRequest, myDogSize);
+    }
+
+    private Boolean deleteDog(User user, Dog dog, Party party) {
+        Boolean isDeletedParty = Boolean.FALSE;
+
+        checkDogDeleteValidation(user, dog, party);
+
+        dogRepository.delete(dog);
+        party.updateDogCount(party.getDogCount() - 1);
+
+        //만약에 멤버가 존재했을 때 실행되는지 테스트 해봐야 함
+        if (party.getDogCount() == 0) {
+            isDeletedParty = true;
+            partyRepository.delete(party);
+        }
+
+        return isDeletedParty;
+    }
+
+    private void checkDogDeleteValidation(User user, Dog dog, Party party){
+        if (!user.getId().equals(party.getPartyLeader().getId())) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION,
+                    ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        if (reservationRepository.existsByDogAndReservationStatusIn(dog, Arrays.asList(ReservationStatus.values()))) {
+            throw new AppException(ErrorCode.CAN_NOT_DELETE_DOG,
+                    ErrorCode.CAN_NOT_DELETE_DOG.getMessage());
+        }
     }
 }

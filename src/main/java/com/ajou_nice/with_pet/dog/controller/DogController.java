@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.dog.model.dto.DogListInfoResponse;
 import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
+import com.ajou_nice.with_pet.dog.model.dto.delete.DogDeleteResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfoResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfosResponse;
 import com.ajou_nice.with_pet.dog.model.dto.update.DogUpdateInfoRequest;
@@ -58,6 +59,13 @@ public class DogController {
         return Response.success(dogInfoResponses);
     }
 
+    @DeleteMapping("/{dogId}")
+    @ApiOperation(value = "반려견 삭제")
+    public Response<DogDeleteResponse> deleteDog(@ApiIgnore Authentication authentication, @PathVariable Long dogId) {
+        DogDeleteResponse dogDeleteResponse = dogService.deleteDog(authentication.getName(), dogId);
+        return Response.success(dogDeleteResponse);
+    }
+
     @PutMapping("/temperature/{dogId}")
     @ApiOperation(value = "반려견 사회화 정도 등록")
     public Response<DogInfoResponse> modifyDogSocialization(
@@ -87,11 +95,5 @@ public class DogController {
         List<DogListInfoResponse> list = dogService.getDogListInfoResponse(authentication.getName(),
                 petSitterId);
         return Response.success(list);
-    }
-
-    @DeleteMapping("/{dogId}")
-    @ApiOperation(value = "반려견 삭제")
-    public Response<Boolean> deleteDog(@ApiIgnore Authentication authentication, @PathVariable Long dogId) {
-        return Response.success(dogService.deleteDog(authentication.getName(), dogId));
     }
 }
