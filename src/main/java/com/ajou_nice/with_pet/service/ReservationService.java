@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.service;
 
-import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
@@ -8,7 +8,7 @@ import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
@@ -126,14 +126,14 @@ public class ReservationService {
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다. [펫시터] %s", user.getName(),
-                            dog.getName(), petSitter.getPetSitterName()),
+                            dog.getDogName(), petSitter.getPetSitterName()),
                     "/usagelist",
                     NotificationType.반려인_예약, u.getUser());
             notificationService.saveNotification(notification);
         });
 
         Notification notification = notificationService.sendEmail(
-                String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다.", user.getName(), dog.getName()),
+                String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다.", user.getName(), dog.getDogName()),
                 "/petsitterCalendar",
                 NotificationType.펫시터_예약, petSitter.getUser());
         notificationService.saveNotification(notification);
@@ -266,7 +266,7 @@ public class ReservationService {
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s 펫시터님이 %s 반려견에 대한 돌봄 서비스 예약을 승인했습니다.",
-                            petSitter.getPetSitterName(), dog.getName()),
+                            petSitter.getPetSitterName(), dog.getDogName()),
                     "/usagelist",
                     NotificationType.반려인_예약, u.getUser());
             notificationService.saveNotification(notification);

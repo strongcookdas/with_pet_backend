@@ -14,8 +14,8 @@ public interface UserPartyRepository extends JpaRepository<UserParty, Long> {
     //리팩토링이 필요할 거 같다.
     boolean existsUserPartyByUserAndParty(User user, Party party);
 
-    @Query("select u.party.partyId from UserParty u where u.user.id=:userId")
-    List<Long> findAllUserPartyIdByUserId(@Param("userId") String userId);
+    @Query("select u.party.partyId from UserParty u where u.user.email=:email")
+    List<Long> findAllUserPartyIdByUserId(@Param("email") String email);
 
     @Query("select u from UserParty u join fetch u.user where u.party.partyId =:partyId and u.user.id <>:userId ")
     List<UserParty> findAllByPartyAndUser(@Param("partyId") Long partyId,

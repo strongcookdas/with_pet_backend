@@ -1,11 +1,10 @@
-package com.ajou_nice.with_pet.domain.dto.dog;
+package com.ajou_nice.with_pet.dog.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +19,8 @@ public class DogSimpleInfoResponse {
     public static DogSimpleInfoResponse of(Dog dog) {
         return DogSimpleInfoResponse.builder()
                 .dogId(dog.getDogId())
-                .dogImg(dog.getProfile_img())
-                .name(dog.getName())
+                .dogImg(dog.getDogProfileImg())
+                .name(dog.getDogName())
                 .build();
     }
 }

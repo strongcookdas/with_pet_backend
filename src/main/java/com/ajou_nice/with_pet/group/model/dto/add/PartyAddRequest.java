@@ -3,6 +3,7 @@ package com.ajou_nice.with_pet.group.model.dto.add;
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 
+import com.ajou_nice.with_pet.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,13 +25,11 @@ public class PartyAddRequest {
     @NotBlank
     private String partyDogBreed;
     @NotBlank
-    private String partyDogGender;
+    private Gender partyDogGender;
     @NotBlank
     private Boolean partyDogNeutralization;
     @NotBlank
     private LocalDate partyDogBirth;
     @NotBlank
     private Float partyDogWeight;
-    @NotBlank
-    private String partyDogIsbn;
 }

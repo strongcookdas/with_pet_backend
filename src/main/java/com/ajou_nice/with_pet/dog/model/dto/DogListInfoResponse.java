@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.dog;
+package com.ajou_nice.with_pet.dog.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class DogListInfoResponse {
     public static DogListInfoResponse of(Dog dog, boolean check) {
         return DogListInfoResponse.builder()
                 .dogId(dog.getDogId())
-                .name(dog.getName())
+                .name(dog.getDogName())
                 .petReservationAvailable(check)
                 .build();
     }

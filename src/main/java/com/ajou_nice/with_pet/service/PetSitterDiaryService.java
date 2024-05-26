@@ -6,7 +6,7 @@ import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryListResponse;
 import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Diary;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -51,7 +51,7 @@ public class PetSitterDiaryService {
         List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
-                    petSitter.getPetSitterName() + " 펫시터님이 " + dog.getName() + "의 일지를 작성했습니다.",
+                    petSitter.getPetSitterName() + " 펫시터님이 " + dog.getDogName() + "의 일지를 작성했습니다.",
                     "/calendar",
                     NotificationType.펫시터_일지, u.getUser());
             notificationService.saveNotification(notification);

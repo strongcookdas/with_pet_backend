@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.group.model.dto;
 
-import com.ajou_nice.with_pet.domain.dto.dog.DogInfoResponse;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import java.util.ArrayList;
 import java.util.Arrays;

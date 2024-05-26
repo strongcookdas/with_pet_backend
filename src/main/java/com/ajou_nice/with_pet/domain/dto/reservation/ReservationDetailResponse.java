@@ -27,14 +27,14 @@ public class ReservationDetailResponse {
         return ReservationDetailResponse.builder()
                 .reservationId(reservation.getReservationId())
                 .dogId(reservation.getDog().getDogId())
-                .dogName(reservation.getDog().getName())
-                .dogImg(reservation.getDog().getProfile_img())
+                .dogName(reservation.getDog().getDogName())
+                .dogImg(reservation.getDog().getDogProfileImg())
                 .cost(reservation.getTotalPrice())
                 .checkIn(reservation.getCheckIn().toLocalDate().toString())
                 .checkOut(reservation.getCheckOut().toLocalDate().toString())
-                .socializationTemperature(reservation.getDog().getSocializationTemperature())
-                .affectionTemperature(reservation.getDog().getAffectionTemperature())
-                .socializationDegree(reservation.getDog().getSocializationDegree())
+                .socializationTemperature(reservation.getDog().getDogSocializationTemperature())
+                .affectionTemperature(reservation.getDog().getDogAffectionTemperature())
+                .socializationDegree(reservation.getDog().getDogSocializationDegree())
                 .build();
     }
 }

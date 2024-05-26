@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.domain.dto.diary;
 
 import com.ajou_nice.with_pet.domain.entity.Diary;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -23,8 +23,8 @@ public class PetSitterDiaryListResponse {
 
     public static PetSitterDiaryListResponse of(Dog dog, List<Diary> diaries) {
         return PetSitterDiaryListResponse.builder()
-                .dogImg(dog.getProfile_img())
-                .dogName(dog.getName())
+                .dogImg(dog.getDogProfileImg())
+                .dogName(dog.getDogName())
                 .petSitterDiaryResponses(diaries.stream().map(PetSitterDiaryResponse::of).collect(
                         Collectors.toList()))
                 .build();

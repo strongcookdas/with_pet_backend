@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.dog;
 
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.dto.delete.DogDeleteResponse;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
@@ -10,13 +11,13 @@ import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.fixture.Fixture;
-import com.ajou_nice.with_pet.repository.DogRepository;
+import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.service.DogService;
+import com.ajou_nice.with_pet.dog.service.DogService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -90,9 +91,9 @@ public class DogDeleteTest {
         String userId = boss.getEmail();
         Long dogId = dog.getDogId();
         //when
-        Boolean deleteParty = dogService.deleteDog(userId, dogId);
+        DogDeleteResponse deleteParty = dogService.deleteDog(userId, dogId);
         //then
-        Assertions.assertEquals(true, deleteParty);
+        Assertions.assertEquals(true, deleteParty.getIsDeletedParty());
     }
 
     @Test

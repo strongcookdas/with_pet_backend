@@ -4,7 +4,7 @@ import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayCancelResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
@@ -194,7 +194,7 @@ public class KaKaoPayService {
 			Dog dog, PetSitter petSitter) {
 		userParties.forEach(u -> {
 			Notification notification = notificationService.sendEmail(
-					String.format("%s 반려견에 대한 돌봄 서비스 예약이 자동 취소되었습니다. [펫시터] %s", dog.getName(),
+					String.format("%s 반려견에 대한 돌봄 서비스 예약이 자동 취소되었습니다. [펫시터] %s", dog.getDogName(),
 							petSitter.getPetSitterName()),
 					"/usagelist",
 					NotificationType.반려인_예약취소, u.getUser());
@@ -277,7 +277,7 @@ public class KaKaoPayService {
 			Dog dog, PetSitter petSitter) {
 		userParties.forEach(u -> {
 			Notification notification = notificationService.sendEmail(
-					String.format("%s 반려견에 대한 돌봄 서비스 예약이 취소되었습니다. [펫시터] %s", dog.getName(),
+					String.format("%s 반려견에 대한 돌봄 서비스 예약이 취소되었습니다. [펫시터] %s", dog.getDogName(),
 							petSitter.getPetSitterName()),
 					"/usagelist",
 					NotificationType.반려인_예약취소, u.getUser());
@@ -289,7 +289,7 @@ public class KaKaoPayService {
 			Dog dog, PetSitter petSitter) {
 		userParties.forEach(u -> {
 			Notification notification = notificationService.sendEmail(
-					String.format("%s 반려견에 대한 돌봄 서비스 예약을 거절되었습니다. [펫시터] %s", dog.getName(),
+					String.format("%s 반려견에 대한 돌봄 서비스 예약을 거절되었습니다. [펫시터] %s", dog.getDogName(),
 							petSitter.getPetSitterName()),
 					"/usagelist",
 					NotificationType.반려인_예약취소, u.getUser());

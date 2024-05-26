@@ -1,10 +1,10 @@
-package com.ajou_nice.with_pet.repository.custom;
+package com.ajou_nice.with_pet.dog.repository;
 
 
-import static com.ajou_nice.with_pet.domain.entity.QDog.dog;
+import static com.ajou_nice.with_pet.dog.model.entity.QDog.dog;
 import static com.ajou_nice.with_pet.domain.entity.QUserParty.userParty;
 
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

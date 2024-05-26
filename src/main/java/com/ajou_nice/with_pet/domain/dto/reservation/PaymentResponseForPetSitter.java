@@ -4,6 +4,8 @@ package com.ajou_nice.with_pet.domain.dto.reservation;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse.ReservationServiceResponse;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import java.util.List;
+
+import com.ajou_nice.with_pet.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +21,7 @@ public class PaymentResponseForPetSitter {
 	private String checkOut;
 	private String userName;
 	private String dogName;
-	private String dogGender;
+	private Gender dogGender;
 	private String dogProfileImg;
 	private String dogBreed;
 	private Float dogWeight;
@@ -39,16 +41,16 @@ public class PaymentResponseForPetSitter {
 				.checkIn(reservation.getCheckIn().toString())
 				.checkOut(reservation.getCheckOut().toString())
 				.userName(reservation.getUser().getName())
-				.dogName(reservation.getDog().getName())
-				.dogGender(reservation.getDog().getGender())
-				.dogProfileImg(reservation.getDog().getProfile_img())
-				.dogBreed(reservation.getDog().getBreed())
-				.dogIsbn(reservation.getDog().getIsbn())
-				.dogWeight(reservation.getDog().getWeight())
-				.dogNeutralization(reservation.getDog().getNeutralization())
-				.dogSocializationTemperature(reservation.getDog().getSocializationTemperature())
-				.dogSocializationDegree(reservation.getDog().getSocializationDegree())
-				.dogAffectionTemperature(reservation.getDog().getAffectionTemperature())
+				.dogName(reservation.getDog().getDogName())
+				.dogGender(reservation.getDog().getDogGender())
+				.dogProfileImg(reservation.getDog().getDogProfileImg())
+				.dogBreed(reservation.getDog().getDogBreed())
+				.dogIsbn(reservation.getDog().getDogIsbn())
+				.dogWeight(reservation.getDog().getDogWeight())
+				.dogNeutralization(reservation.getDog().getDogNeutralization())
+				.dogSocializationTemperature(reservation.getDog().getDogSocializationTemperature())
+				.dogSocializationDegree(reservation.getDog().getDogSocializationDegree())
+				.dogAffectionTemperature(reservation.getDog().getDogAffectionTemperature())
 				.totalCost(reservation.getTotalPrice())
 				.criticalServiceName(reservation.getCriticalServiceName())
 				.criticalServicePrice(reservation.getCriticalServicePrice())

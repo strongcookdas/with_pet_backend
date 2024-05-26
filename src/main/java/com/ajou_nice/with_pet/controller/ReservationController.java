@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.dog.DogSocializationRequest;
+import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.domain.dto.reservation.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;

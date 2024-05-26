@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.repository;
 
 import com.ajou_nice.with_pet.domain.entity.Diary;
-import com.ajou_nice.with_pet.domain.entity.Dog;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.repository.custom.userdiary.DiaryRepositoryCustom;
 import java.util.List;

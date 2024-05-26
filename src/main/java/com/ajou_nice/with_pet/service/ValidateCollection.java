@@ -2,6 +2,8 @@ package com.ajou_nice.with_pet.service;
 
 
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
+import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.domain.entity.*;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;

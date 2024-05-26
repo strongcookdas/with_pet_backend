@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.domain.entity;
 
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import java.time.LocalDateTime;
@@ -119,7 +120,7 @@ public class Reservation extends BaseEntity {
     }
 
     public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user,
-            PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog, String criticalServiceName, int criticalServicePrice){
+                                            PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog, String criticalServiceName, int criticalServicePrice){
         return Reservation.builder()
                 .checkIn(checkIn)
                 .checkOut(checkOut)
