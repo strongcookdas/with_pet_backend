@@ -1,11 +1,12 @@
 package com.ajou_nice.with_pet.dog.model.entity;
 
-import com.ajou_nice.with_pet.dog.model.dto.DogInfoRequest;
+import com.ajou_nice.with_pet.dog.model.dto.update.DogUpdateInfoRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.domain.entity.BaseEntity;
 import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.enums.DogSize;
+import com.ajou_nice.with_pet.enums.Gender;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import lombok.AllArgsConstructor;
@@ -33,65 +34,65 @@ public class Dog extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dogId;
     @NotNull
-    private String name;
+    private String dogName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupId", nullable = false)
+    @JoinColumn(name = "party_id", nullable = false)
     private Party party;
+    @Enumerated(EnumType.STRING)
+    private Gender dogGender;
     @NotNull
-    private String gender;
+    private Boolean dogNeutralization;
     @NotNull
-    private Boolean neutralization;
+    private LocalDate dogBirth;
     @NotNull
-    private LocalDate birth;
-    @NotNull
-    private Float weight;
+    private Float dogWeight;
     @Lob
-    private String profile_img;
+    private String dogProfileImg;
     @NotNull
-    private String breed;
+    private String dogBreed;
 
-    private String isbn;
-
-    @NotNull
-    private Double socializationTemperature;    //펫시터가 작성한 반려견 온도
+    private String dogIsbn;
 
     @NotNull
-    private Integer socializationDegree; //반려인이 작성한 반려견 사회화 정도 %로 표현
+    private Double dogSocializationTemperature;    //펫시터가 작성한 반려견 온도
+
     @NotNull
-    private Double affectionTemperature;
+    private Integer dogSocializationDegree; //반려인이 작성한 반려견 사회화 정도 %로 표현
+    @NotNull
+    private Double dogAffectionTemperature;
 
     @Enumerated(EnumType.STRING)
     private DogSize dogSize;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Diary> diaries;
+    private List<Diary> dogDiaries;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Reservation> reservations;
+    private List<Reservation> dogReservations;
 
-    public void update(DogInfoRequest dogInfoRequest, DogSize dogSize) {
-        this.name = dogInfoRequest.getDog_name();
-        this.gender = dogInfoRequest.getDog_gender();
-        this.neutralization = dogInfoRequest.getNeutralization();
-        this.birth = dogInfoRequest.getDog_birth();
-        this.weight = dogInfoRequest.getDog_weight();
-        this.profile_img = dogInfoRequest.getDog_img();
-        this.breed = dogInfoRequest.getDog_breed();
-        this.isbn = dogInfoRequest.getDog_isbn();
+    public void update(DogUpdateInfoRequest dogUpdateInfoRequest, DogSize dogSize) {
+        this.dogName = dogUpdateInfoRequest.getDogName();
+        this.dogGender = dogUpdateInfoRequest.getDogGender();
+        this.dogNeutralization = dogUpdateInfoRequest.getDogNeutralization();
+        this.dogBirth = dogUpdateInfoRequest.getDogBirth();
+        this.dogWeight = dogUpdateInfoRequest.getDogWeight();
+        this.dogProfileImg = dogUpdateInfoRequest.getDogImg();
+        this.dogBreed = dogUpdateInfoRequest.getDogBreed();
+        this.dogIsbn = dogUpdateInfoRequest.getDogIsbn();
         this.dogSize = dogSize;
     }
 
     public void updateSocialization(int dogSocialization) {
-        this.socializationDegree = dogSocialization;
+        this.dogSocializationDegree = dogSocialization;
     }
 
     public void updateSocializationTemperature(float score) {
-        this.socializationTemperature = this.socializationTemperature + score;
+        this.dogSocializationTemperature = this.dogSocializationTemperature + score;
     }
 
     public void updateAffectionTemperature(double temp) {
-        this.affectionTemperature = temp;
+        this.dogAffectionTemperature = temp;
     }
 
     public static Dog of(DogRegisterRequest dogRegisterRequest, Party party, DogSize dogSize) {
@@ -102,18 +103,18 @@ public class Dog extends BaseEntity {
         }
 
         return Dog.builder()
-                .name(dogRegisterRequest.getDogName())
-                .gender(dogRegisterRequest.getDogGender())
+                .dogName(dogRegisterRequest.getDogName())
+                .dogGender(dogRegisterRequest.getDogGender())
                 .party(party)
-                .neutralization(dogRegisterRequest.getDogNeutralization())
-                .birth(dogRegisterRequest.getDogBirth())
-                .weight(dogRegisterRequest.getDogWeight())
-                .profile_img(img)
-                .breed(dogRegisterRequest.getDogBreed())
-                .isbn(dogRegisterRequest.getDogIsbn())
-                .socializationTemperature(37.5)
-                .socializationDegree(0)
-                .affectionTemperature(37.5)
+                .dogNeutralization(dogRegisterRequest.getDogNeutralization())
+                .dogBirth(dogRegisterRequest.getDogBirth())
+                .dogWeight(dogRegisterRequest.getDogWeight())
+                .dogProfileImg(img)
+                .dogBreed(dogRegisterRequest.getDogBreed())
+                .dogIsbn(dogRegisterRequest.getDogIsbn())
+                .dogSocializationTemperature(37.5)
+                .dogSocializationDegree(0)
+                .dogAffectionTemperature(37.5)
                 .dogSize(dogSize)
                 .build();
     }
@@ -126,39 +127,39 @@ public class Dog extends BaseEntity {
         }
 
         return Dog.builder()
-                .name(partyAddRequest.getPartyDogName())
-                .gender(partyAddRequest.getPartyDogGender())
+                .dogName(partyAddRequest.getPartyDogName())
+                .dogGender(partyAddRequest.getPartyDogGender())
                 .party(party)
-                .neutralization(partyAddRequest.getPartyDogNeutralization())
-                .birth(partyAddRequest.getPartyDogBirth())
-                .weight(partyAddRequest.getPartyDogWeight())
-                .profile_img(img)
-                .breed(partyAddRequest.getPartyDogBreed())
-                .isbn(partyAddRequest.getPartyDogIsbn())
-                .socializationTemperature(37.5)
-                .socializationDegree(0)
-                .affectionTemperature(37.5)
+                .dogNeutralization(partyAddRequest.getPartyDogNeutralization())
+                .dogBirth(partyAddRequest.getPartyDogBirth())
+                .dogWeight(partyAddRequest.getPartyDogWeight())
+                .dogProfileImg(img)
+                .dogBreed(partyAddRequest.getPartyDogBreed())
+                .dogIsbn(partyAddRequest.getPartyDogIsbn())
+                .dogSocializationTemperature(37.5)
+                .dogSocializationDegree(0)
+                .dogAffectionTemperature(37.5)
                 .dogSize(dogSize)
                 .build();
     }
 
-    public static Dog simpleDogForTest(String name, String gender, Party party,
-            Boolean neutralization, LocalDate birth, Float weight, String profile_img, String breed,
-            String isbn,
-            DogSize dogSize) {
+    public static Dog simpleDogForTest(String name, Gender gender, Party party,
+                                       Boolean neutralization, LocalDate birth, Float weight, String profile_img, String breed,
+                                       String isbn,
+                                       DogSize dogSize) {
         return Dog.builder()
-                .name(name)
-                .gender(gender)
+                .dogName(name)
+                .dogGender(gender)
                 .party(party)
-                .neutralization(neutralization)
-                .birth(birth)
-                .weight(weight)
-                .profile_img(profile_img)
-                .breed(breed)
-                .isbn(isbn)
-                .socializationTemperature(37.5)
-                .socializationDegree(0)
-                .affectionTemperature(37.5)
+                .dogNeutralization(neutralization)
+                .dogBirth(birth)
+                .dogWeight(weight)
+                .dogProfileImg(profile_img)
+                .dogBreed(breed)
+                .dogIsbn(isbn)
+                .dogSocializationTemperature(37.5)
+                .dogSocializationDegree(0)
+                .dogAffectionTemperature(37.5)
                 .dogSize(dogSize)
                 .build();
     }

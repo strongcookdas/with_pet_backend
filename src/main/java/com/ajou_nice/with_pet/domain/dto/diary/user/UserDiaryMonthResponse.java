@@ -25,7 +25,7 @@ public class UserDiaryMonthResponse {
                 .categoryId(diary.getCategory().getCategoryId())
                 .categoryName(diary.getCategory().getName())
                 .dogId(diary.getDog().getDogId())
-                .dogName(diary.getDog().getName())
+                .dogName(diary.getDog().getDogName())
                 .createdAt(diary.getCreatedAt().toString())
                 .build();
     }

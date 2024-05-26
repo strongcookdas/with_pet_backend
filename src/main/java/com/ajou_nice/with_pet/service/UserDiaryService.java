@@ -64,7 +64,7 @@ public class UserDiaryService {
 
         for (UserParty userParty : userParties) {
             Notification notification = notificationService.sendEmail(
-                    user.getName() + "님이 " + dog.getName() + "의 일지를 작성했습니다.",
+                    user.getName() + "님이 " + dog.getDogName() + "의 일지를 작성했습니다.",
                     "/calendar",
                     NotificationType.반려인_일지, userParty.getUser());
             notificationService.saveNotification(notification);

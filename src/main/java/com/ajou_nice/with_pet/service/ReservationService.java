@@ -126,14 +126,14 @@ public class ReservationService {
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다. [펫시터] %s", user.getName(),
-                            dog.getName(), petSitter.getPetSitterName()),
+                            dog.getDogName(), petSitter.getPetSitterName()),
                     "/usagelist",
                     NotificationType.반려인_예약, u.getUser());
             notificationService.saveNotification(notification);
         });
 
         Notification notification = notificationService.sendEmail(
-                String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다.", user.getName(), dog.getName()),
+                String.format("%s님이 %s 반려견에 대한 돌봄 서비스 예약을 했습니다.", user.getName(), dog.getDogName()),
                 "/petsitterCalendar",
                 NotificationType.펫시터_예약, petSitter.getUser());
         notificationService.saveNotification(notification);
@@ -266,7 +266,7 @@ public class ReservationService {
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s 펫시터님이 %s 반려견에 대한 돌봄 서비스 예약을 승인했습니다.",
-                            petSitter.getPetSitterName(), dog.getName()),
+                            petSitter.getPetSitterName(), dog.getDogName()),
                     "/usagelist",
                     NotificationType.반려인_예약, u.getUser());
             notificationService.saveNotification(notification);

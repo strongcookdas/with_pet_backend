@@ -51,7 +51,7 @@ public class PetSitterDiaryService {
         List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
-                    petSitter.getPetSitterName() + " 펫시터님이 " + dog.getName() + "의 일지를 작성했습니다.",
+                    petSitter.getPetSitterName() + " 펫시터님이 " + dog.getDogName() + "의 일지를 작성했습니다.",
                     "/calendar",
                     NotificationType.펫시터_일지, u.getUser());
             notificationService.saveNotification(notification);

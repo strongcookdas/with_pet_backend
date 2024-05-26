@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.dog.model.dto.add;
+package com.ajou_nice.with_pet.dog.model.dto.update;
 
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.enums.DogSize;
@@ -13,8 +13,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 @ToString
-public class DogRegisterResponse {
-
+public class DogUpdateInfoResponse {
     private Long dogId;
     private String dogImg;
     private String dogName;
@@ -29,9 +28,9 @@ public class DogRegisterResponse {
     private Double dogAffectionTemperature;
     private DogSize dogSize;
 
-    public static DogRegisterResponse of(Dog dog) {
+    public static DogUpdateInfoResponse of(Dog dog) {
 
-        return DogRegisterResponse.builder()
+        return DogUpdateInfoResponse.builder()
                 .dogId(dog.getDogId())
                 .dogImg(dog.getDogProfileImg())
                 .dogName(dog.getDogName())

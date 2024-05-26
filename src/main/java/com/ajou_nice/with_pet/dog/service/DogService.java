@@ -7,6 +7,8 @@ import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfoResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfosResponse;
+import com.ajou_nice.with_pet.dog.model.dto.update.DogUpdateInfoRequest;
+import com.ajou_nice.with_pet.dog.model.dto.update.DogUpdateInfoResponse;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -63,29 +65,12 @@ public class DogService {
     }
 
     @Transactional
-    public DogInfoResponse modifyDogInfo(Long dogId, DogInfoRequest dogInfoRequest, String userId) {
-
-        //유저 체크
-        User user = valid.userValidationById(userId);
-        //반려견 체크
-        Dog dog = valid.dogValidation(dogId);
-        //그룹 체크
-        if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
-            throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
-        }
-
-        DogSize myDogSize;
-        if (dogInfoRequest.getDog_weight() > 18) {
-            myDogSize = DogSize.대형견;
-        } else if (dogInfoRequest.getDog_weight() > 10) {
-            myDogSize = DogSize.중형견;
-        } else {
-            myDogSize = DogSize.소형견;
-        }
-
-        dog.update(dogInfoRequest, myDogSize);
-
-        return DogInfoResponse.of(dog);
+    public DogUpdateInfoResponse updateDog(String email, Long dogId, DogUpdateInfoRequest dogUpdateInfoRequest) {
+        User user = userValidationByEmail(email);
+        Dog dog = dogValidationById(dogId);
+        checkPartyAuthorization(user, dog);
+        updateDog(dog, dogUpdateInfoRequest);
+        return DogUpdateInfoResponse.of(dog);
     }
 
     public List<DogGetInfosResponse> getDogInfos(String email) {
@@ -230,9 +215,14 @@ public class DogService {
         return dog;
     }
 
-    private void checkPartyAuthorization(User user, Dog dog){
+    private void checkPartyAuthorization(User user, Dog dog) {
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
             throw new AppException(ErrorCode.GROUP_NOT_FOUND, "반려견 그룹에 속한 그룹원이 아닙니다.");
         }
+    }
+
+    private void updateDog(Dog dog, DogUpdateInfoRequest dogUpdateInfoRequest) {
+        DogSize myDogSize = getDogSize(dogUpdateInfoRequest.getDogWeight());
+        dog.update(dogUpdateInfoRequest, myDogSize);
     }
 }

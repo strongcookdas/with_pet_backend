@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.domain.dto.reservation;
 
 import com.ajou_nice.with_pet.domain.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.ReservationPetSitterService;
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,7 @@ public class ReservationCreateResponse {
 				.reservationDate(reservation.getCreatedAt().toString())
 				.checkIn(reservation.getCheckIn().toString())
 				.checkOut(reservation.getCheckOut().toString())
-				.dogName(reservation.getDog().getName())
+				.dogName(reservation.getDog().getDogName())
 				.dogSize(reservation.getDog().getDogSize().toString())
 				.petSitterName(reservation.getPetSitter().getPetSitterName())
 				.criticalServiceName(reservation.getCriticalServiceName())

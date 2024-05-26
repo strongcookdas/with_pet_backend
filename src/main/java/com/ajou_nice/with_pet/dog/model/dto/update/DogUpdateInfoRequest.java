@@ -1,9 +1,10 @@
-package com.ajou_nice.with_pet.dog.model.dto.add;
+package com.ajou_nice.with_pet.dog.model.dto.update;
 
 import com.ajou_nice.with_pet.enums.Gender;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class DogRegisterRequest {
+public class DogUpdateInfoRequest {
 
     private String dogImg;
     @NotBlank
@@ -23,7 +24,7 @@ public class DogRegisterRequest {
     private String dogBreed;
     @NotBlank
     private Gender dogGender;
-    @NotBlank
+    @NotNull
     private Boolean dogNeutralization;
     @NotBlank
     private LocalDate dogBirth;

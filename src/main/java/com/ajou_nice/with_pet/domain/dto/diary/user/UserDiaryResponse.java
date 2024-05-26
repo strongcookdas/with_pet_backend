@@ -46,7 +46,7 @@ public class UserDiaryResponse {
                 .title(diary.getTitle())
                 .contentBody(diary.getContent())
                 .dogImgToday(diary.getMedia())
-                .dogName(diary.getDog().getName())
+                .dogName(diary.getDog().getDogName())
                 .createdAt(diary.getCreatedAt())
                 .build();
     }

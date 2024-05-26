@@ -5,6 +5,8 @@ import com.ajou_nice.with_pet.enums.DogSize;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.ajou_nice.with_pet.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +26,7 @@ public class DogInfoResponse {
     private String dog_img;
     private String dog_name;
     private String dog_breed;
-    private String dog_gender;
+    private Gender dog_gender;
     private Boolean neutralization;
     private LocalDate dog_birth;
     private Float dog_weight;
@@ -38,17 +40,17 @@ public class DogInfoResponse {
     public static List<DogInfoResponse> toList(List<Dog> dogs) {
         return dogs.stream().map(dog -> DogInfoResponse.builder()
                 .dog_id(dog.getDogId())
-                .dog_img(dog.getProfile_img())
-                .dog_name(dog.getName())
-                .dog_breed(dog.getBreed())
-                .dog_gender(dog.getGender())
-                .neutralization(dog.getNeutralization())
-                .dog_birth(dog.getBirth())
-                .dog_weight(dog.getWeight())
-                .dog_isbn(dog.getIsbn())
-                .socializationTemperature(dog.getSocializationTemperature())
-                .socializationTemperature(dog.getSocializationTemperature())
-                .affectionTemperature(dog.getAffectionTemperature())
+                .dog_img(dog.getDogProfileImg())
+                .dog_name(dog.getDogName())
+                .dog_breed(dog.getDogBreed())
+                .dog_gender(dog.getDogGender())
+                .neutralization(dog.getDogNeutralization())
+                .dog_birth(dog.getDogBirth())
+                .dog_weight(dog.getDogWeight())
+                .dog_isbn(dog.getDogIsbn())
+                .socializationTemperature(dog.getDogSocializationTemperature())
+                .socializationTemperature(dog.getDogSocializationTemperature())
+                .affectionTemperature(dog.getDogAffectionTemperature())
                 .dogSize(dog.getDogSize())
                 .build()).collect(Collectors.toList());
     }
@@ -57,17 +59,17 @@ public class DogInfoResponse {
 
         return DogInfoResponse.builder()
                 .dog_id(dog.getDogId())
-                .dog_img(dog.getProfile_img())
-                .dog_name(dog.getName())
-                .dog_breed(dog.getBreed())
-                .dog_gender(dog.getGender())
-                .neutralization(dog.getNeutralization())
-                .dog_birth(dog.getBirth())
-                .dog_weight(dog.getWeight())
-                .dog_isbn(dog.getIsbn())
-                .socializationTemperature(dog.getSocializationTemperature())
-                .socializationDegree(dog.getSocializationDegree())
-                .affectionTemperature(dog.getAffectionTemperature())
+                .dog_img(dog.getDogProfileImg())
+                .dog_name(dog.getDogName())
+                .dog_breed(dog.getDogBreed())
+                .dog_gender(dog.getDogGender())
+                .neutralization(dog.getDogNeutralization())
+                .dog_birth(dog.getDogBirth())
+                .dog_weight(dog.getDogWeight())
+                .dog_isbn(dog.getDogIsbn())
+                .socializationTemperature(dog.getDogSocializationTemperature())
+                .socializationDegree(dog.getDogSocializationDegree())
+                .affectionTemperature(dog.getDogAffectionTemperature())
                 .dogSize(dog.getDogSize())
                 .build();
     }

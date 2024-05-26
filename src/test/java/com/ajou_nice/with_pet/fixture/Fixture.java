@@ -3,6 +3,7 @@ package com.ajou_nice.with_pet.fixture;
 import com.ajou_nice.with_pet.domain.entity.Category;
 import com.ajou_nice.with_pet.domain.entity.Diary;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
+import com.ajou_nice.with_pet.enums.Gender;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.domain.entity.Reservation;
@@ -43,7 +44,7 @@ public class Fixture {
     private Party party = Party.of(user1, "party1");
 
     //반려견
-    Dog dog = Dog.simpleDogForTest("흰둥이", "male", party, true, LocalDate.now(), 5.0f, "image",
+    Dog dog = Dog.simpleDogForTest("흰둥이", Gender.FEMALE, party, true, LocalDate.now(), 5.0f, "image",
             "말티즈", "123456789",
             DogSize.소형견);
 

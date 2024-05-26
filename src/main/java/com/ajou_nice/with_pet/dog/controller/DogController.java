@@ -1,32 +1,25 @@
 package com.ajou_nice.with_pet.dog.controller;
 
+import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogListInfoResponse;
+import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfoResponse;
 import com.ajou_nice.with_pet.dog.model.dto.get.DogGetInfosResponse;
-import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.dog.model.dto.DogInfoRequest;
-import com.ajou_nice.with_pet.dog.model.dto.DogInfoResponse;
-import com.ajou_nice.with_pet.dog.model.dto.DogListInfoResponse;
-import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
+import com.ajou_nice.with_pet.dog.model.dto.update.DogUpdateInfoRequest;
+import com.ajou_nice.with_pet.dog.model.dto.update.DogUpdateInfoResponse;
 import com.ajou_nice.with_pet.dog.service.DogService;
+import com.ajou_nice.with_pet.domain.dto.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v2/dogs")
@@ -53,15 +46,8 @@ public class DogController {
 
     @PutMapping("/{dogId}")
     @ApiOperation(value = "반려견 상세정보 수정")
-    public Response<DogInfoResponse> modifyDogInfo(@ApiIgnore Authentication authentication,
-                                                   @PathVariable Long dogId,
-                                                   @RequestBody DogInfoRequest dogInfoRequest) {
-        log.info("---------------------dog Modify Request : {}--------------------------",
-                dogInfoRequest);
-        DogInfoResponse dogInfoResponse = dogService.modifyDogInfo(dogId, dogInfoRequest,
-                authentication.getName());
-        log.info("---------------------dog Modify Request : {}--------------------------",
-                dogInfoResponse);
+    public Response<DogUpdateInfoResponse> updateDogInfo(@ApiIgnore Authentication authentication, @PathVariable Long dogId, @RequestBody DogUpdateInfoRequest dogUpdateInfoRequest) {
+        DogUpdateInfoResponse dogInfoResponse = dogService.updateDog(authentication.getName(), dogId, dogUpdateInfoRequest);
         return Response.success(dogInfoResponse);
     }
 

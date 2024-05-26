@@ -19,7 +19,7 @@ public class DogListInfoResponse {
     public static DogListInfoResponse of(Dog dog, boolean check) {
         return DogListInfoResponse.builder()
                 .dogId(dog.getDogId())
-                .name(dog.getName())
+                .name(dog.getDogName())
                 .petReservationAvailable(check)
                 .build();
     }

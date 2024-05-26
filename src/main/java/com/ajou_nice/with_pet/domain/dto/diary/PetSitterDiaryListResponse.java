@@ -23,8 +23,8 @@ public class PetSitterDiaryListResponse {
 
     public static PetSitterDiaryListResponse of(Dog dog, List<Diary> diaries) {
         return PetSitterDiaryListResponse.builder()
-                .dogImg(dog.getProfile_img())
-                .dogName(dog.getName())
+                .dogImg(dog.getDogProfileImg())
+                .dogName(dog.getDogName())
                 .petSitterDiaryResponses(diaries.stream().map(PetSitterDiaryResponse::of).collect(
                         Collectors.toList()))
                 .build();

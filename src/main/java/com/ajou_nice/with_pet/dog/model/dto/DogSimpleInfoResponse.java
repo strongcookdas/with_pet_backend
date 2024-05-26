@@ -19,8 +19,8 @@ public class DogSimpleInfoResponse {
     public static DogSimpleInfoResponse of(Dog dog) {
         return DogSimpleInfoResponse.builder()
                 .dogId(dog.getDogId())
-                .dogImg(dog.getProfile_img())
-                .name(dog.getName())
+                .dogImg(dog.getDogProfileImg())
+                .name(dog.getDogName())
                 .build();
     }
 }

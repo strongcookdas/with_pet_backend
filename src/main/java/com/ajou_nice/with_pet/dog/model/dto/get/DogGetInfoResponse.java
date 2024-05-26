@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.dog.model.dto.get;
 
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.enums.DogSize;
+import com.ajou_nice.with_pet.enums.Gender;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public class DogGetInfoResponse {
     private String dogImg;
     private String dogName;
     private String dogBreed;
-    private String dogGender;
+    private Gender dogGender;
     private Boolean dogNeutralization;
     private LocalDate dogBirth;
     private Float dogWeight;
@@ -31,17 +32,17 @@ public class DogGetInfoResponse {
 
         return DogGetInfoResponse.builder()
                 .dogId(dog.getDogId())
-                .dogImg(dog.getProfile_img())
-                .dogName(dog.getName())
-                .dogBreed(dog.getBreed())
-                .dogGender(dog.getGender())
-                .dogNeutralization(dog.getNeutralization())
-                .dogBirth(dog.getBirth())
-                .dogWeight(dog.getWeight())
-                .dogIsbn(dog.getIsbn())
-                .dogSocializationTemperature(dog.getSocializationTemperature())
-                .dogSocializationDegree(dog.getSocializationDegree())
-                .dogAffectionTemperature(dog.getAffectionTemperature())
+                .dogImg(dog.getDogProfileImg())
+                .dogName(dog.getDogName())
+                .dogBreed(dog.getDogBreed())
+                .dogGender(dog.getDogGender())
+                .dogNeutralization(dog.getDogNeutralization())
+                .dogBirth(dog.getDogBirth())
+                .dogWeight(dog.getDogWeight())
+                .dogIsbn(dog.getDogIsbn())
+                .dogSocializationTemperature(dog.getDogSocializationTemperature())
+                .dogSocializationDegree(dog.getDogSocializationDegree())
+                .dogAffectionTemperature(dog.getDogAffectionTemperature())
                 .dogSize(dog.getDogSize())
                 .build();
     }
