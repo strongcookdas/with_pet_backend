@@ -32,6 +32,4 @@ public class PartyAddRequest {
     private LocalDate partyDogBirth;
     @NotBlank
     private Float partyDogWeight;
-    @NotBlank
-    private String partyDogIsbn;
 }

@@ -40,18 +40,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class DogService {
-
-    private final Integer dogCount = 3;
+    private final Integer PARTY_MAX_DOG_COUNT = 3;
 
     private final UserRepository userRepository;
     private final DogRepository dogRepository;
     private final UserPartyRepository userPartyRepository;
     private final ReservationRepository reservationRepository;
     private final PartyRepository partyRepository;
-
     private final PetSitterCriticalServiceRepository criticalServiceRepository;
-    private final ValidateCollection valid;
 
+    private final ValidateCollection valid;
 
     @Transactional
     public DogRegisterResponse registerDog(String email, Long partyId, DogRegisterRequest dogRegisterRequest) {
@@ -183,7 +181,7 @@ public class DogService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 그룹에 반려견을 추가할 권한이 없습니다.");
         }
 
-        if (party.getDogCount() >= dogCount) {
+        if (party.getDogCount() >= PARTY_MAX_DOG_COUNT) {
             throw new AppException(ErrorCode.TOO_MANY_DOG, ErrorCode.TOO_MANY_DOG.getMessage());
         }
 

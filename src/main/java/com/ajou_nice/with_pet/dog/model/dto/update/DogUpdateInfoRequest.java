@@ -30,6 +30,4 @@ public class DogUpdateInfoRequest {
     private LocalDate dogBirth;
     @NotBlank
     private Float dogWeight;
-    @NotBlank
-    private String dogIsbn;
 }
