@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class PartyMemberRequest {
+public class PartyAddPartyByIsbnRequest {
 
     @NotBlank(message = "초대코드를 입력해주세요.")
     private String partyIsbn;

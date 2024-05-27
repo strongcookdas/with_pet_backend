@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.group.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
-import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
+import com.ajou_nice.with_pet.group.model.dto.PartyAddPartyByIsbnResponse;
+import com.ajou_nice.with_pet.group.model.dto.PartyAddPartyByIsbnRequest;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
 import com.ajou_nice.with_pet.group.model.dto.get.PartyGetInfosResponse;
@@ -32,11 +32,10 @@ public class PartyController {
     private final PartyService partyService;
 
     @PostMapping("/member")
-    @ApiOperation(value = "그룹 멤버 추가")
-    public Response<PartyInfoResponse> addMember(@ApiIgnore Authentication authentication,
-            @RequestBody PartyMemberRequest partyMemberRequest) {
-        return Response.success(
-                partyService.addMember(authentication.getName(), partyMemberRequest));
+    @ApiOperation(value = "그룹 식별자로 기존 그룹 추가")
+    public Response<PartyAddPartyByIsbnResponse> addPartyByPartyIsbn(@ApiIgnore Authentication authentication, @RequestBody PartyAddPartyByIsbnRequest partyAddPartyByIsbnRequest) {
+        PartyAddPartyByIsbnResponse partyAddPartyByIsbnResponse = partyService.addPartyByPartyIsbn(authentication.getName(), partyAddPartyByIsbnRequest);
+        return Response.success(partyAddPartyByIsbnResponse);
     }
 
     @GetMapping

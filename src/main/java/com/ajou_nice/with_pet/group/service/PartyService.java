@@ -1,28 +1,22 @@
 package com.ajou_nice.with_pet.group.service;
 
-import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
-import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
-import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
-import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
-import com.ajou_nice.with_pet.group.model.dto.get.PartyGetInfosResponse;
-import com.ajou_nice.with_pet.group.model.entity.Party;
+import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.dog.repository.DogRepository;
+import com.ajou_nice.with_pet.group.model.dto.PartyAddPartyByIsbnRequest;
+import com.ajou_nice.with_pet.group.model.dto.PartyAddPartyByIsbnResponse;
+import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
+import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
+import com.ajou_nice.with_pet.group.model.dto.get.PartyGetInfosResponse;
+import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +24,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PartyService {
-
-    private final Integer partyCount = 5;
-    private final Integer partyMemberCount = 5;
+    private final Integer PARTY_MAX_COUNT = 5;
+    private final Integer PARTY_MEMBER_MAX_COUNT = 5;
 
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
@@ -47,33 +45,13 @@ public class PartyService {
     private final ValidateCollection valid;
 
     @Transactional
-    public PartyInfoResponse addMember(String email, PartyMemberRequest partyMemberRequest) {
+    public PartyAddPartyByIsbnResponse addPartyByPartyIsbn(String email, PartyAddPartyByIsbnRequest partyAddPartyByIsbnRequest) {
         User user = userValidationByEmail(email);
+        Party party = partyValidationByIsbn(partyAddPartyByIsbnRequest.getPartyIsbn());
 
-        //그룹체크
-        Party party = partyValidationByIsbn(partyMemberRequest.getPartyIsbn());
+        checkPartyMemberAddValidation(user, party);
 
-        //그룹에 멤버 추가 체크
-        if (userPartyRepository.existsUserPartyByUserAndParty(user, party)) {
-            throw new AppException(ErrorCode.DUPLICATED_GROUP_MEMBER,
-                    ErrorCode.DUPLICATED_GROUP_MEMBER.getMessage());
-        }
-
-        if (party.getMemberCount() >= partyMemberCount) {
-            throw new AppException(ErrorCode.TOO_MANY_MEMBER,
-                    ErrorCode.TOO_MANY_MEMBER.getMessage());
-        }
-
-        //유저 그룹 매핑
-        userPartyRepository.save(UserParty.of(user, party));
-        user.updatePartyCount(user.getPartyCount() + 1);
-        party.updateMemberCount(party.getMemberCount() + 1);
-
-        List<Dog> dogs = dogRepository.findAllByParty(party);
-
-        PartyInfoResponse partyInfoResponse = PartyInfoResponse.of(party);
-        partyInfoResponse.updatePartyInfoResponse(dogs);
-        return partyInfoResponse;
+        return addPartyMember(user, party);
     }
 
     public List<PartyGetInfosResponse> getPartyInfoList(String email) {
@@ -85,9 +63,7 @@ public class PartyService {
     public PartyAddResponse createParty(String email, PartyAddRequest partyAddRequest) {
         // 파티 생성할 때 반려견을 등록해야 함
         User user = userValidationByEmail(email);
-
         Party party = userPartyCountCheckAndGenerationParty(user, partyAddRequest);
-
         Dog dog = registerPartyDog(party, partyAddRequest);
 
         return PartyAddResponse.of(dog);
@@ -189,11 +165,15 @@ public class PartyService {
         return party;
     }
 
-    private Party userPartyCountCheckAndGenerationParty(User partyLeader, PartyAddRequest partyAddRequest) {
-
-        if (partyLeader.getPartyCount() >= partyCount) {
+    private void checkUserPartyCount(User user) {
+        if (user.getPartyCount() >= PARTY_MAX_COUNT) {
             throw new AppException(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP.getMessage());
         }
+    }
+
+    private Party userPartyCountCheckAndGenerationParty(User partyLeader, PartyAddRequest partyAddRequest) {
+
+        checkUserPartyCount(partyLeader);
 
         Party party = Party.of(partyLeader, partyAddRequest.getPartyName());
         party = partyRepository.save(party);
@@ -238,5 +218,27 @@ public class PartyService {
                                 .forEach(partyGetInfosResponse::toPartyGetInfosDogResponseAndAddDogList)
                 );
         return partyGetInfosResponses;
+    }
+
+    private void checkPartyMemberAddValidation(User user, Party party) {
+        checkUserPartyCount(user);
+
+        if (party.getMemberCount() >= PARTY_MEMBER_MAX_COUNT) {
+            throw new AppException(ErrorCode.TOO_MANY_MEMBER,
+                    ErrorCode.TOO_MANY_MEMBER.getMessage());
+        }
+    }
+
+    private PartyAddPartyByIsbnResponse addPartyMember(User user, Party party) {
+        userPartyRepository.save(UserParty.of(user, party));
+        user.updatePartyCount(user.getPartyCount() + 1);
+        party.updateMemberCount(party.getMemberCount() + 1);
+
+        List<Dog> dogs = dogRepository.findAllByParty(party);
+
+        PartyAddPartyByIsbnResponse partyAddPartyByIsbnResponse = PartyAddPartyByIsbnResponse.of(party);
+        partyAddPartyByIsbnResponse.updatePartyInfoResponse(dogs);
+
+        return partyAddPartyByIsbnResponse;
     }
 }

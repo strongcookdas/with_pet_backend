@@ -1,6 +1,5 @@
 package com.ajou_nice.with_pet.party;
 
-import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
