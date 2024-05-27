@@ -18,13 +18,11 @@ import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +32,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class PartyService {
-    private final Integer PARTY_MAX_COUNT = 5;
-    private final Integer PARTY_MEMBER_MAX_COUNT = 5;
 
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
@@ -43,14 +39,14 @@ public class PartyService {
     private final DogRepository dogRepository;
     private final ReservationRepository reservationRepository;
 
-    private final ValidateCollection valid;
-
     @Transactional
     public PartyAddPartyByIsbnResponse addPartyByPartyIsbn(String email, PartyAddPartyByIsbnRequest partyAddPartyByIsbnRequest) {
         User user = userValidationByEmail(email);
         Party party = partyValidationByIsbn(partyAddPartyByIsbnRequest.getPartyIsbn());
 
-        checkPartyMemberAddValidation(user, party);
+        checkDuplicatedUserInParty(user, party);
+        checkUserPartyCount(user);
+        checkPartyMemberCount(party);
 
         return addPartyMember(user, party);
     }
@@ -64,7 +60,9 @@ public class PartyService {
     public PartyAddResponse createParty(String email, PartyAddRequest partyAddRequest) {
         // 파티 생성할 때 반려견을 등록해야 함
         User user = userValidationByEmail(email);
-        Party party = userPartyCountCheckAndGenerationParty(user, partyAddRequest);
+
+        checkUserPartyCount(user);
+        Party party = generateParty(user, partyAddRequest);
         Dog dog = registerPartyDog(party, partyAddRequest);
 
         return PartyAddResponse.of(dog);
@@ -72,56 +70,38 @@ public class PartyService {
 
     @Transactional
     public String leaveParty(String email, Long partyId) {
-
         User user = userValidationByEmail(email);
         Party party = partyValidationById(partyId);
-        UserParty deleteUserParty = checkUserInParty(user, party).get();
 
+        UserParty deleteUserParty = checkUserInParty(user, party);
         checkUserReservationInParty(user, party);
 
-        return processDeleteParty(user, party, deleteUserParty);
+        deleteMemberInParty(user, party, deleteUserParty);
+        return processDeleteParty(user, party);
     }
 
     @Transactional
-    public String expelMember(String userId, Long partyId, Long memberId) {
+    public String expelMember(String email, Long partyId, Long memberId) {
 
-        User leader = valid.userValidationById(userId);
+        User leader = userValidationByEmail(email);
+        User member = userValidationById(memberId);
+        Party party = partyValidationById(partyId);
 
-        User member = valid.userValidationById(memberId);
+        checkPartyLeaderValidation(leader, party);
+        checkUserReservationInParty(member, party);
 
-        Party party = valid.partyValidation(partyId);
-
-        List<Dog> dogs = dogRepository.findAllByParty(party);
-
-        List<ReservationStatus> reservationStatuses = new ArrayList<>();
-        reservationStatuses.add(ReservationStatus.APPROVAL);
-        reservationStatuses.add(ReservationStatus.PAYED);
-        reservationStatuses.add(ReservationStatus.USE);
-        reservationStatuses.add(ReservationStatus.WAIT);
-
-        if (reservationRepository.existsByUserAndDogInAndReservationStatusIn(member, dogs, reservationStatuses)) {
-            throw new AppException(ErrorCode.CAN_NOT_EXPEL_PARTY, ErrorCode.CAN_NOT_EXPEL_PARTY.getMessage());
-        }
-
-        if (!leader.getId().equals(party.getPartyLeader().getId())) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION, "멤버를 방출시킬 권한이 없습니다.");
-        }
-
-        Optional<UserParty> userParty = userPartyRepository.findByUserAndParty(member, party);
-        if (userParty.isEmpty()) {
-            throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER,
-                    ErrorCode.NOT_FOUND_GROUP_MEMBER.getMessage());
-        }
-
-        userPartyRepository.delete(userParty.get());
-        member.updatePartyCount(member.getPartyCount() - 1);
-        party.updateMemberCount(party.getMemberCount() - 1);
+        UserParty userParty = checkUserInParty(member, party);
+        deleteMemberInParty(member, party, userParty);
 
         return member.getName() + "님이 그룹에서 방출되었습니다.";
     }
 
     private User userValidationByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
+    }
+
+    private User userValidationById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
     }
 
     private Party partyValidationByIsbn(String isbn) {
@@ -133,15 +113,19 @@ public class PartyService {
     }
 
     private void checkUserPartyCount(User user) {
+        Integer PARTY_MAX_COUNT = 5;
         if (user.getPartyCount() >= PARTY_MAX_COUNT) {
             throw new AppException(ErrorCode.TOO_MANY_GROUP, ErrorCode.TOO_MANY_GROUP.getMessage());
         }
     }
 
-    private Party userPartyCountCheckAndGenerationParty(User partyLeader, PartyAddRequest partyAddRequest) {
+    private void checkPartyLeaderValidation(User user, Party party) {
+        if (!user.getId().equals(party.getPartyLeader().getId())) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "멤버를 방출시킬 권한이 없습니다.");
+        }
+    }
 
-        checkUserPartyCount(partyLeader);
-
+    private Party generateParty(User partyLeader, PartyAddRequest partyAddRequest) {
         Party party = Party.of(partyLeader, partyAddRequest.getPartyName());
         party = partyRepository.save(party);
 
@@ -152,12 +136,12 @@ public class PartyService {
         return party;
     }
 
-    private Optional<UserParty> checkUserInParty(User user, Party party) {
+    private UserParty checkUserInParty(User user, Party party) {
         Optional<UserParty> userParty = userPartyRepository.findByUserAndParty(user, party);
         if (userParty.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER, ErrorCode.NOT_FOUND_GROUP_MEMBER.getMessage());
         }
-        return userParty;
+        return userParty.get();
     }
 
     private Dog registerPartyDog(Party party, PartyAddRequest partyAddRequest) {
@@ -179,9 +163,9 @@ public class PartyService {
     }
 
     private List<PartyGetInfosResponse> processUserPartyInfos(String email) {
-        List<Long> userPartyIdList = userPartyRepository.findAllUserPartyIdByUserId(email);
-        List<Party> partyList = partyRepository.findAllByUserPartyId(userPartyIdList);
-        List<Dog> dogList = dogRepository.findAllUserDogs(userPartyIdList);
+        List<Long> userPartyList = userPartyRepository.findAllUserPartyIdByUserId(email);
+        List<Party> partyList = partyRepository.findAllByUserPartyId(userPartyList);
+        List<Dog> dogList = dogRepository.findAllUserDogs(userPartyList);
 
         List<PartyGetInfosResponse> partyGetInfosResponses = partyList.stream()
                 .map(PartyGetInfosResponse::of).collect(Collectors.toList());
@@ -195,16 +179,19 @@ public class PartyService {
         return partyGetInfosResponses;
     }
 
-    private void checkPartyMemberAddValidation(User user, Party party) {
-        Optional<UserParty> userParty = checkUserInParty(user, party);
-        if (userParty.isPresent())
+    private boolean isExistUserInParty(User user, Party party) {
+        return (userPartyRepository.existsUserPartyByUserAndParty(user, party));
+    }
+
+    private void checkDuplicatedUserInParty(User user, Party party) {
+        if (isExistUserInParty(user, party))
             throw new AppException(ErrorCode.DUPLICATED_GROUP_MEMBER, ErrorCode.DUPLICATED_GROUP_MEMBER.getMessage());
+    }
 
-        checkUserPartyCount(user);
-
+    private void checkPartyMemberCount(Party party) {
+        Integer PARTY_MEMBER_MAX_COUNT = 5;
         if (party.getMemberCount() >= PARTY_MEMBER_MAX_COUNT) {
-            throw new AppException(ErrorCode.TOO_MANY_MEMBER,
-                    ErrorCode.TOO_MANY_MEMBER.getMessage());
+            throw new AppException(ErrorCode.TOO_MANY_MEMBER, ErrorCode.TOO_MANY_MEMBER.getMessage());
         }
     }
 
@@ -228,12 +215,14 @@ public class PartyService {
         }
     }
 
-    private String processDeleteParty(User user, Party party, UserParty userParty) {
-        Optional<UserParty> nextLeader = userPartyRepository.findFirstByUserNotAndParty(user, party);
-
+    private void deleteMemberInParty(User user, Party party, UserParty userParty) {
         userPartyRepository.delete(userParty);
         user.updatePartyCount(user.getPartyCount() - 1);
         party.updateMemberCount(party.getMemberCount() - 1);
+    }
+
+    private String processDeleteParty(User user, Party party) {
+        Optional<UserParty> nextLeader = userPartyRepository.findFirstByParty(party);
 
         if (userPartyRepository.findAllByParty(party).isEmpty()) {
             List<Dog> dogs = party.getDogList();

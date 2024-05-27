@@ -31,7 +31,7 @@ public class PartyController {
 
     private final PartyService partyService;
 
-    @PostMapping("/member")
+    @PostMapping("/members")
     @ApiOperation(value = "그룹 식별자로 기존 그룹 추가")
     public Response<PartyAddPartyByIsbnResponse> addPartyByPartyIsbn(@ApiIgnore Authentication authentication, @RequestBody PartyAddPartyByIsbnRequest partyAddPartyByIsbnRequest) {
         PartyAddPartyByIsbnResponse partyAddPartyByIsbnResponse = partyService.addPartyByPartyIsbn(authentication.getName(), partyAddPartyByIsbnRequest);
@@ -54,17 +54,14 @@ public class PartyController {
 
     @DeleteMapping("/{partyId}")
     @ApiOperation(value = "그룹 탈퇴")
-    public Response leaveParty(@ApiIgnore Authentication authentication,
-            @PathVariable Long partyId) {
+    public Response<Void> leaveParty(@ApiIgnore Authentication authentication, @PathVariable Long partyId) {
         return Response.success(partyService.leaveParty(authentication.getName(), partyId));
     }
 
     @DeleteMapping("/{partyId}/members/{memberId}")
     @ApiOperation(value = "그룹 멤버 방출")
-    public Response expelMember(@ApiIgnore Authentication authentication,
-            @PathVariable Long partyId, @PathVariable Long memberId) {
-        return Response.success(
-                partyService.expelMember(authentication.getName(), partyId, memberId));
+    public Response<Void> expelMember(@ApiIgnore Authentication authentication, @PathVariable Long partyId, @PathVariable Long memberId) {
+        return Response.success(partyService.expelMember(authentication.getName(), partyId, memberId));
     }
 
 
