@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
+import com.ajou_nice.with_pet.group.model.dto.get.PartyGetInfosResponse;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
@@ -26,7 +27,6 @@ import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,28 +76,9 @@ public class PartyService {
         return partyInfoResponse;
     }
 
-    public List<PartyInfoResponse> getPartyInfoList(String userId) {
-
-        valid.userValidationById(userId);
-
-        List<Long> userPartyIdList = userPartyRepository.findAllUserPartyIdByUserId(userId);
-        List<Party> partyList = partyRepository.findAllByUserPartyId(userPartyIdList);
-        List<Dog> dogList = dogRepository.findAllUserDogs(userPartyIdList);
-
-        List<PartyInfoResponse> partyInfoResponseList = partyList.stream()
-                .map(PartyInfoResponse::of).collect(
-                        Collectors.toList());
-
-        for (PartyInfoResponse partyInfoResponse : partyInfoResponseList) {
-            for (Dog dog : dogList) {
-                log.info("dogId : {}", dog.getParty().getPartyId());
-                if (partyInfoResponse.getPartyId() == dog.getParty().getPartyId()) {
-                    partyInfoResponse.updatePartyInfoResponse(dog);
-                }
-            }
-        }
-
-        return partyInfoResponseList;
+    public List<PartyGetInfosResponse> getPartyInfoList(String email) {
+        userValidationByEmail(email);
+        return processUserPartyInfos(email);
     }
 
     @Transactional
@@ -110,10 +91,6 @@ public class PartyService {
         Dog dog = registerPartyDog(party, partyAddRequest);
 
         return PartyAddResponse.of(dog);
-    }
-
-    private String createInvitationCode(Party party) {
-        return RandomStringUtils.randomAlphabetic(6) + party.getPartyId().toString();
     }
 
     @Transactional
@@ -244,5 +221,22 @@ public class PartyService {
         dog = dogRepository.save(dog);
 
         return dog;
+    }
+
+    private List<PartyGetInfosResponse> processUserPartyInfos(String email) {
+        List<Long> userPartyIdList = userPartyRepository.findAllUserPartyIdByUserId(email);
+        List<Party> partyList = partyRepository.findAllByUserPartyId(userPartyIdList);
+        List<Dog> dogList = dogRepository.findAllUserDogs(userPartyIdList);
+
+        List<PartyGetInfosResponse> partyGetInfosResponses = partyList.stream()
+                .map(PartyGetInfosResponse::of).collect(Collectors.toList());
+
+        partyGetInfosResponses
+                .forEach(partyGetInfosResponse ->
+                        dogList.stream()
+                                .filter(dog -> partyGetInfosResponse.getPartyId().equals(dog.getParty().getPartyId()))
+                                .forEach(partyGetInfosResponse::toPartyGetInfosDogResponseAndAddDogList)
+                );
+        return partyGetInfosResponses;
     }
 }

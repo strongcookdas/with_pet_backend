@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
 import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
+import com.ajou_nice.with_pet.group.model.dto.get.PartyGetInfosResponse;
 import com.ajou_nice.with_pet.group.service.PartyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,11 +39,11 @@ public class PartyController {
                 partyService.addMember(authentication.getName(), partyMemberRequest));
     }
 
-    @GetMapping("/group-infos")
+    @GetMapping
     @ApiOperation(value = "그룹 상세 리스트 조회")
-    public Response<List<PartyInfoResponse>> getPartyInfoList(
-            @ApiIgnore Authentication authentication) {
-        return Response.success(partyService.getPartyInfoList(authentication.getName()));
+    public Response<List<PartyGetInfosResponse>> getPartyInfoList(@ApiIgnore Authentication authentication) {
+        List<PartyGetInfosResponse> partyGetInfosResponse = partyService.getPartyInfoList(authentication.getName());
+        return Response.success(partyGetInfosResponse);
     }
 
     @PostMapping
