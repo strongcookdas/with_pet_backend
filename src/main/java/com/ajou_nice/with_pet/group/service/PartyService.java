@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,45 +71,15 @@ public class PartyService {
     }
 
     @Transactional
-    public String leaveParty(String userId, Long partyId) {
+    public String leaveParty(String email, Long partyId) {
 
-        User user = valid.userValidationById(userId);
+        User user = userValidationByEmail(email);
+        Party party = partyValidationById(partyId);
+        UserParty deleteUserParty = checkUserInParty(user, party).get();
 
-        Party party = valid.partyValidation(partyId);
+        checkUserReservationInParty(user, party);
 
-        List<Dog> dogs = dogRepository.findAllByParty(party);
-
-        List<ReservationStatus> reservationStatuses = new ArrayList<>();
-        reservationStatuses.add(ReservationStatus.APPROVAL);
-        reservationStatuses.add(ReservationStatus.PAYED);
-        reservationStatuses.add(ReservationStatus.USE);
-        reservationStatuses.add(ReservationStatus.WAIT);
-
-        if (reservationRepository.existsByUserAndDogInAndReservationStatusIn(user, dogs, reservationStatuses)) {
-            throw new AppException(ErrorCode.CAN_NOT_LEAVE_PARTY, ErrorCode.CAN_NOT_LEAVE_PARTY.getMessage());
-        }
-
-        Optional<UserParty> deleteUserParty = userPartyRepository.findByUserAndParty(user, party);
-        if (deleteUserParty.isEmpty()) {
-            throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER,
-                    ErrorCode.NOT_FOUND_GROUP_MEMBER.getMessage());
-        }
-
-        Optional<UserParty> nextLeader = userPartyRepository.findFirstByUserNotAndParty(user,
-                party);
-
-        userPartyRepository.delete(deleteUserParty.get());
-        user.updatePartyCount(user.getPartyCount() - 1);
-        party.updateMemberCount(party.getMemberCount() - 1);
-
-        if (party.getPartyLeader().getId().equals(user.getId())
-                && !nextLeader.isEmpty()) {
-            party.updatePartyLeader(
-                    userPartyRepository.findFirstByUserNotAndParty(user, party).get().getUser());
-            return nextLeader.get().getUser().getName() + "님이 방장이 되었습니다.";
-        }
-
-        return "그룹에서 탈퇴되었습니다.";
+        return processDeleteParty(user, party, deleteUserParty);
     }
 
     @Transactional
@@ -150,19 +121,15 @@ public class PartyService {
     }
 
     private User userValidationByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
-        });
-        return user;
+        return userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
     }
 
     private Party partyValidationByIsbn(String isbn) {
-        Party party = partyRepository.findByPartyIsbn(isbn)
-                .orElseThrow(() -> {
-                    throw new AppException(ErrorCode.GROUP_NOT_FOUND,
-                            ErrorCode.GROUP_NOT_FOUND.getMessage());
-                });
-        return party;
+        return partyRepository.findByPartyIsbn(isbn).orElseThrow(() -> new AppException(ErrorCode.GROUP_NOT_FOUND, ErrorCode.GROUP_NOT_FOUND.getMessage()));
+    }
+
+    private Party partyValidationById(Long partyId) {
+        return partyRepository.findById(partyId).orElseThrow(() -> new AppException(ErrorCode.GROUP_NOT_FOUND, ErrorCode.GROUP_NOT_FOUND.getMessage()));
     }
 
     private void checkUserPartyCount(User user) {
@@ -183,6 +150,14 @@ public class PartyService {
         partyLeader.updatePartyCount(partyLeader.getPartyCount() + 1);
 
         return party;
+    }
+
+    private Optional<UserParty> checkUserInParty(User user, Party party) {
+        Optional<UserParty> userParty = userPartyRepository.findByUserAndParty(user, party);
+        if (userParty.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND_GROUP_MEMBER, ErrorCode.NOT_FOUND_GROUP_MEMBER.getMessage());
+        }
+        return userParty;
     }
 
     private Dog registerPartyDog(Party party, PartyAddRequest partyAddRequest) {
@@ -221,6 +196,10 @@ public class PartyService {
     }
 
     private void checkPartyMemberAddValidation(User user, Party party) {
+        Optional<UserParty> userParty = checkUserInParty(user, party);
+        if (userParty.isPresent())
+            throw new AppException(ErrorCode.DUPLICATED_GROUP_MEMBER, ErrorCode.DUPLICATED_GROUP_MEMBER.getMessage());
+
         checkUserPartyCount(user);
 
         if (party.getMemberCount() >= PARTY_MEMBER_MAX_COUNT) {
@@ -240,5 +219,31 @@ public class PartyService {
         partyAddPartyByIsbnResponse.updatePartyInfoResponse(dogs);
 
         return partyAddPartyByIsbnResponse;
+    }
+
+    private void checkUserReservationInParty(User user, Party party) {
+        List<Dog> dogs = dogRepository.findAllByParty(party);
+        if (reservationRepository.existsByUserAndDogInAndReservationStatusIn(user, dogs, Arrays.asList(ReservationStatus.values()))) {
+            throw new AppException(ErrorCode.CAN_NOT_LEAVE_PARTY, ErrorCode.CAN_NOT_LEAVE_PARTY.getMessage());
+        }
+    }
+
+    private String processDeleteParty(User user, Party party, UserParty userParty) {
+        Optional<UserParty> nextLeader = userPartyRepository.findFirstByUserNotAndParty(user, party);
+
+        userPartyRepository.delete(userParty);
+        user.updatePartyCount(user.getPartyCount() - 1);
+        party.updateMemberCount(party.getMemberCount() - 1);
+
+        if (userPartyRepository.findAllByParty(party).isEmpty()) {
+            List<Dog> dogs = party.getDogList();
+            dogRepository.deleteAll(dogs);
+            partyRepository.delete(party);
+        } else if (party.getPartyLeader().getId().equals(user.getId()) && nextLeader.isPresent()) {
+            party.updatePartyLeader(nextLeader.get().getUser());
+            return nextLeader.get().getUser().getName() + "님이 방장이 되었습니다.";
+        }
+
+        return "그룹을 탈퇴했습니다.";
     }
 }
