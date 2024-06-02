@@ -23,7 +23,7 @@ public interface UserPartyRepository extends JpaRepository<UserParty, Long> {
 
     @Query("select u from UserParty u join fetch u.user where u.party =:party")
     List<UserParty> findAllByParty(@Param("party") Party party);
-    Optional<UserParty> findFirstByUserNotAndParty(User user, Party party);
+    Optional<UserParty> findFirstByParty(Party party);
 
     Optional<UserParty> findByUserAndParty(User user, Party party);
 }

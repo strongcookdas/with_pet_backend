@@ -1,10 +1,11 @@
 package com.ajou_nice.with_pet.group.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.group.model.dto.PartyInfoResponse;
-import com.ajou_nice.with_pet.group.model.dto.PartyMemberRequest;
+import com.ajou_nice.with_pet.group.model.dto.PartyAddPartyByIsbnResponse;
+import com.ajou_nice.with_pet.group.model.dto.PartyAddPartyByIsbnRequest;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
+import com.ajou_nice.with_pet.group.model.dto.get.PartyGetInfosResponse;
 import com.ajou_nice.with_pet.group.service.PartyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,19 +31,18 @@ public class PartyController {
 
     private final PartyService partyService;
 
-    @PostMapping("/member")
-    @ApiOperation(value = "그룹 멤버 추가")
-    public Response<PartyInfoResponse> addMember(@ApiIgnore Authentication authentication,
-            @RequestBody PartyMemberRequest partyMemberRequest) {
-        return Response.success(
-                partyService.addMember(authentication.getName(), partyMemberRequest));
+    @PostMapping("/members")
+    @ApiOperation(value = "그룹 식별자로 기존 그룹 추가")
+    public Response<PartyAddPartyByIsbnResponse> addPartyByPartyIsbn(@ApiIgnore Authentication authentication, @RequestBody PartyAddPartyByIsbnRequest partyAddPartyByIsbnRequest) {
+        PartyAddPartyByIsbnResponse partyAddPartyByIsbnResponse = partyService.addPartyByPartyIsbn(authentication.getName(), partyAddPartyByIsbnRequest);
+        return Response.success(partyAddPartyByIsbnResponse);
     }
 
-    @GetMapping("/group-infos")
+    @GetMapping
     @ApiOperation(value = "그룹 상세 리스트 조회")
-    public Response<List<PartyInfoResponse>> getPartyInfoList(
-            @ApiIgnore Authentication authentication) {
-        return Response.success(partyService.getPartyInfoList(authentication.getName()));
+    public Response<List<PartyGetInfosResponse>> getPartyInfoList(@ApiIgnore Authentication authentication) {
+        List<PartyGetInfosResponse> partyGetInfosResponse = partyService.getPartyInfoList(authentication.getName());
+        return Response.success(partyGetInfosResponse);
     }
 
     @PostMapping
@@ -54,17 +54,14 @@ public class PartyController {
 
     @DeleteMapping("/{partyId}")
     @ApiOperation(value = "그룹 탈퇴")
-    public Response leaveParty(@ApiIgnore Authentication authentication,
-            @PathVariable Long partyId) {
+    public Response<Void> leaveParty(@ApiIgnore Authentication authentication, @PathVariable Long partyId) {
         return Response.success(partyService.leaveParty(authentication.getName(), partyId));
     }
 
     @DeleteMapping("/{partyId}/members/{memberId}")
     @ApiOperation(value = "그룹 멤버 방출")
-    public Response expelMember(@ApiIgnore Authentication authentication,
-            @PathVariable Long partyId, @PathVariable Long memberId) {
-        return Response.success(
-                partyService.expelMember(authentication.getName(), partyId, memberId));
+    public Response<Void> expelMember(@ApiIgnore Authentication authentication, @PathVariable Long partyId, @PathVariable Long memberId) {
+        return Response.success(partyService.expelMember(authentication.getName(), partyId, memberId));
     }
 
 
