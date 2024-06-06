@@ -76,7 +76,7 @@ public class KaKaoPayService {
 		parameters.add("partner_user_id", findUser.getId().toString());
 		parameters.add("item_name", "펫시터 예약");
 		parameters.add("quantity", "1");
-		parameters.add("total_amount", reservation.getTotalPrice().toString());
+		parameters.add("total_amount", reservation.getReservationTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
 		parameters.add("approval_url",
@@ -217,7 +217,7 @@ public class KaKaoPayService {
 		Pay pay = payRepository.findByReservation(reservation).orElseThrow(() -> {
 			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
 		});
-		Period period = Period.between(LocalDate.now(), reservation.getCheckIn().toLocalDate());
+		Period period = Period.between(LocalDate.now(), reservation.getReservationCheckIn().toLocalDate());
 		int cancel_amount = 0; //환불 금액
 		List<UserParty> userParties = userPartyRepository.findAllByParty(reservation.getDog()
 				.getParty());

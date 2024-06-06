@@ -172,13 +172,13 @@ public class ReservationTest {
 	}
 	private void isConflictReservation(LocalDateTime checkIn, LocalDateTime checkOut,
 			PetSitter petSitter, List<ReservationStatus> reservationStatuses) {
-		if (reservationRepository.existsByCheckInBetweenAndPetSitterAndReservationStatusIn(checkIn,
+		if (reservationRepository.existsByReservationCheckInBetweenAndPetSitterAndReservationStatusIn(checkIn,
 				checkOut, petSitter, reservationStatuses)) {
 			throw new AppException(ErrorCode.RESERVATION_CONFLICT,
 					ErrorCode.RESERVATION_CONFLICT.getMessage());
 		}
 
-		if (reservationRepository.existsByCheckOutBetweenAndPetSitterAndReservationStatusIn(checkIn,
+		if (reservationRepository.existsByReservationCheckOutBetweenAndPetSitterAndReservationStatusIn(checkIn,
 				checkOut, petSitter, reservationStatuses)) {
 			throw new AppException(ErrorCode.RESERVATION_CONFLICT,
 					ErrorCode.RESERVATION_CONFLICT.getMessage());

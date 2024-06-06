@@ -69,7 +69,7 @@ public class KaKaoPayTest {
 		parameters.add("partner_user_id", reservation.getUser().getId().toString());
 		parameters.add("item_name", "펫시터 예약");
 		parameters.add("quantity", "1");
-		parameters.add("total_amount", reservation.getTotalPrice().toString());
+		parameters.add("total_amount", reservation.getReservationTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
 		parameters.add("approval_url", "http://localhost:8080/payment/test/"+reservation.getPetSitter().getId().toString()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함

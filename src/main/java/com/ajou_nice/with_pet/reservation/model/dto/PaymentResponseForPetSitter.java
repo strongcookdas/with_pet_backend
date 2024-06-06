@@ -38,8 +38,8 @@ public class PaymentResponseForPetSitter {
 
 	public static PaymentResponseForPetSitter of(Reservation reservation){
 		return PaymentResponseForPetSitter.builder()
-				.checkIn(reservation.getCheckIn().toString())
-				.checkOut(reservation.getCheckOut().toString())
+				.checkIn(reservation.getReservationCheckIn().toString())
+				.checkOut(reservation.getReservationCheckOut().toString())
 				.userName(reservation.getUser().getName())
 				.dogName(reservation.getDog().getDogName())
 				.dogGender(reservation.getDog().getDogGender())
@@ -51,7 +51,7 @@ public class PaymentResponseForPetSitter {
 				.dogSocializationTemperature(reservation.getDog().getDogSocializationTemperature())
 				.dogSocializationDegree(reservation.getDog().getDogSocializationDegree())
 				.dogAffectionTemperature(reservation.getDog().getDogAffectionTemperature())
-				.totalCost(reservation.getTotalPrice())
+				.totalCost(reservation.getReservationTotalPrice())
 				.criticalServiceName(reservation.getCriticalServiceName())
 				.criticalServicePrice(reservation.getCriticalServicePrice())
 				.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?

@@ -36,8 +36,8 @@ public class ReservationCreateResponse {
 		return ReservationCreateResponse.builder()
 				.reservationId(reservation.getReservationId())
 				.reservationDate(reservation.getCreatedAt().toString())
-				.checkIn(reservation.getCheckIn().toString())
-				.checkOut(reservation.getCheckOut().toString())
+				.checkIn(reservation.getReservationCheckIn().toString())
+				.checkOut(reservation.getReservationCheckOut().toString())
 				.dogName(reservation.getDog().getDogName())
 				.dogSize(reservation.getDog().getDogSize().toString())
 				.petSitterName(reservation.getPetSitter().getPetSitterName())
@@ -45,7 +45,7 @@ public class ReservationCreateResponse {
 				.criticalServicePrice(reservation.getCriticalServicePrice())
 				.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?
 						null : ReservationServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
-				.totalCost(reservation.getTotalPrice())
+				.totalCost(reservation.getReservationTotalPrice())
 				.build();
 
 

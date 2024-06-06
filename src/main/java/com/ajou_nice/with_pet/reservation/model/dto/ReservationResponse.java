@@ -25,8 +25,8 @@ public class ReservationResponse {
                 .reservationId(reservation.getReservationId())
                 .dogId(reservation.getDog().getDogId())
                 .dogName(reservation.getDog().getDogName())
-                .checkIn(reservation.getCheckIn().toLocalDate().toString())
-                .checkOut(reservation.getCheckOut().toLocalDate().toString())
+                .checkIn(reservation.getReservationCheckIn().toLocalDate().toString())
+                .checkOut(reservation.getReservationCheckOut().toLocalDate().toString())
                 .reservationStatus(reservation.getReservationStatus())
                 .build();
     }

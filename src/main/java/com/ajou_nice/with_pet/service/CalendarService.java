@@ -35,7 +35,7 @@ public class CalendarService {
 
         int cost = 0;
         for (Reservation reservation : doneReservation) {
-            cost += reservation.getTotalPrice();
+            cost += reservation.getReservationTotalPrice();
         }
 
         return PetSitterSideBarResponse.of(useReservation, waitReservation, doneReservation, cost);

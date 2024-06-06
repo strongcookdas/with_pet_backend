@@ -143,13 +143,13 @@ public class ReservationService {
 
     private void isDuplicatedReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog,
             List<ReservationStatus> statuses) {
-        if (reservationRepository.existsByCheckInBetweenAndDogAndReservationStatusIn(checkIn,
+        if (reservationRepository.existsByReservationCheckInBetweenAndDogAndReservationStatusIn(checkIn,
                 checkOut, dog, statuses)) {
             throw new AppException(ErrorCode.DUPLICATED_RESERVATION,
                     ErrorCode.DUPLICATED_RESERVATION.getMessage());
         }
 
-        if (reservationRepository.existsByCheckOutBetweenAndDogAndReservationStatusIn(checkIn,
+        if (reservationRepository.existsByReservationCheckOutBetweenAndDogAndReservationStatusIn(checkIn,
                 checkOut, dog, statuses)) {
             throw new AppException(ErrorCode.DUPLICATED_RESERVATION,
                     ErrorCode.DUPLICATED_RESERVATION.getMessage());
@@ -159,13 +159,13 @@ public class ReservationService {
     //펫시터 입장에서 validation
     private void isConflictReservation(LocalDateTime checkIn, LocalDateTime checkOut,
             PetSitter petSitter, List<ReservationStatus> reservationStatuses) {
-        if (reservationRepository.existsByCheckInBetweenAndPetSitterAndReservationStatusIn(checkIn,
+        if (reservationRepository.existsByReservationCheckInBetweenAndPetSitterAndReservationStatusIn(checkIn,
                 checkOut, petSitter, reservationStatuses)) {
             throw new AppException(ErrorCode.RESERVATION_CONFLICT,
                     ErrorCode.RESERVATION_CONFLICT.getMessage());
         }
 
-        if (reservationRepository.existsByCheckOutBetweenAndPetSitterAndReservationStatusIn(checkIn,
+        if (reservationRepository.existsByReservationCheckOutBetweenAndPetSitterAndReservationStatusIn(checkIn,
                 checkOut, petSitter, reservationStatuses)) {
             throw new AppException(ErrorCode.RESERVATION_CONFLICT,
                     ErrorCode.RESERVATION_CONFLICT.getMessage());
@@ -215,8 +215,8 @@ public class ReservationService {
                 LocalDate.parse(month + "-01"), reservationStatuses);
 
         for (Reservation reservation : reservations) {
-            unavailableDates.addAll(getDateRange(reservation.getCheckIn().toLocalDate(),
-                    reservation.getCheckOut().toLocalDate()));
+            unavailableDates.addAll(getDateRange(reservation.getReservationCheckIn().toLocalDate(),
+                    reservation.getReservationCheckOut().toLocalDate()));
         }
         return unavailableDates;
     }
@@ -252,7 +252,7 @@ public class ReservationService {
         }
 
         reservation.updateStatus(status);
-        if (LocalDate.now().equals(reservation.getCheckIn().toLocalDate())) {
+        if (LocalDate.now().equals(reservation.getReservationCheckIn().toLocalDate())) {
             reservation.updateStatus(ReservationStatus.USE.toString());
         }
 
