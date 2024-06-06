@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;

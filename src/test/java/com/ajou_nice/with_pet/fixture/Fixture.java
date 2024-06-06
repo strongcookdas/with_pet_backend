@@ -6,7 +6,7 @@ import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.enums.Gender;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;

@@ -13,7 +13,7 @@ import com.ajou_nice.with_pet.repository.DiaryRepository;
 import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.UserDiaryService;

@@ -1,7 +1,9 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.reservation.model.entity;
 
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
+import com.ajou_nice.with_pet.domain.entity.BaseEntity;
+import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationRequest;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import java.time.LocalDateTime;
 import java.util.List;

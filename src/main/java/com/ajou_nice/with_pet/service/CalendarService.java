@@ -2,10 +2,10 @@ package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.calendar.PetSitterSideBarResponse;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 
 import java.time.LocalDate;
 import java.util.List;

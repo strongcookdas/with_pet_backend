@@ -12,6 +12,8 @@ import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.repository.*;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.withpet_service.repository.WithPetServiceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

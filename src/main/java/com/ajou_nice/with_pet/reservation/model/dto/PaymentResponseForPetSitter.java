@@ -1,8 +1,8 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
 
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse.ReservationServiceResponse;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse.ReservationServiceResponse;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import java.util.List;
 
 import com.ajou_nice.with_pet.enums.Gender;

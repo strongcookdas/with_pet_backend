@@ -1,9 +1,9 @@
-package com.ajou_nice.with_pet.repository.custom.reservation;
+package com.ajou_nice.with_pet.reservation.repository.custom;
 
-import static com.ajou_nice.with_pet.domain.entity.QReservation.reservation;
+import static com.ajou_nice.with_pet.reservation.model.entity.QReservation.reservation;
 
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

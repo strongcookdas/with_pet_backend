@@ -15,7 +15,7 @@ import com.ajou_nice.with_pet.group.model.dto.add.PartyAddResponse;
 import com.ajou_nice.with_pet.group.model.dto.get.PartyGetInfosResponse;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

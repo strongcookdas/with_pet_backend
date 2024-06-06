@@ -1,14 +1,14 @@
 package com.ajou_nice.with_pet.reservations;
 
 
-import com.ajou_nice.with_pet.controller.ReservationController;
+import com.ajou_nice.with_pet.reservation.controller.ReservationController;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
@@ -22,9 +22,9 @@ import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.repository.PayRepository;
 import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.service.ReservationService;
+import com.ajou_nice.with_pet.reservation.service.ReservationService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Reservation;
-import com.ajou_nice.with_pet.domain.entity.ReservationPetSitterService;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.ReservationPetSitterService;
 
 import java.util.List;
 import java.util.stream.Collectors;

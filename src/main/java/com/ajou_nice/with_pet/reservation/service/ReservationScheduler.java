@@ -1,15 +1,13 @@
-package com.ajou_nice.with_pet.service;
+package com.ajou_nice.with_pet.reservation.service;
 
-import com.ajou_nice.with_pet.domain.entity.Pay;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.PayRepository;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
-import java.time.LocalDateTime;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
+
 import java.util.List;
 import java.util.Optional;
+
+import com.ajou_nice.with_pet.service.KaKaoPayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;

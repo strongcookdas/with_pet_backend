@@ -1,11 +1,11 @@
-package com.ajou_nice.with_pet.repository;
+package com.ajou_nice.with_pet.reservation.repository;
 
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
-import com.ajou_nice.with_pet.repository.custom.reservation.ReservationRepositoryCustom;
+import com.ajou_nice.with_pet.reservation.repository.custom.ReservationRepositoryCustom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
