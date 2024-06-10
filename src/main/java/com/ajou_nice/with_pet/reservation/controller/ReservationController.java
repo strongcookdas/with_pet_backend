@@ -7,8 +7,8 @@ import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDocsResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationRequest;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationRequest.ReservationSimpleRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationStatusRequest;
 import com.ajou_nice.with_pet.exception.AppException;
@@ -34,7 +34,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/reservation")
+@RequestMapping("api/v2/reservation")
 @RequiredArgsConstructor
 @Api(tags = "Reservation API")
 public class ReservationController {
@@ -44,17 +44,8 @@ public class ReservationController {
 
     @PostMapping
     @ApiOperation(value = "예약 하기")
-    public Response<ReservationCreateResponse> createReservation(
-            @ApiIgnore Authentication authentication,
-            @RequestBody ReservationRequest reservationRequest) {
-        log.info("=======================ReservationRequest : {}=============================",
-                reservationRequest);
-        ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(
-                authentication.getName(), reservationRequest);
-
-        log.info("=======================ReservationResponse : {}=============================",
-                reservationCreateResponse);
-
+    public Response<ReservationCreateResponse> createReservation(@ApiIgnore Authentication authentication, @RequestBody ReservationCreateRequest reservationCreateRequest) {
+        ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(authentication.getName(), reservationCreateRequest);
         return Response.success(reservationCreateResponse);
     }
 

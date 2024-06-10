@@ -3,7 +3,7 @@ package com.ajou_nice.with_pet.reservation.model.entity;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.BaseEntity;
 import com.ajou_nice.with_pet.domain.entity.User;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 
 import java.time.LocalDateTime;
@@ -74,14 +74,14 @@ public class Reservation extends BaseEntity {
     private String reservationTid;
 
 
-    public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
+    public static Reservation of(ReservationCreateRequest reservationCreateRequest, User user, Dog dog,
                                  PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
         return Reservation.builder()
                 .user(user)
                 .dog(dog)
                 .petSitter(petSitter)
-                .reservationCheckIn(reservationRequest.getCheckIn())
-                .reservationCheckOut(reservationRequest.getCheckOut())
+                .reservationCheckIn(reservationCreateRequest.getReservationCheckIn())
+                .reservationCheckOut(reservationCreateRequest.getReservationCheckOut())
                 .reservationStatus(ReservationStatus.WAIT)
                 .petSitterCriticalServiceId(petSitterCriticalService)
                 .criticalServiceName(petSitterCriticalService.getCriticalService().getServiceName())

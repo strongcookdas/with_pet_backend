@@ -1,11 +1,12 @@
 package com.ajou_nice.with_pet.reservation.service;
 
 import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
+import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDocsResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationResponse;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
@@ -50,7 +51,6 @@ public class ReservationService {
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final PetSitterServiceRepository serviceRepository;
     private final ReservationPetSitterServiceRepository reservationServiceRepository;
-
     private final ReviewRepository reviewRepository;
 
     private final ValidateCollection valid;
@@ -63,21 +63,19 @@ public class ReservationService {
     private final NotificationService notificationService;
 
     @Transactional
-    public ReservationCreateResponse createReservation(String userId,
-            ReservationRequest reservationRequest) {
+    public ReservationCreateResponse createReservation(String email, ReservationCreateRequest reservationCreateRequest) {
         int cost = 0;
-        User user = valid.userValidationById(userId);
-        Dog dog = valid.dogValidation(reservationRequest.getDogId());
+
+        User user = valid.userValidationById(email);
+        Dog dog = valid.dogValidation(reservationCreateRequest.getDogId());
+        PetSitter petSitter = valid.petSitterValidation(reservationCreateRequest.getPetSitterId());
 
         //반려견 예약 유효 체크
-        isDuplicatedReservation(reservationRequest.getCheckIn(), reservationRequest.getCheckOut(),
+        isDuplicatedReservation(reservationCreateRequest.getReservationCheckIn(), reservationCreateRequest.getReservationCheckOut(),
                 dog, reservationStatuses);
 
-        //펫시터 유효 체크
-        PetSitter petSitter = valid.petSitterValidation(reservationRequest.getPetsitterId());
-
         //펫시터 예약 유효 체크
-        isConflictReservation(reservationRequest.getCheckIn(), reservationRequest.getCheckOut(),
+        isConflictReservation(reservationCreateRequest.getReservationCheckIn(), reservationCreateRequest.getReservationCheckOut(),
                 petSitter, reservationStatuses);
 
         //소형견, 중형견, 대형견 옵션 선택
@@ -89,14 +87,15 @@ public class ReservationService {
         cost += criticalService.getPrice();
 
         List<PetSitterWithPetService> withPetServices = serviceRepository.findAllById(
-                reservationRequest.getOptionId());
+                reservationCreateRequest.getReservationOptionIdList());
 
         //시간에 따라 요금 계산 (날짜 * 필수 옵션 가격)
-        Period diff = Period.between(reservationRequest.getCheckIn().toLocalDate(),
-                reservationRequest.getCheckOut().toLocalDate());
+        Period diff = Period.between(reservationCreateRequest.getReservationCheckIn().toLocalDate(),
+                reservationCreateRequest.getReservationCheckOut().toLocalDate());
         cost *= diff.getDays();
+
         Reservation reservation = reservationRepository.save(
-                Reservation.of(reservationRequest, user, dog, petSitter, criticalService));
+                Reservation.of(reservationCreateRequest, user, dog, petSitter, criticalService));
 
         List<ReservationPetSitterService> reservationServices = new ArrayList<>();
 
@@ -120,6 +119,8 @@ public class ReservationService {
 
         return ReservationCreateResponse.of(reservation);
     }
+
+
 
     private void sendCreateReservationNotificationByEmail(List<UserParty> userParties, User user,
             Dog dog,
