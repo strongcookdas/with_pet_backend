@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserValidationService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public User userValidationByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));

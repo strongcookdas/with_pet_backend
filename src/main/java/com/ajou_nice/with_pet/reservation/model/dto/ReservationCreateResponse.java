@@ -20,32 +20,32 @@ public class ReservationCreateResponse {
 	private Long reservationId;
 
 	private String reservationDate;
-	private String checkIn;
-	private String checkOut;
+	private String reservationCheckIn;
+	private String reservationCheckOut;
 	private String dogName;
 	private String dogSize;
 	private String petSitterName;
 
-	private String criticalServiceName;
-	private Integer criticalServicePrice;
+	private String reservationCriticalServiceName;
+	private Integer reservationCriticalServicePrice;
 
-	private List<ReservationServiceResponse> reservationServiceResponses;
-	private Integer totalCost;
+	private List<ReservationGetResponse> reservationServiceResponses;
+	private Integer reservationCost;
 
 	public static ReservationCreateResponse of(Reservation reservation){
 		return ReservationCreateResponse.builder()
 				.reservationId(reservation.getReservationId())
 				.reservationDate(reservation.getCreatedAt().toString())
-				.checkIn(reservation.getReservationCheckIn().toString())
-				.checkOut(reservation.getReservationCheckOut().toString())
+				.reservationCheckIn(reservation.getReservationCheckIn().toString())
+				.reservationCheckOut(reservation.getReservationCheckOut().toString())
 				.dogName(reservation.getDog().getDogName())
 				.dogSize(reservation.getDog().getDogSize().toString())
 				.petSitterName(reservation.getPetSitter().getPetSitterName())
-				.criticalServiceName(reservation.getCriticalServiceName())
-				.criticalServicePrice(reservation.getCriticalServicePrice())
+				.reservationCriticalServiceName(reservation.getCriticalServiceName())
+				.reservationCriticalServicePrice(reservation.getCriticalServicePrice())
 				.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?
-						null : ReservationServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
-				.totalCost(reservation.getReservationTotalPrice())
+						null : ReservationGetResponse.toList(reservation.getReservationPetSitterServiceList()))
+				.reservationCost(reservation.getReservationTotalPrice())
 				.build();
 
 
