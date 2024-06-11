@@ -1,8 +1,8 @@
-package com.ajou_nice.with_pet.controller.user;
+package com.ajou_nice.with_pet.auth.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.auth.*;
-import com.ajou_nice.with_pet.service.user.AuthService;
+import com.ajou_nice.with_pet.auth.service.AuthService;
 import com.ajou_nice.with_pet.utils.CookieUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

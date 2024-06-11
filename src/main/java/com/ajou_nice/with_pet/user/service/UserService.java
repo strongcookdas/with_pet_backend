@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.service.user;
+package com.ajou_nice.with_pet.user.service;
 
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyResponse;
