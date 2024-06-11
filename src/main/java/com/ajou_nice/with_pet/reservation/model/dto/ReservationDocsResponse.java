@@ -1,7 +1,7 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse.ReservationServiceResponse;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse.ReservationServiceResponse;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.enums.PayStatus;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,9 +68,9 @@ public class ReservationDocsResponse {
 					.petSitterName(reservation.getPetSitter().getPetSitterName())
 					.dogName(reservation.getDog().getDogName())
 					.dogImg(reservation.getDog().getDogProfileImg())
-					.checkIn(reservation.getCheckIn())
-					.checkOut(reservation.getCheckOut())
-					.totalCost(reservation.getTotalPrice())
+					.checkIn(reservation.getReservationCheckIn())
+					.checkOut(reservation.getReservationCheckOut())
+					.totalCost(reservation.getReservationTotalPrice())
 					.streetAdr(reservation.getPetSitter().getPetSitterStreetAdr())
 					.payStatus(payStatus)
 					.criticalServiceName(reservation.getCriticalServiceName())

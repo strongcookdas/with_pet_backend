@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +25,8 @@ public class ReservationResponse {
                 .reservationId(reservation.getReservationId())
                 .dogId(reservation.getDog().getDogId())
                 .dogName(reservation.getDog().getDogName())
-                .checkIn(reservation.getCheckIn().toLocalDate().toString())
-                .checkOut(reservation.getCheckOut().toLocalDate().toString())
+                .checkIn(reservation.getReservationCheckIn().toLocalDate().toString())
+                .checkOut(reservation.getReservationCheckOut().toLocalDate().toString())
                 .reservationStatus(reservation.getReservationStatus())
                 .build();
     }

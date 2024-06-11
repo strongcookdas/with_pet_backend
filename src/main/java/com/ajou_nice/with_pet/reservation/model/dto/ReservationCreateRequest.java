@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -17,34 +16,23 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Builder
 @Getter
 @Setter
-@ToString
-public class ReservationRequest {
+public class ReservationCreateRequest {
 
     @NotNull(message = "체크인 날짜를 선택해주세요.")
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    private LocalDateTime checkIn;
+    private LocalDateTime reservationCheckIn;
 
     @NotNull(message = "체크아웃 날짜를 선택해주세요.")
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    private LocalDateTime checkOut;
+    private LocalDateTime reservationCheckOut;
 
-    List<Long> optionId;
+    List<Long> reservationOptionIdList;
 
     @NotNull(message = "반려견을 선택해주세요.")
     private Long dogId;
 
     @NotNull
-    private Long petsitterId;
-
-    public static ReservationRequest forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut,
-            Long dogId, Long petSitterId){
-        return ReservationRequest.builder()
-                .checkIn(checkIn)
-                .checkOut(checkOut)
-                .petsitterId(petSitterId)
-                .dogId(dogId)
-                .build();
-    }
+    private Long petSitterId;
 
     @AllArgsConstructor
     @NoArgsConstructor

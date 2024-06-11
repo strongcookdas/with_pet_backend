@@ -8,7 +8,7 @@ import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.Pay;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.NotificationType;
@@ -17,7 +17,7 @@ import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.repository.PayRepository;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 
 import java.time.LocalDate;
@@ -76,7 +76,7 @@ public class KaKaoPayService {
 		parameters.add("partner_user_id", findUser.getId().toString());
 		parameters.add("item_name", "펫시터 예약");
 		parameters.add("quantity", "1");
-		parameters.add("total_amount", reservation.getTotalPrice().toString());
+		parameters.add("total_amount", reservation.getReservationTotalPrice().toString());
 		parameters.add("vat_amount", "0");
 		parameters.add("tax_free_amount", "0");
 		parameters.add("approval_url",
@@ -217,7 +217,7 @@ public class KaKaoPayService {
 		Pay pay = payRepository.findByReservation(reservation).orElseThrow(() -> {
 			throw new AppException(ErrorCode.PAY_NOT_FOUND, ErrorCode.PAY_NOT_FOUND.getMessage());
 		});
-		Period period = Period.between(LocalDate.now(), reservation.getCheckIn().toLocalDate());
+		Period period = Period.between(LocalDate.now(), reservation.getReservationCheckIn().toLocalDate());
 		int cancel_amount = 0; //환불 금액
 		List<UserParty> userParties = userPartyRepository.findAllByParty(reservation.getDog()
 				.getParty());

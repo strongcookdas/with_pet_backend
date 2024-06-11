@@ -3,7 +3,7 @@ package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
-import com.ajou_nice.with_pet.service.ReservationService;
+import com.ajou_nice.with_pet.reservation.service.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

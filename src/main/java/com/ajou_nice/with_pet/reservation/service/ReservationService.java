@@ -1,20 +1,23 @@
-package com.ajou_nice.with_pet.service;
+package com.ajou_nice.with_pet.reservation.service;
 
 import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
-import com.ajou_nice.with_pet.domain.dto.reservation.PaymentResponseForPetSitter;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
+import com.ajou_nice.with_pet.repository.UserRepository;
+import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationDocsResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationResponse;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
+import com.ajou_nice.with_pet.service.NotificationService;
+import com.ajou_nice.with_pet.service.ValidateCollection;
 import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
-import com.ajou_nice.with_pet.domain.entity.ReservationPetSitterService;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.ReservationPetSitterService;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
@@ -25,7 +28,7 @@ import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.withpet_service.repository.PetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 
@@ -48,7 +51,6 @@ public class ReservationService {
     private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
     private final PetSitterServiceRepository serviceRepository;
     private final ReservationPetSitterServiceRepository reservationServiceRepository;
-
     private final ReviewRepository reviewRepository;
 
     private final ValidateCollection valid;
@@ -61,21 +63,19 @@ public class ReservationService {
     private final NotificationService notificationService;
 
     @Transactional
-    public ReservationCreateResponse createReservation(String userId,
-            ReservationRequest reservationRequest) {
+    public ReservationCreateResponse createReservation(String email, ReservationCreateRequest reservationCreateRequest) {
         int cost = 0;
-        User user = valid.userValidationById(userId);
-        Dog dog = valid.dogValidation(reservationRequest.getDogId());
+
+        User user = valid.userValidationById(email);
+        Dog dog = valid.dogValidation(reservationCreateRequest.getDogId());
+        PetSitter petSitter = valid.petSitterValidation(reservationCreateRequest.getPetSitterId());
 
         //반려견 예약 유효 체크
-        isDuplicatedReservation(reservationRequest.getCheckIn(), reservationRequest.getCheckOut(),
+        isDuplicatedReservation(reservationCreateRequest.getReservationCheckIn(), reservationCreateRequest.getReservationCheckOut(),
                 dog, reservationStatuses);
 
-        //펫시터 유효 체크
-        PetSitter petSitter = valid.petSitterValidation(reservationRequest.getPetsitterId());
-
         //펫시터 예약 유효 체크
-        isConflictReservation(reservationRequest.getCheckIn(), reservationRequest.getCheckOut(),
+        isConflictReservation(reservationCreateRequest.getReservationCheckIn(), reservationCreateRequest.getReservationCheckOut(),
                 petSitter, reservationStatuses);
 
         //소형견, 중형견, 대형견 옵션 선택
@@ -87,14 +87,15 @@ public class ReservationService {
         cost += criticalService.getPrice();
 
         List<PetSitterWithPetService> withPetServices = serviceRepository.findAllById(
-                reservationRequest.getOptionId());
+                reservationCreateRequest.getReservationOptionIdList());
 
         //시간에 따라 요금 계산 (날짜 * 필수 옵션 가격)
-        Period diff = Period.between(reservationRequest.getCheckIn().toLocalDate(),
-                reservationRequest.getCheckOut().toLocalDate());
+        Period diff = Period.between(reservationCreateRequest.getReservationCheckIn().toLocalDate(),
+                reservationCreateRequest.getReservationCheckOut().toLocalDate());
         cost *= diff.getDays();
+
         Reservation reservation = reservationRepository.save(
-                Reservation.of(reservationRequest, user, dog, petSitter, criticalService));
+                Reservation.of(reservationCreateRequest, user, dog, petSitter, criticalService));
 
         List<ReservationPetSitterService> reservationServices = new ArrayList<>();
 
@@ -119,6 +120,8 @@ public class ReservationService {
         return ReservationCreateResponse.of(reservation);
     }
 
+
+
     private void sendCreateReservationNotificationByEmail(List<UserParty> userParties, User user,
             Dog dog,
             PetSitter petSitter) {
@@ -141,13 +144,13 @@ public class ReservationService {
 
     private void isDuplicatedReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog,
             List<ReservationStatus> statuses) {
-        if (reservationRepository.existsByCheckInBetweenAndDogAndReservationStatusIn(checkIn,
+        if (reservationRepository.existsByReservationCheckInBetweenAndDogAndReservationStatusIn(checkIn,
                 checkOut, dog, statuses)) {
             throw new AppException(ErrorCode.DUPLICATED_RESERVATION,
                     ErrorCode.DUPLICATED_RESERVATION.getMessage());
         }
 
-        if (reservationRepository.existsByCheckOutBetweenAndDogAndReservationStatusIn(checkIn,
+        if (reservationRepository.existsByReservationCheckOutBetweenAndDogAndReservationStatusIn(checkIn,
                 checkOut, dog, statuses)) {
             throw new AppException(ErrorCode.DUPLICATED_RESERVATION,
                     ErrorCode.DUPLICATED_RESERVATION.getMessage());
@@ -157,13 +160,13 @@ public class ReservationService {
     //펫시터 입장에서 validation
     private void isConflictReservation(LocalDateTime checkIn, LocalDateTime checkOut,
             PetSitter petSitter, List<ReservationStatus> reservationStatuses) {
-        if (reservationRepository.existsByCheckInBetweenAndPetSitterAndReservationStatusIn(checkIn,
+        if (reservationRepository.existsByReservationCheckInBetweenAndPetSitterAndReservationStatusIn(checkIn,
                 checkOut, petSitter, reservationStatuses)) {
             throw new AppException(ErrorCode.RESERVATION_CONFLICT,
                     ErrorCode.RESERVATION_CONFLICT.getMessage());
         }
 
-        if (reservationRepository.existsByCheckOutBetweenAndPetSitterAndReservationStatusIn(checkIn,
+        if (reservationRepository.existsByReservationCheckOutBetweenAndPetSitterAndReservationStatusIn(checkIn,
                 checkOut, petSitter, reservationStatuses)) {
             throw new AppException(ErrorCode.RESERVATION_CONFLICT,
                     ErrorCode.RESERVATION_CONFLICT.getMessage());
@@ -213,8 +216,8 @@ public class ReservationService {
                 LocalDate.parse(month + "-01"), reservationStatuses);
 
         for (Reservation reservation : reservations) {
-            unavailableDates.addAll(getDateRange(reservation.getCheckIn().toLocalDate(),
-                    reservation.getCheckOut().toLocalDate()));
+            unavailableDates.addAll(getDateRange(reservation.getReservationCheckIn().toLocalDate(),
+                    reservation.getReservationCheckOut().toLocalDate()));
         }
         return unavailableDates;
     }
@@ -250,7 +253,7 @@ public class ReservationService {
         }
 
         reservation.updateStatus(status);
-        if (LocalDate.now().equals(reservation.getCheckIn().toLocalDate())) {
+        if (LocalDate.now().equals(reservation.getReservationCheckIn().toLocalDate())) {
             reservation.updateStatus(ReservationStatus.USE.toString());
         }
 

@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,9 +29,9 @@ public class ReservationDetailResponse {
                 .dogId(reservation.getDog().getDogId())
                 .dogName(reservation.getDog().getDogName())
                 .dogImg(reservation.getDog().getDogProfileImg())
-                .cost(reservation.getTotalPrice())
-                .checkIn(reservation.getCheckIn().toLocalDate().toString())
-                .checkOut(reservation.getCheckOut().toLocalDate().toString())
+                .cost(reservation.getReservationTotalPrice())
+                .checkIn(reservation.getReservationCheckIn().toLocalDate().toString())
+                .checkOut(reservation.getReservationCheckOut().toLocalDate().toString())
                 .socializationTemperature(reservation.getDog().getDogSocializationTemperature())
                 .affectionTemperature(reservation.getDog().getDogAffectionTemperature())
                 .socializationDegree(reservation.getDog().getDogSocializationDegree())

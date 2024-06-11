@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.domain.dto.calendar;
 
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

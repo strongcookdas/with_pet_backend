@@ -1,9 +1,9 @@
-package com.ajou_nice.with_pet.repository.custom.reservation;
+package com.ajou_nice.with_pet.reservation.repository.custom;
 
-import static com.ajou_nice.with_pet.domain.entity.QReservation.reservation;
+import static com.ajou_nice.with_pet.reservation.model.entity.QReservation.reservation;
 
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -29,7 +29,7 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
 
         List<Reservation> reservations = queryFactory.selectFrom(reservation)
                 .where(containPetsitter(petSitter), getMonthReservationCheckIn(month), compareReservationStatus(list))
-                .orderBy(reservation.checkIn.asc())
+                .orderBy(reservation.reservationCheckIn.asc())
                 .fetch();
         return reservations;
     }
@@ -38,7 +38,7 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
     public List<Reservation> findAllByPetsitterAndMonth(PetSitter petSitter, LocalDate month) {
         List<Reservation> reservations = queryFactory.selectFrom(reservation)
                 .where(containPetsitter(petSitter), getMonthReservationCheckIn(month))
-                .orderBy(reservation.checkIn.asc()).fetch();
+                .orderBy(reservation.reservationCheckIn.asc()).fetch();
         return reservations;
     }
 
@@ -48,7 +48,7 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
         List<Reservation> reservations = queryFactory.selectFrom(reservation)
                 .where(containPetsitter(petSitter), getMonthReservationCheckIn(month),
                         compareReservationStatus(reservationStatus))
-                .orderBy(reservation.checkIn.asc())
+                .orderBy(reservation.reservationCheckIn.asc())
                 .fetch();
         return reservations;
     }
@@ -58,12 +58,12 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     private BooleanExpression getMonthReservationCheckIn(LocalDate month) {
-        return reservation.checkIn.between(month.withDayOfMonth(1).atStartOfDay(),
+        return reservation.reservationCheckIn.between(month.withDayOfMonth(1).atStartOfDay(),
                 month.withDayOfMonth(month.lengthOfMonth()).atStartOfDay());
     }
 
     private BooleanExpression getMonthReservationCheckOut(LocalDate month) {
-        return reservation.checkOut.between(month.withDayOfMonth(1).atStartOfDay(),
+        return reservation.reservationCheckOut.between(month.withDayOfMonth(1).atStartOfDay(),
                 month.withDayOfMonth(month.lengthOfMonth()).atStartOfDay());
     }
 

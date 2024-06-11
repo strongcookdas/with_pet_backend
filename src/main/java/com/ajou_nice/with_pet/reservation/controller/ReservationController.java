@@ -1,20 +1,20 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.reservation.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
-import com.ajou_nice.with_pet.domain.dto.reservation.PaymentResponseForPetSitter;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDetailResponse;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationDocsResponse;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest.ReservationSimpleRequest;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationResponse;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationStatusRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationDocsResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationStatusRequest;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
-import com.ajou_nice.with_pet.service.ReservationService;
+import com.ajou_nice.with_pet.reservation.service.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -34,7 +34,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/reservation")
+@RequestMapping("api/v2/reservation")
 @RequiredArgsConstructor
 @Api(tags = "Reservation API")
 public class ReservationController {
@@ -44,17 +44,8 @@ public class ReservationController {
 
     @PostMapping
     @ApiOperation(value = "예약 하기")
-    public Response<ReservationCreateResponse> createReservation(
-            @ApiIgnore Authentication authentication,
-            @RequestBody ReservationRequest reservationRequest) {
-        log.info("=======================ReservationRequest : {}=============================",
-                reservationRequest);
-        ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(
-                authentication.getName(), reservationRequest);
-
-        log.info("=======================ReservationResponse : {}=============================",
-                reservationCreateResponse);
-
+    public Response<ReservationCreateResponse> createReservation(@ApiIgnore Authentication authentication, @RequestBody ReservationCreateRequest reservationCreateRequest) {
+        ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(authentication.getName(), reservationCreateRequest);
         return Response.success(reservationCreateResponse);
     }
 

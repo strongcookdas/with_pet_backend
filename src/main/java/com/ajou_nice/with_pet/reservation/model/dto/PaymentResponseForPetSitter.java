@@ -1,8 +1,8 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
 
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationCreateResponse.ReservationServiceResponse;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse.ReservationServiceResponse;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import java.util.List;
 
 import com.ajou_nice.with_pet.enums.Gender;
@@ -38,8 +38,8 @@ public class PaymentResponseForPetSitter {
 
 	public static PaymentResponseForPetSitter of(Reservation reservation){
 		return PaymentResponseForPetSitter.builder()
-				.checkIn(reservation.getCheckIn().toString())
-				.checkOut(reservation.getCheckOut().toString())
+				.checkIn(reservation.getReservationCheckIn().toString())
+				.checkOut(reservation.getReservationCheckOut().toString())
 				.userName(reservation.getUser().getName())
 				.dogName(reservation.getDog().getDogName())
 				.dogGender(reservation.getDog().getDogGender())
@@ -51,7 +51,7 @@ public class PaymentResponseForPetSitter {
 				.dogSocializationTemperature(reservation.getDog().getDogSocializationTemperature())
 				.dogSocializationDegree(reservation.getDog().getDogSocializationDegree())
 				.dogAffectionTemperature(reservation.getDog().getDogAffectionTemperature())
-				.totalCost(reservation.getTotalPrice())
+				.totalCost(reservation.getReservationTotalPrice())
 				.criticalServiceName(reservation.getCriticalServiceName())
 				.criticalServicePrice(reservation.getCriticalServicePrice())
 				.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?

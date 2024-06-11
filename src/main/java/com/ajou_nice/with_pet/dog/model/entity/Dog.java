@@ -4,7 +4,7 @@ import com.ajou_nice.with_pet.dog.model.dto.update.DogUpdateInfoRequest;
 import com.ajou_nice.with_pet.dog.model.dto.add.DogRegisterRequest;
 import com.ajou_nice.with_pet.domain.entity.BaseEntity;
 import com.ajou_nice.with_pet.domain.entity.Diary;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.enums.DogSize;
 import com.ajou_nice.with_pet.enums.Gender;
 import com.ajou_nice.with_pet.group.model.dto.add.PartyAddRequest;

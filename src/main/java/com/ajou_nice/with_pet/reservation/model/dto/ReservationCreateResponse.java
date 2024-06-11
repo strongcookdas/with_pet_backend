@@ -1,7 +1,7 @@
-package com.ajou_nice.with_pet.domain.dto.reservation;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Reservation;
-import com.ajou_nice.with_pet.domain.entity.ReservationPetSitterService;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.ReservationPetSitterService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +36,8 @@ public class ReservationCreateResponse {
 		return ReservationCreateResponse.builder()
 				.reservationId(reservation.getReservationId())
 				.reservationDate(reservation.getCreatedAt().toString())
-				.checkIn(reservation.getCheckIn().toString())
-				.checkOut(reservation.getCheckOut().toString())
+				.checkIn(reservation.getReservationCheckIn().toString())
+				.checkOut(reservation.getReservationCheckOut().toString())
 				.dogName(reservation.getDog().getDogName())
 				.dogSize(reservation.getDog().getDogSize().toString())
 				.petSitterName(reservation.getPetSitter().getPetSitterName())
@@ -45,7 +45,7 @@ public class ReservationCreateResponse {
 				.criticalServicePrice(reservation.getCriticalServicePrice())
 				.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?
 						null : ReservationServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
-				.totalCost(reservation.getTotalPrice())
+				.totalCost(reservation.getReservationTotalPrice())
 				.build();
 
 

@@ -1,9 +1,9 @@
 package com.ajou_nice.with_pet.review;
 
 
-import com.ajou_nice.with_pet.controller.ReservationController;
+import com.ajou_nice.with_pet.reservation.controller.ReservationController;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.domain.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
@@ -12,11 +12,11 @@ import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
-import com.ajou_nice.with_pet.repository.ReservationRepository;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
-import com.ajou_nice.with_pet.service.ReservationService;
+import com.ajou_nice.with_pet.reservation.service.ReservationService;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

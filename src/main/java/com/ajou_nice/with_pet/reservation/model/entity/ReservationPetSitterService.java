@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.reservation.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

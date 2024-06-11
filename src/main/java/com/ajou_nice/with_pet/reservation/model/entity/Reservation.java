@@ -1,8 +1,11 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.reservation.model.entity;
 
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
-import com.ajou_nice.with_pet.domain.dto.reservation.ReservationRequest;
+import com.ajou_nice.with_pet.domain.entity.BaseEntity;
+import com.ajou_nice.with_pet.domain.entity.User;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Entity;
@@ -47,86 +50,89 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "petsitter_id")
     private PetSitter petSitter;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "petSitterCriticalServiceId")
+    private PetSitterCriticalService petSitterCriticalServiceId;
+    private String criticalServiceName;
+    private Integer criticalServicePrice;
+
     @OneToMany(mappedBy = "reservation")
     private List<ReservationPetSitterService> reservationPetSitterServiceList;
 
     @NotNull
-    private LocalDateTime checkIn;
+    private LocalDateTime reservationCheckIn;
 
     @NotNull
-    private LocalDateTime checkOut;
+    private LocalDateTime reservationCheckOut;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-    private Long petSitterCriticalServiceId;
-    private String criticalServiceName;
-    private Integer criticalServicePrice;
-    private Integer totalPrice;
+    private Integer reservationTotalPrice;
 
     //결제 건의 고유번호
-    private String tid;
+    private String reservationTid;
 
 
-    public static Reservation of(ReservationRequest reservationRequest, User user, Dog dog,
+    public static Reservation of(ReservationCreateRequest reservationCreateRequest, User user, Dog dog,
                                  PetSitter petSitter, PetSitterCriticalService petSitterCriticalService) {
         return Reservation.builder()
                 .user(user)
                 .dog(dog)
                 .petSitter(petSitter)
-                .checkIn(reservationRequest.getCheckIn())
-                .checkOut(reservationRequest.getCheckOut())
+                .reservationCheckIn(reservationCreateRequest.getReservationCheckIn())
+                .reservationCheckOut(reservationCreateRequest.getReservationCheckOut())
                 .reservationStatus(ReservationStatus.WAIT)
-                .petSitterCriticalServiceId(petSitterCriticalService.getId())
+                .petSitterCriticalServiceId(petSitterCriticalService)
                 .criticalServiceName(petSitterCriticalService.getCriticalService().getServiceName())
                 .criticalServicePrice(petSitterCriticalService.getPrice())
-                .totalPrice(0)
+                .reservationTotalPrice(0)
                 .build();
     }
 
-    public static Reservation forSchedulerTest(LocalDateTime checkIn, LocalDateTime checkOut){
+    public static Reservation forSchedulerTest(LocalDateTime checkIn, LocalDateTime checkOut) {
         return Reservation.builder()
-                .checkIn(checkIn)
-                .checkOut(checkOut)
+                .reservationCheckIn(checkIn)
+                .reservationCheckOut(checkOut)
                 .reservationStatus(ReservationStatus.WAIT)
                 .build();
     }
 
-    public void updateForTest(String criticalServiceName, int criticalServicePrice){
+    public void updateForTest(String criticalServiceName, int criticalServicePrice) {
         this.criticalServiceName = criticalServiceName;
         this.criticalServicePrice = criticalServicePrice;
     }
 
-    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost){
+    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost) {
         return Reservation.builder()
-                .checkIn(checkIn)
-                .checkOut(checkOut)
+                .reservationCheckIn(checkIn)
+                .reservationCheckOut(checkOut)
                 .user(user)
                 .petSitter(petSitter)
-                .totalPrice(totalCost)
+                .reservationTotalPrice(totalCost)
                 .build();
     }
 
-    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog){
+    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog) {
         return Reservation.builder()
-                .checkIn(checkIn)
-                .checkOut(checkOut)
+                .reservationCheckIn(checkIn)
+                .reservationCheckOut(checkOut)
                 .user(user)
                 .petSitter(petSitter)
-                .totalPrice(totalCost)
+                .reservationTotalPrice(totalCost)
                 .reservationStatus(status)
                 .dog(dog)
                 .build();
     }
 
     public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user,
-                                            PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog, String criticalServiceName, int criticalServicePrice){
+                                            PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog, String criticalServiceName, int criticalServicePrice) {
         return Reservation.builder()
-                .checkIn(checkIn)
-                .checkOut(checkOut)
+                .reservationCheckIn(checkIn)
+                .reservationCheckOut(checkOut)
                 .user(user)
                 .petSitter(petSitter)
-                .totalPrice(totalCost)
+                .reservationTotalPrice(totalCost)
                 .reservationStatus(status)
                 .dog(dog)
                 .criticalServiceName(criticalServiceName)
@@ -134,20 +140,20 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 
-    public void updateTid(String tid){
-        this.tid = tid;
+    public void updateTid(String tid) {
+        this.reservationTid = tid;
     }
 
-    public void approvePay(ReservationStatus reservationStatus){
+    public void approvePay(ReservationStatus reservationStatus) {
         this.reservationStatus = reservationStatus;
     }
 
-    public void updateReservationServices(List<ReservationPetSitterService> petSitterServices){
+    public void updateReservationServices(List<ReservationPetSitterService> petSitterServices) {
         this.reservationPetSitterServiceList = petSitterServices;
     }
 
-    public void updateTotalPrice(int price){
-        this.totalPrice = price;
+    public void updateTotalPrice(int price) {
+        this.reservationTotalPrice = price;
     }
 
     public void updateStatus(String status) {
