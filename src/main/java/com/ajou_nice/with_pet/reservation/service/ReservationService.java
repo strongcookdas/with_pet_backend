@@ -1,7 +1,8 @@
 package com.ajou_nice.with_pet.reservation.service;
 
 import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
-import com.ajou_nice.with_pet.repository.UserRepository;
+import com.ajou_nice.with_pet.dog.service.DogValidationService;
+import com.ajou_nice.with_pet.petsitter.service.PetSitterValidationService;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
@@ -15,6 +16,7 @@ import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.service.NotificationService;
 import com.ajou_nice.with_pet.service.ValidateCollection;
+import com.ajou_nice.with_pet.user.service.UserValidationService;
 import com.ajou_nice.with_pet.withpet_service.model.entity.PetSitterWithPetService;
 import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.reservation.model.entity.ReservationPetSitterService;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,69 +65,76 @@ public class ReservationService {
     private final UserPartyRepository userPartyRepository;
     private final NotificationService notificationService;
 
+    private final UserValidationService userValidationService;
+    private final PetSitterValidationService petSitterValidationService;
+    private final DogValidationService dogValidationService;
+
     @Transactional
     public ReservationCreateResponse createReservation(String email, ReservationCreateRequest reservationCreateRequest) {
-        int cost = 0;
 
-        User user = valid.userValidationById(email);
-        Dog dog = valid.dogValidation(reservationCreateRequest.getDogId());
-        PetSitter petSitter = valid.petSitterValidation(reservationCreateRequest.getPetSitterId());
+        User user = userValidationService.userValidationByEmail(email);
+        Dog dog = dogValidationService.dogValidation(reservationCreateRequest.getDogId());
+        PetSitter petSitter = petSitterValidationService.petSitterValidationByPetSitterId(reservationCreateRequest.getPetSitterId());
 
         //반려견 예약 유효 체크
-        isDuplicatedReservation(reservationCreateRequest.getReservationCheckIn(), reservationCreateRequest.getReservationCheckOut(),
-                dog, reservationStatuses);
-
+        isDuplicatedDogReservation(reservationCreateRequest.getReservationCheckIn(), reservationCreateRequest.getReservationCheckOut(), dog, reservationStatuses);
         //펫시터 예약 유효 체크
-        isConflictReservation(reservationCreateRequest.getReservationCheckIn(), reservationCreateRequest.getReservationCheckOut(),
-                petSitter, reservationStatuses);
+        isConflictPetSitterReservation(reservationCreateRequest.getReservationCheckIn(), reservationCreateRequest.getReservationCheckOut(), petSitter, reservationStatuses);
 
         //소형견, 중형견, 대형견 옵션 선택
-        PetSitterCriticalService criticalService = petSitterCriticalServiceRepository.findByPetSitterAndCriticalService_ServiceName(
-                petSitter, dog.getDogSize().name()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.PETSITTER_SERVICE_NOT_FOUND, "해당 옵션이 존재하지 않습니다.");
-        });
+        PetSitterCriticalService criticalService = petSitterCriticalServiceRepository.findByPetSitterAndCriticalService_ServiceName(petSitter, dog.getDogSize().name()).orElseThrow(() -> new AppException(ErrorCode.PETSITTER_SERVICE_NOT_FOUND, "해당 옵션이 존재하지 않습니다."));
+        //부가 옵션
+        List<PetSitterWithPetService> withPetServices = serviceRepository.findAllById(reservationCreateRequest.getReservationOptionIdList());
+        int cost = calculatorReservationCost(reservationCreateRequest, criticalService, withPetServices);
 
-        cost += criticalService.getPrice();
-
-        List<PetSitterWithPetService> withPetServices = serviceRepository.findAllById(
-                reservationCreateRequest.getReservationOptionIdList());
-
-        //시간에 따라 요금 계산 (날짜 * 필수 옵션 가격)
-        Period diff = Period.between(reservationCreateRequest.getReservationCheckIn().toLocalDate(),
-                reservationCreateRequest.getReservationCheckOut().toLocalDate());
-        cost *= diff.getDays();
-
-        Reservation reservation = reservationRepository.save(
-                Reservation.of(reservationCreateRequest, user, dog, petSitter, criticalService));
-
-        List<ReservationPetSitterService> reservationServices = new ArrayList<>();
-
-        for (PetSitterWithPetService withPetService : withPetServices) {
-            if (!withPetService.getPetSitter().getId().equals(petSitter.getId())) {
-                throw new AppException(ErrorCode.PETSITTER_SERVICE_NOT_FOUND,
-                        "해당 펫시터가 제공하는 서비스가 아닙니다.");
-            }
-            ReservationPetSitterService reservationService =
-                    ReservationPetSitterService.of(reservation, withPetService);
-            reservationServices.add(reservationService);
-            cost += withPetService.getPrice();
-        }
+        Reservation reservation = reservationRepository.save(Reservation.of(reservationCreateRequest, user, dog, petSitter, criticalService));
+        List<ReservationPetSitterService> reservationServices = toReservationPetSitterService(withPetServices, petSitter, reservation);
 
         reservationServiceRepository.saveAll(reservationServices);
         reservation.updateReservationServices(reservationServices);
         reservation.updateTotalPrice(cost);
 
+        /*
         List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
         sendCreateReservationNotificationByEmail(userParties, user, dog, petSitter);
+        */
 
         return ReservationCreateResponse.of(reservation);
     }
 
+    private int calculatorReservationCost(ReservationCreateRequest reservationCreateRequest, PetSitterCriticalService petSitterCriticalService, List<PetSitterWithPetService> petSitterWithPetServices) {
+        int cost = 0;
+        cost += petSitterCriticalService.getPrice();
+
+        //시간에 따라 요금 계산 (날짜 * 필수 옵션 가격)
+        Period diff = Period.between(reservationCreateRequest.getReservationCheckIn().toLocalDate(), reservationCreateRequest.getReservationCheckOut().toLocalDate());
+        cost *= diff.getDays();
+
+        for (PetSitterWithPetService petSitterWithPetService : petSitterWithPetServices)
+            cost += petSitterWithPetService.getPrice();
+        return cost;
+    }
+
+    private List<ReservationPetSitterService> toReservationPetSitterService(List<PetSitterWithPetService> petSitterWithPetServices, PetSitter petSitter, Reservation reservation) {
+        List<ReservationPetSitterService> reservationServices = new ArrayList<>();
+
+        for (PetSitterWithPetService petSitterWithPetService : petSitterWithPetServices) {
+            if (!petSitterWithPetService.getPetSitter().getId().equals(petSitter.getId())) {
+                throw new AppException(ErrorCode.PETSITTER_SERVICE_NOT_FOUND,
+                        "해당 펫시터가 제공하는 서비스가 아닙니다.");
+            }
+            ReservationPetSitterService reservationService =
+                    ReservationPetSitterService.of(reservation, petSitterWithPetService);
+            reservationServices.add(reservationService);
+        }
+
+        return reservationServices;
+    }
 
 
     private void sendCreateReservationNotificationByEmail(List<UserParty> userParties, User user,
-            Dog dog,
-            PetSitter petSitter) {
+                                                          Dog dog,
+                                                          PetSitter petSitter) {
         List<Notification> notifications = new ArrayList<>();
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
@@ -142,8 +152,7 @@ public class ReservationService {
         notificationService.saveNotification(notification);
     }
 
-    private void isDuplicatedReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog,
-            List<ReservationStatus> statuses) {
+    private void isDuplicatedDogReservation(LocalDateTime checkIn, LocalDateTime checkOut, Dog dog, List<ReservationStatus> statuses) {
         if (reservationRepository.existsByReservationCheckInBetweenAndDogAndReservationStatusIn(checkIn,
                 checkOut, dog, statuses)) {
             throw new AppException(ErrorCode.DUPLICATED_RESERVATION,
@@ -158,8 +167,8 @@ public class ReservationService {
     }
 
     //펫시터 입장에서 validation
-    private void isConflictReservation(LocalDateTime checkIn, LocalDateTime checkOut,
-            PetSitter petSitter, List<ReservationStatus> reservationStatuses) {
+    private void isConflictPetSitterReservation(LocalDateTime checkIn, LocalDateTime checkOut,
+                                                PetSitter petSitter, List<ReservationStatus> reservationStatuses) {
         if (reservationRepository.existsByReservationCheckInBetweenAndPetSitterAndReservationStatusIn(checkIn,
                 checkOut, petSitter, reservationStatuses)) {
             throw new AppException(ErrorCode.RESERVATION_CONFLICT,
@@ -176,7 +185,7 @@ public class ReservationService {
     @Transactional
     // 펫시터가 완료된 예약의 반려견의 사회화 온도 평가
     public void modifyDogTemp(String userId, Long reservationId,
-            DogSocializationRequest dogSocializationRequest) {
+                              DogSocializationRequest dogSocializationRequest) {
 
         //reservation
         Reservation reservation = valid.reservationValidation(reservationId);
@@ -235,7 +244,7 @@ public class ReservationService {
 
     @Transactional
     public ReservationDetailResponse approveReservation(String userId, Long reservationId,
-            String status) {
+                                                        String status) {
 
         //상태 변경 값이 잘 들어왔는지 유효 체크
         if (!status.equals(ReservationStatus.APPROVAL.toString())) {
@@ -265,7 +274,7 @@ public class ReservationService {
     }
 
     private void sendApproveReservationNotificationByEmail(List<UserParty> userParties, Dog dog,
-            PetSitter petSitter) {
+                                                           PetSitter petSitter) {
         userParties.forEach(u -> {
             Notification notification = notificationService.sendEmail(
                     String.format("%s 펫시터님이 %s 반려견에 대한 돌봄 서비스 예약을 승인했습니다.",
