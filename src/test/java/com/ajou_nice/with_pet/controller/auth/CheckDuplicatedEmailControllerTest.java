@@ -1,12 +1,12 @@
 package com.ajou_nice.with_pet.controller.auth;
 
 import com.ajou_nice.with_pet.CommonApiTest;
-import com.ajou_nice.with_pet.controller.user.AuthController;
+import com.ajou_nice.with_pet.auth.controller.AuthController;
 import com.ajou_nice.with_pet.domain.dto.auth.EmailRequest;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.fixture.EmailDtoFixture;
-import com.ajou_nice.with_pet.service.user.AuthService;
+import com.ajou_nice.with_pet.auth.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

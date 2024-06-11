@@ -9,7 +9,7 @@ import com.ajou_nice.with_pet.fixture.EmailDtoFixture;
 import com.ajou_nice.with_pet.fixture.entity.UserFixture;
 import com.ajou_nice.with_pet.repository.UserRepository;
 import com.ajou_nice.with_pet.service.ValidateCollection;
-import com.ajou_nice.with_pet.service.user.AuthService;
+import com.ajou_nice.with_pet.auth.service.AuthService;
 import com.ajou_nice.with_pet.utils.JwtTokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

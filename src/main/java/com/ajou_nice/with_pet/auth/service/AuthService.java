@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.service.user;
+package com.ajou_nice.with_pet.auth.service;
 
 import com.ajou_nice.with_pet.domain.dto.auth.*;
 import com.ajou_nice.with_pet.domain.entity.User;

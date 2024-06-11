@@ -1,10 +1,10 @@
-package com.ajou_nice.with_pet.controller.user;
+package com.ajou_nice.with_pet.user.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyRequest;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoModifyResponse;
 import com.ajou_nice.with_pet.domain.dto.user.MyInfoResponse;
-import com.ajou_nice.with_pet.service.user.UserService;
+import com.ajou_nice.with_pet.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
