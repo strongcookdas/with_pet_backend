@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.reservations;
 
 
 import com.ajou_nice.with_pet.reservation.controller.ReservationController;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationDocsResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
@@ -157,7 +157,7 @@ public class ReservationListTest {
 		reservationRepository.save(reservation4);
 	   
 		//when ReservationDocsResponse에 매핑했을때
-		ReservationDocsResponse docsResponse = reservationService.getReservationDoc(user.getEmail());
+		UserReservationGetInfosResponse docsResponse = reservationService.getUserReservations(user.getEmail());
 
 		//then Dto에 생각한대로 잘 매핑되는지 출력
 		System.out.println(docsResponse);

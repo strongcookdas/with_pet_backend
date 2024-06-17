@@ -6,7 +6,7 @@ import com.ajou_nice.with_pet.petsitter.service.PetSitterValidationService;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationDocsResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationResponse;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
@@ -347,7 +347,7 @@ public class ReservationService {
 
 
     //예약 내역 반려인 입장에서
-    public ReservationDocsResponse getReservationDoc(String userId) {
+    public UserReservationGetInfosResponse getUserReservations(String userId) {
 
         User user = valid.userValidationById(userId);
 
@@ -377,7 +377,7 @@ public class ReservationService {
                         reservation -> reservation.getReservationStatus().equals(ReservationStatus.DONE))
                 .collect(Collectors.toList());
 
-        return ReservationDocsResponse.of(waitReservations, payedReservations, approveReservations,
+        return UserReservationGetInfosResponse.of(waitReservations, payedReservations, approveReservations,
                 useReservations, doneReservations);
     }
 
