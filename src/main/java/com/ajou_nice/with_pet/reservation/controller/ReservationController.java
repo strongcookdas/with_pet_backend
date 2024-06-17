@@ -6,9 +6,7 @@ import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationStatusRequest;
@@ -40,15 +38,6 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final KaKaoPayService kaKaoPayService;
-
-    @PostMapping
-    @ApiOperation(value = "예약 하기")
-    public Response<ReservationCreateResponse> createReservation(@ApiIgnore Authentication authentication,
-                                                                 @RequestBody ReservationCreateRequest reservationCreateRequest) {
-        ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(
-                authentication.getName(), reservationCreateRequest);
-        return Response.success(reservationCreateResponse);
-    }
 
     @PutMapping("/update-dogSocialTemperature/{reservationId}")
     @ApiOperation(value = "예약 완료시 펫시터가 반려견 사회화온도 평가")
