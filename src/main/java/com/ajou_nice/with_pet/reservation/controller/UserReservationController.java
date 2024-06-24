@@ -26,10 +26,12 @@ import springfox.documentation.annotations.ApiIgnore;
 public class UserReservationController {
 
     private final UserReservationService userReservationService;
+
     @GetMapping
     @ApiOperation(value = "유저의 예약 리스트 조회")
     public Response<UserReservationGetInfosResponse> getUserReservations(@ApiIgnore Authentication authentication) {
-        UserReservationGetInfosResponse docsResponse = userReservationService.getUserReservations(authentication.getName());
+        UserReservationGetInfosResponse docsResponse = userReservationService.getUserReservations(
+                authentication.getName());
         return Response.success(docsResponse);
     }
 

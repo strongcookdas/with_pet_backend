@@ -8,7 +8,7 @@ import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationStatusRequest;
 import com.ajou_nice.with_pet.reservation.service.ReservationService;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
@@ -31,13 +31,20 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v2/reservations")
+@RequestMapping("api/v2/pet-sitters/reservations")
 @RequiredArgsConstructor
-@Api(tags = "Reservation API")
-public class ReservationController {
+@Api(tags = "PetSitter Reservation API")
+public class PetSitterReservationController {
 
-    private final ReservationService reservationService;
+    private final ReservationService PetSitterReservationService;
     private final KaKaoPayService kaKaoPayService;
+
+    @GetMapping
+    @ApiOperation(value = "펫시터 월별 예약 목록 조회")
+    public Response<List<PetSitterReservationGetMonthlyResponse>> getMonthlyReservations(@ApiIgnore Authentication authentication,
+                                                                                         @RequestParam String month) {
+        return Response.success(PetSitterReservationService.getMonthlyReservations(authentication.getName(), month));
+    }
 
     @PutMapping("/update-dogSocialTemperature/{reservationId}")
     @ApiOperation(value = "예약 완료시 펫시터가 반려견 사회화온도 평가")
@@ -46,16 +53,16 @@ public class ReservationController {
         log.info("---------------------dog Modify socialization Temperature Request : {}--------------------------",
                 dogSocializationRequest);
 
-        reservationService.modifyDogTemp(authentication.getName(), reservationId, dogSocializationRequest);
+        PetSitterReservationService.modifyDogTemp(authentication.getName(), reservationId, dogSocializationRequest);
 
         return Response.success("평가가 완료되었습니다. 감사합니다.");
     }
 
-    @GetMapping
+    @GetMapping("/unable-date")
     @ApiOperation(value = "예약 불가능한 날짜 반환")
     @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
     public Response<List<String>> getUnavailableDates(@RequestParam String month, @RequestParam Long petsitterId) {
-        return Response.success(reservationService.getUnavailableDates(petsitterId, month));
+        return Response.success(PetSitterReservationService.getUnavailableDates(petsitterId, month));
     }
 
     @PutMapping("/reservation-accept")
@@ -64,7 +71,7 @@ public class ReservationController {
                                                                        @RequestBody ReservationStatusRequest reservationStatusRequest) {
         log.info("============================ReservationStatusRequest : {}==============================",
                 reservationStatusRequest);
-        ReservationDetailResponse detailResponse = reservationService.approveReservation(authentication.getName(),
+        ReservationDetailResponse detailResponse = PetSitterReservationService.approveReservation(authentication.getName(),
                 reservationStatusRequest.getReservationId(), reservationStatusRequest.getStatus());
         return Response.success(detailResponse);
     }
@@ -88,20 +95,12 @@ public class ReservationController {
         return Response.success(refundResponse);
     }
 
-    @GetMapping("/petsitter/reservations")
-    @ApiOperation(value = "펫시터 월별 예약 목록 조회")
-    public Response<List<ReservationResponse>> getMonthlyReservations(
-            @ApiIgnore Authentication authentication,
-            @RequestParam String month) {
-        return Response.success(
-                reservationService.getMonthlyReservations(authentication.getName(), month));
-    }
 
     @PostMapping("/user/done-reservation")
     @ApiOperation(value = "사용자의 이용 완료 신청")
     public Response doneReservation(@ApiIgnore Authentication authentication,
                                     @RequestBody ReservationSimpleRequest simpleRequest) {
-        reservationService.doneReservation(authentication.getName(),
+        PetSitterReservationService.doneReservation(authentication.getName(),
                 simpleRequest.getReservationId());
 
         return Response.success("완료 되었습니다. 만족스러우셨다면 후기를 작성해주세요.");
@@ -112,7 +111,7 @@ public class ReservationController {
     public Response cancelReservation(@ApiIgnore Authentication authentication,
                                       @RequestBody ReservationSimpleRequest simpleRequest) {
 
-        reservationService.cancelReservation(authentication.getName(),
+        PetSitterReservationService.cancelReservation(authentication.getName(),
                 simpleRequest.getReservationId());
 
         return Response.success("취소가 완료 되었습니다.");
@@ -123,7 +122,7 @@ public class ReservationController {
     public Response<PaymentResponseForPetSitter> showPaymentForPetSitter(@ApiIgnore Authentication authentication,
                                                                          @PathVariable("reservationId") Long reservationId) {
 
-        PaymentResponseForPetSitter paymentResponseForPetSitter = reservationService.getPaymentView(
+        PaymentResponseForPetSitter paymentResponseForPetSitter = PetSitterReservationService.getPaymentView(
                 authentication.getName(), reservationId);
 
         return Response.success(paymentResponseForPetSitter);

@@ -6,7 +6,7 @@ import com.ajou_nice.with_pet.petsitter.service.PetSitterValidationService;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
@@ -30,12 +30,14 @@ import com.ajou_nice.with_pet.repository.ReviewRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.http.impl.cookie.DateParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,7 +102,7 @@ public class ReservationService {
 
         PetSitter petSitter = valid.petSitterValidation(petsitterId);
 
-        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(
+        List<Reservation> reservations = reservationRepository.findAllByPetSitterAndMonthAndStatus(
                 petSitter,
                 LocalDate.parse(month + "-01"), reservationStatuses);
 
@@ -166,16 +168,23 @@ public class ReservationService {
     }
 
 
-    public List<ReservationResponse> getMonthlyReservations(String userId, String month) {
-        User user = valid.userValidationById(userId);
+    public List<PetSitterReservationGetMonthlyResponse> getMonthlyReservations(String email, String month) {
+        User user = userValidationService.userValidationByEmail(email);
+        PetSitter petSitter = petSitterValidationService.petSitterValidationByUser(user);
 
-        PetSitter petSitter = valid.petSitterValidationByUser(user);
+        LocalDate startDate = validatedStartDate(month);
+        List<Reservation> reservations = reservationRepository.findAllByPetSitterAndMonthAndStatus(petSitter,
+                startDate, reservationStatuses);
 
-        List<Reservation> reservations = reservationRepository.findAllByPetsitterAndMonthAndStatus(
-                petSitter,
-                LocalDate.parse(month + "-01"), reservationStatuses);
+        return reservations.stream().map(PetSitterReservationGetMonthlyResponse::of).collect(Collectors.toList());
+    }
 
-        return reservations.stream().map(ReservationResponse::of).collect(Collectors.toList());
+    private LocalDate validatedStartDate(String month) {
+        try {
+            return LocalDate.parse(month + "-01");
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid month format: " + month, e);
+        }
     }
 
     public PaymentResponseForPetSitter getPaymentView(String userId, Long reservationId) {
