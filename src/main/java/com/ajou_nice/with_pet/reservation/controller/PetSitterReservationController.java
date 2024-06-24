@@ -41,9 +41,18 @@ public class PetSitterReservationController {
 
     @GetMapping
     @ApiOperation(value = "펫시터 월별 예약 목록 조회")
-    public Response<List<PetSitterReservationGetMonthlyResponse>> getMonthlyReservations(@ApiIgnore Authentication authentication,
-                                                                                         @RequestParam String month) {
+    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
+    public Response<List<PetSitterReservationGetMonthlyResponse>> getMonthlyReservations(
+            @ApiIgnore Authentication authentication,
+            @RequestParam String month) {
         return Response.success(PetSitterReservationService.getMonthlyReservations(authentication.getName(), month));
+    }
+
+    @GetMapping("/{petSitterId}/unavailable-dates")
+    @ApiOperation(value = "예약 불가능한 날짜 반환")
+    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
+    public Response<List<String>> getUnavailableDates(@RequestParam String month, @PathVariable Long petSitterId) {
+        return Response.success(PetSitterReservationService.getUnavailableDates(petSitterId, month));
     }
 
     @PutMapping("/update-dogSocialTemperature/{reservationId}")
@@ -58,12 +67,6 @@ public class PetSitterReservationController {
         return Response.success("평가가 완료되었습니다. 감사합니다.");
     }
 
-    @GetMapping("/unable-date")
-    @ApiOperation(value = "예약 불가능한 날짜 반환")
-    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
-    public Response<List<String>> getUnavailableDates(@RequestParam String month, @RequestParam Long petsitterId) {
-        return Response.success(PetSitterReservationService.getUnavailableDates(petsitterId, month));
-    }
 
     @PutMapping("/reservation-accept")
     @ApiOperation(value = "예약 수락")
@@ -71,7 +74,8 @@ public class PetSitterReservationController {
                                                                        @RequestBody ReservationStatusRequest reservationStatusRequest) {
         log.info("============================ReservationStatusRequest : {}==============================",
                 reservationStatusRequest);
-        ReservationDetailResponse detailResponse = PetSitterReservationService.approveReservation(authentication.getName(),
+        ReservationDetailResponse detailResponse = PetSitterReservationService.approveReservation(
+                authentication.getName(),
                 reservationStatusRequest.getReservationId(), reservationStatusRequest.getStatus());
         return Response.success(detailResponse);
     }

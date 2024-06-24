@@ -96,21 +96,23 @@ public class ReservationService {
         }
     }
 
-    public List<String> getUnavailableDates(Long petsitterId, String month) {
+    public List<String> getUnavailableDates(Long petSitterId, String month) {
+        PetSitter petSitter = petSitterValidationService.petSitterValidationByPetSitterId(petSitterId);
 
-        List<String> unavailableDates = new ArrayList<>();
+        LocalDate startDate = validatedStartDate(month);
+        List<Reservation> reservations = reservationRepository.findAllByPetSitterAndMonthAndStatus(petSitter, startDate,
+                reservationStatuses);
 
-        PetSitter petSitter = valid.petSitterValidation(petsitterId);
+        return getUnavailableDateList(reservations);
+    }
 
-        List<Reservation> reservations = reservationRepository.findAllByPetSitterAndMonthAndStatus(
-                petSitter,
-                LocalDate.parse(month + "-01"), reservationStatuses);
-
+    private ArrayList<String> getUnavailableDateList(List<Reservation> reservations) {
+        ArrayList<String> unavailableDateList = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            unavailableDates.addAll(getDateRange(reservation.getReservationCheckIn().toLocalDate(),
+            unavailableDateList.addAll(getDateRange(reservation.getReservationCheckIn().toLocalDate(),
                     reservation.getReservationCheckOut().toLocalDate()));
         }
-        return unavailableDates;
+        return unavailableDateList;
     }
 
     private List<String> getDateRange(LocalDate startDate, LocalDate endDate) {
