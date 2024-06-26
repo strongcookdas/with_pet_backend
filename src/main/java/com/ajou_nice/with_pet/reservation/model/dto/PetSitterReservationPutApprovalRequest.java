@@ -15,10 +15,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ReservationStatusRequest {
-
+public class PetSitterReservationPutApprovalRequest {
     @NotNull
     private Long reservationId;
     @NotBlank
-    private String status;
+    private String reservationStatus;
 }
