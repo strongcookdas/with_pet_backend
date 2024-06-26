@@ -4,6 +4,7 @@ import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.dog.service.DogValidationService;
 import com.ajou_nice.with_pet.petsitter.service.PetSitterValidationService;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
@@ -59,40 +60,26 @@ public class ReservationService {
 
     private final UserPartyRepository userPartyRepository;
     private final NotificationService notificationService;
-
     private final UserValidationService userValidationService;
     private final PetSitterValidationService petSitterValidationService;
     private final DogValidationService dogValidationService;
 
-    @Transactional
-    // 펫시터가 완료된 예약의 반려견의 사회화 온도 평가
-    public void modifyDogTemp(String userId, Long reservationId,
-                              DogSocializationRequest dogSocializationRequest) {
+    public List<PetSitterReservationGetMonthlyResponse> getMonthlyReservations(String email, String month) {
+        User user = userValidationService.userValidationByEmail(email);
+        PetSitter petSitter = petSitterValidationService.petSitterValidationByUser(user);
 
-        //reservation
-        Reservation reservation = valid.reservationValidation(reservationId);
+        LocalDate startDate = validatedStartDate(month);
+        List<Reservation> reservations = reservationRepository.findAllByPetSitterAndMonthAndStatus(petSitter,
+                startDate, reservationStatuses);
 
-        //user가 펫시터인지 검증
-        User user = valid.userValidationById(userId);
+        return reservations.stream().map(PetSitterReservationGetMonthlyResponse::of).collect(Collectors.toList());
+    }
 
-        //예약의 펫시터가 아니라면
-        if (!reservation.getPetSitter().getUser().equals(user)) {
-            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
-                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
-        }
-
-        // 예약의 펫시터가 맞다면
-        Dog dog = valid.dogValidation(reservation.getDog().getDogId());
-
-        float score = (dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()
-                + dogSocializationRequest.getQ3() +
-                dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5()) / 5;
-
-        if (score < 2.5) {
-            score = -score;
-            dog.updateSocializationTemperature(score);
-        } else {
-            dog.updateSocializationTemperature(score);
+    private LocalDate validatedStartDate(String month) {
+        try {
+            return LocalDate.parse(month + "-01");
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid month format: " + month, e);
         }
     }
 
@@ -126,35 +113,66 @@ public class ReservationService {
         return dateRange;
     }
 
+
     @Transactional
-    public ReservationDetailResponse approveReservation(String userId, Long reservationId,
-                                                        String status) {
+    // 펫시터가 완료된 예약의 반려견의 사회화 온도 평가
+    public void modifyDogTemp(String userId, Long reservationId,
+                              DogSocializationRequest dogSocializationRequest) {
 
-        //상태 변경 값이 잘 들어왔는지 유효 체크
-        if (!status.equals(ReservationStatus.APPROVAL.toString())) {
-            throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS,
-                    ErrorCode.BAD_REQUEST_RESERVATION_STATSUS.getMessage());
-        }
-
-        valid.userValidationById(userId);
-
+        //reservation
         Reservation reservation = valid.reservationValidation(reservationId);
 
-        if (!reservation.getPetSitter().getUser().getId().equals(userId)) {
-            throw new AppException(ErrorCode.UNAUTHORIZED_RESERVATION,
-                    ErrorCode.UNAUTHORIZED_RESERVATION.getMessage());
+        //user가 펫시터인지 검증
+        User user = valid.userValidationById(userId);
+
+        //예약의 펫시터가 아니라면
+        if (!reservation.getPetSitter().getUser().equals(user)) {
+            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
+                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
         }
 
-        reservation.updateStatus(status);
+        // 예약의 펫시터가 맞다면
+        Dog dog = valid.dogValidation(reservation.getDog().getDogId());
+
+        float score = (dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()
+                + dogSocializationRequest.getQ3() +
+                dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5()) / 5;
+
+        if (score < 2.5) {
+            score = -score;
+            dog.updateSocializationTemperature(score);
+        } else {
+            dog.updateSocializationTemperature(score);
+        }
+    }
+
+    @Transactional
+    public PetSitterReservationPatchApprovalResponse approveReservation(String email, Long reservationId) {
+        PetSitter petSitter = petSitterValidationService.petSitterValidationByPetSitterEmail(email);
+        Reservation reservation = valid.reservationValidation(reservationId);
+
+        validationPetSitterReservation(reservation, petSitter);
+        reservation.approveReservation();
+
+        // 필요한 로직인지 의문
         if (LocalDate.now().equals(reservation.getReservationCheckIn().toLocalDate())) {
             reservation.updateStatus(ReservationStatus.USE.toString());
         }
 
-        List<UserParty> userParties = userPartyRepository.findAllByParty(reservation.getDog()
-                .getParty());
-        sendApproveReservationNotificationByEmail(userParties, reservation.getDog(),
-                reservation.getPetSitter());
-        return ReservationDetailResponse.of(reservation);
+        // 이메일 알림 주석
+
+//        List<UserParty> userParties = userPartyRepository.findAllByParty(reservation.getDog()
+//                .getParty());
+//        sendApproveReservationNotificationByEmail(userParties, reservation.getDog(),
+//                reservation.getPetSitter());
+
+        return PetSitterReservationPatchApprovalResponse.of(reservation);
+    }
+
+    private void validationPetSitterReservation(Reservation reservation, PetSitter petSitter) {
+        if (!reservation.getPetSitter().getId().equals(petSitter.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED_RESERVATION, ErrorCode.UNAUTHORIZED_RESERVATION.getMessage());
+        }
     }
 
     private void sendApproveReservationNotificationByEmail(List<UserParty> userParties, Dog dog,
@@ -169,25 +187,6 @@ public class ReservationService {
         });
     }
 
-
-    public List<PetSitterReservationGetMonthlyResponse> getMonthlyReservations(String email, String month) {
-        User user = userValidationService.userValidationByEmail(email);
-        PetSitter petSitter = petSitterValidationService.petSitterValidationByUser(user);
-
-        LocalDate startDate = validatedStartDate(month);
-        List<Reservation> reservations = reservationRepository.findAllByPetSitterAndMonthAndStatus(petSitter,
-                startDate, reservationStatuses);
-
-        return reservations.stream().map(PetSitterReservationGetMonthlyResponse::of).collect(Collectors.toList());
-    }
-
-    private LocalDate validatedStartDate(String month) {
-        try {
-            return LocalDate.parse(month + "-01");
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid month format: " + month, e);
-        }
-    }
 
     public PaymentResponseForPetSitter getPaymentView(String userId, Long reservationId) {
 

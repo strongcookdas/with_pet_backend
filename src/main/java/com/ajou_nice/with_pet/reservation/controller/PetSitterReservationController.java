@@ -6,10 +6,10 @@ import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationStatusRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutApprovalRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
 import com.ajou_nice.with_pet.reservation.service.ReservationService;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
 import io.swagger.annotations.Api;
@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,7 +42,7 @@ public class PetSitterReservationController {
 
     @GetMapping
     @ApiOperation(value = "펫시터 월별 예약 목록 조회")
-    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
+    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2024-06", required = true, dataTypeClass = String.class)
     public Response<List<PetSitterReservationGetMonthlyResponse>> getMonthlyReservations(
             @ApiIgnore Authentication authentication,
             @RequestParam String month) {
@@ -49,10 +50,19 @@ public class PetSitterReservationController {
     }
 
     @GetMapping("/{petSitterId}/unavailable-dates")
-    @ApiOperation(value = "예약 불가능한 날짜 반환")
-    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
+    @ApiOperation(value = "펫시터 예약 불가능한 날짜 반환")
+    @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2024-06", required = true, dataTypeClass = String.class)
     public Response<List<String>> getUnavailableDates(@RequestParam String month, @PathVariable Long petSitterId) {
         return Response.success(PetSitterReservationService.getUnavailableDates(petSitterId, month));
+    }
+
+    @PatchMapping("/approval/{reservationId}")
+    @ApiOperation(value = "펫시터 예약 승인")
+    public Response<PetSitterReservationPatchApprovalResponse> approveReservation(
+            @ApiIgnore Authentication authentication,
+            @PathVariable Long reservationId) {
+        return Response.success(
+                PetSitterReservationService.approveReservation(authentication.getName(), reservationId));
     }
 
     @PutMapping("/update-dogSocialTemperature/{reservationId}")
@@ -67,32 +77,19 @@ public class PetSitterReservationController {
         return Response.success("평가가 완료되었습니다. 감사합니다.");
     }
 
-
-    @PutMapping("/reservation-accept")
-    @ApiOperation(value = "예약 수락")
-    public Response<ReservationDetailResponse> updateReservationStatus(@ApiIgnore Authentication authentication,
-                                                                       @RequestBody ReservationStatusRequest reservationStatusRequest) {
-        log.info("============================ReservationStatusRequest : {}==============================",
-                reservationStatusRequest);
-        ReservationDetailResponse detailResponse = PetSitterReservationService.approveReservation(
-                authentication.getName(),
-                reservationStatusRequest.getReservationId(), reservationStatusRequest.getStatus());
-        return Response.success(detailResponse);
-    }
-
     @PostMapping("/reservation-refuse")
     @ApiOperation(value = "펫시터의 예약 거절")
     public Response<RefundResponse> refuseReservation(@ApiIgnore Authentication authentication,
-                                                      @RequestBody ReservationStatusRequest reservationStatusRequest) {
+                                                      @RequestBody PetSitterReservationPutApprovalRequest petSitterReservationPutApprovalRequest) {
         log.info(
                 "============================ReservationStatusRequest : {}==============================",
-                reservationStatusRequest);
-        if (!reservationStatusRequest.getStatus().equals("REFUSE")) {
+                petSitterReservationPutApprovalRequest);
+        if (!petSitterReservationPutApprovalRequest.getReservationStatus().equals("REFUSE")) {
             throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS,
                     ErrorCode.BAD_REQUEST_APPLICANT_STATUS.getMessage());
         }
         RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(),
-                reservationStatusRequest.getReservationId());
+                petSitterReservationPutApprovalRequest.getReservationId());
 
         log.info("=======================payCancelResponse : {}=============================",
                 refundResponse);

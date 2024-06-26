@@ -103,7 +103,8 @@ public class Reservation extends BaseEntity {
         this.criticalServicePrice = criticalServicePrice;
     }
 
-    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost) {
+    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user,
+                                            PetSitter petSitter, int totalCost) {
         return Reservation.builder()
                 .reservationCheckIn(checkIn)
                 .reservationCheckOut(checkOut)
@@ -113,7 +114,8 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 
-    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user, PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog) {
+    public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user,
+                                            PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog) {
         return Reservation.builder()
                 .reservationCheckIn(checkIn)
                 .reservationCheckOut(checkOut)
@@ -126,7 +128,8 @@ public class Reservation extends BaseEntity {
     }
 
     public static Reservation forSimpleTest(LocalDateTime checkIn, LocalDateTime checkOut, User user,
-                                            PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog, String criticalServiceName, int criticalServicePrice) {
+                                            PetSitter petSitter, int totalCost, ReservationStatus status, Dog dog,
+                                            String criticalServiceName, int criticalServicePrice) {
         return Reservation.builder()
                 .reservationCheckIn(checkIn)
                 .reservationCheckOut(checkOut)
@@ -158,5 +161,8 @@ public class Reservation extends BaseEntity {
 
     public void updateStatus(String status) {
         this.reservationStatus = ReservationStatus.valueOf(status);
+    }
+    public void approveReservation() {
+        this.reservationStatus = ReservationStatus.APPROVAL;
     }
 }
