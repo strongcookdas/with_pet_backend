@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 // 예약 생성 후 줄 response
-public class ReservationCreateResponse {
+public class UserReservationCreateResponse {
 
 	private Long reservationId;
 
@@ -29,11 +29,11 @@ public class ReservationCreateResponse {
 	private String reservationCriticalServiceName;
 	private Integer reservationCriticalServicePrice;
 
-	private List<ReservationGetResponse> reservationServiceResponses;
+	private List<ReservationGetServiceResponse> reservationServiceResponses;
 	private Integer reservationCost;
 
-	public static ReservationCreateResponse of(Reservation reservation){
-		return ReservationCreateResponse.builder()
+	public static UserReservationCreateResponse of(Reservation reservation){
+		return UserReservationCreateResponse.builder()
 				.reservationId(reservation.getReservationId())
 				.reservationDate(reservation.getCreatedAt().toString())
 				.reservationCheckIn(reservation.getReservationCheckIn().toString())
@@ -44,7 +44,7 @@ public class ReservationCreateResponse {
 				.reservationCriticalServiceName(reservation.getCriticalServiceName())
 				.reservationCriticalServicePrice(reservation.getCriticalServicePrice())
 				.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?
-						null : ReservationGetResponse.toList(reservation.getReservationPetSitterServiceList()))
+						null : ReservationGetServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
 				.reservationCost(reservation.getReservationTotalPrice())
 				.build();
 
@@ -54,20 +54,20 @@ public class ReservationCreateResponse {
 	@NoArgsConstructor
 	@Builder
 	@Getter
-	public static class ReservationServiceResponse{
+	public static class ReservationGetServiceResponse {
 
 		private Integer price;
 		private String serviceName;
 
-		public static ReservationServiceResponse of(ReservationPetSitterService reservationPetSitterService){
-			return ReservationServiceResponse.builder()
+		public static ReservationGetServiceResponse of(ReservationPetSitterService reservationPetSitterService){
+			return ReservationGetServiceResponse.builder()
 					.price(reservationPetSitterService.getPrice())
 					.serviceName(reservationPetSitterService.getServiceName())
 					.build();
 		}
 
-		public static List<ReservationServiceResponse> toList(List<ReservationPetSitterService> reservationPetSitterServiceList){
-			return reservationPetSitterServiceList.stream().map(reservationService -> ReservationServiceResponse.builder()
+		public static List<ReservationGetServiceResponse> toList(List<ReservationPetSitterService> reservationPetSitterServiceList){
+			return reservationPetSitterServiceList.stream().map(reservationService -> ReservationGetServiceResponse.builder()
 					.price(reservationService.getPrice())
 					.serviceName(reservationService.getServiceName())
 					.build()).collect(Collectors.toList());
