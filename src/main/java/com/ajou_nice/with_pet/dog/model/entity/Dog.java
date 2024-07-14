@@ -141,7 +141,7 @@ public class Dog extends BaseEntity {
                 .dogWeight(partyAddRequest.getPartyDogWeight())
                 .dogProfileImg(img)
                 .dogBreed(partyAddRequest.getPartyDogBreed())
-                .dogIsbn(isbn)
+                .dogIsbn(partyAddRequest.getPartyDogIsbn())
                 .dogSocializationTemperature(37.5)
                 .dogSocializationDegree(0)
                 .dogAffectionTemperature(37.5)
