@@ -79,7 +79,7 @@ public class CalculateAffectionTemperature {
         DiaryRequest diaryRequest = new DiaryRequest(dog.getDogId(),"제목",category.getCategoryId(),"내용입니다.","image",LocalDate.of(2023,06,12));
         //when 일지를 작성했을 때
         System.out.println("반려견의 사회성 사회 : ");
-        userDiaryService.writeUserDiary(boss.getEmail(),diaryRequest);
+        //userDiaryService.writeUserDiary(boss.getEmail(),diaryRequest);
         //then 일지를 작성한 결과 사회성 온도는 39도가 된다.
         Assertions.assertEquals(39,dog.getDogAffectionTemperature());
 

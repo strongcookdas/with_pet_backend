@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.diary.service;
 
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthResponse;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostRequest;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.diary.model.entity.Category;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
@@ -43,27 +44,26 @@ public class UserDiaryService {
 
 
     @Transactional
-    public UserDiaryResponse writeUserDiary(String userId, DiaryRequest diaryRequest) {
+    public UserDiaryResponse writeUserDiary(String userId, UserDiaryPostRequest userDiaryPostRequest) {
         //유저 체크
         User user = valid.userValidationById(userId);
         //반려견 체크
-        Dog dog = valid.dogValidation(diaryRequest.getDogId());
+        Dog dog = valid.dogValidation(userDiaryPostRequest.getUserDiaryDogId());
         //반려견 그룹 유저 존재 체크
         if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
             throw new AppException(ErrorCode.GROUP_NOT_FOUND, "글 작성 권한이 없습니다.");
         }
         //카테고리 체크
-        Category category = valid.categoryValidation(diaryRequest.getCategoryId());
+        Category category = valid.categoryValidation(userDiaryPostRequest.getUserDiaryCategoryId());
 
         Diary diary = userDiaryRepository.save(
-                Diary.of(diaryRequest, dog, user, category));
+                Diary.of(userDiaryPostRequest, dog, user, category));
 
         List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
 
         dog.updateAffectionTemperature(this.calculateAffectionTemperature(dog));
 
-        log.info("======================debug==========================");
-
+/*
         for (UserParty userParty : userParties) {
             Notification notification = notificationService.sendEmail(
                     user.getName() + "님이 " + dog.getDogName() + "의 일지를 작성했습니다.",
@@ -71,14 +71,14 @@ public class UserDiaryService {
                     NotificationType.반려인_일지, userParty.getUser());
             notificationService.saveNotification(notification);
 //            notificationService.send(notification);
-        }
+        }\*/
         return UserDiaryResponse.of(diary);
     }
 
 
     @Transactional
     public UserDiaryResponse updateUserDiary(String userId, DiaryRequest diaryRequest,
-            Long diaryId) {
+                                             Long diaryId) {
         //유저 체크
         User user = valid.userValidationById(userId);
         //일지 체크
@@ -101,8 +101,8 @@ public class UserDiaryService {
     }
 
     public List<UserDiaryMonthResponse> getUserMonthDiary(String userId, Long dogId,
-            Long categoryId,
-            String month, String petsitterCheck) {
+                                                          Long categoryId,
+                                                          String month, String petsitterCheck) {
 
         //유저 체크
         User user = valid.userValidationById(userId);
@@ -113,7 +113,7 @@ public class UserDiaryService {
     }
 
     public List<UserDiaryResponse> getUserDayDiary(String userId, Long dogId, Long categoryId,
-            String day, String petsitterCheck) {
+                                                   String day, String petsitterCheck) {
         //유저체크
         User user = valid.userValidationById(userId);
 

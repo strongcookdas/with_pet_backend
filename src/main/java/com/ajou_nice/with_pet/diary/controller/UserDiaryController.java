@@ -1,5 +1,6 @@
 package com.ajou_nice.with_pet.diary.controller;
 
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostRequest;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthResponse;
@@ -26,7 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/userdiaries")
+@RequestMapping("api/v2/users/diaries")
 @Api(tags = "UserDiary API")
 @Slf4j
 public class UserDiaryController {
@@ -36,23 +37,16 @@ public class UserDiaryController {
     @PostMapping
     @ApiOperation(value = "반려인 다이어리 작성")
     public Response<UserDiaryResponse> writeUserDiary(@ApiIgnore Authentication authentication,
-            @Valid @RequestBody DiaryRequest diaryRequest) {
-        log.info("token : {}", authentication.getName());
-        log.info(
-                "-------------------------------------------DiaryRequest : {}------------------------------------------------",
-                diaryRequest);
-        UserDiaryResponse userDiaryResponse = userDiaryService.writeUserDiary(
-                authentication.getName(), diaryRequest);
-        log.info(
-                "-------------------------------------------DiaryResponse : {}------------------------------------------------",
-                userDiaryResponse);
+                                                      @Valid @RequestBody UserDiaryPostRequest userDiaryPostRequest) {
+        UserDiaryResponse userDiaryResponse = userDiaryService.writeUserDiary(authentication.getName(), userDiaryPostRequest);
         return Response.success(userDiaryResponse);
     }
 
     @PutMapping("/{diaryId}")
     @ApiOperation(value = "반려인 다이어리 수정")
     public Response<UserDiaryResponse> updateUserDiary(@ApiIgnore Authentication authentication,
-            @Valid @RequestBody DiaryRequest diaryRequest, @PathVariable Long diaryId) {
+                                                       @Valid @RequestBody DiaryRequest diaryRequest,
+                                                       @PathVariable Long diaryId) {
         UserDiaryResponse userDiaryResponse = userDiaryService.updateUserDiary(
                 authentication.getName(), diaryRequest, diaryId);
         return Response.success(userDiaryResponse);
@@ -108,7 +102,7 @@ public class UserDiaryController {
 
     @DeleteMapping("/{diaryId}")
     @ApiOperation(value = "일지 삭제")
-    public Response deleteUserDiary(@ApiIgnore Authentication authentication, @PathVariable Long diaryId){
+    public Response deleteUserDiary(@ApiIgnore Authentication authentication, @PathVariable Long diaryId) {
         return Response.success(userDiaryService.deleteUserDiary(authentication.getName(), diaryId));
     }
 }

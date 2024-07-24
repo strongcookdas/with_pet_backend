@@ -1,9 +1,9 @@
 package com.ajou_nice.with_pet.diary.model.entity;
 
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostRequest;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.diary.model.dto.DiaryModifyRequest;
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
-import com.ajou_nice.with_pet.domain.entity.BaseEntity;
 import com.ajou_nice.with_pet.domain.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -69,15 +69,15 @@ public class Diary{
 
     private LocalDateTime deletedAt;
 
-    public static Diary of(DiaryRequest diaryRequest, Dog dog, User user, Category category) {
+    public static Diary of(UserDiaryPostRequest userDiaryPostRequest, Dog dog, User user, Category category) {
         return Diary.builder()
                 .diaryCategory(category)
-                .diaryTitle(diaryRequest.getTitle())
-                .diaryContent(diaryRequest.getContentBody())
-                .diaryMedia(diaryRequest.getDogImgToday())
+                .diaryTitle(userDiaryPostRequest.getUserDiaryTitle())
+                .diaryContent(userDiaryPostRequest.getUserDiaryContent())
+                .diaryMedia(userDiaryPostRequest.getUserDiaryDogImg())
                 .user(user)
                 .dog(dog)
-                .createdAt(diaryRequest.getCreatedAt())
+                .createdAt(userDiaryPostRequest.getUserDiaryCreatedAt())
                 .build();
     }
 
