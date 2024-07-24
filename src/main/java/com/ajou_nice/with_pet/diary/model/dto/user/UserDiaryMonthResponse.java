@@ -22,8 +22,8 @@ public class UserDiaryMonthResponse {
     public static UserDiaryMonthResponse of(Diary diary) {
         return UserDiaryMonthResponse.builder()
                 .userDiaryId(diary.getDiaryId())
-                .categoryId(diary.getCategory().getCategoryId())
-                .categoryName(diary.getCategory().getName())
+                .categoryId(diary.getDiaryCategory().getCategoryId())
+                .categoryName(diary.getDiaryCategory().getCategoryName())
                 .dogId(diary.getDog().getDogId())
                 .dogName(diary.getDog().getDogName())
                 .createdAt(diary.getCreatedAt().toString())

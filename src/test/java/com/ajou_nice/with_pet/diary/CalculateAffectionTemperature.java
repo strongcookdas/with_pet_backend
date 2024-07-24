@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.diary;
 
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
-import com.ajou_nice.with_pet.domain.entity.Category;
+import com.ajou_nice.with_pet.diary.model.entity.Category;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;

@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.fixture;
 
-import com.ajou_nice.with_pet.domain.entity.Category;
+import com.ajou_nice.with_pet.diary.model.entity.Category;
 import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.enums.Gender;

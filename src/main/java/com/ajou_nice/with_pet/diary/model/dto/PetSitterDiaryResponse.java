@@ -26,11 +26,11 @@ public class PetSitterDiaryResponse {
     public static PetSitterDiaryResponse of(Diary diary) {
         return PetSitterDiaryResponse.builder()
                 .petSitterDiaryId(diary.getDiaryId())
-                .categoryId(diary.getCategory().getCategoryId())
-                .categoryName(diary.getCategory().getName())
-                .title(diary.getTitle())
-                .contentBody(diary.getContent())
-                .dogImgToday(diary.getMedia())
+                .categoryId(diary.getDiaryCategory().getCategoryId())
+                .categoryName(diary.getDiaryCategory().getCategoryName())
+                .title(diary.getDiaryTitle())
+                .contentBody(diary.getDiaryContent())
+                .dogImgToday(diary.getDiaryMedia())
                 .createdAt(diary.getCreatedAt())
                 .build();
     }

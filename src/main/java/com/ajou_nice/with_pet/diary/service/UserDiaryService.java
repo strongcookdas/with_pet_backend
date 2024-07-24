@@ -3,7 +3,7 @@ package com.ajou_nice.with_pet.diary.service;
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthResponse;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryResponse;
-import com.ajou_nice.with_pet.domain.entity.Category;
+import com.ajou_nice.with_pet.diary.model.entity.Category;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.User;

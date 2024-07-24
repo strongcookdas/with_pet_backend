@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.service;
 
 import com.ajou_nice.with_pet.domain.dto.category.CategoryRequest;
 import com.ajou_nice.with_pet.domain.dto.category.CategoryResponse;
-import com.ajou_nice.with_pet.domain.entity.Category;
+import com.ajou_nice.with_pet.diary.model.entity.Category;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
 
 import java.util.List;

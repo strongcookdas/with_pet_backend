@@ -2,6 +2,7 @@ package com.ajou_nice.with_pet.service;
 
 
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
+import com.ajou_nice.with_pet.diary.model.entity.Category;
 import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import com.ajou_nice.with_pet.diary.repository.DiaryRepository;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;

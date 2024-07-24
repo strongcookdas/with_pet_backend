@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.diary.repository;
 
-import static com.ajou_nice.with_pet.domain.entity.QDiary.diary;
+import static com.ajou_nice.with_pet.diary.model.entity.QDiary.diary;
 import static com.ajou_nice.with_pet.domain.entity.QUserParty.userParty;
 
 import com.ajou_nice.with_pet.diary.model.entity.Diary;
@@ -73,7 +73,7 @@ public class DiaryRepositoryImpl extends QuerydslRepositorySupport implements
         if (categoryId == null) {
             return null;
         }
-        return diary.category.categoryId.eq(categoryId);
+        return diary.diaryCategory.categoryId.eq(categoryId);
     }
 
     private BooleanExpression containsPetsitter(String petsitterCheck) {
