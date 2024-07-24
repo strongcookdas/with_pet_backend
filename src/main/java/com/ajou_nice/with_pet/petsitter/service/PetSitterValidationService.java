@@ -20,4 +20,8 @@ public class PetSitterValidationService {
     public PetSitter petSitterValidationByPetSitterId(Long petSitterId) {
         return petSitterRepository.findById(petSitterId).orElseThrow(() -> new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage()));
     }
+
+    public PetSitter petSitterValidationByPetSitterEmail(String email){
+        return petSitterRepository.findByUserEmail(email).orElseThrow(() -> new AppException(ErrorCode.PETSITTER_NOT_FOUND, ErrorCode.PETSITTER_NOT_FOUND.getMessage()));
+    }
 }

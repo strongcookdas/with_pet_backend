@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.reservation.model.dto;
 
 
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateResponse.ReservationServiceResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.UserReservationCreateResponse.ReservationGetServiceResponse;
 import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class PaymentResponseForPetSitter {
 
 	private String criticalServiceName;
 	private Integer criticalServicePrice;
-	private List<ReservationServiceResponse> reservationServiceResponses;
+	private List<ReservationGetServiceResponse> reservationGetServiceRespons;
 
 	public static PaymentResponseForPetSitter of(Reservation reservation){
 		return PaymentResponseForPetSitter.builder()
@@ -54,8 +54,8 @@ public class PaymentResponseForPetSitter {
 				.totalCost(reservation.getReservationTotalPrice())
 				.criticalServiceName(reservation.getCriticalServiceName())
 				.criticalServicePrice(reservation.getCriticalServicePrice())
-				.reservationServiceResponses(reservation.getReservationPetSitterServiceList() == null ?
-						null : ReservationServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
+				.reservationGetServiceRespons(reservation.getReservationPetSitterServiceList() == null ?
+						null : ReservationGetServiceResponse.toList(reservation.getReservationPetSitterServiceList()))
 				.build();
 	}
 }

@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.reservations;
 
 
-import com.ajou_nice.with_pet.reservation.controller.ReservationController;
+import com.ajou_nice.with_pet.reservation.controller.PetSitterReservationController;
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
@@ -52,7 +52,7 @@ public class ReservationTest {
 	ReservationRepository reservationRepository;
 
 	@Autowired
-	ReservationController reservationController;
+	PetSitterReservationController petSitterReservationController;
 
 	@Autowired
 	ReservationService reservationService;

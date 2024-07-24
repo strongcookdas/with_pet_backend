@@ -28,6 +28,7 @@ public class SecurityConfig {
     private final String[] GET_PERMIT_URL = {
             "/api/v2/pet-sitters/{petSitterId:\\d+}",
             "/api/v2/pet-sitters",
+            "/api/v2/pet-sitters/reservations/{petSitterId:\\d+}/unavailable-dates",
             "/api/v2/services",
             "/api/v2/critical-services",
             "/api/v1/reservation",

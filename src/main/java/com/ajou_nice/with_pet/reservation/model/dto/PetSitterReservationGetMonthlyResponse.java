@@ -11,22 +11,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class ReservationResponse {
+public class PetSitterReservationGetMonthlyResponse {
     //월별 펫시터 예약 조회용 Response
     private Long reservationId;
     private Long dogId;
     private String dogName;
-    private String checkIn;
-    private String checkOut;
+    private String reservationCheckIn;
+    private String reservationCheckOut;
     private ReservationStatus reservationStatus;
 
-    public static ReservationResponse of(Reservation reservation) {
-        return ReservationResponse.builder()
+    public static PetSitterReservationGetMonthlyResponse of(Reservation reservation) {
+        return PetSitterReservationGetMonthlyResponse.builder()
                 .reservationId(reservation.getReservationId())
                 .dogId(reservation.getDog().getDogId())
                 .dogName(reservation.getDog().getDogName())
-                .checkIn(reservation.getReservationCheckIn().toLocalDate().toString())
-                .checkOut(reservation.getReservationCheckOut().toLocalDate().toString())
+                .reservationCheckIn(reservation.getReservationCheckIn().toLocalDate().toString())
+                .reservationCheckOut(reservation.getReservationCheckOut().toLocalDate().toString())
                 .reservationStatus(reservation.getReservationStatus())
                 .build();
     }

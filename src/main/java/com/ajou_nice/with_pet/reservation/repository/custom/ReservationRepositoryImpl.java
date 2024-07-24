@@ -23,9 +23,9 @@ public class ReservationRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public List<Reservation> findAllByPetsitterAndMonthAndStatus(PetSitter petSitter,
-            LocalDate month,
-            List<ReservationStatus> list) {
+    public List<Reservation> findAllByPetSitterAndMonthAndStatus(PetSitter petSitter,
+                                                                 LocalDate month,
+                                                                 List<ReservationStatus> list) {
 
         List<Reservation> reservations = queryFactory.selectFrom(reservation)
                 .where(containPetsitter(petSitter), getMonthReservationCheckIn(month), compareReservationStatus(list))
