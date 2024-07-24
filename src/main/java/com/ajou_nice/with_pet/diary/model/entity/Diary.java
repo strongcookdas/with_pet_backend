@@ -1,8 +1,10 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.diary.model.entity;
 
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryModifyRequest;
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryModifyRequest;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
+import com.ajou_nice.with_pet.domain.entity.Category;
+import com.ajou_nice.with_pet.domain.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;

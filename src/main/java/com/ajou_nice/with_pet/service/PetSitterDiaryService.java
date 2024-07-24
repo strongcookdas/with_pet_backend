@@ -1,11 +1,11 @@
 package com.ajou_nice.with_pet.service;
 
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryModifyRequest;
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
-import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryListResponse;
-import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryModifyRequest;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
+import com.ajou_nice.with_pet.diary.model.dto.PetSitterDiaryListResponse;
+import com.ajou_nice.with_pet.diary.model.dto.PetSitterDiaryResponse;
 import com.ajou_nice.with_pet.domain.entity.Category;
-import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
@@ -14,7 +14,7 @@ import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.DiaryRepository;
+import com.ajou_nice.with_pet.diary.repository.DiaryRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 
 import java.util.List;

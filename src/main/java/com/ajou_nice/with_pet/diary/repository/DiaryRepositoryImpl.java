@@ -1,13 +1,12 @@
-package com.ajou_nice.with_pet.repository.custom.userdiary;
+package com.ajou_nice.with_pet.diary.repository;
 
 import static com.ajou_nice.with_pet.domain.entity.QDiary.diary;
 import static com.ajou_nice.with_pet.domain.entity.QUserParty.userParty;
 
-import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;

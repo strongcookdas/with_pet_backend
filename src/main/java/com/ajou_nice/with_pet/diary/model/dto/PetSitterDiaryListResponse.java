@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.diary;
+package com.ajou_nice.with_pet.diary.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import java.util.List;
 import java.util.stream.Collectors;

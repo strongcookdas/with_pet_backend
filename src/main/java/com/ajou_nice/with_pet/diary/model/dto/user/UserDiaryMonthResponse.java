@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.diary.user;
+package com.ajou_nice.with_pet.diary.model.dto.user;
 
-import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

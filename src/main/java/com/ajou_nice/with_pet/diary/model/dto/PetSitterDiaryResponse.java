@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.diary;
+package com.ajou_nice.with_pet.diary.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

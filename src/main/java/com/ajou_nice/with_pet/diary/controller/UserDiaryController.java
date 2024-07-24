@@ -1,10 +1,10 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.diary.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
-import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryMonthResponse;
-import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryResponse;
-import com.ajou_nice.with_pet.service.UserDiaryService;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthResponse;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryResponse;
+import com.ajou_nice.with_pet.diary.service.UserDiaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
