@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.diary.user;
+package com.ajou_nice.with_pet.diary.model.dto.user;
 
-import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class UserDiaryMonthResponse {
+public class UserDiaryMonthGetResponse {
 
     private Long userDiaryId;
     private Long categoryId;
@@ -19,11 +19,11 @@ public class UserDiaryMonthResponse {
     private String dogName;
     private String createdAt;
 
-    public static UserDiaryMonthResponse of(Diary diary) {
-        return UserDiaryMonthResponse.builder()
+    public static UserDiaryMonthGetResponse of(Diary diary) {
+        return UserDiaryMonthGetResponse.builder()
                 .userDiaryId(diary.getDiaryId())
-                .categoryId(diary.getCategory().getCategoryId())
-                .categoryName(diary.getCategory().getName())
+                .categoryId(diary.getDiaryCategory().getCategoryId())
+                .categoryName(diary.getDiaryCategory().getCategoryName())
                 .dogId(diary.getDog().getDogId())
                 .dogName(diary.getDog().getDogName())
                 .createdAt(diary.getCreatedAt().toString())

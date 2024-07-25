@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.repository.custom.userdiary;
+package com.ajou_nice.with_pet.diary.repository;
 
-import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import java.time.LocalDate;
 import java.util.List;
 

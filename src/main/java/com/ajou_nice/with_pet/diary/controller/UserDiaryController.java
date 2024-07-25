@@ -1,10 +1,13 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.diary.controller;
 
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthListGetResponse;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostRequest;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
-import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryMonthResponse;
-import com.ajou_nice.with_pet.domain.dto.diary.user.UserDiaryResponse;
-import com.ajou_nice.with_pet.service.UserDiaryService;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthGetResponse;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryResponse;
+import com.ajou_nice.with_pet.diary.service.UserDiaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/userdiaries")
+@RequestMapping("api/v2/users/diaries")
 @Api(tags = "UserDiary API")
 @Slf4j
 public class UserDiaryController {
@@ -35,24 +38,18 @@ public class UserDiaryController {
 
     @PostMapping
     @ApiOperation(value = "반려인 다이어리 작성")
-    public Response<UserDiaryResponse> writeUserDiary(@ApiIgnore Authentication authentication,
-            @Valid @RequestBody DiaryRequest diaryRequest) {
-        log.info("token : {}", authentication.getName());
-        log.info(
-                "-------------------------------------------DiaryRequest : {}------------------------------------------------",
-                diaryRequest);
-        UserDiaryResponse userDiaryResponse = userDiaryService.writeUserDiary(
-                authentication.getName(), diaryRequest);
-        log.info(
-                "-------------------------------------------DiaryResponse : {}------------------------------------------------",
-                userDiaryResponse);
-        return Response.success(userDiaryResponse);
+    public Response<UserDiaryPostResponse> writeUserDiary(@ApiIgnore Authentication authentication,
+                                                          @Valid @RequestBody UserDiaryPostRequest userDiaryPostRequest) {
+        UserDiaryPostResponse userDiaryPostResponse = userDiaryService.writeUserDiary(authentication.getName(),
+                userDiaryPostRequest);
+        return Response.success(userDiaryPostResponse);
     }
 
     @PutMapping("/{diaryId}")
     @ApiOperation(value = "반려인 다이어리 수정")
     public Response<UserDiaryResponse> updateUserDiary(@ApiIgnore Authentication authentication,
-            @Valid @RequestBody DiaryRequest diaryRequest, @PathVariable Long diaryId) {
+                                                       @Valid @RequestBody DiaryRequest diaryRequest,
+                                                       @PathVariable Long diaryId) {
         UserDiaryResponse userDiaryResponse = userDiaryService.updateUserDiary(
                 authentication.getName(), diaryRequest, diaryId);
         return Response.success(userDiaryResponse);
@@ -70,16 +67,16 @@ public class UserDiaryController {
     @GetMapping("/month")
     @ApiOperation(value = "월별 캘린더 일지 조회")
     @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
-    public Response<List<UserDiaryMonthResponse>> getUserMonthDiary(
+    public Response<UserDiaryMonthListGetResponse> getUserMonthDiary(
             @ApiIgnore Authentication authentication,
             @RequestParam(required = false) Long dogId,
             @RequestParam(required = false) Long categoryId,
             @RequestParam String month,
-            @RequestParam(required = false) String petsitterCheck) {
+            @RequestParam(required = false) String petSitterCheck) {
 
-        List<UserDiaryMonthResponse> userDiaryResponses = userDiaryService.getUserMonthDiary(
-                authentication.getName(), dogId, categoryId, month, petsitterCheck);
-        return Response.success(userDiaryResponses);
+        UserDiaryMonthListGetResponse userDiaryMonthGetResponses = userDiaryService.getUserMonthDiary(
+                authentication.getName(), dogId, categoryId, month, petSitterCheck);
+        return Response.success(userDiaryMonthGetResponses);
     }
 
     /**
@@ -108,7 +105,7 @@ public class UserDiaryController {
 
     @DeleteMapping("/{diaryId}")
     @ApiOperation(value = "일지 삭제")
-    public Response deleteUserDiary(@ApiIgnore Authentication authentication, @PathVariable Long diaryId){
+    public Response deleteUserDiary(@ApiIgnore Authentication authentication, @PathVariable Long diaryId) {
         return Response.success(userDiaryService.deleteUserDiary(authentication.getName(), diaryId));
     }
 }

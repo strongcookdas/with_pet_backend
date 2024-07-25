@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.diary;
+package com.ajou_nice.with_pet.diary.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Diary;
+import com.ajou_nice.with_pet.diary.model.entity.Diary;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,11 +26,11 @@ public class PetSitterDiaryResponse {
     public static PetSitterDiaryResponse of(Diary diary) {
         return PetSitterDiaryResponse.builder()
                 .petSitterDiaryId(diary.getDiaryId())
-                .categoryId(diary.getCategory().getCategoryId())
-                .categoryName(diary.getCategory().getName())
-                .title(diary.getTitle())
-                .contentBody(diary.getContent())
-                .dogImgToday(diary.getMedia())
+                .categoryId(diary.getDiaryCategory().getCategoryId())
+                .categoryName(diary.getDiaryCategory().getCategoryName())
+                .title(diary.getDiaryTitle())
+                .contentBody(diary.getDiaryContent())
+                .dogImgToday(diary.getDiaryMedia())
                 .createdAt(diary.getCreatedAt())
                 .build();
     }

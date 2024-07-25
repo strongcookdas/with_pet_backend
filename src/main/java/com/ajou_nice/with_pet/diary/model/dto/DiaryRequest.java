@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.diary;
+package com.ajou_nice.with_pet.diary.model.dto;
 
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
@@ -16,8 +16,10 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class DiaryModifyRequest {
+public class DiaryRequest {
 
+    @NotNull(message = "반려견을 선택해주세요.")
+    private Long dogId;
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
     @NotNull(message = "카테고리를 선택해주세요.")

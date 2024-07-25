@@ -1,6 +1,7 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.diary.model.entity;
 
 import com.ajou_nice.with_pet.domain.dto.category.CategoryRequest;
+import com.ajou_nice.with_pet.domain.entity.BaseEntity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,17 +22,17 @@ public class Category extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    private String name;
+    private String categoryName;
 
     public static Category of(CategoryRequest categoryRequest) {
         return Category.builder()
-                .name(categoryRequest.getName())
+                .categoryName(categoryRequest.getName())
                 .build();
     }
 
     public static Category simpleCategoryForTest(String name) {
         return Category.builder()
-                .name(name)
+                .categoryName(name)
                 .build();
     }
 

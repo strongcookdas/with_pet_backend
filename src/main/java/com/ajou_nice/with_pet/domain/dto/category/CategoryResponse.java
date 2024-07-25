@@ -1,6 +1,6 @@
 package com.ajou_nice.with_pet.domain.dto.category;
 
-import com.ajou_nice.with_pet.domain.entity.Category;
+import com.ajou_nice.with_pet.diary.model.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class CategoryResponse {
     public static CategoryResponse of(Category category) {
         return CategoryResponse.builder()
                 .categoryId(category.getCategoryId())
-                .name(category.getName())
+                .name(category.getCategoryName())
                 .build();
     }
 }
