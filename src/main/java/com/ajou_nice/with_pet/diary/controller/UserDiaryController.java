@@ -1,10 +1,11 @@
 package com.ajou_nice.with_pet.diary.controller;
 
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthListGetResponse;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostRequest;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
-import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthResponse;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthGetResponse;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.diary.service.UserDiaryService;
 import io.swagger.annotations.Api;
@@ -66,16 +67,16 @@ public class UserDiaryController {
     @GetMapping("/month")
     @ApiOperation(value = "월별 캘린더 일지 조회")
     @ApiImplicitParam(name = "month", value = "해당 년 월", example = "2023-05", required = true, dataTypeClass = String.class)
-    public Response<List<UserDiaryMonthResponse>> getUserMonthDiary(
+    public Response<UserDiaryMonthListGetResponse> getUserMonthDiary(
             @ApiIgnore Authentication authentication,
             @RequestParam(required = false) Long dogId,
             @RequestParam(required = false) Long categoryId,
             @RequestParam String month,
-            @RequestParam(required = false) String petsitterCheck) {
+            @RequestParam(required = false) String petSitterCheck) {
 
-        List<UserDiaryMonthResponse> userDiaryResponses = userDiaryService.getUserMonthDiary(
-                authentication.getName(), dogId, categoryId, month, petsitterCheck);
-        return Response.success(userDiaryResponses);
+        UserDiaryMonthListGetResponse userDiaryMonthGetResponses = userDiaryService.getUserMonthDiary(
+                authentication.getName(), dogId, categoryId, month, petSitterCheck);
+        return Response.success(userDiaryMonthGetResponses);
     }
 
     /**

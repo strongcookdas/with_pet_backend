@@ -1,22 +1,19 @@
 package com.ajou_nice.with_pet.diary.service;
 
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
-import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthResponse;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthListGetResponse;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostRequest;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostResponse;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.diary.model.entity.Category;
-import com.ajou_nice.with_pet.dog.model.entity.Dog;
-import com.ajou_nice.with_pet.dog.service.DogValidationService;
-import com.ajou_nice.with_pet.domain.entity.Notification;
-import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.diary.model.entity.Diary;
-import com.ajou_nice.with_pet.domain.entity.UserParty;
-import com.ajou_nice.with_pet.enums.NotificationType;
+import com.ajou_nice.with_pet.diary.repository.DiaryRepository;
+import com.ajou_nice.with_pet.dog.model.entity.Dog;
+import com.ajou_nice.with_pet.dog.repository.DogRepository;
+import com.ajou_nice.with_pet.dog.service.DogValidationService;
+import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.dog.repository.DogRepository;
-import com.ajou_nice.with_pet.diary.repository.DiaryRepository;
 import com.ajou_nice.with_pet.group.service.PartyUserValidationService;
 import com.ajou_nice.with_pet.repository.NotificationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
@@ -101,25 +98,24 @@ public class UserDiaryService {
         return UserDiaryResponse.of(diary);
     }
 
-    public List<UserDiaryMonthResponse> getUserMonthDiary(String userId, Long dogId,
-                                                          Long categoryId,
-                                                          String month, String petsitterCheck) {
-
-        //유저 체크
-        User user = valid.userValidationById(userId);
+    public UserDiaryMonthListGetResponse getUserMonthDiary(String email, Long dogId,
+                                                           Long categoryId,
+                                                           String month, String petSitterCheck) {
+        User user = userValidationService.userValidationByEmail(email);
 
         List<Diary> userDiaries = userDiaryRepository.findByMonthDate(user.getId(),
-                dogId, categoryId, LocalDate.parse(month + "-01"), petsitterCheck);
-        return userDiaries.stream().map(UserDiaryMonthResponse::of).collect(Collectors.toList());
+                dogId, categoryId, LocalDate.parse(month + "-01"), petSitterCheck);
+
+        return UserDiaryMonthListGetResponse.of(userDiaries);
     }
 
     public List<UserDiaryResponse> getUserDayDiary(String userId, Long dogId, Long categoryId,
-                                                   String day, String petsitterCheck) {
+                                                   String day, String petSitterCheck) {
         //유저체크
         User user = valid.userValidationById(userId);
 
         List<Diary> userDiaries = userDiaryRepository.findByDayDate(user.getId(), dogId,
-                categoryId, LocalDate.parse(day), petsitterCheck);
+                categoryId, LocalDate.parse(day), petSitterCheck);
         return userDiaries.stream().map(UserDiaryResponse::of).collect(Collectors.toList());
     }
 
