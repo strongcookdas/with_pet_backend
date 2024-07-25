@@ -3,9 +3,11 @@ package com.ajou_nice.with_pet.diary.service;
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthResponse;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostRequest;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostResponse;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryResponse;
 import com.ajou_nice.with_pet.diary.model.entity.Category;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
+import com.ajou_nice.with_pet.dog.service.DogValidationService;
 import com.ajou_nice.with_pet.domain.entity.Notification;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.diary.model.entity.Diary;
@@ -15,10 +17,12 @@ import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.diary.repository.DiaryRepository;
+import com.ajou_nice.with_pet.group.service.PartyUserValidationService;
 import com.ajou_nice.with_pet.repository.NotificationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.service.NotificationService;
 import com.ajou_nice.with_pet.service.ValidateCollection;
+import com.ajou_nice.with_pet.user.service.UserValidationService;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -35,6 +39,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserDiaryService {
 
+    private final UserValidationService userValidationService;
+    private final DogValidationService dogValidationService;
+    private final PartyUserValidationService partyUserValidationService;
+    private final CategoryValidationService categoryValidationService;
+
     private final UserPartyRepository userPartyRepository;
     private final DiaryRepository userDiaryRepository;
     private final NotificationRepository notificationRepository;
@@ -44,26 +53,17 @@ public class UserDiaryService {
 
 
     @Transactional
-    public UserDiaryResponse writeUserDiary(String userId, UserDiaryPostRequest userDiaryPostRequest) {
-        //유저 체크
-        User user = valid.userValidationById(userId);
-        //반려견 체크
-        Dog dog = valid.dogValidation(userDiaryPostRequest.getUserDiaryDogId());
-        //반려견 그룹 유저 존재 체크
-        if (!userPartyRepository.existsUserPartyByUserAndParty(user, dog.getParty())) {
-            throw new AppException(ErrorCode.GROUP_NOT_FOUND, "글 작성 권한이 없습니다.");
-        }
-        //카테고리 체크
-        Category category = valid.categoryValidation(userDiaryPostRequest.getUserDiaryCategoryId());
+    public UserDiaryPostResponse writeUserDiary(String email, UserDiaryPostRequest userDiaryPostRequest) {
+        User user = userValidationService.userValidationByEmail(email);
+        Dog dog = dogValidationService.dogValidation(userDiaryPostRequest.getUserDiaryDogId());
+        partyUserValidationService.validationPartyUser(user, dog.getParty());
+        Category category = categoryValidationService.validationCategory(userDiaryPostRequest.getUserDiaryCategoryId());
 
-        Diary diary = userDiaryRepository.save(
-                Diary.of(userDiaryPostRequest, dog, user, category));
-
-        List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
-
+        Diary diary = userDiaryRepository.save(Diary.of(userDiaryPostRequest, dog, user, category));
         dog.updateAffectionTemperature(this.calculateAffectionTemperature(dog));
 
 /*
+        List<UserParty> userParties = userPartyRepository.findAllByParty(dog.getParty());
         for (UserParty userParty : userParties) {
             Notification notification = notificationService.sendEmail(
                     user.getName() + "님이 " + dog.getDogName() + "의 일지를 작성했습니다.",
@@ -72,7 +72,8 @@ public class UserDiaryService {
             notificationService.saveNotification(notification);
 //            notificationService.send(notification);
         }\*/
-        return UserDiaryResponse.of(diary);
+
+        return UserDiaryPostResponse.of(diary);
     }
 
 

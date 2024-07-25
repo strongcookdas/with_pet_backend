@@ -1,6 +1,7 @@
 package com.ajou_nice.with_pet.diary.controller;
 
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostRequest;
+import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryPostResponse;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
 import com.ajou_nice.with_pet.diary.model.dto.user.UserDiaryMonthResponse;
@@ -36,10 +37,11 @@ public class UserDiaryController {
 
     @PostMapping
     @ApiOperation(value = "반려인 다이어리 작성")
-    public Response<UserDiaryResponse> writeUserDiary(@ApiIgnore Authentication authentication,
-                                                      @Valid @RequestBody UserDiaryPostRequest userDiaryPostRequest) {
-        UserDiaryResponse userDiaryResponse = userDiaryService.writeUserDiary(authentication.getName(), userDiaryPostRequest);
-        return Response.success(userDiaryResponse);
+    public Response<UserDiaryPostResponse> writeUserDiary(@ApiIgnore Authentication authentication,
+                                                          @Valid @RequestBody UserDiaryPostRequest userDiaryPostRequest) {
+        UserDiaryPostResponse userDiaryPostResponse = userDiaryService.writeUserDiary(authentication.getName(),
+                userDiaryPostRequest);
+        return Response.success(userDiaryPostResponse);
     }
 
     @PutMapping("/{diaryId}")
