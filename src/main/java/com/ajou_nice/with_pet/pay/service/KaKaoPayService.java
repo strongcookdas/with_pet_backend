@@ -1,12 +1,12 @@
-package com.ajou_nice.with_pet.service;
+package com.ajou_nice.with_pet.pay.service;
 
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayCancelResponse;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
+import com.ajou_nice.with_pet.pay.model.dto.PayApproveResponse;
+import com.ajou_nice.with_pet.pay.model.dto.PayCancelResponse;
+import com.ajou_nice.with_pet.pay.model.dto.PayReadyResponse;
+import com.ajou_nice.with_pet.pay.model.dto.RefundResponse;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.domain.entity.Notification;
-import com.ajou_nice.with_pet.domain.entity.Pay;
+import com.ajou_nice.with_pet.pay.model.entity.Pay;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -16,16 +16,20 @@ import com.ajou_nice.with_pet.enums.PayStatus;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.repository.PayRepository;
+import com.ajou_nice.with_pet.pay.repository.PayRepository;
 import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 
+import com.ajou_nice.with_pet.service.NotificationService;
+import com.ajou_nice.with_pet.service.ValidateCollection;
+import com.ajou_nice.with_pet.user.service.UserValidationService;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -39,6 +43,7 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 @Service
 public class KaKaoPayService {
+	private final UserValidationService userValidationService;
 
 	private final ReservationRepository reservationRepository;
 	private final PayRepository payRepository;
@@ -47,7 +52,9 @@ public class KaKaoPayService {
 
 	private final ValidateCollection valid;
 	static final String cid = "TC0ONETIME"; //테스트 코드
-	static final String admin_Key = "059c166f6891b7508def2a190d83955f"; //장승현이 부여받은 admin key
+
+	@Value("${PAY.KEY}")
+	private String secretKey; //장승현이 부여받은 admin key
 
 	private PayReadyResponse payReadyResponse;
 
@@ -55,7 +62,7 @@ public class KaKaoPayService {
 		//카카오 페이 서버로 요청할 header
 		HttpHeaders httpHeaders = new HttpHeaders();
 
-		String auth = "KakaoAK " + admin_Key;
+		String auth = "KakaoAK " + secretKey;
 		httpHeaders.set("Authorization", auth);
 		httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 		return httpHeaders;
@@ -63,9 +70,9 @@ public class KaKaoPayService {
 
 	//pay ready를 요청하면 pay entity 생성 x
 	@Transactional
-	public PayReadyResponse payReady(String userId, Long reservationId) {
+	public PayReadyResponse payReady(String email, Long reservationId) {
 
-		User findUser = valid.userValidationById(userId);
+		User user = userValidationService.userValidationByEmail(email);
 
 		Reservation reservation = valid.reservationValidation(reservationId);
 
@@ -73,7 +80,7 @@ public class KaKaoPayService {
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		parameters.add("cid", cid);
 		parameters.add("partner_order_id", reservation.getPetSitter().getId().toString());
-		parameters.add("partner_user_id", findUser.getId().toString());
+		parameters.add("partner_user_id", user.getId().toString());
 		parameters.add("item_name", "펫시터 예약");
 		parameters.add("quantity", "1");
 		parameters.add("total_amount", reservation.getReservationTotalPrice().toString());

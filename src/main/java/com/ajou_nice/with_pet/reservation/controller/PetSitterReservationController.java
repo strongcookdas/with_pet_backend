@@ -2,7 +2,7 @@ package com.ajou_nice.with_pet.reservation.controller;
 
 import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
+import com.ajou_nice.with_pet.pay.model.dto.RefundResponse;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
@@ -11,7 +11,7 @@ import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApp
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutApprovalRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
 import com.ajou_nice.with_pet.reservation.service.ReservationService;
-import com.ajou_nice.with_pet.service.KaKaoPayService;
+import com.ajou_nice.with_pet.pay.service.KaKaoPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;

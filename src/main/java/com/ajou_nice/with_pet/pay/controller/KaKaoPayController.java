@@ -1,25 +1,18 @@
-package com.ajou_nice.with_pet.controller;
+package com.ajou_nice.with_pet.pay.controller;
 
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayCancelResponse;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayRequest.PaySimpleRequest;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
-import com.ajou_nice.with_pet.service.KaKaoPayService;
+import com.ajou_nice.with_pet.pay.model.dto.PayApproveResponse;
+import com.ajou_nice.with_pet.pay.model.dto.PayReadyResponse;
+import com.ajou_nice.with_pet.pay.model.dto.PayRequest.PaySimpleRequest;
+import com.ajou_nice.with_pet.pay.model.dto.RefundResponse;
+import com.ajou_nice.with_pet.pay.service.KaKaoPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.net.URI;
-import java.net.URISyntaxException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

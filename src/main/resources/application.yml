@@ -57,3 +57,7 @@ SMS:
   SECRET: ${SMS_SECRET}
   PHONE: ${SMS_PHONE}
 
+PAY:
+  KEY: ${PAY_KEY}
+
+
