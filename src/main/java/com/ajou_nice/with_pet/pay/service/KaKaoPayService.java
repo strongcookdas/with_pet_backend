@@ -51,10 +51,10 @@ public class KaKaoPayService {
 	private final UserPartyRepository userPartyRepository;
 
 	private final ValidateCollection valid;
-	static final String cid = "TC0ONETIME"; //테스트 코드
+	static final String cid = "TC0ONETIME";//테스트 코드
 
 	@Value("${PAY.KEY}")
-	private String secretKey; //장승현이 부여받은 admin key
+	private String secretKey;
 
 	private PayReadyResponse payReadyResponse;
 
