@@ -22,7 +22,7 @@ public class PartyAddPartyByIsbnResponse {
     private Long partyId;
     private String partyName;
     private String partyLeaderName;
-    private String partyLeaderId;
+    private String partyLeaderEmail;
     private String partyLeaderImg;
     private String partyIsbn;
     private List<PartyMemberResponse> partyMemberList;
@@ -32,7 +32,7 @@ public class PartyAddPartyByIsbnResponse {
         return PartyAddPartyByIsbnResponse.builder()
                 .partyId(party.getPartyId())
                 .partyName(party.getPartyName())
-                .partyLeaderId(party.getPartyLeader().getEmail())
+                .partyLeaderEmail(party.getPartyLeader().getEmail())
                 .partyLeaderImg(party.getPartyLeader().getProfileImg())
                 .partyLeaderName(party.getPartyLeader().getName())
                 .partyIsbn(party.getPartyIsbn())
@@ -48,7 +48,7 @@ public class PartyAddPartyByIsbnResponse {
         return PartyAddPartyByIsbnResponse.builder()
                 .partyId(dog.getParty().getPartyId())
                 .partyName(dog.getParty().getPartyName())
-                .partyLeaderId(dog.getParty().getPartyLeader().getEmail())
+                .partyLeaderEmail(dog.getParty().getPartyLeader().getEmail())
                 .partyLeaderImg(dog.getParty().getPartyLeader().getProfileImg())
                 .partyLeaderName(dog.getParty().getPartyLeader().getName())
                 .partyIsbn(dog.getParty().getPartyIsbn())
