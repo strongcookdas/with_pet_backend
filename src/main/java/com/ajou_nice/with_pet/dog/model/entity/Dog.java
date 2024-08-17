@@ -83,6 +83,7 @@ public class Dog extends BaseEntity {
         this.dogProfileImg = dogUpdateInfoRequest.getDogImg();
         this.dogBreed = dogUpdateInfoRequest.getDogBreed();
         this.dogSize = dogSize;
+        this.dogIsbn = dogUpdateInfoRequest.getDogIsbn();
     }
 
     public void updateSocialization(int dogSocialization) {
@@ -149,7 +150,8 @@ public class Dog extends BaseEntity {
     }
 
     public static Dog simpleDogForTest(String name, Gender gender, Party party,
-                                       Boolean neutralization, LocalDate birth, Float weight, String profile_img, String breed,
+                                       Boolean neutralization, LocalDate birth, Float weight, String profile_img,
+                                       String breed,
                                        String isbn,
                                        DogSize dogSize) {
         return Dog.builder()
