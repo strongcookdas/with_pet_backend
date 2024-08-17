@@ -22,15 +22,15 @@ import lombok.ToString;
 @ToString
 public class DogInfoResponse {
 
-    private Long dog_id;
-    private String dog_img;
-    private String dog_name;
-    private String dog_breed;
-    private Gender dog_gender;
+    private Long dogId;
+    private String dogImg;
+    private String dogName;
+    private String dogBreed;
+    private Gender dogGender;
     private Boolean neutralization;
-    private LocalDate dog_birth;
-    private Float dog_weight;
-    private String dog_isbn;
+    private LocalDate dogBirth;
+    private Float dogWeight;
+    private String dogIsbn;
     private Double socializationTemperature;
     private Integer socializationDegree;
     private Double affectionTemperature;
@@ -39,15 +39,15 @@ public class DogInfoResponse {
 
     public static List<DogInfoResponse> toList(List<Dog> dogs) {
         return dogs.stream().map(dog -> DogInfoResponse.builder()
-                .dog_id(dog.getDogId())
-                .dog_img(dog.getDogProfileImg())
-                .dog_name(dog.getDogName())
-                .dog_breed(dog.getDogBreed())
-                .dog_gender(dog.getDogGender())
+                .dogId(dog.getDogId())
+                .dogImg(dog.getDogProfileImg())
+                .dogName(dog.getDogName())
+                .dogBreed(dog.getDogBreed())
+                .dogGender(dog.getDogGender())
                 .neutralization(dog.getDogNeutralization())
-                .dog_birth(dog.getDogBirth())
-                .dog_weight(dog.getDogWeight())
-                .dog_isbn(dog.getDogIsbn())
+                .dogBirth(dog.getDogBirth())
+                .dogWeight(dog.getDogWeight())
+                .dogIsbn(dog.getDogIsbn())
                 .socializationTemperature(dog.getDogSocializationTemperature())
                 .socializationTemperature(dog.getDogSocializationTemperature())
                 .affectionTemperature(dog.getDogAffectionTemperature())
@@ -58,15 +58,15 @@ public class DogInfoResponse {
     public static DogInfoResponse of(Dog dog) {
 
         return DogInfoResponse.builder()
-                .dog_id(dog.getDogId())
-                .dog_img(dog.getDogProfileImg())
-                .dog_name(dog.getDogName())
-                .dog_breed(dog.getDogBreed())
-                .dog_gender(dog.getDogGender())
+                .dogId(dog.getDogId())
+                .dogImg(dog.getDogProfileImg())
+                .dogName(dog.getDogName())
+                .dogBreed(dog.getDogBreed())
+                .dogGender(dog.getDogGender())
                 .neutralization(dog.getDogNeutralization())
-                .dog_birth(dog.getDogBirth())
-                .dog_weight(dog.getDogWeight())
-                .dog_isbn(dog.getDogIsbn())
+                .dogBirth(dog.getDogBirth())
+                .dogWeight(dog.getDogWeight())
+                .dogIsbn(dog.getDogIsbn())
                 .socializationTemperature(dog.getDogSocializationTemperature())
                 .socializationDegree(dog.getDogSocializationDegree())
                 .affectionTemperature(dog.getDogAffectionTemperature())
@@ -76,6 +76,6 @@ public class DogInfoResponse {
 
     @Override
     public boolean equals(Object obj) {
-        return this.dog_id == obj;
+        return this.dogId == obj;
     }
 }
