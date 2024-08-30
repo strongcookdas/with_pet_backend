@@ -33,15 +33,9 @@ public class KaKaoPayController {
     @PostMapping("/ready")
     @ApiOperation(value = "결제 요청")
     public Response<PayReadyResponse> readyToKakaoPay(@ApiIgnore Authentication authentication,
-            @RequestBody PaySimpleRequest paySimpleRequest) {
-
-        log.info("=======================payRequest : {}=============================",
-                paySimpleRequest);
-        //reservation과 동기화 필요
+                                                      @RequestBody PaySimpleRequest paySimpleRequest) {
         PayReadyResponse payReadyResponse = kaKaoPayService.payReady(authentication.getName(),
                 paySimpleRequest.getReservationId());
-        log.info("=======================payResponse : {}=============================",
-                payReadyResponse);
         return Response.success(payReadyResponse);
     }
 
@@ -49,7 +43,8 @@ public class KaKaoPayController {
     @GetMapping("/success")
     @ApiOperation(value = "결제 성공")
     public Response<PayApproveResponse> afterPay(@ApiIgnore Authentication authentication,
-            @RequestParam("pg_token") String pgToken, @RequestParam("tid") String tid) {
+                                                 @RequestParam("pg_token") String pgToken,
+                                                 @RequestParam("tid") String tid) {
         PayApproveResponse payApproveResponse = kaKaoPayService.approvePay(authentication.getName(),
                 pgToken, tid);
 
@@ -62,7 +57,7 @@ public class KaKaoPayController {
     @PostMapping("/refund")
     @ApiOperation(value = "사용자의 결제 취소(환불)")
     public Response<RefundResponse> refundPay(@ApiIgnore Authentication authentication,
-            @RequestBody PaySimpleRequest paySimpleRequest) {
+                                              @RequestBody PaySimpleRequest paySimpleRequest) {
 
         log.info("=======================payCancelRequest : {}=============================",
                 paySimpleRequest);
