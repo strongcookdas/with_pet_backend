@@ -70,10 +70,11 @@ public class KakaoPayUtilService {
 
     public Map<String, String> getRefundParameters(Pay pay, int cancelAmount) {
         // 카카오페이 요청
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("cid", cid);
-        parameters.add("tid", pay.getTid());
-        parameters.add("cancel_amount", Integer.toString(cancelAmount));
-        parameters.add("cancel_tax_free_amount", Integer.toString(0));
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("cid", cid);
+        parameters.put("tid", pay.getTid());
+        parameters.put("cancel_amount", Integer.toString(cancelAmount));
+        parameters.put("cancel_tax_free_amount", Integer.toString(0));
+        return parameters;
     }
 }
