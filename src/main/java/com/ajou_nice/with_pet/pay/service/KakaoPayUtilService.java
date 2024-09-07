@@ -38,7 +38,7 @@ public class KakaoPayUtilService {
         parameters.put("total_amount", reservation.getReservationTotalPrice().toString());
         parameters.put("vat_amount", "0");
         parameters.put("tax_free_amount", "0");
-        parameters.put("approval_url", "https://withpet.info/petsitterdetail/" + reservation.getPetSitter()
+        parameters.put("approval_url", "http://localhost:3000/petsitterdetail/" + reservation.getPetSitter()
                 .getId()); // 성공 시 redirect url -> 이 부분을 프론트엔드 url로 바꿔주어야 함
         parameters.put("cancel_url", "https://withpet.info/payment-cancel"); // 취소 시 redirect url -> 서버의 주소
         parameters.put("fail_url", "https://withpet.info/payment-fail"); // 실패 시 redirect url -> 서버의 주소
