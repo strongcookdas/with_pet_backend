@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.pay.model.dto.RefundResponse;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetSideInfoResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
@@ -127,6 +128,13 @@ public class PetSitterReservationController {
                 authentication.getName(), reservationId);
 
         return Response.success(paymentResponseForPetSitter);
+    }
+
+    @GetMapping("/side-infos")
+    @ApiOperation(value = "유형별 예약 건 조회 (펫시터 캘린더 사이드바)")
+    public Response<PetSitterReservationGetSideInfoResponse> getPetSitterSideBarInfo(@ApiIgnore Authentication authentication,
+                                                                                     @RequestParam String month) {
+        return Response.success(PetSitterReservationService.getPetSitterReservationsByType(authentication.getName(), month));
     }
 
 }
