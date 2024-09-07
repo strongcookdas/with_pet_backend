@@ -82,7 +82,7 @@ public class Reservation extends BaseEntity {
                 .petSitter(petSitter)
                 .reservationCheckIn(reservationCreateRequest.getReservationCheckIn())
                 .reservationCheckOut(reservationCreateRequest.getReservationCheckOut())
-                .reservationStatus(ReservationStatus.WAIT)
+                .reservationStatus(ReservationStatus.PAYED)
                 .petSitterCriticalServiceId(petSitterCriticalService)
                 .criticalServiceName(petSitterCriticalService.getCriticalService().getServiceName())
                 .criticalServicePrice(petSitterCriticalService.getPrice())

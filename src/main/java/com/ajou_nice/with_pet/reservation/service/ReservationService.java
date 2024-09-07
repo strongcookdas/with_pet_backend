@@ -55,7 +55,7 @@ public class ReservationService {
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
-                    ReservationStatus.USE, ReservationStatus.WAIT));
+                    ReservationStatus.USE));
 
     private final UserPartyRepository userPartyRepository;
     private final NotificationService notificationService;

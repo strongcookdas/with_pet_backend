@@ -21,9 +21,9 @@ public class KakaoPayUtilService {
         //카카오 페이 서버로 요청할 header
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        String auth = "KakaoAK " + secretKey;
+        String auth = "SECRET_KEY " + secretKey;
         httpHeaders.set("Authorization", auth);
-        httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        httpHeaders.set("Content-type", "application/json");
         return httpHeaders;
     }
 
