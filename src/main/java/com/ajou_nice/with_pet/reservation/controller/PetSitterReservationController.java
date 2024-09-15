@@ -3,12 +3,10 @@ package com.ajou_nice.with_pet.reservation.controller;
 import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutApprovalRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPostRefuseRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
 import com.ajou_nice.with_pet.reservation.service.ReservationService;
 import com.ajou_nice.with_pet.service.KaKaoPayService;
@@ -77,22 +75,12 @@ public class PetSitterReservationController {
         return Response.success("평가가 완료되었습니다. 감사합니다.");
     }
 
-    @PostMapping("/reservation-refuse")
+    @PostMapping("/refuse")
     @ApiOperation(value = "펫시터의 예약 거절")
     public Response<RefundResponse> refuseReservation(@ApiIgnore Authentication authentication,
-                                                      @RequestBody PetSitterReservationPutApprovalRequest petSitterReservationPutApprovalRequest) {
-        log.info(
-                "============================ReservationStatusRequest : {}==============================",
-                petSitterReservationPutApprovalRequest);
-        if (!petSitterReservationPutApprovalRequest.getReservationStatus().equals("REFUSE")) {
-            throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS,
-                    ErrorCode.BAD_REQUEST_APPLICANT_STATUS.getMessage());
-        }
+                                                      @RequestBody PetSitterReservationPostRefuseRequest petSitterReservationPostRefuseRequest) {
         RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(),
-                petSitterReservationPutApprovalRequest.getReservationId());
-
-        log.info("=======================payCancelResponse : {}=============================",
-                refundResponse);
+                petSitterReservationPostRefuseRequest.getReservationId());
         return Response.success(refundResponse);
     }
 
