@@ -77,7 +77,7 @@ public class UserReservationService {
                                                            ReservationCreateRequest reservationCreateRequest) {
 
         User user = userValidationService.userValidationByEmail(email);
-        Dog dog = dogValidationService.dogValidation(reservationCreateRequest.getDogId());
+        Dog dog = dogValidationService.dogValidationById(reservationCreateRequest.getDogId());
         PetSitter petSitter = petSitterValidationService.petSitterValidationByPetSitterId(
                 reservationCreateRequest.getPetSitterId());
 

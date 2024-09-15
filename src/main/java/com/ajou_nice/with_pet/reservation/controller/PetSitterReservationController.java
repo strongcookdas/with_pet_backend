@@ -1,11 +1,12 @@
 package com.ajou_nice.with_pet.reservation.controller;
 
-import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.domain.dto.kakaopay.RefundResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPostRefuseRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
 import com.ajou_nice.with_pet.reservation.service.ReservationService;
@@ -63,16 +64,14 @@ public class PetSitterReservationController {
                 PetSitterReservationService.approveReservation(authentication.getName(), reservationId));
     }
 
-    @PutMapping("/update-dogSocialTemperature/{reservationId}")
-    @ApiOperation(value = "예약 완료시 펫시터가 반려견 사회화온도 평가")
-    public Response modifyDogTemperature(@ApiIgnore Authentication authentication, @PathVariable Long reservationId,
-                                         @RequestBody DogSocializationRequest dogSocializationRequest) {
-        log.info("---------------------dog Modify socialization Temperature Request : {}--------------------------",
-                dogSocializationRequest);
-
-        PetSitterReservationService.modifyDogTemp(authentication.getName(), reservationId, dogSocializationRequest);
-
-        return Response.success("평가가 완료되었습니다. 감사합니다.");
+    @PutMapping("/dog-social-temperature/{reservationId}")
+    @ApiOperation(value = "예약 완료시 펫시터 반려견 사회화온도 평가")
+    public Response<PetSitterReservationPutEvaluateDogResponse> evaluateDogSocialTemperature(
+            @ApiIgnore Authentication authentication, @PathVariable Long reservationId,
+            @RequestBody PetSitterReservationPutEvaluateDogRequest dogSocializationRequest) {
+        return Response.success(
+                PetSitterReservationService.evaluateDogSocialTemperature(authentication.getName(), reservationId,
+                        dogSocializationRequest));
     }
 
     @PostMapping("/refuse")

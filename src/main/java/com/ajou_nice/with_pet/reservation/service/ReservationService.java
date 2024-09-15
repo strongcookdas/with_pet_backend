@@ -1,11 +1,11 @@
 package com.ajou_nice.with_pet.reservation.service;
 
-import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.dog.service.DogValidationService;
 import com.ajou_nice.with_pet.petsitter.service.PetSitterValidationService;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
@@ -23,12 +23,8 @@ import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
-import com.ajou_nice.with_pet.withpet_service.repository.PetSitterServiceRepository;
-import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
-import com.ajou_nice.with_pet.repository.UserPartyRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -38,7 +34,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.http.impl.cookie.DateParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,22 +42,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final PetSitterCriticalServiceRepository petSitterCriticalServiceRepository;
-    private final PetSitterServiceRepository serviceRepository;
-    private final ReservationPetSitterServiceRepository reservationServiceRepository;
     private final ReviewRepository reviewRepository;
 
     private final ValidateCollection valid;
+
+    private final NotificationService notificationService;
+    private final UserValidationService userValidationService;
+    private final PetSitterValidationService petSitterValidationService;
+    private final ReservationValidationService reservationValidationService;
+    private final DogValidationService dogValidationService;
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
                     ReservationStatus.USE, ReservationStatus.WAIT));
 
-    private final UserPartyRepository userPartyRepository;
-    private final NotificationService notificationService;
-    private final UserValidationService userValidationService;
-    private final PetSitterValidationService petSitterValidationService;
-    private final DogValidationService dogValidationService;
 
     public List<PetSitterReservationGetMonthlyResponse> getMonthlyReservations(String email, String month) {
         User user = userValidationService.userValidationByEmail(email);
@@ -116,27 +109,18 @@ public class ReservationService {
 
     @Transactional
     // 펫시터가 완료된 예약의 반려견의 사회화 온도 평가
-    public void modifyDogTemp(String userId, Long reservationId,
-                              DogSocializationRequest dogSocializationRequest) {
+    public PetSitterReservationPutEvaluateDogResponse evaluateDogSocialTemperature(String email, Long reservationId,
+                                                                                   PetSitterReservationPutEvaluateDogRequest dogSocializationRequest) {
 
-        //reservation
-        Reservation reservation = valid.reservationValidation(reservationId);
+        Reservation reservation = reservationValidationService.reservationValidationById(reservationId);
+        PetSitter petSitter = petSitterValidationService.petSitterValidationByPetSitterEmail(email);
+        Dog dog = dogValidationService.dogValidationById(reservation.getDog().getDogId());
 
-        //user가 펫시터인지 검증
-        User user = valid.userValidationById(userId);
-
-        //예약의 펫시터가 아니라면
-        if (!reservation.getPetSitter().getUser().equals(user)) {
-            throw new AppException(ErrorCode.PETSITTER_NOT_FOUND,
-                    ErrorCode.PETSITTER_NOT_FOUND.getMessage());
-        }
-
-        // 예약의 펫시터가 맞다면
-        Dog dog = valid.dogValidation(reservation.getDog().getDogId());
-
-        float score = (dogSocializationRequest.getQ1() + dogSocializationRequest.getQ2()
-                + dogSocializationRequest.getQ3() +
-                dogSocializationRequest.getQ4() + dogSocializationRequest.getQ5()) / 5;
+        float score = (float) (dogSocializationRequest.getDogSocialTemperatureQ1()
+                + dogSocializationRequest.getDogSocialTemperatureQ2()
+                + dogSocializationRequest.getDogSocialTemperatureQ3() +
+                dogSocializationRequest.getDogSocialTemperatureQ4()
+                + dogSocializationRequest.getDogSocialTemperatureQ5()) / 5;
 
         if (score < 2.5) {
             score = -score;
@@ -144,6 +128,8 @@ public class ReservationService {
         } else {
             dog.updateSocializationTemperature(score);
         }
+
+        return PetSitterReservationPutEvaluateDogResponse.of("반려견의 사회화 온도 평가가 완료되었습니다.");
     }
 
     @Transactional
