@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.dto.kakaopay;
+package com.ajou_nice.with_pet.pay.model.dto;
 
-import com.ajou_nice.with_pet.domain.entity.Pay;
+import com.ajou_nice.with_pet.pay.model.entity.Pay;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -2,10 +2,10 @@ package com.ajou_nice.with_pet.reservation.service;
 
 import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.dog.service.DogValidationService;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetSideInfoResponse;
 import com.ajou_nice.with_pet.petsitter.service.PetSitterValidationService;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.ReservationDetailResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
 import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
@@ -38,7 +38,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.http.impl.cookie.DateParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +55,7 @@ public class ReservationService {
 
     private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
             List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
-                    ReservationStatus.USE, ReservationStatus.WAIT));
+                    ReservationStatus.USE));
 
     private final UserPartyRepository userPartyRepository;
     private final NotificationService notificationService;
@@ -269,6 +268,24 @@ public class ReservationService {
 
         return UserReservationGetInfosResponse.of(waitReservations, payedReservations, approveReservations,
                 useReservations, doneReservations);
+    }
+
+    public PetSitterReservationGetSideInfoResponse getPetSitterReservationsByType(String email, String month) {
+        PetSitter petSitter = petSitterValidationService.petSitterValidationByPetSitterEmail(email);
+
+        List<Reservation> useReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
+                LocalDate.parse(month + "-01"), ReservationStatus.USE);
+        List<Reservation> waitReservation = reservationRepository.findAllByPetSitterAndReservationStatus(
+                petSitter, ReservationStatus.PAYED);
+        List<Reservation> doneReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
+                LocalDate.parse(month + "-01"), ReservationStatus.DONE);
+
+        int cost = 0;
+        for (Reservation reservation : doneReservation) {
+            cost += reservation.getReservationTotalPrice();
+        }
+
+        return PetSitterReservationGetSideInfoResponse.of(useReservation, waitReservation, doneReservation, cost);
     }
 
 }

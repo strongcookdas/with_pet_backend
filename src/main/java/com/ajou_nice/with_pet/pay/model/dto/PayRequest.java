@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.domain.dto.kakaopay;
+package com.ajou_nice.with_pet.pay.model.dto;
 
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

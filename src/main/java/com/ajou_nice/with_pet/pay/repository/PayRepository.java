@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.repository;
+package com.ajou_nice.with_pet.pay.repository;
 
-import com.ajou_nice.with_pet.domain.entity.Pay;
+import com.ajou_nice.with_pet.pay.model.entity.Pay;
 import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

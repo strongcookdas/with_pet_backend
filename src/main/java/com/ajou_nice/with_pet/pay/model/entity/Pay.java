@@ -1,6 +1,6 @@
-package com.ajou_nice.with_pet.domain.entity;
+package com.ajou_nice.with_pet.pay.model.entity;
 
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayApproveResponse;
+import com.ajou_nice.with_pet.pay.model.dto.PayApproveResponse;
 import com.ajou_nice.with_pet.enums.PayStatus;
 
 import javax.persistence.Entity;

@@ -1,8 +1,8 @@
 package com.ajou_nice.with_pet.kakopay;
 
 
-import com.ajou_nice.with_pet.controller.KaKaoPayController;
-import com.ajou_nice.with_pet.domain.dto.kakaopay.PayReadyResponse;
+import com.ajou_nice.with_pet.pay.controller.KaKaoPayController;
+import com.ajou_nice.with_pet.pay.model.dto.PayReadyResponse;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -11,7 +11,7 @@ import com.ajou_nice.with_pet.enums.UserRole;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.service.KaKaoPayService;
+import com.ajou_nice.with_pet.pay.service.KaKaoPayService;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

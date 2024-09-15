@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.controller;
 
 
-import com.ajou_nice.with_pet.service.KaKaoPayService;
+import com.ajou_nice.with_pet.pay.service.KaKaoPayService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
