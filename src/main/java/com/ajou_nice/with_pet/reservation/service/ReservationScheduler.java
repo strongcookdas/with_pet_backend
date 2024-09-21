@@ -7,7 +7,7 @@ import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import java.util.List;
 import java.util.Optional;
 
-import com.ajou_nice.with_pet.service.KaKaoPayService;
+import com.ajou_nice.with_pet.pay.service.KaKaoPayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;

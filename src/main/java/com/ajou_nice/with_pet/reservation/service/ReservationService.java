@@ -1,21 +1,9 @@
 package com.ajou_nice.with_pet.reservation.service;
 
-import com.ajou_nice.with_pet.dog.service.DogValidationService;
-import com.ajou_nice.with_pet.petsitter.service.PetSitterValidationService;
-import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
-import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogRequest;
-import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
-import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
+import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
+import com.ajou_nice.with_pet.dog.service.DogValidationService;
 import com.ajou_nice.with_pet.domain.entity.Notification;
-import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
-import com.ajou_nice.with_pet.service.NotificationService;
-import com.ajou_nice.with_pet.service.ValidateCollection;
-import com.ajou_nice.with_pet.user.service.UserValidationService;
-import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.domain.entity.Review;
 import com.ajou_nice.with_pet.domain.entity.User;
 import com.ajou_nice.with_pet.domain.entity.UserParty;
@@ -23,16 +11,31 @@ import com.ajou_nice.with_pet.enums.NotificationType;
 import com.ajou_nice.with_pet.enums.ReservationStatus;
 import com.ajou_nice.with_pet.exception.AppException;
 import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
+import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
+import com.ajou_nice.with_pet.petsitter.service.PetSitterValidationService;
+import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.repository.ReviewRepository;
-
+import com.ajou_nice.with_pet.repository.UserPartyRepository;
+import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetSideInfoResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
+import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
+import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
+import com.ajou_nice.with_pet.review.model.dto.ReviewRequest;
+import com.ajou_nice.with_pet.service.NotificationService;
+import com.ajou_nice.with_pet.service.ValidateCollection;
+import com.ajou_nice.with_pet.user.service.UserValidationService;
+import com.ajou_nice.with_pet.withpet_service.repository.PetSitterServiceRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -255,6 +258,24 @@ public class ReservationService {
 
         return UserReservationGetInfosResponse.of(waitReservations, payedReservations, approveReservations,
                 useReservations, doneReservations);
+    }
+
+    public PetSitterReservationGetSideInfoResponse getPetSitterReservationsByType(String email, String month) {
+        PetSitter petSitter = petSitterValidationService.petSitterValidationByPetSitterEmail(email);
+
+        List<Reservation> useReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
+                LocalDate.parse(month + "-01"), ReservationStatus.USE);
+        List<Reservation> waitReservation = reservationRepository.findAllByPetSitterAndReservationStatus(
+                petSitter, ReservationStatus.PAYED);
+        List<Reservation> doneReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
+                LocalDate.parse(month + "-01"), ReservationStatus.DONE);
+
+        int cost = 0;
+        for (Reservation reservation : doneReservation) {
+            cost += reservation.getReservationTotalPrice();
+        }
+
+        return PetSitterReservationGetSideInfoResponse.of(useReservation, waitReservation, doneReservation, cost);
     }
 
 }

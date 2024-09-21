@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ReservationValidationService {
+
     private final ReservationRepository reservationRepository;
 
     public Reservation reservationValidationById(Long reservationId) {

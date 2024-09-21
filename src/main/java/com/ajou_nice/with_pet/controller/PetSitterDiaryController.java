@@ -1,14 +1,13 @@
 package com.ajou_nice.with_pet.controller;
 
 import com.ajou_nice.with_pet.domain.dto.Response;
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryModifyRequest;
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
-import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryListResponse;
-import com.ajou_nice.with_pet.domain.dto.diary.PetSitterDiaryResponse;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryModifyRequest;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
+import com.ajou_nice.with_pet.diary.model.dto.PetSitterDiaryListResponse;
+import com.ajou_nice.with_pet.diary.model.dto.PetSitterDiaryResponse;
 import com.ajou_nice.with_pet.service.PetSitterDiaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;

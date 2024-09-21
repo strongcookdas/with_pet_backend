@@ -5,7 +5,7 @@ import com.ajou_nice.with_pet.reservation.controller.PetSitterReservationControl
 import com.ajou_nice.with_pet.critical_service.model.entity.CriticalService;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
-import com.ajou_nice.with_pet.domain.entity.Pay;
+import com.ajou_nice.with_pet.pay.model.entity.Pay;
 import com.ajou_nice.with_pet.petsitter.model.entity.PetSitter;
 import com.ajou_nice.with_pet.critical_service.model.entity.PetSitterCriticalService;
 import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
@@ -19,7 +19,7 @@ import com.ajou_nice.with_pet.fixture.Fixture;
 import com.ajou_nice.with_pet.critical_service.repository.CriticalServiceRepository;
 import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
-import com.ajou_nice.with_pet.repository.PayRepository;
+import com.ajou_nice.with_pet.pay.repository.PayRepository;
 import com.ajou_nice.with_pet.critical_service.repository.PetSitterCriticalServiceRepository;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;

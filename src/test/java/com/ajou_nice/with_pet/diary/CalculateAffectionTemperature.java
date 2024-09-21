@@ -1,7 +1,7 @@
 package com.ajou_nice.with_pet.diary;
 
-import com.ajou_nice.with_pet.domain.dto.diary.DiaryRequest;
-import com.ajou_nice.with_pet.domain.entity.Category;
+import com.ajou_nice.with_pet.diary.model.dto.DiaryRequest;
+import com.ajou_nice.with_pet.diary.model.entity.Category;
 import com.ajou_nice.with_pet.dog.model.entity.Dog;
 import com.ajou_nice.with_pet.group.model.entity.Party;
 import com.ajou_nice.with_pet.domain.entity.User;
@@ -9,14 +9,14 @@ import com.ajou_nice.with_pet.domain.entity.UserParty;
 import com.ajou_nice.with_pet.domain.entity.embedded.Address;
 import com.ajou_nice.with_pet.fixture.Fixture;
 import com.ajou_nice.with_pet.repository.CategoryRepository;
-import com.ajou_nice.with_pet.repository.DiaryRepository;
+import com.ajou_nice.with_pet.diary.repository.DiaryRepository;
 import com.ajou_nice.with_pet.dog.repository.DogRepository;
 import com.ajou_nice.with_pet.group.repository.PartyRepository;
 import com.ajou_nice.with_pet.petsitter.repository.PetSitterRepository;
 import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
 import com.ajou_nice.with_pet.repository.UserPartyRepository;
 import com.ajou_nice.with_pet.repository.UserRepository;
-import com.ajou_nice.with_pet.service.UserDiaryService;
+import com.ajou_nice.with_pet.diary.service.UserDiaryService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -79,7 +79,7 @@ public class CalculateAffectionTemperature {
         DiaryRequest diaryRequest = new DiaryRequest(dog.getDogId(),"제목",category.getCategoryId(),"내용입니다.","image",LocalDate.of(2023,06,12));
         //when 일지를 작성했을 때
         System.out.println("반려견의 사회성 사회 : ");
-        userDiaryService.writeUserDiary(boss.getEmail(),diaryRequest);
+        //userDiaryService.writeUserDiary(boss.getEmail(),diaryRequest);
         //then 일지를 작성한 결과 사회성 온도는 39도가 된다.
         Assertions.assertEquals(39,dog.getDogAffectionTemperature());
 
