@@ -75,12 +75,11 @@ public class PetSitterReservationController {
                         dogSocializationRequest));
     }
 
-    @PostMapping("/refuse")
+    @PatchMapping("/refuse/{reservationId}")
     @ApiOperation(value = "펫시터의 예약 거절")
     public Response<RefundResponse> refuseReservation(@ApiIgnore Authentication authentication,
-                                                      @RequestBody PetSitterReservationPostRefuseRequest petSitterReservationPostRefuseRequest) {
-        RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(),
-                petSitterReservationPostRefuseRequest.getReservationId());
+                                                      @PathVariable Long reservationId) {
+        RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(), reservationId);
         return Response.success(refundResponse);
     }
 
