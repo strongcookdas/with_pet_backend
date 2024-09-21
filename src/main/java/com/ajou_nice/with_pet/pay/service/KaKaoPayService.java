@@ -154,7 +154,7 @@ public class KaKaoPayService {
         pay.refund(PayStatus.REFUND, payCancelResponse.getCanceled_amount().getTotal(),
                 payCancelResponse.getCanceled_at());
 
-        return RefundResponse.of(pay);
+        return RefundResponse.of("예약을 거절했습니다.");
     }
 
     private static int getCancelAmount(Reservation reservation, User user, Pay pay) {

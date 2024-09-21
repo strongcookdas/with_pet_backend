@@ -7,7 +7,6 @@ import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetSideInfoResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPostRefuseRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
