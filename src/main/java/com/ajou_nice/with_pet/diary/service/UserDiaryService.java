@@ -52,7 +52,7 @@ public class UserDiaryService {
     @Transactional
     public UserDiaryPostResponse writeUserDiary(String email, UserDiaryPostRequest userDiaryPostRequest) {
         User user = userValidationService.userValidationByEmail(email);
-        Dog dog = dogValidationService.dogValidation(userDiaryPostRequest.getUserDiaryDogId());
+        Dog dog = dogValidationService.dogValidationById(userDiaryPostRequest.getUserDiaryDogId());
         partyUserValidationService.validationPartyUser(user, dog.getParty());
         Category category = categoryValidationService.validationCategory(userDiaryPostRequest.getUserDiaryCategoryId());
 
