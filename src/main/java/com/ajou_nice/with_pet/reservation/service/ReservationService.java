@@ -268,8 +268,10 @@ public class ReservationService {
 
         List<Reservation> useReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
                 LocalDate.parse(month + "-01"), ReservationStatus.USE);
-        List<Reservation> waitReservation = reservationRepository.findAllByPetSitterAndReservationStatus(
+        List<Reservation> payedReservation = reservationRepository.findAllByPetSitterAndReservationStatus(
                 petSitter, ReservationStatus.PAYED);
+        List<Reservation> approvalReservation = reservationRepository.findAllByPetSitterAndReservationStatus(
+                petSitter, ReservationStatus.APPROVAL);
         List<Reservation> doneReservation = reservationRepository.getPetsitterSideBarInfo(petSitter,
                 LocalDate.parse(month + "-01"), ReservationStatus.DONE);
 
@@ -278,7 +280,7 @@ public class ReservationService {
             cost += reservation.getReservationTotalPrice();
         }
 
-        return PetSitterReservationGetSideInfoResponse.of(useReservation, waitReservation, doneReservation, cost);
+        return PetSitterReservationGetSideInfoResponse.of(useReservation, payedReservation, approvalReservation, doneReservation, cost);
     }
 
 }

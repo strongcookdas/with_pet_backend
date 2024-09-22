@@ -120,8 +120,7 @@ public class PetSitterReservationController {
     public Response<PetSitterReservationGetSideInfoResponse> getPetSitterSideBarInfo(
             @ApiIgnore Authentication authentication,
             @RequestParam String month) {
-        return Response.success(
-                PetSitterReservationService.getPetSitterReservationsByType(authentication.getName(), month));
+        return Response.success(PetSitterReservationService.getPetSitterReservationsByType(authentication.getName(), month));
     }
 
 }

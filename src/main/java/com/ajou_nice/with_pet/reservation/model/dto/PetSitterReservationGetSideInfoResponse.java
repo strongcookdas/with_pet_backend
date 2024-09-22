@@ -15,16 +15,20 @@ import lombok.NoArgsConstructor;
 public class PetSitterReservationGetSideInfoResponse {
 
     private List<PetSitterReservationGetDetailResponse> useReservations;
-    private List<PetSitterReservationGetDetailResponse> newReservations;
+    private List<PetSitterReservationGetDetailResponse> payedReservations;
+    private List<PetSitterReservationGetDetailResponse> approvalReservations;
     private List<PetSitterReservationGetDetailResponse> doneReservations;
     private Integer reservationMonthProfit;
 
-    public static PetSitterReservationGetSideInfoResponse of(List<Reservation> use, List<Reservation> wait,
+    public static PetSitterReservationGetSideInfoResponse of(List<Reservation> use, List<Reservation> payed,
+                                                             List<Reservation> approval,
                                                              List<Reservation> done, Integer monthProfit) {
         return PetSitterReservationGetSideInfoResponse.builder()
                 .useReservations(use.stream().map(PetSitterReservationGetDetailResponse::of)
                         .collect(Collectors.toList()))
-                .newReservations(wait.stream().map(PetSitterReservationGetDetailResponse::of)
+                .payedReservations(payed.stream().map(PetSitterReservationGetDetailResponse::of)
+                        .collect(Collectors.toList()))
+                .approvalReservations(approval.stream().map(PetSitterReservationGetDetailResponse::of)
                         .collect(Collectors.toList()))
                 .doneReservations(done.stream().map(PetSitterReservationGetDetailResponse::of).collect(
                         Collectors.toList()))
