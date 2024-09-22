@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class ReservationValidationService {
 
     private final ReservationRepository reservationRepository;
+
     public Reservation reservationValidationById(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(() -> new AppException(
                 ErrorCode.RESERVATION_NOT_FOUND, ErrorCode.RESERVATION_NOT_FOUND.getMessage()));

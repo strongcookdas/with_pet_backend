@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class DogValidationService {
     private final DogRepository dogRepository;
 
-    public Dog dogValidation(Long dogId) {
+    public Dog dogValidationById(Long dogId) {
         return dogRepository.findById(dogId).orElseThrow(() -> new AppException(ErrorCode.DOG_NOT_FOUND, ErrorCode.DOG_NOT_FOUND.getMessage()));
     }
 }

@@ -1,18 +1,16 @@
 package com.ajou_nice.with_pet.reservation.controller;
 
-import com.ajou_nice.with_pet.dog.model.dto.DogSocializationRequest;
 import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.pay.model.dto.RefundResponse;
-import com.ajou_nice.with_pet.exception.AppException;
-import com.ajou_nice.with_pet.exception.ErrorCode;
-import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetSideInfoResponse;
+import com.ajou_nice.with_pet.pay.service.KaKaoPayService;
 import com.ajou_nice.with_pet.reservation.model.dto.PaymentResponseForPetSitter;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetMonthlyResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationGetSideInfoResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPatchApprovalResponse;
-import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutApprovalRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogRequest;
+import com.ajou_nice.with_pet.reservation.model.dto.PetSitterReservationPutEvaluateDogResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest.ReservationSimpleRequest;
 import com.ajou_nice.with_pet.reservation.service.ReservationService;
-import com.ajou_nice.with_pet.pay.service.KaKaoPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -66,34 +64,21 @@ public class PetSitterReservationController {
                 PetSitterReservationService.approveReservation(authentication.getName(), reservationId));
     }
 
-    @PutMapping("/update-dogSocialTemperature/{reservationId}")
-    @ApiOperation(value = "예약 완료시 펫시터가 반려견 사회화온도 평가")
-    public Response modifyDogTemperature(@ApiIgnore Authentication authentication, @PathVariable Long reservationId,
-                                         @RequestBody DogSocializationRequest dogSocializationRequest) {
-        log.info("---------------------dog Modify socialization Temperature Request : {}--------------------------",
-                dogSocializationRequest);
-
-        PetSitterReservationService.modifyDogTemp(authentication.getName(), reservationId, dogSocializationRequest);
-
-        return Response.success("평가가 완료되었습니다. 감사합니다.");
+    @PutMapping("/dog-social-temperature/{reservationId}")
+    @ApiOperation(value = "예약 완료시 펫시터 반려견 사회화온도 평가")
+    public Response<PetSitterReservationPutEvaluateDogResponse> evaluateDogSocialTemperature(
+            @ApiIgnore Authentication authentication, @PathVariable Long reservationId,
+            @RequestBody PetSitterReservationPutEvaluateDogRequest dogSocializationRequest) {
+        return Response.success(
+                PetSitterReservationService.evaluateDogSocialTemperature(authentication.getName(), reservationId,
+                        dogSocializationRequest));
     }
 
-    @PostMapping("/reservation-refuse")
+    @PatchMapping("/refuse/{reservationId}")
     @ApiOperation(value = "펫시터의 예약 거절")
     public Response<RefundResponse> refuseReservation(@ApiIgnore Authentication authentication,
-                                                      @RequestBody PetSitterReservationPutApprovalRequest petSitterReservationPutApprovalRequest) {
-        log.info(
-                "============================ReservationStatusRequest : {}==============================",
-                petSitterReservationPutApprovalRequest);
-        if (!petSitterReservationPutApprovalRequest.getReservationStatus().equals("REFUSE")) {
-            throw new AppException(ErrorCode.BAD_REQUEST_RESERVATION_STATSUS,
-                    ErrorCode.BAD_REQUEST_APPLICANT_STATUS.getMessage());
-        }
-        RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(),
-                petSitterReservationPutApprovalRequest.getReservationId());
-
-        log.info("=======================payCancelResponse : {}=============================",
-                refundResponse);
+                                                      @PathVariable Long reservationId) {
+        RefundResponse refundResponse = kaKaoPayService.refundPayment(authentication.getName(), reservationId);
         return Response.success(refundResponse);
     }
 
@@ -132,8 +117,9 @@ public class PetSitterReservationController {
 
     @GetMapping("/side-infos")
     @ApiOperation(value = "유형별 예약 건 조회 (펫시터 캘린더 사이드바)")
-    public Response<PetSitterReservationGetSideInfoResponse> getPetSitterSideBarInfo(@ApiIgnore Authentication authentication,
-                                                                                     @RequestParam String month) {
+    public Response<PetSitterReservationGetSideInfoResponse> getPetSitterSideBarInfo(
+            @ApiIgnore Authentication authentication,
+            @RequestParam String month) {
         return Response.success(PetSitterReservationService.getPetSitterReservationsByType(authentication.getName(), month));
     }
 

@@ -1,4 +1,4 @@
-package com.ajou_nice.with_pet.pay.model.dto;
+package com.ajou_nice.with_pet.reservation.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class RefundResponse {
+public class PetSitterReservationPutEvaluateDogResponse {
 
     private String message;
 
-    public static RefundResponse of(String message) {
-        return RefundResponse.builder()
+    public static PetSitterReservationPutEvaluateDogResponse of(String message) {
+        return PetSitterReservationPutEvaluateDogResponse.builder()
                 .message(message)
                 .build();
     }
