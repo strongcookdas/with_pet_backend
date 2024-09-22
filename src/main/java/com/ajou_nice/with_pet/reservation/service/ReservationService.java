@@ -55,18 +55,17 @@ public class ReservationService {
     private final ReservationValidationService reservationValidationService;
     private final DogValidationService dogValidationService;
 
-    private final List<ReservationStatus> reservationStatuses = new ArrayList<>(
-            List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
-                    ReservationStatus.USE, ReservationStatus.WAIT));
-
 
     public List<PetSitterReservationGetMonthlyResponse> getMonthlyReservations(String email, String month) {
+        List<ReservationStatus> getReservationStatuses = new ArrayList<>(
+                List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED, ReservationStatus.USE));
+
         User user = userValidationService.userValidationByEmail(email);
         PetSitter petSitter = petSitterValidationService.petSitterValidationByUser(user);
 
         LocalDate startDate = validatedStartDate(month);
         List<Reservation> reservations = reservationRepository.findAllByPetSitterAndMonthAndStatus(petSitter,
-                startDate, reservationStatuses);
+                startDate, getReservationStatuses);
 
         return reservations.stream().map(PetSitterReservationGetMonthlyResponse::of).collect(Collectors.toList());
     }
@@ -80,6 +79,10 @@ public class ReservationService {
     }
 
     public List<String> getUnavailableDates(Long petSitterId, String month) {
+        List<ReservationStatus> reservationStatuses = new ArrayList<>(
+                List.of(ReservationStatus.APPROVAL, ReservationStatus.PAYED,
+                        ReservationStatus.USE, ReservationStatus.WAIT));
+
         PetSitter petSitter = petSitterValidationService.petSitterValidationByPetSitterId(petSitterId);
 
         LocalDate startDate = validatedStartDate(month);
