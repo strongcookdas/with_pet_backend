@@ -82,28 +82,6 @@ public class PetSitterReservationController {
         return Response.success(refundResponse);
     }
 
-
-    @PostMapping("/user/done-reservation")
-    @ApiOperation(value = "사용자의 이용 완료 신청")
-    public Response doneReservation(@ApiIgnore Authentication authentication,
-                                    @RequestBody ReservationSimpleRequest simpleRequest) {
-        PetSitterReservationService.doneReservation(authentication.getName(),
-                simpleRequest.getReservationId());
-
-        return Response.success("완료 되었습니다. 만족스러우셨다면 후기를 작성해주세요.");
-    }
-
-    @PostMapping("/user/cancel-reservation")
-    @ApiOperation(value = "사용자의 예약 취소 (결제 전 예약건에 대해)")
-    public Response cancelReservation(@ApiIgnore Authentication authentication,
-                                      @RequestBody ReservationSimpleRequest simpleRequest) {
-
-        PetSitterReservationService.cancelReservation(authentication.getName(),
-                simpleRequest.getReservationId());
-
-        return Response.success("취소가 완료 되었습니다.");
-    }
-
     @GetMapping("/show-payment/{reservationId}")
     @ApiOperation(value = "펫시터의 예약에 대한 결제내역 확인")
     public Response<PaymentResponseForPetSitter> showPaymentForPetSitter(@ApiIgnore Authentication authentication,

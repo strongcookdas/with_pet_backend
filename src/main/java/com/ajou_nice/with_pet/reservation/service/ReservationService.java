@@ -189,25 +189,8 @@ public class ReservationService {
         return PaymentResponseForPetSitter.of(reservation);
     }
 
-    // 반려인의 예약 취소
-    // 승인 전 예약 건에 대해서
-    @Transactional
-    public void cancelReservation(String userId, Long reservationId) {
-        valid.userValidationById(userId);
-
-        Reservation reservation = valid.reservationValidation(reservationId);
-
-        reservation.updateStatus(ReservationStatus.CANCEL.toString());
-    }
-
     // 반려인의 이용 완료
-    @Transactional
-    public void doneReservation(String userId, Long reservationId) {
-        valid.userValidationById(userId);
 
-        Reservation reservation = valid.reservationValidation(reservationId);
-        reservation.updateStatus(ReservationStatus.DONE.toString());
-    }
 
     //반려인의 리뷰 작성
     @Transactional
