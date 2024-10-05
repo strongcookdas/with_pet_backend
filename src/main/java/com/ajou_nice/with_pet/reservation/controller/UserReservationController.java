@@ -5,6 +5,7 @@ import com.ajou_nice.with_pet.domain.dto.Response;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationCreateResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.UserReservationPatchCancelResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationPatchDoneResponse;
 import com.ajou_nice.with_pet.reservation.service.UserReservationService;
 import io.swagger.annotations.Api;
@@ -54,5 +55,16 @@ public class UserReservationController {
         UserReservationPatchDoneResponse doneResponse = userReservationService.doneReservation(authentication.getName(),
                 reservationId);
         return Response.success(doneResponse);
+    }
+
+    @PatchMapping("/cancel/{reservationId}")
+    @ApiOperation(value = "사용자의 예약 취소 (결제 전 예약건에 대해)")
+    public Response<UserReservationPatchCancelResponse> cancelReservation(@ApiIgnore Authentication authentication,
+                                                                          @PathVariable Long reservationId) {
+
+        UserReservationPatchCancelResponse cancelResponse = userReservationService.cancelReservation(
+                authentication.getName(), reservationId);
+
+        return Response.success(cancelResponse);
     }
 }
