@@ -201,13 +201,7 @@ public class ReservationService {
     }
 
     // 반려인의 이용 완료
-    @Transactional
-    public void doneReservation(String userId, Long reservationId) {
-        valid.userValidationById(userId);
 
-        Reservation reservation = valid.reservationValidation(reservationId);
-        reservation.updateStatus(ReservationStatus.DONE.toString());
-    }
 
     //반려인의 리뷰 작성
     @Transactional

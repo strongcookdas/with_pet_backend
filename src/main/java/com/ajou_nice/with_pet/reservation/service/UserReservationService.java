@@ -14,6 +14,7 @@ import com.ajou_nice.with_pet.repository.ReservationPetSitterServiceRepository;
 import com.ajou_nice.with_pet.reservation.model.dto.ReservationCreateRequest;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationCreateResponse;
 import com.ajou_nice.with_pet.reservation.model.dto.UserReservationGetInfosResponse;
+import com.ajou_nice.with_pet.reservation.model.dto.UserReservationPatchDoneResponse;
 import com.ajou_nice.with_pet.reservation.model.entity.Reservation;
 import com.ajou_nice.with_pet.reservation.model.entity.ReservationPetSitterService;
 import com.ajou_nice.with_pet.reservation.repository.ReservationRepository;
@@ -36,6 +37,7 @@ public class UserReservationService {
     private final UserValidationService userValidationService;
     private final DogValidationService dogValidationService;
     private final PetSitterValidationService petSitterValidationService;
+    private final ReservationValidationService reservationValidationService;
 
 
     private final ReservationRepository reservationRepository;
@@ -200,4 +202,13 @@ public class UserReservationService {
         notificationService.saveNotification(notification);
     }
     */
+
+    @Transactional
+    public UserReservationPatchDoneResponse doneReservation(String email, Long reservationId) {
+        userValidationService.userValidationByEmail(email);
+        Reservation reservation = reservationValidationService.reservationValidationById(reservationId);
+        reservationValidationService.validReservationStatus(reservation, ReservationStatus.USE);
+        reservation.updateStatus(ReservationStatus.DONE.toString());
+        return UserReservationPatchDoneResponse.of("이용을 완료했습니다.");
+    }
 }

@@ -51,7 +51,8 @@ public enum ErrorCode {
     INCONSISTENCY_AUTHENTICATION_NUMBER(HttpStatus.BAD_REQUEST,"인증번호가 일치하지 않습니다."),
     UNAUTHORIZED_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 권한이 없습니다."),
     NOT_FOUND_APPLICANT(HttpStatus.NOT_FOUND, "해당 지원자를 찾을 수 없습니다."),
-    ALREADY_ACCEPT_APPLICANT(HttpStatus.CONFLICT, "해당 지원자는 이미 승인된 상태입니다.");
+    ALREADY_ACCEPT_APPLICANT(HttpStatus.CONFLICT, "해당 지원자는 이미 승인된 상태입니다."),
+    NOT_ACCESS_RESERVATION(HttpStatus.BAD_REQUEST,"적절하지 않은 예약 요청입니다.");
 
     private HttpStatus status;
     private String message;

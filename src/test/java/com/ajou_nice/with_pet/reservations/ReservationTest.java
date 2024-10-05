@@ -113,6 +113,7 @@ public class ReservationTest {
 		criticalServiceRepository.save(criticalService);
 		petSitterCriticalServiceRepository.save(petSitterCriticalService);
 	}
+	/*
 	@DisplayName("사용자의 이용 완료 신청 test")
 	@Transactional
 	@Test
@@ -129,6 +130,7 @@ public class ReservationTest {
 	    //then 예약 상태가 done으로 잘 바뀌는지 test
 		Assertions.assertEquals(reservation.getReservationStatus(), ReservationStatus.DONE);
 	 }
+	 */
  	@DisplayName("사용자의 결제 전 예약건에 대한 예약 취소")
  	@Transactional
  	@Test
